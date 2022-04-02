@@ -5,8 +5,7 @@ export const fakeCategoryEntity = {
     _id: "123",
     createdById: "123",
     name: "fakeCategoryEntity",
-    description:
-        "Animi temporibus voluptatem corrupti quas ab voluptatem delectus.",
+    description: "Animi temporibus voluptatem corrupti quas ab voluptatem delectus.",
     image: "Pariatur quos accusantium aut quod ad enim odio blanditiis quia.",
     active: true,
     createdAt: new Date(),
