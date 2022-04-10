@@ -1,0 +1,28 @@
+export type {{pascalCase name}}Data = {
+    _id?: string;
+    createdById: string;
+    name: string;
+    active?: boolean;
+    createdAt?: Date;
+    updatedAt?: Date;
+};
+
+export type {{pascalCase name}}Paginated = {
+    {{camelCase name}}s: {{pascalCase name}}Data[];
+    total: number;
+};
+
+export class {{pascalCase name}}Entity {
+    createdById: string;
+    name: string;
+    active?: boolean;
+    createdAt?: Date;
+    updatedAt?: Date;
+    constructor(data: {{pascalCase name}}Data) {
+        this.createdById = data.createdById;
+        this.name = data.name;
+        this.active = false;
+        this.createdAt = new Date();
+        this.updatedAt = new Date();
+    }
+}

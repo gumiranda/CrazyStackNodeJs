@@ -6,7 +6,8 @@
   "repository": "https://github.com/gumiranda/CrazyStackNodeJs.git",
   "author": "imartytk@Hotmail.com",
   "scripts": {
-    "test": "jest --passWithNoTests --silent --noStackTrace --runInBand"
+    "test": "jest --passWithNoTests --silent --noStackTrace --runInBand",
+    "generate":"yarn plop --plopfile ./generators/plopfile.js"
   },
   "license": "MIT",
   "devDependencies": {
@@ -20,6 +21,7 @@
     "jest": "^27.5.1",
     "jest-mock-extended": "^2.0.5",
     "mockdate": "^3.0.5",
+    "plop": "^3.0.5",
     "prettier": "^2.6.2",
     "ts-jest": "^27.1.4",
     "typescript": "^4.6.3"
