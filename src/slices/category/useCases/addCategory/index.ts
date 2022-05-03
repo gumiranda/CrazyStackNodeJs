@@ -1,1 +1,1 @@
-export * from "./AddCategory";
+export * from "./addCategory";
