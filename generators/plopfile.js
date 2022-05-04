@@ -13,6 +13,13 @@ module.exports = function (plop) {
         ],
         actions: [...useCasesCreations],
     });
+    plop.setGenerator("all", {
+        description: "Create a new domain",
+        prompts: [
+            { type: "input", name: "name", message: "What is the name of the domain?" },
+        ],
+        actions: [...entitiesCreations, ...useCasesCreations],
+    });
     plop.setGenerator("test", {
         description: "Create a new test",
         prompts: [
