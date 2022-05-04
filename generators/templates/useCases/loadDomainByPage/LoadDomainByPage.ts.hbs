@@ -1,0 +1,13 @@
+import { Load{{pascalCase name}}ByPageRepository } from "@/slices/{{camelCase name}}/repositories";
+import { {{pascalCase name}}Paginated } from "@/slices/{{camelCase name}}/entities";
+import { Query } from "@/application/types";
+
+export type Load{{pascalCase name}}ByPage = (query: Query) => Promise<{{pascalCase name}}Paginated | null>;
+export type Load{{pascalCase name}}ByPageSignature = (
+    load{{pascalCase name}}ByPage: Load{{pascalCase name}}ByPageRepository
+) => Load{{pascalCase name}}ByPage;
+export const load{{pascalCase name}}ByPage: Load{{pascalCase name}}ByPageSignature =
+    (load{{pascalCase name}}ByPageRepository: Load{{pascalCase name}}ByPageRepository) =>
+    async (query: Query) => {
+        return load{{pascalCase name}}ByPageRepository.load{{pascalCase name}}ByPage(query);
+    };
