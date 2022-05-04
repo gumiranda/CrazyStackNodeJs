@@ -1,0 +1,6 @@
+import { Query } from "@/application/types";
+import { {{pascalCase name}}Data } from "@/slices/{{camelCase name}}/entities";
+
+export interface Delete{{pascalCase name}}Repository {
+    delete{{pascalCase name}}(query: Query): Promise<{{pascalCase name}}Data | null>;
+}
