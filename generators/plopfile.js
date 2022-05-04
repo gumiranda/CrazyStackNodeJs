@@ -126,6 +126,21 @@ const useCasesCreations = [
         path: "../src/slices/{{camelCase name}}/useCases/delete{{pascalCase name}}/index.ts",
         templateFile: "./templates/useCases/deleteDomain/index.ts.hbs",
     },
+    {
+        type: "add",
+        path: "../src/slices/{{camelCase name}}/useCases/update{{pascalCase name}}/Update{{pascalCase name}}.ts",
+        templateFile: "./templates/useCases/updateDomain/UpdateDomain.ts.hbs",
+    },
+    {
+        type: "add",
+        path: "../src/slices/{{camelCase name}}/useCases/update{{pascalCase name}}/Update{{pascalCase name}}.spec.ts",
+        templateFile: "./templates/useCases/updateDomain/UpdateDomain.spec.ts.hbs",
+    },
+    {
+        type: "add",
+        path: "../src/slices/{{camelCase name}}/useCases/update{{pascalCase name}}/index.ts",
+        templateFile: "./templates/useCases/updateDomain/index.ts.hbs",
+    },
 ];
 const entitiesCreations = [
     {
