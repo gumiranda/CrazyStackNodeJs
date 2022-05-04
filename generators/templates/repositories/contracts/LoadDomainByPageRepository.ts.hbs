@@ -1,0 +1,6 @@
+import { Query } from "@/application/types";
+import { {{pascalCase name}}Paginated } from "@/slices/{{camelCase name}}/entities";
+
+export interface Load{{pascalCase name}}ByPageRepository {
+    load{{pascalCase name}}ByPage(query: Query): Promise<{{pascalCase name}}Paginated | null>;
+}
