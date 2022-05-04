@@ -26,4 +26,17 @@ describe("LoadCategory", () => {
         expect(loadCategoryRepository.loadCategory).toHaveBeenCalledWith(fakeQuery);
         expect(loadCategoryRepository.loadCategory).toHaveBeenCalledTimes(1);
     });
+    it("should return a category loaded when loadCategoryRepository insert it", async () => {
+        const category = await testInstance(fakeQuery);
+        expect(category).toEqual(fakeCategoryEntity);
+    });
+    it("should return null a new category loaded when loadCategoryRepository return it", async () => {
+        loadCategoryRepository.loadCategory.mockResolvedValue(null);
+        const category = await testInstance(fakeQuery);
+        expect(category).toBeNull();
+    });
+    it("should rethrow if loadCategory of LoadCategoryRepository throws", async () => {
+        loadCategoryRepository.loadCategory.mockRejectedValueOnce(new Error("any_error"));
+        await expect(testInstance(fakeQuery)).rejects.toThrowError("any_error");
+    });
 });
