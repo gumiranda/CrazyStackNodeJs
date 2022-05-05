@@ -16,7 +16,7 @@ export const fakeAppointmentEntity = {
     ownerId: "fakeUserId",
     clientId: "fakeUserId",
     professionalId: "fakeUserId",
-    status: "pending",
+    status: 0,
     initDate: new Date(),
     endDate: new Date(),
     read: false,
