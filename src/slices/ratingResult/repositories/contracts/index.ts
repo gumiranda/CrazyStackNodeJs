@@ -3,3 +3,4 @@ export * from "./LoadRatingResultRepository";
 export * from "./LoadRatingResultByPageRepository";
 export * from "./DeleteRatingResultRepository";
 export * from "./UpdateRatingResultRepository";
+export * from "./LoadAverageRatingResultRepository";
