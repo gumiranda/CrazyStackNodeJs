@@ -9,6 +9,8 @@ import {
     startOfDay,
     parseISO,
     intervalsOverlapping,
+    eachHourInterval,
+    eachMinuteOfInterval,
 } from "./dateFns";
 import MockDate from "mockdate";
 
@@ -86,5 +88,90 @@ describe("dateFns functions", () => {
                 formatISO(new Date(2021, 10, 10))
             )
         ).toBe(true);
+    });
+    test("eachHourInterval function in ISO Format", () => {
+        const dateTest = eachHourInterval(new Date(2021, 9, 11), new Date(2021, 9, 14), {
+            step: 1,
+        });
+        expect(dateTest).toBeTruthy();
+        expect(dateTest.length).toBe(73);
+    });
+    test("eachMinuteOfInterval function with step 39 minutes", () => {
+        const dateTest = eachMinuteOfInterval(
+            { start: new Date(2021, 9, 11), end: new Date(2021, 9, 12) },
+            {
+                step: 39,
+            }
+        );
+        expect(dateTest).toBeTruthy();
+        expect(dateTest.length).toBe(37);
+    });
+    test("eachMinuteOfInterval function with step -1 minute", () => {
+        let response;
+        try {
+            response = eachMinuteOfInterval(
+                { start: new Date(2021, 9, 11), end: new Date(2021, 9, 12) },
+                {
+                    step: -1,
+                }
+            );
+        } catch (e: any) {
+            response = e.toString();
+        }
+        expect(response).toBe("Error: Step must be a number greater than 0");
+    });
+    test("eachMinuteOfInterval function with start greater end", () => {
+        let response;
+        try {
+            response = eachMinuteOfInterval(
+                { start: new Date(2021, 9, 13), end: new Date(2021, 9, 12) },
+                {
+                    step: 10,
+                }
+            );
+        } catch (e: any) {
+            response = e.toString();
+        }
+        expect(response).toBe("Error: Start date is after end date");
+    });
+    test("eachMinuteOfInterval function with step 122 minutes", () => {
+        const dateTest = eachMinuteOfInterval(
+            { start: new Date(2021, 9, 11), end: new Date(2021, 9, 12) },
+            {
+                step: 122,
+            }
+        );
+        expect(dateTest).toBeTruthy();
+        expect(dateTest.length).toBe(12);
+    });
+    test("eachMinuteOfInterval function with step 119 minutes", () => {
+        const dateTest = eachMinuteOfInterval(
+            { start: new Date(2021, 9, 11), end: new Date(2021, 9, 12) },
+            {
+                step: 119,
+            }
+        );
+        expect(dateTest).toBeTruthy();
+        expect(dateTest.length).toBe(13);
+    });
+    test("eachMinuteOfInterval function with step 359 minutes", () => {
+        const dateTest = eachMinuteOfInterval(
+            { start: new Date(2021, 9, 11), end: new Date(2021, 9, 12) },
+            {
+                step: 359,
+            }
+        );
+        expect(dateTest).toBeTruthy();
+        expect(dateTest.length).toBe(5);
+    });
+    test("eachMinuteOfInterval function with step 479 minutes", () => {
+        const dateTest = eachMinuteOfInterval(
+            { start: new Date(2021, 9, 11), end: new Date(2021, 9, 12) },
+            {
+                step: 479,
+            }
+        );
+        expect(dateTest).toBeTruthy();
+        expect(dateTest.length).toBe(4);
     });
 });

@@ -90,3 +90,51 @@ export const intervalsOverlapping = (
         { start: start2Aux, end: end2Aux }
     );
 };
+
+export const eachHourInterval = (
+    start: number | Date,
+    end: number | Date,
+    options: Options
+): Date[] => {
+    return eachHourOfIntervalDateFns({ start, end }, options);
+};
+export const eachMinuteOfInterval = (dirtyInterval: any, options: Options): Date[] => {
+    const interval = dirtyInterval;
+    const startDate = toDateDateFns(interval.start);
+    const endDate = toDateDateFns(interval.end);
+    const startTime = startDate.getTime();
+    const endTime = endDate.getTime();
+    if (startTime > endTime) {
+        throw new Error("Start date is after end date");
+    }
+    const dates: Date[] = [];
+    const step = Number(options?.step);
+    if (step < 1 || isNaN(step)) {
+        throw new Error("Step must be a number greater than 0");
+    }
+    let currentDate = startDate;
+    let dateWithMinutes = currentDate;
+    dates.push(toDateDateFns(currentDate));
+    while (currentDate.getTime() <= endTime) {
+        let floorStep = 60;
+        let currentStep = 1;
+        if (step > 60 && step <= 120) {
+            floorStep = 120;
+        } else if (step > 120 && step <= 240) {
+            floorStep = 240;
+        } else if (step > 240 && step <= 360) {
+            floorStep = 360;
+        } else if (step > 360 && step <= 480) {
+            floorStep = 480;
+        }
+        const stepDivided = Math.floor(floorStep / step);
+        while (currentStep <= stepDivided) {
+            dateWithMinutes = addMinutesDateFns(dateWithMinutes, step);
+            dateWithMinutes.getTime() <= endTime &&
+                dates.push(toDateDateFns(dateWithMinutes));
+            currentStep += 1;
+        }
+        currentDate = addMinutesDateFns(currentDate, step);
+    }
+    return dates;
+};
