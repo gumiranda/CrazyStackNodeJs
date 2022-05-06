@@ -47,3 +47,46 @@ export const addDays = (date: number | Date, amount: number): string => {
 export const addMinutes = (date: number | Date, amount: number): string => {
     return addMinutesDateFns(date, amount)?.toISOString?.();
 };
+export const isPast = (date: number | Date): boolean => {
+    return isPastDateFns(date);
+};
+export const startOfDay = (date: number | Date): Date => startOfDayDateFns(date);
+
+export const isBeforeToday = (date: number | Date): boolean => {
+    return isBeforeDateFns(date, startOfDayDateFns(new Date()));
+};
+
+export const formatISO = (date: number | Date): string => formatISODateFns(date);
+export const parseISO = (date: string): Date => parseISODateFns(date);
+
+export const intervalDuration = (start: number | Date, end: number | Date): Duration => {
+    return intervalToDurationDateFns({ start, end });
+};
+export const addDuration = (duration: Duration, date: number | Date): Date => {
+    return addDateFns(date, duration);
+};
+
+export const intervalsOverlapping = (
+    started1: any,
+    ended1: any,
+    started2: any,
+    ended2: any
+): boolean => {
+    const start1Aux: Date = started1?.getMonth ? started1 : parseISODateFns(started1);
+    const start2Aux: Date = started2?.getMonth ? started2 : parseISODateFns(started2);
+    const end1Aux: Date = ended1?.getMonth ? ended1 : parseISODateFns(ended1);
+    const end2Aux: Date = ended2?.getMonth ? ended2 : parseISODateFns(ended2);
+    if (
+        start2Aux.getTime() > start1Aux.getTime() ||
+        start1Aux.getTime() > end1Aux.getTime() ||
+        start2Aux.getTime() > end2Aux.getTime() ||
+        end1Aux.getTime() > end2Aux.getTime() ||
+        end1Aux.getTime() < start2Aux.getTime()
+    ) {
+        return false;
+    }
+    return areIntervalsOverlappingDateFns(
+        { start: start1Aux, end: end1Aux },
+        { start: start2Aux, end: end2Aux }
+    );
+};
