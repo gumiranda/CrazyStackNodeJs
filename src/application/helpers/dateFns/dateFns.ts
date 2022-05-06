@@ -20,7 +20,7 @@ import {
     parseISO as parseISODateFns,
     toDate as toDateDateFns,
     differenceInMinutes as differenceInMinutesDateFns,
-    setMilliseconds as setMillisecondsDateFns,
+    setMilliseconds as setMiliDateFns,
     setSeconds as setSecondsDateFns,
     isBefore as isBeforeDateFns,
     differenceInDays as differenceInDaysDateFns,
@@ -47,10 +47,15 @@ export const addDays = (date: number | Date, amount: number): string => {
 export const addMinutes = (date: number | Date, amount: number): string => {
     return addMinutesDateFns(date, amount)?.toISOString?.();
 };
+export const addHours = (date: number | Date, amount: number): string => {
+    return addHoursDateFns(date, amount)?.toISOString?.();
+};
 export const isPast = (date: number | Date): boolean => {
     return isPastDateFns(date);
 };
+
 export const startOfDay = (date: number | Date): Date => startOfDayDateFns(date);
+export const endOfDay = (date: number | Date): Date => endOfDayDateFns(date);
 
 export const isBeforeToday = (date: number | Date): boolean => {
     return isBeforeDateFns(date, startOfDayDateFns(new Date()));
@@ -137,4 +142,70 @@ export const eachMinuteOfInterval = (dirtyInterval: any, options: Options): Date
         currentDate = addMinutesDateFns(currentDate, step);
     }
     return dates;
+};
+
+export const setMinutes = (date: number | Date, minutes: number): Date => {
+    return setMinutesDateFns(date, minutes);
+};
+export const setHours = (date: number | Date, hours: number): Date => {
+    return setHoursDateFns(date, hours);
+};
+export const setSeconds = (date: number | Date, hours: number): Date => {
+    return setSecondsDateFns(date, hours);
+};
+export const setMili = (date: number | Date, hours: number): Date => {
+    return setMiliDateFns(date, hours);
+};
+export const differenceInMinutes = (date: number | Date, date2: number | Date): number => {
+    return differenceInMinutesDateFns(date, date2);
+};
+export const differenceInDays = (date: number | Date, date2: number | Date): number => {
+    return differenceInDaysDateFns(date, date2);
+};
+
+export const dayOfWeek = (date: number | Date): string => {
+    const result = getDayDateFns(date);
+    switch (result) {
+        case 0:
+            return "sunday";
+        case 1:
+            return "monday";
+        case 2:
+            return "tuesday";
+        case 3:
+            return "wednesday";
+        case 4:
+            return "thursday";
+        case 5:
+            return "friday";
+        case 6:
+            return "saturday";
+    }
+};
+
+export const subMinutes = (date: number | Date, minutes: number): Date => {
+    return subMinutesDateFns(date, minutes);
+};
+export const subDays = (date: number | Date, days: number): Date => {
+    return subDaysDateFns(date, days);
+};
+
+export const isAfter = (date: number | Date, date2: number | Date): boolean => {
+    return isAfterDateFns(date, date2);
+};
+export const isToday = (date: number | Date): boolean => {
+    return isTodayDateFns(date);
+};
+
+export const cloneDate = (date: number | Date): Date => {
+    return toDateDateFns(date);
+};
+
+export const isBefore = (date: number | Date, date2: number | Date): boolean => {
+    return isBeforeDateFns(date, date2);
+};
+
+export const trataTimezone = (date: number | Date): Date => {
+    const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    return utcToZonedTimeDateFns(date, timezone);
 };
