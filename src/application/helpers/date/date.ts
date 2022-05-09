@@ -1,4 +1,13 @@
 import { OwnerAppointmentInfo } from "@/slices/appointment/entities";
+import {
+    cloneDate,
+    setHours,
+    setMinutes,
+    setMili,
+    setSeconds,
+    parseISO,
+    differenceInMinutes,
+} from "@/application/helpers/dateFns";
 
 export type QueryDate = {
     dayOfWeekFound: string;
@@ -10,7 +19,7 @@ export type QueryDate = {
 export type BusinessHoursInput = {
     infoOwner: OwnerAppointmentInfo;
     dayOfWeekFound: string;
-    dateQuery: string;
+    dateQuery: Date;
 };
 
 export type BusinessHoursOutput = {
@@ -18,6 +27,7 @@ export type BusinessHoursOutput = {
     hourEnd: Date;
     hourLunchStart: Date | null;
     hourLunchEnd: Date | null;
+    haveLunchTime: boolean;
 };
 export type GetHoursObjectInput = OwnerAppointmentInfo & {
     dayOfWeek1: string;
@@ -25,25 +35,44 @@ export type GetHoursObjectInput = OwnerAppointmentInfo & {
     dayOfWeek3: string;
 };
 export type GetHoursObjectOutput = {
-    hourStart: string;
-    hourEnd: string;
-    hourLunchStart: string;
-    hourLunchEnd: string;
+    hourStart: string[];
+    hourEnd: string[];
+    hourLunchStart: string[];
+    hourLunchEnd: string[];
 };
-export const mapBusinessHours = (
-    businessHoursInput: BusinessHoursInput
-): BusinessHoursOutput | null => {
-    const { infoOwner, dayOfWeekFound, dateQuery } = businessHoursInput;
-    const dayOfWeek1 = dayOfWeekFound + "1";
-    const dayOfWeek2 = dayOfWeekFound + "2";
-    const dayOfWeek3 = dayOfWeekFound + "3";
-    let { hourStart, hourEnd, hourLunchStart, hourLunchEnd } = getHoursObject({
-        ...infoOwner,
-        dayOfWeek1,
-        dayOfWeek2,
-        dayOfWeek3,
-    });
-    return null;
+export type GetDateWithCustomHourAndMinutesInput = {
+    hours: number;
+    minutes: number;
+    date: Date;
+};
+export type GetArrayTimesInput = {
+    infoOwner: OwnerAppointmentInfo;
+    dayOfWeekFound: string;
+    dateQuery: Date;
+    appointments: Array<any>;
+    duration: number;
+};
+export type AvailableTimesModel = {
+    timeAvailable: Array<any>;
+    timeAvailableProfessional: Array<any>;
+};
+export type FirstStepInput = {
+    hourStart: Date;
+    hourEnd: Date;
+    hourLunchStart: Date | null;
+    hourLunchEnd: Date | null;
+    haveLunchTime: boolean;
+    initDate: Date;
+    endDate: Date;
+    haveOnlyOneAppointment: boolean;
+    dateQuery: Date;
+    timeAvailableProfessional: Array<any>;
+};
+export type AddTimeInArrayInput = {
+    initDate: Date;
+    endDate: Date;
+    array: Array<any>;
+    dateQuery: Date;
 };
 export const getHoursObject = (
     getHoursInput: GetHoursObjectInput
@@ -90,5 +119,159 @@ export const getHoursObject = (
             hourLunchEnd: hourLunchEnd3?.split?.(":"),
         };
     }
-    return { hourStart: "", hourEnd: "", hourLunchStart: "", hourLunchEnd: "" };
+    return { hourStart: [], hourEnd: [], hourLunchStart: [], hourLunchEnd: [] };
+};
+export const getDateWithCustomHourAndMinutes = (
+    getDateWithCustomHourAndMinutesInput: GetDateWithCustomHourAndMinutesInput
+): Date => {
+    const { hours, minutes, date } = getDateWithCustomHourAndMinutesInput;
+    let dateAux = cloneDate(date);
+    dateAux = setHours(dateAux, hours);
+    dateAux = setMinutes(dateAux, minutes);
+    dateAux = setMili(dateAux, 0);
+    dateAux = setSeconds(dateAux, 0);
+    return cloneDate(dateAux);
+};
+export const mapBusinessHours = (
+    businessHoursInput: BusinessHoursInput
+): BusinessHoursOutput | null => {
+    const { infoOwner, dayOfWeekFound, dateQuery } = businessHoursInput;
+    const dayOfWeek1 = dayOfWeekFound + "1";
+    const dayOfWeek2 = dayOfWeekFound + "2";
+    const dayOfWeek3 = dayOfWeekFound + "3";
+    const {
+        hourStart: hourStartMapped,
+        hourEnd: hourEndMapped,
+        hourLunchStart: hourLunchStartMapped,
+        hourLunchEnd: hourLunchEndMapped,
+    } = getHoursObject({
+        ...infoOwner,
+        dayOfWeek1,
+        dayOfWeek2,
+        dayOfWeek3,
+    });
+    if (hourStartMapped?.length < 2 || hourEndMapped?.length < 2) {
+        return null;
+    }
+    const hoursStart = Number(hourStartMapped[0]);
+    const minutesStart = Number(hourStartMapped[1]);
+    const hourStart = getDateWithCustomHourAndMinutes({
+        hours: hoursStart,
+        minutes: minutesStart,
+        date: dateQuery,
+    });
+    const hoursEnd = Number(hourEndMapped[0]);
+    const minutesEnd = Number(hourEndMapped[1]);
+    const hourEnd = getDateWithCustomHourAndMinutes({
+        hours: hoursEnd,
+        minutes: minutesEnd,
+        date: dateQuery,
+    });
+    const haveLunchTime =
+        hourLunchStartMapped?.length === 2 && hourLunchEndMapped?.length === 2;
+    if (haveLunchTime) {
+        const hoursLunchStart = Number(hourLunchStartMapped[0]);
+        const minutesLunchStart = Number(hourLunchStartMapped[1]);
+        const hourLunchStart = getDateWithCustomHourAndMinutes({
+            hours: hoursLunchStart,
+            minutes: minutesLunchStart,
+            date: dateQuery,
+        });
+        const hoursLunchEnd = Number(hourLunchEndMapped[0]);
+        const minutesLunchEnd = Number(hourLunchEndMapped[1]);
+        const hourLunchEnd = getDateWithCustomHourAndMinutes({
+            hours: hoursLunchEnd,
+            minutes: minutesLunchEnd,
+            date: dateQuery,
+        });
+        return { hourStart, hourEnd, hourLunchStart, hourLunchEnd, haveLunchTime: true };
+    }
+    return {
+        hourStart,
+        hourEnd,
+        hourLunchStart: null,
+        hourLunchEnd: null,
+        haveLunchTime: false,
+    };
+};
+export const getArrayTimes = (
+    getArrayTimesInput: GetArrayTimesInput
+): AvailableTimesModel => {
+    const { infoOwner, dayOfWeekFound, dateQuery, appointments, duration } =
+        getArrayTimesInput || {};
+    const timeAvailable: any = [];
+    let timeAvailableProfessional: any = [];
+    const businessHours: BusinessHoursOutput | null = mapBusinessHours({
+        infoOwner,
+        dayOfWeekFound,
+        dateQuery,
+    });
+    if (!businessHours) {
+        return { timeAvailable, timeAvailableProfessional };
+    }
+    const { hourStart, hourEnd, hourLunchStart, hourLunchEnd, haveLunchTime } =
+        businessHours;
+    if (appointments?.length > 0) {
+        const haveOnlyOneAppointment = appointments.length === 1;
+        const [firstAppointment] = appointments;
+        const { initDate, endDate } = firstAppointment;
+        firstStep({
+            hourStart,
+            hourEnd,
+            hourLunchStart,
+            hourLunchEnd,
+            haveLunchTime,
+            initDate,
+            endDate,
+            haveOnlyOneAppointment,
+            dateQuery,
+            timeAvailableProfessional,
+        });
+    } else {
+    }
+    return { timeAvailable, timeAvailableProfessional };
+};
+export const firstStep = (firstStepInput: FirstStepInput): void => {
+    const {
+        hourStart,
+        hourEnd,
+        hourLunchStart,
+        hourLunchEnd,
+        haveLunchTime,
+        initDate,
+        endDate,
+        haveOnlyOneAppointment,
+        dateQuery,
+        timeAvailableProfessional,
+    } = firstStepInput || {};
+    if (haveLunchTime === true) {
+        //PAROU AQUI
+    } else {
+        addTimeInArray({
+            initDate: hourStart,
+            endDate: parseISO(initDate as any),
+            dateQuery,
+            array: timeAvailableProfessional,
+        });
+        if (haveOnlyOneAppointment) {
+            addTimeInArray({
+                initDate: parseISO(endDate as any),
+                endDate: hourEnd,
+                dateQuery,
+                array: timeAvailableProfessional,
+            });
+        }
+    }
+};
+export const addTimeInArray = (addTimeInArrayInput: AddTimeInArrayInput): void => {
+    console.log({ addTimeInArrayInput });
+    const { initDate, endDate, dateQuery, array } = addTimeInArrayInput || {};
+    if (
+        initDate &&
+        endDate &&
+        differenceInMinutes(initDate, endDate) < 0 &&
+        differenceInMinutes(initDate, dateQuery) > 0
+    ) {
+        array.push({ initDate, endDate });
+    }
 };
