@@ -2,13 +2,11 @@ import { LoadAvailableTimesRepository } from "@/slices/appointment/repositories"
 import MockDate from "mockdate";
 import { mock, MockProxy } from "jest-mock-extended";
 import {
-    AvailableTimesModelRepository,
     QueryAvailableTimes,
     QueryAvailableTimesRepository,
 } from "@/slices/appointment/entities";
 import { fakeAvailableTimesEntity } from "@/slices/appointment/entities/AppointmentEntity.spec";
 import { LoadAvailableTimes, loadAvailableTimes } from "./LoadAvailableTimes";
-import { endOfDay, formatISO, startOfDay } from "@/application/helpers/dateFns";
 import { LoadServiceRepository } from "@/slices/service/repositories";
 import { LoadUserRepository } from "@/slices/user/repositories";
 import { LoadOwnerRepository } from "@/slices/owner/repositories";

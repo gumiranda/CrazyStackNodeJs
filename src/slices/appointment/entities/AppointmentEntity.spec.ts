@@ -1,5 +1,6 @@
 import { AppointmentEntity } from "./AppointmentEntity";
 import MockDate from "mockdate";
+import { parseISO } from "@/application/helpers/dateFns";
 
 export const fakeAppointmentEntity = {
     _id: "123",
@@ -98,6 +99,53 @@ export const fakeAvailableTimesEntity = {
             requestId: "fakeRequestId",
         },
     ],
+};
+export const fakeAvailableTimesModel2 = {
+    timeAvailable: [],
+    timeAvailableProfessional: [
+        {
+            endDate: parseISO("2021-10-14T21:00:00.000Z"),
+            initDate: parseISO("2021-10-14T11:00:00.000Z"),
+        },
+    ],
+};
+export const fakeAvailableTimesModel = {
+    timeAvailable: [
+        { available: true, time: parseISO("2021-10-14T11:00:00.000Z") },
+        { available: true, time: parseISO("2021-10-14T11:30:00.000Z") },
+        { available: true, time: parseISO("2021-10-14T12:00:00.000Z") },
+        { available: true, time: parseISO("2021-10-14T12:30:00.000Z") },
+        { available: true, time: parseISO("2021-10-14T13:00:00.000Z") },
+        { available: true, time: parseISO("2021-10-14T13:30:00.000Z") },
+        { available: true, time: parseISO("2021-10-14T14:00:00.000Z") },
+        { available: true, time: parseISO("2021-10-14T14:30:00.000Z") },
+        { available: true, time: parseISO("2021-10-14T15:00:00.000Z") },
+        { available: true, time: parseISO("2021-10-14T15:30:00.000Z") },
+        { available: true, time: parseISO("2021-10-14T16:00:00.000Z") },
+        { available: true, time: parseISO("2021-10-14T16:30:00.000Z") },
+        { available: true, time: parseISO("2021-10-14T17:00:00.000Z") },
+        { available: true, time: parseISO("2021-10-14T17:30:00.000Z") },
+        { available: true, time: parseISO("2021-10-14T18:00:00.000Z") },
+        { available: true, time: parseISO("2021-10-14T18:30:00.000Z") },
+        { available: true, time: parseISO("2021-10-14T19:00:00.000Z") },
+        { available: true, time: parseISO("2021-10-14T19:30:00.000Z") },
+        { available: true, time: parseISO("2021-10-14T20:00:00.000Z") },
+        { available: true, time: parseISO("2021-10-14T20:30:00.000Z") },
+    ],
+    timeAvailableProfessional: [
+        {
+            endDate: parseISO("2021-10-14T21:00:00.000Z"),
+            initDate: parseISO("2021-10-14T11:00:00.000Z"),
+        },
+    ],
+};
+export const fakeQueryVerifyAvailableTimes = {
+    professionalId: "fakeUserId",
+    serviceId: "fakeServiceId",
+    ownerId: "fakeUserId",
+    date: new Date(2021, 9, 14, 3, 0).toISOString(),
+    initDate: new Date(2021, 9, 14, 9, 0).toISOString(),
+    endDate: new Date(2021, 9, 14, 10, 0).toISOString(),
 };
 describe("Appointment", () => {
     beforeAll(async () => {
