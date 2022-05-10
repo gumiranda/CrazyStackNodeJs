@@ -1,4 +1,5 @@
 import MockDate from "mockdate";
+import { dayOfWeek, endOfDay, formatISO, startOfDay } from "../dateFns";
 import {
     BusinessHoursInput,
     getHoursObject,
@@ -13,6 +14,7 @@ import {
     AddTimeInArrayInput,
     addTimeInArray,
     secondStep,
+    queryDateGenerator,
 } from "./date";
 
 describe("date tests business rules", () => {
@@ -1115,6 +1117,29 @@ describe("date tests business rules", () => {
                     initDate: new Date("2021-10-14T16:00:00.000Z"),
                 },
             ],
+        });
+    });
+    test("testing queryDateGenerator function when date passed is before today", () => {
+        const dateTest = queryDateGenerator("2021-09-18T10:00:00.000Z");
+        expect(dateTest).toBeNull();
+    });
+    test("testing queryDateGenerator function when date passed is after today", () => {
+        const dateTest = queryDateGenerator("2099-09-18T10:00:00.000Z");
+        expect(dateTest).toEqual({
+            dateQuery: startOfDay(new Date("2099-09-18T10:00:00.000Z")),
+            dayOfWeekFound: "friday",
+            endDay: "2099-09-18T23:59:59-03:00",
+            initDay: "2099-09-18T00:00:00-03:00",
+        });
+    });
+    test("testing queryDateGenerator function when date passed is today", () => {
+        const date = new Date().setMilliseconds(0);
+        const dateTest = queryDateGenerator(formatISO(date));
+        expect(dateTest).toEqual({
+            dateQuery: new Date(date),
+            dayOfWeekFound: dayOfWeek(new Date()),
+            endDay: formatISO(endOfDay(new Date())),
+            initDay: formatISO(startOfDay(new Date())),
         });
     });
 });

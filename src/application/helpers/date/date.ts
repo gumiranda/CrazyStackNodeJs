@@ -9,13 +9,20 @@ import {
     differenceInMinutes,
     intervalsOverlapping,
     eachMinuteOfInterval,
+    trataTimezone,
+    isBeforeToday,
+    isToday,
+    startOfDay,
+    dayOfWeek,
+    formatISO,
+    endOfDay,
 } from "@/application/helpers/dateFns";
 
 export type QueryDate = {
     dayOfWeekFound: string;
     endDay: string;
     initDay: string;
-    dateQuery: string;
+    dateQuery: string | Date;
 };
 
 export type BusinessHoursInput = {
@@ -525,4 +532,20 @@ export const calculateTimeAvailable = (
             }
         }
     });
+};
+export const queryDateGenerator = (date: string): QueryDate | null => {
+    const dateRequest = trataTimezone(new Date(date));
+    if (!isBeforeToday(dateRequest)) {
+        let dateQuery;
+        if (isToday(dateRequest)) {
+            dateQuery = cloneDate(dateRequest);
+        } else {
+            dateQuery = startOfDay(dateRequest);
+        }
+        const dayOfWeekFound = dayOfWeek(dateQuery);
+        const endDay = formatISO(endOfDay(dateRequest));
+        const initDay = formatISO(startOfDay(dateRequest));
+        return { dayOfWeekFound, endDay, initDay, dateQuery };
+    }
+    return null;
 };

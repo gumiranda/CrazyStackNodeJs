@@ -82,7 +82,22 @@ export const fakeAvailableTimesEntity = {
             saturday3: true,
         },
     },
-    data: [],
+    data: [
+        {
+            _id: "fakeAppointmentId",
+            name: "Cabelo",
+            clientId: "fakeUserId",
+            professionalId: "fakeUserId",
+            serviceId: "fakeServiceId",
+            initDate: "2021-09-18T10:00:00.000Z",
+            endDate: "2021-09-18T10:15:00.000Z",
+            cancelled: false,
+            active: true,
+            createdAt: new Date(),
+            ownerId: "fakeUserId",
+            requestId: "fakeRequestId",
+        },
+    ],
 };
 describe("Appointment", () => {
     beforeAll(async () => {
