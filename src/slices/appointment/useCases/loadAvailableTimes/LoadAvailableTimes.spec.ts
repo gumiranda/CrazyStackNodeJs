@@ -67,4 +67,50 @@ describe("LoadAvailableTimes", () => {
         );
         expect(loadAvailableTimesRepository.loadAvailableTimes).toHaveBeenCalledTimes(1);
     });
+    it("if i pass date in past, should return null", async () => {
+        const res = await testInstance({
+            ...fakeQueryAvailableTimes,
+            date: new Date(1998, 8, 8, 8, 8).toISOString(),
+        });
+        expect(res).toBeNull();
+    });
+    it("if i pass date null, should return null", async () => {
+        const res = await testInstance({
+            ...fakeQueryAvailableTimes,
+            date: null,
+        });
+        expect(res).toBeNull();
+    });
+    it("should rethrow if load of LoadAvailableTimesRepository throws", async () => {
+        loadAvailableTimesRepository.loadAvailableTimes.mockRejectedValueOnce(
+            new Error("any_error")
+        );
+        await expect(testInstance(fakeQueryAvailableTimes)).rejects.toThrow("any_error");
+    });
+    it("should return null if loadAvailableTimes return null", async () => {
+        loadAvailableTimesRepository.loadAvailableTimes.mockResolvedValueOnce(null);
+        const appointment = await testInstance(fakeQueryAvailableTimes);
+        expect(appointment).toEqual({ timeAvailable: [], timeAvailableProfessional: [] });
+    });
+    it("should return null if load of loadOwner returns null", async () => {
+        loadAvailableTimesRepository.loadAvailableTimes.mockResolvedValueOnce(null);
+        ownerRepository.loadOwner.mockResolvedValueOnce(null);
+        const appointment = await testInstance(fakeQueryAvailableTimes);
+        expect(appointment).toBeNull();
+    });
+    it("should return null if load of loadService returns null", async () => {
+        serviceRepository.loadService.mockResolvedValueOnce(null);
+        const appointment = await testInstance(fakeQueryAvailableTimes);
+        expect(appointment).toBeNull();
+    });
+    it("should return null if load of loadUser returns null", async () => {
+        loadAvailableTimesRepository.loadAvailableTimes.mockResolvedValueOnce(null);
+        userRepository.loadUser.mockResolvedValueOnce(null);
+        const appointment = await testInstance(fakeQueryAvailableTimes);
+        expect(appointment).toBeNull();
+    });
+    it("should return null testInstance returns null", async () => {
+        const appointment = await testInstance(null as any);
+        expect(appointment).toBeNull();
+    });
 });

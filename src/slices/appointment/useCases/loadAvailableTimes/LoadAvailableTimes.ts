@@ -51,7 +51,6 @@ export const loadAvailableTimes: LoadAvailableTimesSignature =
                     initDay,
                 })) || {};
             if (infoOwner && appointments) {
-                console.log("caiu aqui 5");
                 //esse é o caso em que existem agendamentos para o profissional no dia
                 return getArrayTimes({
                     infoOwner,
@@ -62,10 +61,11 @@ export const loadAvailableTimes: LoadAvailableTimesSignature =
                 });
             }
             if (ownerId) {
-                const { ownerId: _id = null } = (await userRepository.loadUser({
-                    fields: { _id: ownerId },
-                    options: {},
-                })) as any;
+                const { ownerId: _id = null }: any =
+                    (await userRepository.loadUser({
+                        fields: { _id: ownerId },
+                        options: {},
+                    })) || {};
                 if (_id) {
                     const {
                         hourEnd1 = null,
@@ -83,10 +83,10 @@ export const loadAvailableTimes: LoadAvailableTimesSignature =
                         hourLunchStart3 = null,
                         hourStart3 = null,
                         days3 = null,
-                    } = (await ownerRepository.loadOwner({
+                    }: any = (await ownerRepository.loadOwner({
                         fields: { _id },
                         options: {},
-                    })) as any;
+                    })) || {};
                     if (!days1 || !hourEnd1 || !hourStart1) {
                         return null;
                     }
