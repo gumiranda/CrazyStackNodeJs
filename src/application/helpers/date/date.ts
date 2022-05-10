@@ -8,6 +8,7 @@ import {
     parseISO,
     differenceInMinutes,
     intervalsOverlapping,
+    eachMinuteOfInterval,
 } from "@/application/helpers/dateFns";
 
 export type QueryDate = {
@@ -88,6 +89,11 @@ export type AddTimeInArrayInput = {
 export type Schedule = {
     initDate: any;
     endDate: any;
+};
+export type CalculateTimeAvailableInput = {
+    timeAvailableProfessional: Array<any>;
+    duration: number;
+    timeAvailable: Array<any>;
 };
 export const getHoursObject = (
     getHoursInput: GetHoursObjectInput
@@ -255,7 +261,33 @@ export const getArrayTimes = (
             });
         }
     } else {
+        if (haveLunchTime) {
+            addTimeInArray({
+                initDate: hourStart,
+                endDate: hourLunchStart as any,
+                dateQuery,
+                array: timeAvailableProfessional,
+            });
+            addTimeInArray({
+                initDate: hourLunchEnd as any,
+                endDate: hourEnd,
+                dateQuery,
+                array: timeAvailableProfessional,
+            });
+        } else {
+            addTimeInArray({
+                initDate: hourStart,
+                endDate: hourEnd,
+                dateQuery,
+                array: timeAvailableProfessional,
+            });
+        }
     }
+    calculateTimeAvailable({
+        timeAvailableProfessional,
+        duration,
+        timeAvailable,
+    });
     return { timeAvailable, timeAvailableProfessional };
 };
 export const firstStep = (firstStepInput: FirstStepInput): void => {
@@ -474,4 +506,23 @@ export const addTimeInArray = (addTimeInArrayInput: AddTimeInArrayInput): void =
     ) {
         array.push({ initDate, endDate });
     }
+};
+export const calculateTimeAvailable = (
+    calculateTimeAvailableInput: CalculateTimeAvailableInput
+): void => {
+    const { timeAvailable, duration, timeAvailableProfessional } =
+        calculateTimeAvailableInput;
+    timeAvailableProfessional.forEach((scheduleTime: Schedule) => {
+        const { initDate, endDate } = scheduleTime;
+        if (differenceInMinutes(endDate, initDate) >= duration) {
+            const arrayBroken = eachMinuteOfInterval(
+                { start: initDate, end: endDate },
+                { step: duration }
+            );
+            arrayBroken.pop();
+            for (const time of arrayBroken) {
+                timeAvailable.push({ time, available: true });
+            }
+        }
+    });
 };

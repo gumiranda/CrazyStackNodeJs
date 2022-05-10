@@ -355,13 +355,196 @@ describe("date tests business rules", () => {
         addTimeInArray(null as any);
         expect(mockAddTimeInArray.array).toStrictEqual([]);
     });
-    test("getArrayTimes function", async () => {
+    test("getArrayTimes function with have lunch time", async () => {
         expect(getArrayTimes(mockGetArrayTimes)).toEqual({
-            timeAvailable: [],
-            timeAvailableProfessional: [],
+            timeAvailable: [
+                {
+                    available: true,
+                    time: new Date("2021-11-10T11:00:00.000Z"),
+                },
+                {
+                    available: true,
+                    time: new Date("2021-11-10T11:30:00.000Z"),
+                },
+                {
+                    available: true,
+                    time: new Date("2021-11-10T12:00:00.000Z"),
+                },
+                {
+                    available: true,
+                    time: new Date("2021-11-10T12:30:00.000Z"),
+                },
+                {
+                    available: true,
+                    time: new Date("2021-11-10T13:00:00.000Z"),
+                },
+                {
+                    available: true,
+                    time: new Date("2021-11-10T13:30:00.000Z"),
+                },
+                {
+                    available: true,
+                    time: new Date("2021-11-10T14:00:00.000Z"),
+                },
+                {
+                    available: true,
+                    time: new Date("2021-11-10T14:30:00.000Z"),
+                },
+                {
+                    available: true,
+                    time: new Date("2021-11-10T16:00:00.000Z"),
+                },
+                {
+                    available: true,
+                    time: new Date("2021-11-10T16:30:00.000Z"),
+                },
+                {
+                    available: true,
+                    time: new Date("2021-11-10T17:00:00.000Z"),
+                },
+                {
+                    available: true,
+                    time: new Date("2021-11-10T17:30:00.000Z"),
+                },
+                {
+                    available: true,
+                    time: new Date("2021-11-10T18:00:00.000Z"),
+                },
+                {
+                    available: true,
+                    time: new Date("2021-11-10T18:30:00.000Z"),
+                },
+                {
+                    available: true,
+                    time: new Date("2021-11-10T19:00:00.000Z"),
+                },
+                {
+                    available: true,
+                    time: new Date("2021-11-10T19:30:00.000Z"),
+                },
+                {
+                    available: true,
+                    time: new Date("2021-11-10T20:00:00.000Z"),
+                },
+                {
+                    available: true,
+                    time: new Date("2021-11-10T20:30:00.000Z"),
+                },
+            ],
+            timeAvailableProfessional: [
+                {
+                    endDate: new Date("2021-11-10T15:00:00.000Z"),
+                    initDate: new Date("2021-11-10T11:00:00.000Z"),
+                },
+                {
+                    endDate: new Date("2021-11-10T21:00:00.000Z"),
+                    initDate: new Date("2021-11-10T16:00:00.000Z"),
+                },
+            ],
         });
     });
-    test("getArrayTimes function", async () => {
+    test("getArrayTimes function with have`t lunch time", async () => {
+        expect(
+            getArrayTimes({
+                ...mockGetArrayTimes,
+                infoOwner: {
+                    ...mockGetArrayTimes.infoOwner,
+                    hourLunchStart1: null,
+                    hourLunchEnd1: null,
+                },
+            })
+        ).toEqual({
+            timeAvailable: [
+                {
+                    available: true,
+                    time: new Date("2021-11-10T11:00:00.000Z"),
+                },
+                {
+                    available: true,
+                    time: new Date("2021-11-10T11:30:00.000Z"),
+                },
+                {
+                    available: true,
+                    time: new Date("2021-11-10T12:00:00.000Z"),
+                },
+                {
+                    available: true,
+                    time: new Date("2021-11-10T12:30:00.000Z"),
+                },
+                {
+                    available: true,
+                    time: new Date("2021-11-10T13:00:00.000Z"),
+                },
+                {
+                    available: true,
+                    time: new Date("2021-11-10T13:30:00.000Z"),
+                },
+                {
+                    available: true,
+                    time: new Date("2021-11-10T14:00:00.000Z"),
+                },
+                {
+                    available: true,
+                    time: new Date("2021-11-10T14:30:00.000Z"),
+                },
+                {
+                    available: true,
+                    time: new Date("2021-11-10T15:00:00.000Z"),
+                },
+                {
+                    available: true,
+                    time: new Date("2021-11-10T15:30:00.000Z"),
+                },
+                {
+                    available: true,
+                    time: new Date("2021-11-10T16:00:00.000Z"),
+                },
+                {
+                    available: true,
+                    time: new Date("2021-11-10T16:30:00.000Z"),
+                },
+                {
+                    available: true,
+                    time: new Date("2021-11-10T17:00:00.000Z"),
+                },
+                {
+                    available: true,
+                    time: new Date("2021-11-10T17:30:00.000Z"),
+                },
+                {
+                    available: true,
+                    time: new Date("2021-11-10T18:00:00.000Z"),
+                },
+                {
+                    available: true,
+                    time: new Date("2021-11-10T18:30:00.000Z"),
+                },
+                {
+                    available: true,
+                    time: new Date("2021-11-10T19:00:00.000Z"),
+                },
+                {
+                    available: true,
+                    time: new Date("2021-11-10T19:30:00.000Z"),
+                },
+                {
+                    available: true,
+                    time: new Date("2021-11-10T20:00:00.000Z"),
+                },
+                {
+                    available: true,
+                    time: new Date("2021-11-10T20:30:00.000Z"),
+                },
+            ],
+            timeAvailableProfessional: [
+                {
+                    endDate: new Date("2021-11-10T21:00:00.000Z"),
+                    initDate: new Date("2021-11-10T11:00:00.000Z"),
+                },
+            ],
+        });
+    });
+    test("getArrayTimes function when i pass infoOwner null", async () => {
         expect(getArrayTimes({ ...mockGetArrayTimes, infoOwner: null as any })).toEqual({
             timeAvailable: [],
             timeAvailableProfessional: [],
@@ -715,7 +898,76 @@ describe("date tests business rules", () => {
             ],
         };
         expect(getArrayTimes(mockCustomGetArrayTimes)).toEqual({
-            timeAvailable: [],
+            timeAvailable: [
+                {
+                    available: true,
+                    time: new Date("2021-10-14T11:00:00.000Z"),
+                },
+                {
+                    available: true,
+                    time: new Date("2021-10-14T11:30:00.000Z"),
+                },
+                {
+                    available: true,
+                    time: new Date("2021-10-14T12:15:00.000Z"),
+                },
+                {
+                    available: true,
+                    time: new Date("2021-10-14T12:45:00.000Z"),
+                },
+                {
+                    available: true,
+                    time: new Date("2021-10-14T13:15:00.000Z"),
+                },
+                {
+                    available: true,
+                    time: new Date("2021-10-14T13:45:00.000Z"),
+                },
+                {
+                    available: true,
+                    time: new Date("2021-10-14T14:15:00.000Z"),
+                },
+                {
+                    available: true,
+                    time: new Date("2021-10-14T16:00:00.000Z"),
+                },
+                {
+                    available: true,
+                    time: new Date("2021-10-14T16:30:00.000Z"),
+                },
+                {
+                    available: true,
+                    time: new Date("2021-10-14T17:00:00.000Z"),
+                },
+                {
+                    available: true,
+                    time: new Date("2021-10-14T17:30:00.000Z"),
+                },
+                {
+                    available: true,
+                    time: new Date("2021-10-14T18:00:00.000Z"),
+                },
+                {
+                    available: true,
+                    time: new Date("2021-10-14T18:30:00.000Z"),
+                },
+                {
+                    available: true,
+                    time: new Date("2021-10-14T19:00:00.000Z"),
+                },
+                {
+                    available: true,
+                    time: new Date("2021-10-14T19:30:00.000Z"),
+                },
+                {
+                    available: true,
+                    time: new Date("2021-10-14T20:00:00.000Z"),
+                },
+                {
+                    available: true,
+                    time: new Date("2021-10-14T20:30:00.000Z"),
+                },
+            ],
             timeAvailableProfessional: [
                 {
                     endDate: new Date("2021-10-14T12:00:00.000Z"),
@@ -783,7 +1035,72 @@ describe("date tests business rules", () => {
             ],
         };
         expect(getArrayTimes(mockCustomGetArrayTimes2)).toEqual({
-            timeAvailable: [],
+            timeAvailable: [
+                {
+                    available: true,
+                    time: new Date("2021-10-14T11:00:00.000Z"),
+                },
+                {
+                    available: true,
+                    time: new Date("2021-10-14T11:30:00.000Z"),
+                },
+                {
+                    available: true,
+                    time: new Date("2021-10-14T12:45:00.000Z"),
+                },
+                {
+                    available: true,
+                    time: new Date("2021-10-14T13:15:00.000Z"),
+                },
+                {
+                    available: true,
+                    time: new Date("2021-10-14T13:45:00.000Z"),
+                },
+                {
+                    available: true,
+                    time: new Date("2021-10-14T14:15:00.000Z"),
+                },
+                {
+                    available: true,
+                    time: new Date("2021-10-14T16:00:00.000Z"),
+                },
+                {
+                    available: true,
+                    time: new Date("2021-10-14T16:30:00.000Z"),
+                },
+                {
+                    available: true,
+                    time: new Date("2021-10-14T17:00:00.000Z"),
+                },
+                {
+                    available: true,
+                    time: new Date("2021-10-14T17:30:00.000Z"),
+                },
+                {
+                    available: true,
+                    time: new Date("2021-10-14T18:00:00.000Z"),
+                },
+                {
+                    available: true,
+                    time: new Date("2021-10-14T18:30:00.000Z"),
+                },
+                {
+                    available: true,
+                    time: new Date("2021-10-14T19:00:00.000Z"),
+                },
+                {
+                    available: true,
+                    time: new Date("2021-10-14T19:30:00.000Z"),
+                },
+                {
+                    available: true,
+                    time: new Date("2021-10-14T20:00:00.000Z"),
+                },
+                {
+                    available: true,
+                    time: new Date("2021-10-14T20:30:00.000Z"),
+                },
+            ],
             timeAvailableProfessional: [
                 {
                     endDate: new Date("2021-10-14T12:00:00.000Z"),
