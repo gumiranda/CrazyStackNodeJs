@@ -69,11 +69,25 @@ export type FirstStepInput = {
     dateQuery: Date;
     timeAvailableProfessional: Array<any>;
 };
+export type SecondStepInput = {
+    hourStart: Date;
+    hourEnd: Date;
+    hourLunchStart: Date | null;
+    hourLunchEnd: Date | null;
+    haveLunchTime: boolean;
+    dateQuery: Date;
+    timeAvailableProfessional: Array<any>;
+    appointments: Array<any>;
+};
 export type AddTimeInArrayInput = {
     initDate: Date | string;
     endDate: Date | string;
     array: Array<any>;
     dateQuery: Date;
+};
+export type Schedule = {
+    initDate: any;
+    endDate: any;
 };
 export const getHoursObject = (
     getHoursInput: GetHoursObjectInput
@@ -228,6 +242,18 @@ export const getArrayTimes = (
             dateQuery,
             timeAvailableProfessional,
         });
+        if (!haveOnlyOneAppointment) {
+            secondStep({
+                hourStart,
+                hourEnd,
+                hourLunchStart,
+                hourLunchEnd,
+                haveLunchTime,
+                dateQuery,
+                timeAvailableProfessional,
+                appointments,
+            });
+        }
     } else {
     }
     return { timeAvailable, timeAvailableProfessional };
@@ -317,6 +343,117 @@ export const firstStep = (firstStepInput: FirstStepInput): void => {
             });
         }
     }
+};
+export const secondStep = (secondStepInput: SecondStepInput): void => {
+    const {
+        hourStart,
+        hourEnd,
+        hourLunchStart,
+        hourLunchEnd,
+        haveLunchTime,
+        dateQuery,
+        timeAvailableProfessional,
+        appointments,
+    } = secondStepInput || {};
+    appointments?.forEach((schedule: Schedule, index: number) => {
+        const { initDate: initDateAux, endDate: endDateAux } = schedule;
+        const initDateNext = appointments[index + 1]?.initDate;
+        const endDateNext = appointments[index + 1]?.endDate;
+        const hasNext = initDateNext && endDateNext;
+
+        if (!haveLunchTime) {
+            if (!hasNext) {
+                addTimeInArray({
+                    initDate: parseISO(endDateAux as any),
+                    endDate: hourEnd,
+                    dateQuery,
+                    array: timeAvailableProfessional,
+                });
+            } else {
+                addTimeInArray({
+                    initDate: parseISO(endDateAux as any),
+                    endDate: parseISO(initDateNext as any),
+                    dateQuery,
+                    array: timeAvailableProfessional,
+                });
+            }
+        } else {
+            const insideFirstHalfAux = intervalsOverlapping(
+                initDateAux,
+                endDateAux,
+                hourStart,
+                hourLunchStart
+            );
+            const insideSecondHalfAux = intervalsOverlapping(
+                initDateAux,
+                endDateAux,
+                hourLunchEnd,
+                hourEnd
+            );
+            const nextInsideFirstHalf =
+                hasNext &&
+                intervalsOverlapping(initDateNext, endDateNext, hourStart, hourLunchStart);
+
+            const nextInsideSecondHalf =
+                hasNext &&
+                intervalsOverlapping(initDateNext, endDateNext, hourLunchEnd, hourEnd);
+
+            if (insideFirstHalfAux) {
+                if (!hasNext) {
+                    addTimeInArray({
+                        initDate: parseISO(endDateAux as any),
+                        endDate: hourLunchStart as any,
+                        dateQuery,
+                        array: timeAvailableProfessional,
+                    });
+                    addTimeInArray({
+                        initDate: hourLunchEnd as any,
+                        endDate: hourEnd,
+                        dateQuery,
+                        array: timeAvailableProfessional,
+                    });
+                } else {
+                    if (nextInsideFirstHalf) {
+                        addTimeInArray({
+                            initDate: parseISO(endDateAux as any),
+                            endDate: parseISO(initDateNext as any),
+                            dateQuery,
+                            array: timeAvailableProfessional,
+                        });
+                    } else if (nextInsideSecondHalf) {
+                        addTimeInArray({
+                            initDate: parseISO(endDateAux as any),
+                            endDate: hourLunchStart as any,
+                            dateQuery,
+                            array: timeAvailableProfessional,
+                        });
+                        addTimeInArray({
+                            initDate: hourLunchEnd as any,
+                            endDate: parseISO(initDateNext as any),
+                            dateQuery,
+                            array: timeAvailableProfessional,
+                        });
+                    }
+                }
+            } else if (insideSecondHalfAux) {
+                if (!hasNext) {
+                    addTimeInArray({
+                        initDate: parseISO(endDateAux as any),
+                        endDate: hourEnd,
+                        dateQuery,
+                        array: timeAvailableProfessional,
+                    });
+                } else if (nextInsideSecondHalf) {
+                    addTimeInArray({
+                        initDate: parseISO(endDateAux as any),
+                        endDate: parseISO(initDateNext as any),
+                        dateQuery,
+                        array: timeAvailableProfessional,
+                    });
+                }
+            }
+        }
+    });
 };
 export const addTimeInArray = (addTimeInArrayInput: AddTimeInArrayInput): void => {
     const { initDate, endDate, dateQuery, array } = addTimeInArrayInput || {};

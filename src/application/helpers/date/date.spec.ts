@@ -12,6 +12,7 @@ import {
     FirstStepInput,
     AddTimeInArrayInput,
     addTimeInArray,
+    secondStep,
 } from "./date";
 
 describe("date tests business rules", () => {
@@ -23,6 +24,8 @@ describe("date tests business rules", () => {
     let mockAddTimeInArray: AddTimeInArrayInput;
     beforeAll(async () => {
         MockDate.set(new Date());
+    });
+    beforeEach(async () => {
         mockAddTimeInArray = {
             initDate: new Date(2021, 10, 10, 11, 0, 0),
             endDate: new Date(2021, 10, 10, 11, 30, 0),
@@ -140,7 +143,6 @@ describe("date tests business rules", () => {
             appointments: [],
         };
     });
-
     afterAll(async () => {
         MockDate.reset();
     });
@@ -336,6 +338,23 @@ describe("date tests business rules", () => {
             },
         ]);
     });
+    test("addTimeInArray function when i pass date as string", async () => {
+        addTimeInArray({
+            ...mockAddTimeInArray,
+            initDate: new Date(2021, 10, 10, 11, 0, 0).toISOString(),
+            endDate: new Date(2021, 10, 10, 11, 30, 0).toISOString(),
+        });
+        expect(mockAddTimeInArray.array).toStrictEqual([
+            {
+                initDate: "2021-11-10T14:00:00.000Z",
+                endDate: "2021-11-10T14:30:00.000Z",
+            },
+        ]);
+    });
+    test("addTimeInArray function with null as parameters", async () => {
+        addTimeInArray(null as any);
+        expect(mockAddTimeInArray.array).toStrictEqual([]);
+    });
     test("getArrayTimes function", async () => {
         expect(getArrayTimes(mockGetArrayTimes)).toEqual({
             timeAvailable: [],
@@ -363,13 +382,13 @@ describe("date tests business rules", () => {
             },
         ]);
     });
+    test("firstStep function when i pass null", async () => {
+        firstStep(null as any);
+        expect(mockFirstStep.timeAvailableProfessional).toStrictEqual([]);
+    });
     test("firstStep function with one appointment", async () => {
         firstStep({ ...mockFirstStep, haveOnlyOneAppointment: true });
         expect(mockFirstStep.timeAvailableProfessional).toStrictEqual([
-            {
-                endDate: new Date("2021-11-10T17:00:00.000Z"),
-                initDate: new Date("2021-11-10T16:00:00.000Z"),
-            },
             {
                 endDate: new Date("2021-11-10T17:00:00.000Z"),
                 initDate: new Date("2021-11-10T16:00:00.000Z"),
@@ -483,5 +502,302 @@ describe("date tests business rules", () => {
                 initDate: new Date("2021-11-10T17:30:00.000Z"),
             },
         ]);
+    });
+    test("secondStep function with appointments with 2 appointments inside first half", async () => {
+        let mockSecondStepCustom = {
+            hourStart: new Date(2021, 10, 10, 8, 0, 0), //11:00
+            hourEnd: new Date(2021, 10, 10, 19, 0, 0), //22:00
+            hourLunchStart: new Date(2021, 10, 10, 11, 0, 0), //14:00
+            hourLunchEnd: new Date(2021, 10, 10, 12, 0, 0), //15:00
+            haveLunchTime: true,
+            haveOnlyOneAppointment: false,
+            dateQuery: new Date(2021, 10, 10, 3, 0),
+            timeAvailableProfessional: [],
+            appointments: [
+                {
+                    initDate: "2021-11-10T11:00:00.000Z",
+                    endDate: "2021-11-10T11:30:00.000Z",
+                },
+                {
+                    initDate: "2021-11-10T11:30:00.000Z",
+                    endDate: "2021-11-10T12:00:00.000Z",
+                },
+            ],
+        };
+        secondStep(mockSecondStepCustom);
+        expect(mockSecondStepCustom.timeAvailableProfessional).toStrictEqual([
+            {
+                endDate: new Date("2021-11-10T14:00:00.000Z"),
+                initDate: new Date("2021-11-10T12:00:00.000Z"),
+            },
+            {
+                endDate: new Date("2021-11-10T22:00:00.000Z"),
+                initDate: new Date("2021-11-10T15:00:00.000Z"),
+            },
+        ]);
+    });
+    test("secondStep function when i pass null", async () => {
+        let mockSecondStepCustom = {
+            hourStart: new Date(2021, 10, 10, 8, 0, 0), //11:00
+            hourEnd: new Date(2021, 10, 10, 19, 0, 0), //22:00
+            hourLunchStart: new Date(2021, 10, 10, 11, 0, 0), //14:00
+            hourLunchEnd: new Date(2021, 10, 10, 12, 0, 0), //15:00
+            haveLunchTime: true,
+            haveOnlyOneAppointment: false,
+            dateQuery: new Date(2021, 10, 10, 3, 0),
+            timeAvailableProfessional: [],
+            appointments: [
+                {
+                    initDate: "2021-11-10T11:00:00.000Z",
+                    endDate: "2021-11-10T11:30:00.000Z",
+                },
+                {
+                    initDate: "2021-11-10T11:30:00.000Z",
+                    endDate: "2021-11-10T12:00:00.000Z",
+                },
+            ],
+        };
+        secondStep(null as any);
+        expect(mockSecondStepCustom.timeAvailableProfessional).toStrictEqual([]);
+    });
+    test("secondStep function with appointments with 1 appointments inside first half and 1 appointment inside second half", async () => {
+        let mockSecondStepCustom = {
+            hourStart: new Date(2021, 10, 10, 8, 0, 0), //11:00
+            hourEnd: new Date(2021, 10, 10, 19, 0, 0), //22:00
+            hourLunchStart: new Date(2021, 10, 10, 11, 0, 0), //14:00
+            hourLunchEnd: new Date(2021, 10, 10, 12, 0, 0), //15:00
+            haveLunchTime: true,
+            haveOnlyOneAppointment: false,
+            dateQuery: new Date(2021, 10, 10, 3, 0),
+            timeAvailableProfessional: [],
+            appointments: [
+                {
+                    initDate: "2021-11-10T11:00:00.000Z",
+                    endDate: "2021-11-10T12:30:00.000Z",
+                },
+                {
+                    initDate: "2021-11-10T15:30:00.000Z",
+                    endDate: "2021-11-10T16:00:00.000Z",
+                },
+            ],
+        };
+        secondStep(mockSecondStepCustom);
+        expect(mockSecondStepCustom.timeAvailableProfessional).toStrictEqual([
+            {
+                endDate: new Date("2021-11-10T14:00:00.000Z"),
+                initDate: new Date("2021-11-10T12:30:00.000Z"),
+            },
+            {
+                endDate: new Date("2021-11-10T15:30:00.000Z"),
+                initDate: new Date("2021-11-10T15:00:00.000Z"),
+            },
+            {
+                endDate: new Date("2021-11-10T22:00:00.000Z"),
+                initDate: new Date("2021-11-10T16:00:00.000Z"),
+            },
+        ]);
+    });
+    test("secondStep function with appointments with 2 appointments inside second half", async () => {
+        let mockSecondStepCustom = {
+            hourStart: new Date(2021, 10, 10, 8, 0, 0), //11:00
+            hourEnd: new Date(2021, 10, 10, 19, 0, 0), //22:00
+            hourLunchStart: new Date(2021, 10, 10, 11, 0, 0), //14:00
+            hourLunchEnd: new Date(2021, 10, 10, 12, 0, 0), //15:00
+            haveLunchTime: true,
+            haveOnlyOneAppointment: false,
+            dateQuery: new Date(2021, 10, 10, 3, 0),
+            timeAvailableProfessional: [],
+            appointments: [
+                {
+                    initDate: "2021-11-10T11:00:00.000Z",
+                    endDate: "2021-11-10T12:30:00.000Z",
+                },
+                {
+                    initDate: "2021-11-10T15:30:00.000Z",
+                    endDate: "2021-11-10T16:00:00.000Z",
+                },
+                {
+                    initDate: "2021-11-10T16:00:00.000Z",
+                    endDate: "2021-11-10T17:00:00.000Z",
+                },
+            ],
+        };
+        secondStep(mockSecondStepCustom);
+        expect(mockSecondStepCustom.timeAvailableProfessional).toStrictEqual([
+            {
+                endDate: new Date("2021-11-10T14:00:00.000Z"),
+                initDate: new Date("2021-11-10T12:30:00.000Z"),
+            },
+            {
+                endDate: new Date("2021-11-10T15:30:00.000Z"),
+                initDate: new Date("2021-11-10T15:00:00.000Z"),
+            },
+            {
+                endDate: new Date("2021-11-10T22:00:00.000Z"),
+                initDate: new Date("2021-11-10T17:00:00.000Z"),
+            },
+        ]);
+    });
+
+    test("secondStep function without lunch time", async () => {
+        let mockSecondStepCustom = {
+            hourStart: new Date(2021, 10, 10, 8, 0, 0), //11:00
+            hourEnd: new Date(2021, 10, 10, 19, 0, 0), //22:00
+            hourLunchStart: null,
+            hourLunchEnd: null,
+            haveLunchTime: false,
+            haveOnlyOneAppointment: false,
+            dateQuery: new Date(2021, 10, 10, 0, 0),
+            timeAvailableProfessional: [],
+            appointments: [
+                {
+                    initDate: "2021-11-10T15:30:00.000Z",
+                    endDate: "2021-11-10T16:00:00.000Z",
+                },
+                {
+                    initDate: "2021-11-10T16:00:00.000Z",
+                    endDate: "2021-11-10T17:00:00.000Z",
+                },
+            ],
+        };
+        secondStep(mockSecondStepCustom);
+        expect(mockSecondStepCustom.timeAvailableProfessional).toStrictEqual([
+            {
+                endDate: new Date("2021-11-10T22:00:00.000Z"),
+                initDate: new Date("2021-11-10T17:00:00.000Z"),
+            },
+        ]);
+    });
+    test("getArrayTimes function with firstStep and secondStep with appointments array with unique appointment insideFirstHalf with lunch time", async () => {
+        const infoOwnerAux = {
+            hourEnd2: "18:00",
+            hourStart2: "08:00",
+            hourLunchStart2: "12:00",
+            hourLunchEnd2: "14:00",
+            days2: { friday2: true },
+            hourStart1: "8:00",
+            hourEnd1: "18:00",
+            hourLunchEnd1: "13:00",
+            hourLunchStart1: "12:00",
+            hourStart3: "8:00",
+            hourEnd3: "18:00",
+            hourLunchEnd3: "13:00",
+            hourLunchStart3: "12:00",
+            days1: {
+                monday1: true,
+                sunday1: false,
+                tuesday1: true,
+                thursday1: true,
+                friday1: true,
+                wednsday1: false,
+                saturday1: false,
+            },
+            days3: {
+                monday3: false,
+                sunday3: false,
+                tuesday3: false,
+                thursday3: false,
+                friday3: false,
+                wednsday3: false,
+                saturday3: true,
+            },
+        };
+        let mockCustomGetArrayTimes = {
+            infoOwner: infoOwnerAux,
+            dayOfWeekFound: "friday",
+            dateQuery: new Date(2021, 9, 14, 3, 0),
+            duration: 30,
+            appointments: [
+                {
+                    initDate: "2021-10-14T12:00:00.000Z",
+                    endDate: "2021-10-14T12:15:00.000Z",
+                },
+            ],
+        };
+        expect(getArrayTimes(mockCustomGetArrayTimes)).toEqual({
+            timeAvailable: [],
+            timeAvailableProfessional: [
+                {
+                    endDate: new Date("2021-10-14T12:00:00.000Z"),
+                    initDate: new Date("2021-10-14T11:00:00.000Z"),
+                },
+                {
+                    endDate: new Date("2021-10-14T15:00:00.000Z"),
+                    initDate: new Date("2021-10-14T12:15:00.000Z"),
+                },
+                {
+                    endDate: new Date("2021-10-14T21:00:00.000Z"),
+                    initDate: new Date("2021-10-14T16:00:00.000Z"),
+                },
+            ],
+        });
+    });
+    test("getArrayTimes function with firstStep and secondStep with appointments array length === 2 insideFirstHalf with lunch time", async () => {
+        const infoOwnerAux2 = {
+            hourEnd2: "18:00", //21:00
+            hourStart2: "08:00", //11:00
+            hourLunchStart2: "12:00", //15:00
+            hourLunchEnd2: "14:00", //17:00
+            days2: { friday2: true },
+            hourStart1: "8:00",
+            hourEnd1: "18:00",
+            hourLunchEnd1: "13:00",
+            hourLunchStart1: "12:00",
+            hourStart3: "8:00",
+            hourEnd3: "18:00",
+            hourLunchEnd3: "13:00",
+            hourLunchStart3: "12:00",
+            days1: {
+                monday1: true,
+                sunday1: false,
+                tuesday1: true,
+                thursday1: true,
+                friday1: true,
+                wednsday1: false,
+                saturday1: false,
+            },
+            days3: {
+                monday3: false,
+                sunday3: false,
+                tuesday3: false,
+                thursday3: false,
+                friday3: false,
+                wednsday3: false,
+                saturday3: true,
+            },
+        };
+        let mockCustomGetArrayTimes2 = {
+            infoOwner: infoOwnerAux2,
+            dayOfWeekFound: "friday",
+            dateQuery: new Date(2021, 9, 14, 3, 0),
+            duration: 30,
+            appointments: [
+                {
+                    initDate: "2021-10-14T12:00:00.000Z",
+                    endDate: "2021-10-14T12:15:00.000Z",
+                },
+                {
+                    initDate: "2021-10-14T12:15:00.000Z",
+                    endDate: "2021-10-14T12:45:00.000Z",
+                },
+            ],
+        };
+        expect(getArrayTimes(mockCustomGetArrayTimes2)).toEqual({
+            timeAvailable: [],
+            timeAvailableProfessional: [
+                {
+                    endDate: new Date("2021-10-14T12:00:00.000Z"),
+                    initDate: new Date("2021-10-14T11:00:00.000Z"),
+                },
+                {
+                    endDate: new Date("2021-10-14T15:00:00.000Z"),
+                    initDate: new Date("2021-10-14T12:45:00.000Z"),
+                },
+                {
+                    endDate: new Date("2021-10-14T21:00:00.000Z"),
+                    initDate: new Date("2021-10-14T16:00:00.000Z"),
+                },
+            ],
+        });
     });
 });
