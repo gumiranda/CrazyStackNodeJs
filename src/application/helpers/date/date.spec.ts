@@ -380,4 +380,108 @@ describe("date tests business rules", () => {
             },
         ]);
     });
+    test("firstStep function when i have lunch time and appointment inside first half", async () => {
+        let mockFirstStepCustom = {
+            hourStart: new Date(2021, 10, 10, 8, 0, 0), //11:00
+            hourEnd: new Date(2021, 10, 10, 19, 0, 0), //22:00
+            hourLunchStart: new Date(2021, 10, 10, 11, 0, 0), //14:00
+            hourLunchEnd: new Date(2021, 10, 10, 12, 0, 0), //15:00
+            haveLunchTime: true,
+            initDate: new Date(2021, 10, 10, 9, 0, 0).toISOString() as any, //12:00
+            endDate: new Date(2021, 10, 10, 9, 30, 0).toISOString() as any, //12:30
+            haveOnlyOneAppointment: false,
+            dateQuery: new Date(2021, 10, 10, 3, 0),
+            timeAvailableProfessional: [],
+        };
+        firstStep(mockFirstStepCustom);
+        expect(mockFirstStepCustom.timeAvailableProfessional).toStrictEqual([
+            {
+                endDate: new Date("2021-11-10T12:00:00.000Z"),
+                initDate: new Date("2021-11-10T11:00:00.000Z"),
+            },
+        ]);
+    });
+    test("firstStep function when i have lunch time and appointment inside first half with haveOnlyOneAppointment === true", async () => {
+        let mockFirstStepCustom = {
+            hourStart: new Date(2021, 10, 10, 8, 0, 0), //11:00
+            hourEnd: new Date(2021, 10, 10, 19, 0, 0), //22:00
+            hourLunchStart: new Date(2021, 10, 10, 11, 0, 0), //14:00
+            hourLunchEnd: new Date(2021, 10, 10, 12, 0, 0), //15:00
+            haveLunchTime: true,
+            initDate: new Date(2021, 10, 10, 9, 0, 0).toISOString() as any, //12:00
+            endDate: new Date(2021, 10, 10, 9, 30, 0).toISOString() as any, //12:30
+            haveOnlyOneAppointment: true,
+            dateQuery: new Date(2021, 10, 10, 3, 0),
+            timeAvailableProfessional: [],
+        };
+        firstStep(mockFirstStepCustom);
+        expect(mockFirstStepCustom.timeAvailableProfessional).toStrictEqual([
+            {
+                endDate: new Date("2021-11-10T12:00:00.000Z"),
+                initDate: new Date("2021-11-10T11:00:00.000Z"),
+            },
+            {
+                endDate: new Date("2021-11-10T14:00:00.000Z"),
+                initDate: new Date("2021-11-10T12:30:00.000Z"),
+            },
+            {
+                endDate: new Date("2021-11-10T22:00:00.000Z"),
+                initDate: new Date("2021-11-10T15:00:00.000Z"),
+            },
+        ]);
+    });
+    test("firstStep function when i have lunch time and appointment inside second half", async () => {
+        let mockFirstStepCustom = {
+            hourStart: new Date(2021, 10, 10, 8, 0, 0), //11:00
+            hourEnd: new Date(2021, 10, 10, 19, 0, 0), //22:00
+            hourLunchStart: new Date(2021, 10, 10, 11, 0, 0), //14:00
+            hourLunchEnd: new Date(2021, 10, 10, 12, 0, 0), //15:00
+            haveLunchTime: true,
+            initDate: new Date(2021, 10, 10, 13, 0, 0).toISOString() as any, //16:00
+            endDate: new Date(2021, 10, 10, 14, 30, 0).toISOString() as any, //17:30
+            haveOnlyOneAppointment: false,
+            dateQuery: new Date(2021, 10, 10, 3, 0),
+            timeAvailableProfessional: [],
+        };
+        firstStep(mockFirstStepCustom);
+        expect(mockFirstStepCustom.timeAvailableProfessional).toStrictEqual([
+            {
+                endDate: new Date("2021-11-10T14:00:00.000Z"),
+                initDate: new Date("2021-11-10T11:00:00.000Z"),
+            },
+            {
+                endDate: new Date("2021-11-10T16:00:00.000Z"),
+                initDate: new Date("2021-11-10T15:00:00.000Z"),
+            },
+        ]);
+    });
+    test("firstStep function when i have lunch time and appointment inside second half and haveOnlyOneAppointment === true", async () => {
+        let mockFirstStepCustom = {
+            hourStart: new Date(2021, 10, 10, 8, 0, 0), //11:00
+            hourEnd: new Date(2021, 10, 10, 19, 0, 0), //22:00
+            hourLunchStart: new Date(2021, 10, 10, 11, 0, 0), //14:00
+            hourLunchEnd: new Date(2021, 10, 10, 12, 0, 0), //15:00
+            haveLunchTime: true,
+            initDate: new Date(2021, 10, 10, 13, 0, 0).toISOString() as any, //16:00
+            endDate: new Date(2021, 10, 10, 14, 30, 0).toISOString() as any, //17:30
+            haveOnlyOneAppointment: true,
+            dateQuery: new Date(2021, 10, 10, 3, 0),
+            timeAvailableProfessional: [],
+        };
+        firstStep(mockFirstStepCustom);
+        expect(mockFirstStepCustom.timeAvailableProfessional).toStrictEqual([
+            {
+                endDate: new Date("2021-11-10T14:00:00.000Z"),
+                initDate: new Date("2021-11-10T11:00:00.000Z"),
+            },
+            {
+                endDate: new Date("2021-11-10T16:00:00.000Z"),
+                initDate: new Date("2021-11-10T15:00:00.000Z"),
+            },
+            {
+                endDate: new Date("2021-11-10T22:00:00.000Z"),
+                initDate: new Date("2021-11-10T17:30:00.000Z"),
+            },
+        ]);
+    });
 });

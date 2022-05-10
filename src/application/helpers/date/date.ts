@@ -7,6 +7,7 @@ import {
     setSeconds,
     parseISO,
     differenceInMinutes,
+    intervalsOverlapping,
 } from "@/application/helpers/dateFns";
 
 export type QueryDate = {
@@ -69,8 +70,8 @@ export type FirstStepInput = {
     timeAvailableProfessional: Array<any>;
 };
 export type AddTimeInArrayInput = {
-    initDate: Date;
-    endDate: Date;
+    initDate: Date | string;
+    endDate: Date | string;
     array: Array<any>;
     dateQuery: Date;
 };
@@ -245,7 +246,61 @@ export const firstStep = (firstStepInput: FirstStepInput): void => {
         timeAvailableProfessional,
     } = firstStepInput || {};
     if (haveLunchTime === true) {
-        //PAROU AQUI
+        const insideFirstHalf = intervalsOverlapping(
+            initDate,
+            endDate,
+            hourStart,
+            hourLunchStart
+        );
+        const insideSecondHalf = intervalsOverlapping(
+            initDate,
+            endDate,
+            hourLunchEnd,
+            hourEnd
+        );
+        if (insideFirstHalf) {
+            addTimeInArray({
+                initDate: hourStart,
+                endDate: parseISO(initDate as any),
+                dateQuery,
+                array: timeAvailableProfessional,
+            });
+            if (haveOnlyOneAppointment) {
+                addTimeInArray({
+                    initDate: parseISO(endDate as any),
+                    endDate: hourLunchStart as any,
+                    dateQuery,
+                    array: timeAvailableProfessional,
+                });
+                addTimeInArray({
+                    initDate: hourLunchEnd as any,
+                    endDate: hourEnd,
+                    dateQuery,
+                    array: timeAvailableProfessional,
+                });
+            }
+        } else if (insideSecondHalf) {
+            addTimeInArray({
+                initDate: hourStart,
+                endDate: hourLunchStart as any,
+                dateQuery,
+                array: timeAvailableProfessional,
+            });
+            addTimeInArray({
+                initDate: hourLunchEnd as any,
+                endDate: parseISO(initDate as any),
+                dateQuery,
+                array: timeAvailableProfessional,
+            });
+            if (haveOnlyOneAppointment) {
+                addTimeInArray({
+                    initDate: parseISO(endDate as any),
+                    endDate: hourEnd,
+                    dateQuery,
+                    array: timeAvailableProfessional,
+                });
+            }
+        }
     } else {
         addTimeInArray({
             initDate: hourStart,
@@ -264,13 +319,21 @@ export const firstStep = (firstStepInput: FirstStepInput): void => {
     }
 };
 export const addTimeInArray = (addTimeInArrayInput: AddTimeInArrayInput): void => {
-    console.log({ addTimeInArrayInput });
     const { initDate, endDate, dateQuery, array } = addTimeInArrayInput || {};
     if (
-        initDate &&
-        endDate &&
-        differenceInMinutes(initDate, endDate) < 0 &&
-        differenceInMinutes(initDate, dateQuery) > 0
+        (initDate &&
+            endDate &&
+            initDate instanceof Date &&
+            endDate instanceof Date &&
+            differenceInMinutes(initDate, endDate) < 0 &&
+            differenceInMinutes(initDate, dateQuery) > 0) ||
+        (initDate &&
+            endDate &&
+            differenceInMinutes(
+                parseISO(initDate as string),
+                parseISO(endDate as string)
+            ) < 0 &&
+            differenceInMinutes(parseISO(initDate as string), dateQuery) > 0)
     ) {
         array.push({ initDate, endDate });
     }
