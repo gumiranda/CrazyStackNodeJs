@@ -69,4 +69,25 @@ describe("ValidateAvailableTimes", () => {
         });
         expect(appointment).toBeTruthy();
     });
+    it("should return null if i pass null as param", async () => {
+        testInstance = validateAvailableTimes(
+            jest.fn().mockImplementation((query) => fakeAvailableTimesModel)
+        );
+        const appointment = await testInstance(null as any);
+        expect(appointment).toBeNull();
+    });
+    it("should return null if pass endDate <= initDate", async () => {
+        testInstance = validateAvailableTimes(
+            jest.fn().mockImplementation((query) => fakeAvailableTimesModel)
+        );
+        const appointment = await testInstance({
+            professionalId: "fakeUserId",
+            date: new Date(2021, 9, 14, 3, 0).toISOString(),
+            serviceId: "fakeServiceId",
+            ownerId: "fakeOwnerId",
+            initDate: "2021-10-14T14:00:00.000Z",
+            endDate: "2021-10-14T11:30:00.000Z",
+        });
+        expect(appointment).toBeNull();
+    });
 });
