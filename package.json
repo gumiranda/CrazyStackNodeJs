@@ -7,6 +7,7 @@
   "author": "imartytk@Hotmail.com",
   "scripts": {
     "test": "jest --passWithNoTests --silent --noStackTrace --runInBand",
+    "test:v": "jest --passWithNoTests --noStackTrace --runInBand",
     "generate": "yarn plop --plopfile ./generators/plopfile.js"
   },
   "license": "MIT",
