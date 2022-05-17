@@ -21,7 +21,7 @@ export const fakeRequestEntity = {
     ownerId: "fakeUserId",
     clientId: "fakeUserId",
     clientUserId: "fakeUserId",
-    professionalId: "fakeUserId",
+    professionalId: "fakeUser2Id",
     status: 10,
     initDate: new Date().toISOString(),
     endDate: new Date().toISOString(),
