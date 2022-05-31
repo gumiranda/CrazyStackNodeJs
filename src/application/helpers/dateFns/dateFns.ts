@@ -206,6 +206,6 @@ export const isBefore = (date: number | Date, date2: number | Date): boolean => 
 };
 
 export const trataTimezone = (date: number | Date): Date => {
-    const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-    return utcToZonedTimeDateFns(date, timezone);
+    //const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    return utcToZonedTimeDateFns(date, "America/Sao_Paulo");
 };
