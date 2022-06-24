@@ -3,5 +3,5 @@ import { ClientData } from "@/slices/client/entities";
 
 export interface UpdateClientRepository {
     updateClient(query: Query, data: ClientData): Promise<ClientData | null>;
-    incrementAppointmentsTotal(id: string): Promise<ClientData | null>;
+    incrementAppointmentsTotal(query: Query): Promise<ClientData | null>;
 }

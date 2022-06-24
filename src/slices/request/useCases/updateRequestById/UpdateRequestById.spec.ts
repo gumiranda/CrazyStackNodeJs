@@ -167,7 +167,10 @@ describe("UpdateRequestById useCase", () => {
             status: 10,
             initDate: subMinutes(new Date(), 4000).toISOString(),
         });
-        expect(mockUser.incrementAppointmentsTotal).toHaveBeenCalledWith("fakeUserId");
+        expect(mockUser.incrementAppointmentsTotal).toHaveBeenCalledWith({
+            fields: { _id: fakeRequestEntity?.ownerId },
+            options: {},
+        });
         expect(mockUser.incrementAppointmentsTotal).toHaveBeenCalledTimes(3);
     });
     it("should call incrementAppointmentsTotal of service method with correct values", async () => {
@@ -176,9 +179,10 @@ describe("UpdateRequestById useCase", () => {
             status: 10,
             initDate: subMinutes(new Date(), 4000).toISOString(),
         });
-        expect(mockService.incrementAppointmentsTotal).toHaveBeenCalledWith(
-            "fakeServiceId"
-        );
+        expect(mockService.incrementAppointmentsTotal).toHaveBeenCalledWith({
+            fields: { _id: fakeRequestEntity?.serviceId },
+            options: {},
+        });
         expect(mockService.incrementAppointmentsTotal).toHaveBeenCalledTimes(1);
     });
     it("should call incrementAppointmentsTotal of client method with correct values", async () => {
@@ -187,7 +191,10 @@ describe("UpdateRequestById useCase", () => {
             status: 10,
             initDate: subMinutes(new Date(), 4000).toISOString(),
         });
-        expect(mockClient.incrementAppointmentsTotal).toHaveBeenCalledWith("fakeUserId");
+        expect(mockClient.incrementAppointmentsTotal).toHaveBeenCalledWith({
+            fields: { _id: fakeRequestEntity?.clientId },
+            options: {},
+        });
         expect(mockClient.incrementAppointmentsTotal).toHaveBeenCalledTimes(1);
     });
     it("Should throws if was not increment appointment after call incrementAppointmentsTotal of serviceRepository", async () => {
