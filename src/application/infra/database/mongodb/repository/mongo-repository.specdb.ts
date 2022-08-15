@@ -147,4 +147,43 @@ describe("Mongo Repository tests", () => {
         const result = await sut.getPaginate(1, {}, { createdAt: -1 }, 10, {});
         expect(result).toHaveLength(10);
     });
+    test("Should update user with success", async () => {
+        const sut = makeSut();
+        const user = {
+            name: "John Doe",
+            email: "any_email@mail.com",
+            password: "any_password",
+        };
+        const { insertedId } = await userCollection.insertOne(user);
+        const userUpdated = await sut.update(
+            { _id: insertedId },
+            { name: "New John Doe" }
+        );
+        expect(userUpdated).toBeTruthy();
+        expect(userUpdated).toEqual({ _id: insertedId, ...user, name: "New John Doe" });
+    });
+    test("Should call update method with correct values", async () => {
+        const sut = makeSut();
+        const spySut = jest.spyOn(sut, "update");
+        const user = {
+            name: "John Doe",
+            email: "any_email@mail.com",
+            password: "any_password",
+        };
+        const { insertedId } = await userCollection.insertOne(user);
+        await sut.update({ _id: insertedId }, { name: "New John Doe" });
+        expect(spySut).toHaveBeenCalledWith({ _id: insertedId }, { name: "New John Doe" });
+    });
+    test("Should throws if update throw a exception", async () => {
+        const sut = makeSut();
+        jest.spyOn(sut, "update").mockRejectedValueOnce(new Error());
+        const user = {
+            name: "John Doe",
+            email: "any_email@mail.com",
+            password: "any_password",
+        };
+        const { insertedId } = await userCollection.insertOne(user);
+        const promise = sut.update({ _id: insertedId }, { name: "New John Doe" });
+        expect(promise).rejects.toThrow();
+    });
 });

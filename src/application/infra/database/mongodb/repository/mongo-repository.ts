@@ -33,8 +33,26 @@ export class MongoRepository extends Repository {
         }
         return null;
     }
-    update(query: any, data: any): Promise<any> {
-        throw new Error("Method not implemented.");
+    async updateOne(query: any, data: any): Promise<any> {
+        const collection = await this.getCollection();
+        const session = await MongoHelper.getSession();
+        if (query._id) {
+            query._id = new ObjectId(query._id);
+        }
+        return collection.updateOne(
+            mapQueryParamsToQueryMongo(query),
+            { $set: mapAnyToMongoObject(data) },
+            { upsert: false, session }
+        );
+    }
+    async update(query: any, data: any): Promise<any> {
+        const collection = await this.getCollection();
+        const session = await MongoHelper.getSession();
+        const result = await this.updateOne(query, data);
+        if (result?.modifiedCount === 1) {
+            return collection.findOne(mapQueryParamsToQueryMongo(query), { session });
+        }
+        return null;
     }
     incrementOne(query: any, data: any): Promise<any> {
         throw new Error("Method not implemented.");
@@ -45,9 +63,9 @@ export class MongoRepository extends Repository {
         if (query._id) {
             query._id = new ObjectId(query._id);
         }
-        const result = await collection.deleteOne(mapQueryParamsToQueryMongo(query), {
+        const result = (await collection.deleteOne(mapQueryParamsToQueryMongo(query), {
             session,
-        });
+        })) as any;
         if (result?.deletedCount === 1) {
             return true;
         }

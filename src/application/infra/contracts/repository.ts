@@ -2,6 +2,7 @@ export abstract class Repository {
     abstract add(data: any): Promise<any>;
     abstract insertOne(data: any): Promise<any>;
     abstract update(query: any, data: any): Promise<any>;
+    abstract updateOne(query: any, data: any): Promise<any>;
     abstract incrementOne(query: any, data: any): Promise<any>;
     abstract deleteOne(query: any): Promise<any>;
     abstract getOne(query: any, options?: any): Promise<any>;
