@@ -1,11 +1,17 @@
+import { Collection } from "mongodb";
 import { MongoHelper } from "./mongodb-helper";
 
 describe("Mongo Helper", () => {
+    let userCollection: Collection;
     beforeAll(async () => {
         await MongoHelper.connect(process.env.MONGO_URL as string);
     });
     afterAll(async () => {
         await MongoHelper.disconnect();
+    });
+    beforeEach(async () => {
+        userCollection = await MongoHelper.getCollection("user");
+        await userCollection.deleteMany({});
     });
     it("should reconnect if mongodb is down", async () => {
         let userCollection = await MongoHelper.getCollection("user");
