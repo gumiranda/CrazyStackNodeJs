@@ -54,8 +54,26 @@ export class MongoRepository extends Repository {
         }
         return null;
     }
-    incrementOne(query: any, data: any): Promise<any> {
-        throw new Error("Method not implemented.");
+    async incrementOne(query: any, data: any): Promise<any> {
+        const collection = await this.getCollection();
+        const session = await MongoHelper.getSession();
+        if (query._id) {
+            query._id = new ObjectId(query._id);
+        }
+        return collection.updateOne(
+            mapQueryParamsToQueryMongo(query),
+            { $inc: mapAnyToMongoObject(data) },
+            { upsert: false, session }
+        );
+    }
+    async increment(query: any, data: any): Promise<any> {
+        const collection = await this.getCollection();
+        const session = await MongoHelper.getSession();
+        const result = await this.incrementOne(query, data);
+        if (result?.modifiedCount === 1) {
+            return collection.findOne(mapQueryParamsToQueryMongo(query), { session });
+        }
+        return null;
     }
     async deleteOne(query: any): Promise<any> {
         const collection = await this.getCollection();
@@ -107,10 +125,16 @@ export class MongoRepository extends Repository {
             .sort(sort)
             .toArray();
     }
-    getCount(query: any): Promise<any> {
-        throw new Error("Method not implemented.");
+    async getCount(query: any): Promise<any> {
+        const collection = await this.getCollection();
+        if (query._id) {
+            query._id = new ObjectId(query._id);
+        }
+        return collection.countDocuments(mapQueryParamsToQueryMongo(query));
     }
-    aggregate(query: any): Promise<any> {
-        throw new Error("Method not implemented.");
+    async aggregate(query: any): Promise<any> {
+        const collection = await this.getCollection();
+        const session = await MongoHelper.getSession();
+        return collection.aggregate(query, { session }).toArray();
     }
 }
