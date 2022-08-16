@@ -29,7 +29,7 @@ module.exports = function (plop) {
         prompts: [
             { type: "input", name: "name", message: "What is the name of the domain?" },
         ],
-        actions: [...entitiesCreations, ...useCasesCreations],
+        actions: [...entitiesCreations, ...useCasesCreations, ...repositoryCreations],
     });
     plop.setGenerator("test", {
         description: "Create a new test",
