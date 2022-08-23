@@ -1,26 +1,24 @@
+import { fakeAvailableTimesModel } from "./../entities/AppointmentEntity.spec";
 import {
     fakeAppointmentEntity,
     fakeAppointmentPaginated,
+    fakeAvailableTimesEntity,
+    fakeQueryAvailableTimesRepository,
 } from "@/slices/appointment/entities/AppointmentEntity.spec";
 import { Repository } from "@/application/infra/contracts/repository";
-import { AppointmentData, AppointmentPaginated } from "@/slices/appointment/entities";
-import {
-    AddAppointmentRepository,
-    DeleteAppointmentRepository,
-    LoadAppointmentByPageRepository,
-    LoadAppointmentRepository,
-    UpdateAppointmentRepository,
-} from "./contracts";
 import { Query } from "@/application/types";
 import MockDate from "mockdate";
 import { mock, MockProxy } from "jest-mock-extended";
 import { AppointmentRepository } from "./appointmentRepository";
+import { ObjectId } from "mongodb";
 
 describe("Appointment Mongo Repository", () => {
     let fakeQuery: Query;
+    let fakeId: string;
     let testInstance: AppointmentRepository;
     let repository: MockProxy<Repository>;
     beforeAll(async () => {
+        fakeId = new ObjectId().toString();
         fakeQuery = { fields: { name: "123" }, options: {} };
         MockDate.set(new Date());
         repository = mock<Repository>();
@@ -30,6 +28,7 @@ describe("Appointment Mongo Repository", () => {
         repository.getPaginate.mockResolvedValue(fakeAppointmentPaginated?.appointments);
         repository.getCount.mockResolvedValue(fakeAppointmentPaginated?.total);
         repository.deleteOne.mockResolvedValue(true);
+        repository.aggregate.mockResolvedValue([fakeAvailableTimesEntity]);
     });
     beforeEach(async () => {
         testInstance = new AppointmentRepository(repository);
@@ -70,16 +69,25 @@ describe("Appointment Mongo Repository", () => {
         expect(repository.update).toHaveBeenCalledTimes(1);
     });
     test("should return a appointment updated when updateAppointment update it", async () => {
-        const result = await testInstance.updateAppointment(fakeQuery, fakeAppointmentEntity);
+        const result = await testInstance.updateAppointment(
+            fakeQuery,
+            fakeAppointmentEntity
+        );
         expect(result).toEqual(fakeAppointmentEntity);
     });
     test("should return a appointment updated when updateAppointment update it when i pass null", async () => {
-        const result = await testInstance.updateAppointment(null as any, fakeAppointmentEntity);
+        const result = await testInstance.updateAppointment(
+            null as any,
+            fakeAppointmentEntity
+        );
         expect(result).toEqual(fakeAppointmentEntity);
     });
     test("should return null when updateAppointment returns null", async () => {
         repository.update.mockResolvedValueOnce(null);
-        const result = await testInstance.updateAppointment(fakeQuery, fakeAppointmentEntity);
+        const result = await testInstance.updateAppointment(
+            fakeQuery,
+            fakeAppointmentEntity
+        );
         expect(result).toBeNull();
     });
     test("should rethrow if update of updateAppointment throws", async () => {
@@ -171,5 +179,103 @@ describe("Appointment Mongo Repository", () => {
         repository.getPaginate.mockRejectedValueOnce(new Error("Error"));
         const result = testInstance.loadAppointmentByPage(fakeQuery);
         await expect(result).rejects.toThrow("Error");
+    });
+    test("should call aggregate of loadAvailableTimes with correct values", async () => {
+        await testInstance.loadAvailableTimes({
+            ...fakeQueryAvailableTimesRepository,
+            professionalId: fakeId,
+        });
+        expect(repository.aggregate).toHaveBeenCalledWith([
+            {
+                $match: {
+                    cancelled: false,
+                    active: true,
+                    initDate: {
+                        $lte: fakeQueryAvailableTimesRepository.endDay,
+                        $gte: fakeQueryAvailableTimesRepository.initDay,
+                    },
+                    endDate: {
+                        $lte: fakeQueryAvailableTimesRepository.endDay,
+                        $gte: fakeQueryAvailableTimesRepository.initDay,
+                    },
+                    professionalId: new ObjectId(fakeId),
+                },
+            },
+            { $sort: { initDate: 1 } },
+            {
+                $lookup: {
+                    as: "professionalDetails",
+                    foreignField: "_id",
+                    from: "user",
+                    localField: "professionalId",
+                },
+            },
+            {
+                $project: { endDate: 1, initDate: 1, professionalDetails: { ownerId: 1 } },
+            },
+            { $unwind: { path: "$professionalDetails" } },
+            {
+                $lookup: {
+                    as: "owner",
+                    foreignField: "_id",
+                    from: "owner",
+                    localField: "professionalDetails.ownerId",
+                },
+            },
+            {
+                $project: {
+                    endDate: 1,
+                    initDate: 1,
+                    owner: {
+                        days1: 1,
+                        days2: 1,
+                        days3: 1,
+                        hourEnd1: 1,
+                        hourEnd2: 1,
+                        hourEnd3: 1,
+                        hourLunchEnd1: 1,
+                        hourLunchEnd2: 1,
+                        hourLunchEnd3: 1,
+                        hourLunchStart1: 1,
+                        hourLunchStart2: 1,
+                        hourLunchStart3: 1,
+                        hourStart1: 1,
+                        hourStart2: 1,
+                        hourStart3: 1,
+                    },
+                },
+            },
+            { $unwind: { path: "$owner" } },
+            { $group: { _id: "$owner", data: { $push: "$$ROOT" } } },
+            { $project: { _id: 1, data: { endDate: 1, initDate: 1 } } },
+        ]);
+        expect(repository.aggregate).toHaveBeenCalledTimes(1);
+    });
+    test("should return appointments from loadAvailableTimes", async () => {
+        const appointments = await testInstance.loadAvailableTimes({
+            ...fakeQueryAvailableTimesRepository,
+            professionalId: fakeId,
+        });
+        expect(appointments).toEqual(fakeAvailableTimesEntity);
+    });
+    test("should return null if dont have appointments from loadAvailableTimes", async () => {
+        repository.aggregate.mockResolvedValueOnce([]);
+        const appointments = await testInstance.loadAvailableTimes({
+            ...fakeQueryAvailableTimesRepository,
+            professionalId: fakeId,
+        });
+        expect(appointments).toBeNull();
+    });
+    test("should return null if PASS NULL as parameter loadAvailableTimes", async () => {
+        const appointments = await testInstance.loadAvailableTimes(null as any);
+        expect(appointments).toBeNull();
+    });
+    test("should rethrow if loadAvailableTimes throws", async () => {
+        repository.aggregate.mockRejectedValueOnce(new Error("Error"));
+        const appointments = testInstance.loadAvailableTimes({
+            ...fakeQueryAvailableTimesRepository,
+            professionalId: fakeId,
+        });
+        await expect(appointments).rejects.toThrow("Error");
     });
 });
