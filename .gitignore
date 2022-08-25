@@ -4,3 +4,4 @@ coverage
 globalConfig.json
 .env
 yarn.lock
+dist
