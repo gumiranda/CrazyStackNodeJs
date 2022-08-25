@@ -10,7 +10,7 @@
     "test:all": "jest --passWithNoTests --silent --noStackTrace --runInBand -c jest-all-config.js",
     "test": "jest --passWithNoTests --silent --noStackTrace --runInBand",
     "test:v": "jest --passWithNoTests --noStackTrace --runInBand",
-    "clean":"rimraf dist",
+    "clean": "rimraf dist",
     "build": "npm run clean && tsc",
     "start": "node -r dotenv/config dist",
     "generate": "yarn plop --plopfile ./generators/plopfile.js"
