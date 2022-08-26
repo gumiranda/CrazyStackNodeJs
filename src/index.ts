@@ -1,11 +1,13 @@
 import "./application/infra/config/module-alias";
-import { env, routes } from "@/application/infra";
+import { env, routes, MongoHelper } from "@/application/infra";
 import Fastify, { FastifyInstance } from "fastify";
+const { fastifyRequestContextPlugin } = require("@fastify/request-context");
 const fastify: FastifyInstance = Fastify({ logger: true });
 
 // Run the server!
 const start = async () => {
   try {
+    const client = await MongoHelper.connect(env.mongoUri);
     await fastify.register(require("@fastify/helmet"), {
       contentSecurityPolicy: false,
       global: true,
@@ -22,9 +24,15 @@ const start = async () => {
       message: "Estamos sobrecarregados!",
       retryAfter: 50,
     });
+    await fastify.register(fastifyRequestContextPlugin, {
+      hook: "onRequest",
+      defaultStoreValues: {
+        user: { insertedId: "system" },
+      },
+    });
     await fastify.register(require("@fastify/mongodb"), {
       forceClose: true,
-      url: env.mongoUri,
+      client,
     });
     for (const route of routes) {
       fastify.register(route);
