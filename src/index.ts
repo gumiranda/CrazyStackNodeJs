@@ -6,9 +6,23 @@ const fastify: FastifyInstance = Fastify({ logger: true });
 // Run the server!
 const start = async () => {
   try {
+    await fastify.register(require("@fastify/helmet"), {
+      contentSecurityPolicy: false,
+      global: true,
+    });
+    await fastify.register(import("@fastify/rate-limit"), {
+      max: 10,
+      timeWindow: "10 minutes",
+    });
+    await fastify.register(require("@fastify/under-pressure"), {
+      maxEventLoopDelay: 1000,
+      maxHeapUsedBytes: 100000000,
+      maxRssBytes: 100000000,
+      maxEventLoopUtilization: 0.98,
+      message: "Estamos sobrecarregados!",
+      retryAfter: 50,
+    });
     await fastify.register(require("@fastify/mongodb"), {
-      // force to close the mongodb connection when app stopped
-      // the default value is false
       forceClose: true,
       url: env.mongoUri,
     });
