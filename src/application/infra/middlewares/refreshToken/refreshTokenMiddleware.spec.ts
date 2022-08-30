@@ -1,7 +1,7 @@
 import { fakeUserEntity } from "@/slices/user/entities/UserEntity.spec";
 import MockDate from "mockdate";
 import { Middleware } from "@/application/infra/contracts";
-import { AuthMiddleware } from "./authMiddleware";
+import { RefreshTokenMiddleware } from "./refreshTokenMiddleware";
 import { forbidden, serverError, ok, unauthorized } from "@/application/helpers";
 import { AccessDeniedError } from "@/application/errors";
 jest.mock("jsonwebtoken", () => ({
@@ -13,7 +13,7 @@ jest.mock("jsonwebtoken", () => ({
   },
 }));
 export const mockFakeRequestHeader = (): any => ({
-  headers: { authorization: "Bearer any_token" },
+  headers: { refreshtoken: "any_token" },
 });
 
 describe("auth middleware", () => {
@@ -25,7 +25,7 @@ describe("auth middleware", () => {
     loadUser.mockResolvedValue(fakeUserEntity);
   });
   beforeEach(async () => {
-    testInstance = new AuthMiddleware(loadUser, ["client"]);
+    testInstance = new RefreshTokenMiddleware(loadUser, ["client"]);
   });
   afterAll(async () => {
     MockDate.reset();
