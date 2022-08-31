@@ -1,8 +1,8 @@
-import { MongoRepository } from "@/application/infra/database/mongodb";
+import { MongoRepository } from "@/application/infra";
 import { UserRepository } from "@/slices/user/repositories";
-import { loadUser, LoadUser } from "@/slices/user/useCases/loadUser";
+import { loadUser, LoadUser } from "@/slices/user/useCases";
+
 export const makeLoadUserFactory = (): LoadUser => {
-  const userMongoRepository = new MongoRepository("users");
-  const userRepository = new UserRepository(userMongoRepository);
-  return loadUser(userRepository);
+  const repository = new UserRepository(new MongoRepository("user"));
+  return loadUser(repository);
 };
