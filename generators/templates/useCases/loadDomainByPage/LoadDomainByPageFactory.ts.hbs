@@ -1,0 +1,8 @@
+import { MongoRepository } from "@/application/infra";
+import { {{pascalCase name}}Repository } from "@/slices/{{camelCase name}}/repositories";
+import { load{{pascalCase name}}ByPage, Load{{pascalCase name}}ByPage } from "@/slices/{{camelCase name}}/useCases";
+
+export const makeLoad{{pascalCase name}}ByPageFactory = (): Load{{pascalCase name}}ByPage => {
+  const repository = new {{pascalCase name}}Repository(new MongoRepository("{{camelCase name}}"));
+  return load{{pascalCase name}}ByPage(repository);
+};
