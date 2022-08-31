@@ -240,26 +240,26 @@ const useCasesFactoriesCreations = [
   {
     type: "add",
     path: "../src/slices/{{camelCase name}}/useCases/load{{pascalCase name}}ByPage/Load{{pascalCase name}}ByPageFactory.ts",
-    templateFile: "./templates/useCases/LoadDomainByPageFactory.ts.hbs",
+    templateFile: "./templates/useCases/loadDomainByPage/LoadDomainByPageFactory.ts.hbs",
   },
   {
     type: "add",
     path: "../src/slices/{{camelCase name}}/useCases/update{{pascalCase name}}/Update{{pascalCase name}}Factory.ts",
-    templateFile: "./templates/useCases/UpdateDomainFactory.ts.hbs",
+    templateFile: "./templates/useCases/updateDomain/UpdateDomainFactory.ts.hbs",
   },
   {
     type: "add",
     path: "../src/slices/{{camelCase name}}/useCases/add{{pascalCase name}}/Add{{pascalCase name}}Factory.ts",
-    templateFile: "./templates/useCases/AddDomainFactory.ts.hbs",
+    templateFile: "./templates/useCases/addDomain/AddDomainFactory.ts.hbs",
   },
   {
     type: "add",
     path: "../src/slices/{{camelCase name}}/useCases/delete{{pascalCase name}}/Delete{{pascalCase name}}Factory.ts",
-    templateFile: "./templates/useCases/DeleteDomainFactory.ts.hbs",
+    templateFile: "./templates/useCases/deleteDomain/DeleteDomainFactory.ts.hbs",
   },
   {
     type: "add",
     path: "../src/slices/{{camelCase name}}/useCases/load{{pascalCase name}}/Load{{pascalCase name}}Factory.ts",
-    templateFile: "./templates/useCases/LoadDomainFactory.ts.hbs",
+    templateFile: "./templates/useCases/loadDomain/LoadDomainFactory.ts.hbs",
   },
 ];
