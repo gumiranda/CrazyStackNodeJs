@@ -2,6 +2,6 @@
     "trailingComma": "es5",
     "semi":true,
     "singleQuote": false,
-    "printWidth": 90,
+    "printWidth": 91,
     "arrowParens": "always"
 }
