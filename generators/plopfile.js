@@ -62,11 +62,6 @@ const useCasesCreations = [
   },
   {
     type: "add",
-    path: "../src/slices/{{camelCase name}}/useCases/index.ts",
-    templateFile: "./templates/useCases/index.ts.hbs",
-  },
-  {
-    type: "add",
     path: "../src/slices/{{camelCase name}}/repositories/contracts/Add{{pascalCase name}}Repository.ts",
     templateFile: "./templates/repositories/contracts/addDomainRepository.ts.hbs",
   },
@@ -207,6 +202,11 @@ const repositoryCreations = [
   },
 ];
 const useCasesFactoriesCreations = [
+  {
+    type: "add",
+    path: "../src/slices/{{camelCase name}}/useCases/index.ts",
+    templateFile: "./templates/useCases/index.ts.hbs",
+  },
   {
     type: "modify",
     path: "../src/slices/{{camelCase name}}/useCases/load{{pascalCase name}}ByPage/index.ts",
