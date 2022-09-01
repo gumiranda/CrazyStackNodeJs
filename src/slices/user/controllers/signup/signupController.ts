@@ -12,7 +12,9 @@ import {
 import { Controller } from "@/application/infra/contracts";
 import { AddUser, LoadUser } from "@/slices/user/useCases";
 import { AddAccount } from "@/slices/account/useCases";
-import { EmailInUseError } from "@/application/errors";
+import { EmailInUseError, InvalidParamError } from "@/application/errors";
+import emailValidator from "deep-email-validator";
+import { env } from "@/application/infra";
 
 export class SignupController extends Controller {
   constructor(
@@ -30,6 +32,25 @@ export class SignupController extends Controller {
       return badRequest(errors);
     }
     const { email, password } = httpRequest?.body;
+    if (env.environment !== "test") {
+      const { validators = null } = (await emailValidator(email)) || {};
+      const {
+        regex = null,
+        typo = null,
+        disposable = null,
+        smtp = null,
+        mx = null,
+      } = validators || {};
+      if (
+        !regex?.valid ||
+        !typo?.valid ||
+        !disposable?.valid ||
+        (!smtp?.valid && smtp?.reason !== "Timeout") ||
+        !mx?.valid
+      ) {
+        return badRequest([new InvalidParamError("email")]);
+      }
+    }
     const userExists = await this.loadUser({
       fields: { email },
       options: { projection: { password: 0 } },
