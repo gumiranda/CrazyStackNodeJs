@@ -18,15 +18,7 @@
         "@typescript-eslint","prettier"
     ],
     "rules": {
-      "indent": [
-        "error",
-        2
-      ],
       "prettier/prettier":"error",
-        "linebreak-style": [
-            "error",
-            "space"
-        ],
         "quotes": [
             "error",
             "double"

@@ -19,20 +19,26 @@ export class ServerError extends Error {
   }
 }
 export class MissingParamError extends Error {
+  mensagem: string;
   constructor(paramName: string) {
     super(`Missing param: ${paramName}`);
+    this.mensagem = `Missing param: ${paramName}`;
     this.name = "MissingParamError";
   }
 }
 export class InvalidParamError extends Error {
+  mensagem: string;
   constructor(paramName: string) {
     super(`Invalid param: ${paramName}`);
+    this.mensagem = `Invalid param: ${paramName}`;
     this.name = "InvalidParamError";
   }
 }
 export class EmailInUseError extends Error {
+  mensagem: string;
   constructor() {
-    super(`The received email is already in use`);
+    super("The received email is already in use");
+    this.mensagem = "The received email is already in use";
     this.name = "EmailInUseError";
   }
 }
