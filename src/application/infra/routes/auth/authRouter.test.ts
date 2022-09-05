@@ -23,8 +23,8 @@ describe("Route api/auth", () => {
     await fastify.listen({ port: 3000, host: "0.0.0.0" });
   });
   afterAll(async () => {
-    await MongoHelper.disconnect();
     await fastify.close();
+    await MongoHelper.disconnect();
     fastify = null;
   });
   beforeEach(async () => {
