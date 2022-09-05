@@ -48,3 +48,44 @@ export const signupPostSchema = {
     response: signupResponse,
   },
 };
+const bodyLoginJsonSchema = {
+  type: "object",
+  required: ["email", "password", "passwordConfirmation"],
+  properties: {
+    email: { type: "string" },
+    password: { type: "string" },
+    passwordConfirmation: { type: "string" },
+  },
+};
+const loginResponse = {
+  200: {
+    type: "object",
+    properties: {
+      refreshToken: { type: "string" },
+      accessToken: { type: "string" },
+      user: {
+        type: "object",
+        properties: {
+          _id: { type: "string" },
+          email: { type: "string" },
+          name: { type: "string" },
+          role: { type: "string" },
+          active: { type: "boolean" },
+          coord: {
+            type: "object",
+            properties: {
+              type: { type: "string", enum: ["Point"] },
+              coordinates: { type: "array", items: { type: "number" } },
+            },
+          },
+        },
+      },
+    },
+  },
+};
+export const loginPostSchema = {
+  schema: {
+    body: bodyLoginJsonSchema,
+    response: loginResponse,
+  },
+};
