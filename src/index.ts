@@ -12,7 +12,7 @@ export const makeFastifyInstance = async (externalMongoClient = null) => {
       global: true,
     });
     await fastify.register(import("@fastify/rate-limit"), {
-      max: 10,
+      max: 100,
       timeWindow: "10 minutes",
     });
     if (env.environment === "production") {
