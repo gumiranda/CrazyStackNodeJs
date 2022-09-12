@@ -1,0 +1,18 @@
+import { makeLogController } from "@/application/decorators/logControllerFactory";
+import { makeValidationComposite } from "@/application/factories";
+import { Controller } from "@/application/infra/contracts";
+import { makeUpdate{{pascalCase name}}Factory } from "@/slices/{{camelCase name}}/useCases";
+import { Update{{pascalCase name}}Controller } from "@/slices/{{camelCase name}}/controllers";
+
+export const makeUpdate{{pascalCase name}}Controller = (): Controller => {
+  const requiredFieldsQuery = ["_id"];
+  const requiredFieldsBody: any = [];
+  return makeLogController(
+    "update{{pascalCase name}}",
+    new Update{{pascalCase name}}Controller(
+      makeValidationComposite(requiredFieldsQuery),
+      makeValidationComposite(requiredFieldsBody),
+      makeUpdate{{pascalCase name}}Factory()
+    )
+  );
+};

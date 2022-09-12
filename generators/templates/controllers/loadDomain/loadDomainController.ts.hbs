@@ -1,0 +1,30 @@
+/* eslint-disable no-unsafe-optional-chaining */
+import {
+  HttpRequest,
+  HttpResponse,
+  Validation,
+  badRequest,
+  ok,
+} from "@/application/helpers";
+import { Controller } from "@/application/infra/contracts";
+import { Load{{pascalCase name}} } from "@/slices/{{camelCase name}}/useCases";
+
+export class Load{{pascalCase name}}Controller extends Controller {
+  constructor(
+    private readonly validation: Validation,
+    private readonly load{{pascalCase name}}: Load{{pascalCase name}}
+  ) {
+    super();
+  }
+  async execute(httpRequest: HttpRequest<any>): Promise<HttpResponse<any>> {
+    const errors = this.validation.validate(httpRequest?.query);
+    if (errors?.length > 0) {
+      return badRequest(errors);
+    }
+    const {{camelCase name}}Loaded = await this.load{{pascalCase name}}({
+      fields: httpRequest?.query,
+      options: {},
+    });
+    return ok({{camelCase name}}Loaded);
+  }
+}

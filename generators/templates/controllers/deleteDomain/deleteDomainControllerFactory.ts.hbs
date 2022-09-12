@@ -1,0 +1,16 @@
+import { makeLogController } from "@/application/decorators/logControllerFactory";
+import { makeValidationComposite } from "@/application/factories";
+import { Controller } from "@/application/infra/contracts";
+import { makeDelete{{pascalCase name}}Factory } from "@/slices/{{camelCase name}}/useCases";
+import { Delete{{pascalCase name}}Controller } from "@/slices/{{camelCase name}}/controllers";
+
+export const makeDelete{{pascalCase name}}Controller = (): Controller => {
+  const requiredFields = ["_id"];
+  return makeLogController(
+    "delete{{pascalCase name}}",
+    new Delete{{pascalCase name}}Controller(
+      makeValidationComposite(requiredFields),
+      makeDelete{{pascalCase name}}Factory()
+    )
+  );
+};

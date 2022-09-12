@@ -1,0 +1,16 @@
+import { makeLogController } from "@/application/decorators/logControllerFactory";
+import { makeValidationComposite } from "@/application/factories";
+import { Controller } from "@/application/infra/contracts";
+import { makeLoad{{pascalCase name}}ByPageFactory } from "@/slices/{{camelCase name}}/useCases";
+import { Load{{pascalCase name}}ByPageController } from "@/slices/{{camelCase name}}/controllers";
+
+export const makeLoad{{pascalCase name}}ByPageController = (): Controller => {
+  const requiredFields = ["page"];
+  return makeLogController(
+    "load{{pascalCase name}}ByPage",
+    new Load{{pascalCase name}}ByPageController(
+      makeValidationComposite(requiredFields),
+      makeLoad{{pascalCase name}}ByPageFactory()
+    )
+  );
+};

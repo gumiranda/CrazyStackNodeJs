@@ -1,0 +1,16 @@
+import { makeLogController } from "@/application/decorators/logControllerFactory";
+import { makeValidationComposite } from "@/application/factories";
+import { Controller } from "@/application/infra/contracts";
+import { makeAdd{{pascalCase name}}Factory } from "@/slices/{{camelCase name}}/useCases";
+import { Add{{pascalCase name}}Controller } from "@/slices/{{camelCase name}}/controllers";
+
+export const makeAdd{{pascalCase name}}Controller = (): Controller => {
+  const requiredFields = ["name"];
+  return makeLogController(
+    "add{{pascalCase name}}",
+    new Add{{pascalCase name}}Controller(
+      makeValidationComposite(requiredFields),
+      makeAdd{{pascalCase name}}Factory()
+    )
+  );
+};

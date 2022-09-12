@@ -1,0 +1,67 @@
+import MockDate from "mockdate";
+import { badRequest, ok, Validation } from "@/application/helpers";
+import { MockProxy, mock } from "jest-mock-extended";
+import { Load{{pascalCase name}}Controller } from "./load{{pascalCase name}}Controller";
+import { fake{{pascalCase name}}Entity } from "@/slices/{{camelCase name}}/entities/{{pascalCase name}}Entity.spec";
+import { Controller } from "@/application/infra/contracts";
+import { MissingParamError } from "@/application/errors";
+import { fakeUserEntity } from "@/slices/user/entities/UserEntity.spec";
+
+describe("Load{{pascalCase name}}Controller", () => {
+  let testInstance: Load{{pascalCase name}}Controller;
+  let load{{pascalCase name}}: jest.Mock;
+  let validation: MockProxy<Validation>;
+  let fakeQuery: any;
+  beforeAll(async () => {
+    MockDate.set(new Date());
+    load{{pascalCase name}} = jest.fn();
+    load{{pascalCase name}}.mockResolvedValue({
+      ...fake{{pascalCase name}}Entity,
+      createdById: fakeUserEntity?._id,
+    });
+    validation = mock();
+    validation.validate.mockResolvedValue([] as never);
+  });
+  afterAll(() => {
+    MockDate.reset();
+  });
+  beforeEach(() => {
+    fakeQuery = { _id: fake{{pascalCase name}}Entity._id };
+    testInstance = new Load{{pascalCase name}}Controller(validation, load{{pascalCase name}});
+  });
+  it("should extends class Controller", async () => {
+    expect(testInstance).toBeInstanceOf(Controller);
+  });
+  test("should call validation with correct params", async () => {
+    await testInstance.execute({ query: fakeQuery });
+    expect(validation.validate).toHaveBeenCalledWith(fakeQuery);
+    expect(validation.validate).toHaveBeenCalledTimes(1);
+  });
+  test("should call load{{pascalCase name}} with correct params", async () => {
+    const result = await testInstance.execute({
+      query: fakeQuery,
+      userId: fakeUserEntity?._id,
+    });
+    expect(result).toEqual(
+      ok({
+        ...fake{{pascalCase name}}Entity,
+        createdById: fakeUserEntity?._id,
+      })
+    );
+    expect(load{{pascalCase name}}).toHaveBeenCalledWith({ fields: fakeQuery, options: {} });
+    expect(load{{pascalCase name}}).toHaveBeenCalledTimes(1);
+  });
+  test("should throws if load{{pascalCase name}} throw", async () => {
+    load{{pascalCase name}}.mockRejectedValueOnce(new Error("error"));
+    const result = testInstance.execute({
+      query: fakeQuery,
+      userId: fakeUserEntity?._id,
+    });
+    await expect(result).rejects.toThrow(new Error("error"));
+  });
+  test("should return bad request if i dont pass any required field", async () => {
+    validation.validate.mockReturnValueOnce([new MissingParamError("_id")]);
+    const httpResponse = await testInstance.execute({ query: fakeQuery });
+    expect(httpResponse).toEqual(badRequest([new MissingParamError("_id")]));
+  });
+});
