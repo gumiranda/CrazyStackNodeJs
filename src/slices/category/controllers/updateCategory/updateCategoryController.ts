@@ -28,8 +28,11 @@ export class UpdateCategoryController extends Controller {
     }
     const categoryUpdated = await this.updateCategory(
       {
-        ...httpRequest?.query,
-        createdById: httpRequest?.userId,
+        fields: {
+          ...httpRequest?.query,
+          createdById: httpRequest?.userId,
+        },
+        options: {},
       },
       httpRequest?.body
     );
