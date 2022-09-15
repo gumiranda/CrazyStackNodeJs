@@ -28,11 +28,7 @@ describe("UpdateOrderController", () => {
     MockDate.reset();
   });
   beforeEach(() => {
-    testInstance = new UpdateOrderController(
-      validationQuery,
-      validationBody,
-      updateOrder
-    );
+    testInstance = new UpdateOrderController(validationQuery, validationBody, updateOrder);
   });
   it("should extends class Controller", async () => {
     expect(testInstance).toBeInstanceOf(Controller);
@@ -61,8 +57,11 @@ describe("UpdateOrderController", () => {
     );
     expect(updateOrder).toHaveBeenCalledWith(
       {
-        ...fakeOrderEntity,
-        createdById: fakeUserEntity?._id,
+        fields: {
+          ...fakeOrderEntity,
+          createdById: fakeUserEntity?._id,
+        },
+        options: {},
       },
       fakeOrderEntity
     );
