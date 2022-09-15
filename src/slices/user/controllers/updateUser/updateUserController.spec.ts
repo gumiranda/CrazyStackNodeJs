@@ -66,6 +66,56 @@ describe("UpdateUserController", () => {
     );
     expect(updateUser).toHaveBeenCalledTimes(1);
   });
+  test("should call updateUser twice if the first returns null with correct params", async () => {
+    updateUser.mockResolvedValueOnce(null);
+    const result = await testInstance.execute({
+      body: fakeUserEntity,
+      query: fakeUserEntity,
+      userId: fakeUserEntity?._id,
+    });
+    expect(result).toEqual(
+      ok({
+        ...fakeUserEntity,
+        createdById: fakeUserEntity?._id,
+      })
+    );
+    expect(updateUser).toHaveBeenCalledWith(
+      {
+        fields: {
+          ...fakeUserEntity,
+          createdById: fakeUserEntity?._id,
+        },
+        options: {},
+      },
+      fakeUserEntity
+    );
+    expect(updateUser).toHaveBeenCalledTimes(2);
+  });
+  test("should test admin role", async () => {
+    const result = await testInstance.execute({
+      body: fakeUserEntity,
+      query: fakeUserEntity,
+      userId: fakeUserEntity?._id,
+      userLogged: { ...fakeUserEntity, role: "admin" },
+    });
+    expect(result).toEqual(
+      ok({
+        ...fakeUserEntity,
+        createdById: fakeUserEntity?._id,
+      })
+    );
+    expect(updateUser).toHaveBeenCalledWith(
+      {
+        fields: {
+          ...fakeUserEntity,
+          createdById: fakeUserEntity?._id,
+        },
+        options: {},
+      },
+      fakeUserEntity
+    );
+    expect(updateUser).toHaveBeenCalledTimes(1);
+  });
   test("should throws if updateUser throw", async () => {
     updateUser.mockRejectedValueOnce(new Error("error"));
     const result = testInstance.execute({
