@@ -1,11 +1,11 @@
 import { MongoRepository } from "@/application/infra";
 import { RatingResultRepository } from "@/slices/ratingResult/repositories";
 import {
-  loadRatingResultByPage,
-  LoadRatingResultByPage,
+  loadAverageRatingResult,
+  LoadAverageRatingResult,
 } from "@/slices/ratingResult/useCases";
 
-export const makeLoadRatingResultByPageFactory = (): LoadRatingResultByPage => {
+export const makeLoadAverageRatingResultFactory = (): LoadAverageRatingResult => {
   const repository = new RatingResultRepository(new MongoRepository("ratingResult"));
-  return loadRatingResultByPage(repository);
+  return loadAverageRatingResult(repository);
 };
