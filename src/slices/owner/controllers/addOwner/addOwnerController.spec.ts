@@ -10,6 +10,7 @@ import { fakeUserEntity } from "@/slices/user/entities/UserEntity.spec";
 describe("AddOwnerController", () => {
   let testInstance: AddOwnerController;
   let addOwner: jest.Mock;
+  let loadOwner: jest.Mock;
   let validation: MockProxy<Validation>;
   beforeAll(async () => {
     MockDate.set(new Date());
@@ -18,6 +19,8 @@ describe("AddOwnerController", () => {
       ...fakeOwnerEntity,
       createdById: fakeUserEntity?._id,
     });
+    loadOwner = jest.fn();
+    loadOwner.mockResolvedValue(null);
     validation = mock();
     validation.validate.mockResolvedValue([] as never);
   });
@@ -25,7 +28,7 @@ describe("AddOwnerController", () => {
     MockDate.reset();
   });
   beforeEach(() => {
-    testInstance = new AddOwnerController(validation, addOwner);
+    testInstance = new AddOwnerController(validation, addOwner, loadOwner);
   });
   it("should extends class Controller", async () => {
     expect(testInstance).toBeInstanceOf(Controller);
@@ -54,6 +57,41 @@ describe("AddOwnerController", () => {
   });
   test("should throws if addOwner throw", async () => {
     addOwner.mockRejectedValueOnce(new Error("error"));
+    const result = testInstance.execute({
+      body: fakeOwnerEntity,
+      userId: fakeUserEntity?._id,
+    });
+    await expect(result).rejects.toThrow(new Error("error"));
+  });
+  test("should call loadOwner with correct params", async () => {
+    const result = await testInstance.execute({
+      body: fakeOwnerEntity,
+      userId: fakeUserEntity?._id,
+    });
+    expect(result).toEqual(
+      ok({
+        ...fakeOwnerEntity,
+        createdById: fakeUserEntity?._id,
+      })
+    );
+    expect(loadOwner).toHaveBeenCalledWith({
+      fields: { createdById: fakeUserEntity?._id },
+      options: {},
+    });
+    expect(loadOwner).toHaveBeenCalledTimes(1);
+  });
+  test("should return bad request if owner exists", async () => {
+    loadOwner.mockResolvedValueOnce(fakeOwnerEntity);
+    const result = await testInstance.execute({
+      body: fakeOwnerEntity,
+      userId: fakeUserEntity?._id,
+    });
+    expect(result).toEqual(
+      badRequest([{ field: "createdById", message: "Owner already exists" }])
+    );
+  });
+  test("should throws if loadOwner throw", async () => {
+    loadOwner.mockRejectedValueOnce(new Error("error"));
     const result = testInstance.execute({
       body: fakeOwnerEntity,
       userId: fakeUserEntity?._id,

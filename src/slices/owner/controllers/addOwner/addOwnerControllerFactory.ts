@@ -1,7 +1,7 @@
 import { makeLogController } from "@/application/decorators/logControllerFactory";
 import { makeValidationComposite } from "@/application/factories";
 import { Controller } from "@/application/infra/contracts";
-import { makeAddOwnerFactory } from "@/slices/owner/useCases";
+import { makeAddOwnerFactory, makeLoadOwnerFactory } from "@/slices/owner/useCases";
 import { AddOwnerController } from "@/slices/owner/controllers";
 
 export const makeAddOwnerController = (): Controller => {
@@ -10,7 +10,8 @@ export const makeAddOwnerController = (): Controller => {
     "addOwner",
     new AddOwnerController(
       makeValidationComposite(requiredFields),
-      makeAddOwnerFactory()
+      makeAddOwnerFactory(),
+      makeLoadOwnerFactory()
     )
   );
 };
