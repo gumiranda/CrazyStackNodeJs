@@ -25,6 +25,9 @@ export const updateOwner: UpdateOwnerSignature =
           "hourEnd3",
           "hourLunchStart3",
           "hourLunchEnd3",
+          "days1",
+          "days2",
+          "days3",
         ],
         bodyObject: data,
       })
