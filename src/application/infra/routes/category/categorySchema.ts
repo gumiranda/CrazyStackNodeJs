@@ -73,3 +73,72 @@ export const deleteCategorySchema = {
     },
   },
 };
+const queryStringJsonUpdateCategorySchema = {
+  type: "object",
+  properties: {
+    _id: { type: "string", maxLength: 24, minLength: 24 },
+  },
+  required: ["_id"],
+};
+const updateCategoryResponse = {
+  type: "object",
+  properties: {
+    _id: { type: "string", maxLength: 24, minLength: 24 },
+    name: { type: "string" },
+    createdById: { type: "string" },
+  },
+};
+const updateCategoryBody = {
+  type: "object",
+  properties: {
+    name: { type: "string" },
+  },
+};
+export const updateCategorySchema = {
+  schema: {
+    headers: headersJsonSchema,
+    querystring: queryStringJsonUpdateCategorySchema,
+    body: updateCategoryBody,
+    response: {
+      200: updateCategoryResponse,
+    },
+  },
+};
+const queryStringJsonLoadCategoryByPageSchema = {
+  type: "object",
+  properties: {
+    page: { type: "integer", minimum: 1 },
+    sortBy: { type: "string" },
+    typeSort: { type: "string" },
+  },
+  required: ["page"],
+};
+const loadCategoryByPageResponse = {
+  type: "object",
+  properties: {
+    categorys: {
+      type: "array",
+      maxItems: 10,
+      items: {
+        type: "object",
+        properties: {
+          _id: { type: "string", maxLength: 24, minLength: 24 },
+          name: { type: "string" },
+          active: { type: "boolean" },
+          createdById: { type: "string" },
+          createdAt: { type: "string" },
+        },
+      },
+    },
+    total: { type: "integer" },
+  },
+};
+export const loadCategoryByPageGetSchema = {
+  schema: {
+    headers: headersJsonSchema,
+    querystring: queryStringJsonLoadCategoryByPageSchema,
+    response: {
+      200: loadCategoryByPageResponse,
+    },
+  },
+};
