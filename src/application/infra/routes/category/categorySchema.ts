@@ -56,3 +56,20 @@ export const loadCategoryGetSchema = {
     },
   },
 };
+const deleteCategoryResponse = { type: "boolean" };
+const queryStringJsonDeleteCategorySchema = {
+  type: "object",
+  properties: {
+    _id: { type: "string", maxLength: 24, minLength: 24 },
+  },
+  required: ["_id"],
+};
+export const deleteCategorySchema = {
+  schema: {
+    headers: headersJsonSchema,
+    querystring: queryStringJsonDeleteCategorySchema,
+    response: {
+      200: deleteCategoryResponse,
+    },
+  },
+};

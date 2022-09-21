@@ -83,7 +83,6 @@ describe("Route api/category", () => {
       expect(response.statusCode).toBe(400);
     });
   });
-
   describe("GET /api/category/load", () => {
     test("Should return 400 for bad requests", async () => {
       const { token } = await makeAccessToken("admin", "password");
@@ -102,9 +101,9 @@ describe("Route api/category", () => {
         url: `/api/category/load?_id=${insertedId.toString()}`,
         headers: { authorization: `Bearer ${token}` },
       });
-      const responseBodyAdd = JSON.parse(response.body);
+      const responseBody = JSON.parse(response.body);
       expect(response.statusCode).toBe(200);
-      expect(responseBodyAdd._id).toEqual(insertedId.toString());
+      expect(responseBody._id).toEqual(insertedId.toString());
     });
     test("Should return 401 for unauthorized access token", async () => {
       const response = await fastify.inject({
@@ -118,6 +117,48 @@ describe("Route api/category", () => {
       const response = await fastify.inject({
         method: "GET",
         url: "/api/category/load",
+      });
+      expect(response.statusCode).toBe(400);
+    });
+  });
+
+  describe("DELETE /api/category/delete", () => {
+    test("Should return 400 for bad requests", async () => {
+      const { token } = await makeAccessToken("admin", "password");
+      const response = await fastify.inject({
+        method: "DELETE",
+        url: "/api/category/delete",
+        headers: { authorization: `Bearer ${token}` },
+      });
+      expect(response.statusCode).toBe(400);
+    });
+    test("Should return 200 on delete", async () => {
+      const { token, _id } = await makeAccessToken("admin", "password");
+      const { insertedId } = await categoryCollection.insertOne({
+        ...categoryBody,
+        createdById: _id,
+      });
+      const response = await fastify.inject({
+        method: "DELETE",
+        url: `/api/category/delete?_id=${insertedId.toString()}`,
+        headers: { authorization: `Bearer ${token}` },
+      });
+      const responseBody = JSON.parse(response.body);
+      expect(response.statusCode).toBe(200);
+      expect(responseBody).toEqual(true);
+    });
+    test("Should return 401 for unauthorized access token", async () => {
+      const response = await fastify.inject({
+        method: "DELETE",
+        url: `/api/category/delete?_id=${new ObjectId().toString()}`,
+        headers: { authorization: "Bearer invalid_token" },
+      });
+      expect(response.statusCode).toBe(401);
+    });
+    test("Should return 400 if i dont pass any token", async () => {
+      const response = await fastify.inject({
+        method: "DELETE",
+        url: "/api/category/delete",
       });
       expect(response.statusCode).toBe(400);
     });
