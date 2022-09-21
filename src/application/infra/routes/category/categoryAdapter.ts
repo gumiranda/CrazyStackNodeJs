@@ -1,4 +1,8 @@
 import { adaptRoute } from "@/application/adapters";
-import { makeAddCategoryController } from "@/slices/category/controllers";
+import {
+  makeAddCategoryController,
+  makeLoadCategoryController,
+} from "@/slices/category/controllers";
 
 export const addCategoryAdapter = () => adaptRoute(makeAddCategoryController());
+export const loadCategoryAdapter = () => adaptRoute(makeLoadCategoryController());

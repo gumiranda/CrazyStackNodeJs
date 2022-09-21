@@ -15,7 +15,7 @@ const headersJsonSchema = {
 const addCategoryResponse = {
   type: "object",
   properties: {
-    _id: { type: "string" },
+    _id: { type: "string", maxLength: 24, minLength: 24 },
     name: { type: "string" },
     active: { type: "boolean" },
     createdById: { type: "string" },
@@ -27,5 +27,32 @@ export const addCategoryPostSchema = {
     body: bodyAddCategoryJsonSchema,
     response: { 200: addCategoryResponse },
     headers: headersJsonSchema,
+  },
+};
+
+const queryStringJsonLoadCategorySchema = {
+  type: "object",
+  properties: {
+    _id: { type: "string", maxLength: 24, minLength: 24 },
+  },
+  required: ["_id"],
+};
+const loadCategoryResponse = {
+  type: "object",
+  properties: {
+    _id: { type: "string", maxLength: 24, minLength: 24 },
+    name: { type: "string" },
+    active: { type: "boolean" },
+    createdById: { type: "string" },
+    createdAt: { type: "string" },
+  },
+};
+export const loadCategoryGetSchema = {
+  schema: {
+    headers: headersJsonSchema,
+    querystring: queryStringJsonLoadCategorySchema,
+    response: {
+      200: loadCategoryResponse,
+    },
   },
 };
