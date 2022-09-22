@@ -28,6 +28,7 @@ export const updateOwner: UpdateOwnerSignature =
           "days1",
           "days2",
           "days3",
+          "name",
         ],
         bodyObject: data,
       })
