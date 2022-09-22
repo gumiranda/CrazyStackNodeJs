@@ -13,6 +13,7 @@ const ownerBody = {
   password: "111123",
   passwordConfirmation: "111123",
   coord: { type: "Point", coordinates: [-18.9512678, -41.1838365] },
+  active: true,
 };
 const userBody = {
   email: "any_email2@mail.com",
@@ -22,6 +23,7 @@ const userBody = {
   passwordConfirmation: "111123",
   serviceIds: ["61dd880e81d2b01178d5962d"],
   coord: { type: "Point", coordinates: [-22.9512678, -43.1838365] },
+  active: true,
 };
 const makeAccessToken = async (role: string, password: string): Promise<any> => {
   const result = await userCollection.insertOne({ ...ownerBody, password, role });
@@ -42,6 +44,7 @@ describe("Route api/user", () => {
   });
   beforeEach(async () => {
     userCollection = await MongoHelper.getCollection("user");
+    await userCollection.createIndex({ coord: "2dsphere" });
     await userCollection.deleteMany({});
   });
   describe("POST /api/user/add", () => {
@@ -124,7 +127,6 @@ describe("Route api/user", () => {
       expect(response.statusCode).toBe(400);
     });
   });
-
   describe("GET /api/user/loadByPage", () => {
     test("Should return 400 for bad requests", async () => {
       const { token } = await makeAccessToken("owner", "password");
@@ -244,6 +246,46 @@ describe("Route api/user", () => {
       const response = await fastify.inject({
         method: "PATCH",
         url: "/api/user/update",
+      });
+      expect(response.statusCode).toBe(400);
+    });
+  });
+
+  describe("GET /api/user/loadByGeoNear", () => {
+    test("Should return 400 for bad requests", async () => {
+      const { token } = await makeAccessToken("owner", "password");
+      const response = await fastify.inject({
+        method: "GET",
+        url: "/api/user/loadByGeoNear",
+        headers: { authorization: `Bearer ${token}` },
+      });
+      expect(response.statusCode).toBe(400);
+    });
+    test("Should return 200 on loadByGeoNear", async () => {
+      await userCollection.insertOne(userBody);
+      const { token } = await makeAccessToken("owner", "password");
+      const response = await fastify.inject({
+        method: "GET",
+        url: `/api/user/loadByGeoNear?page=${1}`,
+        headers: { authorization: `Bearer ${token}` },
+      });
+      const responseBody = JSON.parse(response.body);
+      expect(response.statusCode).toBe(200);
+      expect(responseBody.users).toBeTruthy();
+      expect(responseBody.total).toBeTruthy();
+    });
+    test("Should return 401 for unauthorized access token", async () => {
+      const response = await fastify.inject({
+        method: "GET",
+        url: `/api/user/loadByGeoNear?page=${1}`,
+        headers: { authorization: "Bearer invalid_token" },
+      });
+      expect(response.statusCode).toBe(401);
+    });
+    test("Should return 400 if i dont pass any token", async () => {
+      const response = await fastify.inject({
+        method: "GET",
+        url: "/api/user/loadByGeoNear",
       });
       expect(response.statusCode).toBe(400);
     });

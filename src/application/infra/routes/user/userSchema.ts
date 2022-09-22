@@ -167,3 +167,48 @@ export const loadUserByPageGetSchema = {
     },
   },
 };
+const loadUserGeoNearResponse = {
+  type: "object",
+  properties: {
+    users: {
+      type: "array",
+      maxItems: 10,
+      items: {
+        type: "object",
+        properties: {
+          _id: { type: "string", maxLength: 24, minLength: 24 },
+          name: { type: "string" },
+          distance: { type: "number" },
+          role: {
+            type: "string",
+            enum: ["professional", "owner", "client", "guest"],
+          },
+          serviceIds: {
+            type: "array",
+            items: { type: "string", maxLength: 24, minLength: 24 },
+          },
+          createdAt: { type: "string" },
+        },
+      },
+    },
+    total: { type: "integer" },
+  },
+};
+const queryStringJsonLoadUserGeoNearSchema = {
+  type: "object",
+  properties: {
+    page: { type: "integer", minimum: 1 },
+    sortBy: { type: "string" },
+    typeSort: { type: "string" },
+  },
+  required: ["page"],
+};
+export const loadUserByGeoNearSchema = {
+  schema: {
+    headers: headersJsonSchema,
+    querystring: queryStringJsonLoadUserGeoNearSchema,
+    response: {
+      200: loadUserGeoNearResponse,
+    },
+  },
+};
