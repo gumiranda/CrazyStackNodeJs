@@ -1,3 +1,4 @@
+/* eslint-disable quotes */
 module.exports = function (plop) {
   plop.setGenerator("entities", {
     description: "Create a new entity",
@@ -10,6 +11,11 @@ module.exports = function (plop) {
       { type: "input", name: "name", message: "What is the name of the useCase?" },
     ],
     actions: [...useCasesCreations],
+  });
+  plop.setGenerator("routes", {
+    description: "Create a new route",
+    prompts: [{ type: "input", name: "name", message: "What is the name of the route?" }],
+    actions: [...routesCreations],
   });
   plop.setGenerator("repositories", {
     description: "Create a new repository",
@@ -392,5 +398,44 @@ const controllersCreations = [
     type: "add",
     path: "../src/slices/{{camelCase name}}/controllers/update{{pascalCase name}}/index.ts",
     templateFile: "./templates/controllers/updateDomain/index.ts.hbs",
+  },
+];
+const routesCreations = [
+  {
+    type: "add",
+    path: "../src/application/infra/routes/{{camelCase name}}/{{camelCase name}}Adapter.ts",
+    templateFile: "templates/routes/domain/domainAdapter.ts.hbs",
+  },
+  {
+    type: "add",
+    path: "../src/application/infra/routes/{{camelCase name}}/{{camelCase name}}Schema.ts",
+    templateFile: "templates/routes/domain/domainSchema.ts.hbs",
+  },
+  {
+    type: "add",
+    path: "../src/application/infra/routes/{{camelCase name}}/index.ts",
+    templateFile: "templates/routes/domain/index.ts.hbs",
+  },
+  {
+    type: "add",
+    path: "../src/application/infra/routes/{{camelCase name}}/{{camelCase name}}Router.ts",
+    templateFile: "templates/routes/domain/domainRouter.ts.hbs",
+  },
+  {
+    type: "add",
+    path: "../src/application/infra/routes/{{camelCase name}}/{{camelCase name}}Router.test.ts",
+    templateFile: "templates/routes/domain/domainRouter.test.ts.hbs",
+  },
+  {
+    type: "modify",
+    path: "../src/application/infra/routes/index.ts",
+    pattern: /(\/\/ IMPORT MODULE FILES)/g,
+    template: '$1\nimport { {{camelCase name}} } from "./{{camelCase name}}";',
+  },
+  {
+    type: "modify",
+    path: "../src/application/infra/routes/index.ts",
+    pattern: /(\/\/ ADD FUNCTION IMPORTS)/g,
+    template: "$1\n{{camelCase name}},",
   },
 ];

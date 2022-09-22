@@ -1,0 +1,29 @@
+import { authLogged } from "@/application/infra/middlewares";
+import {
+  add{{pascalCase name}}Adapter,
+  load{{pascalCase name}}Adapter,
+  delete{{pascalCase name}}Adapter,
+  update{{pascalCase name}}Adapter,
+  load{{pascalCase name}}ByPageAdapter,
+} from "./{{camelCase name}}Adapter";
+import {
+  add{{pascalCase name}}PostSchema,
+  load{{pascalCase name}}GetSchema,
+  delete{{pascalCase name}}Schema,
+  update{{pascalCase name}}Schema,
+  load{{pascalCase name}}ByPageGetSchema,
+} from "./{{camelCase name}}Schema";
+
+async function {{camelCase name}}(fastify: any, options: any) {
+  fastify.addHook("preHandler", authLogged());
+  fastify.post("/{{camelCase name}}/add", add{{pascalCase name}}PostSchema, add{{pascalCase name}}Adapter());
+  fastify.get("/{{camelCase name}}/load", load{{pascalCase name}}GetSchema, load{{pascalCase name}}Adapter());
+  fastify.get(
+    "/{{camelCase name}}/loadByPage",
+    load{{pascalCase name}}ByPageGetSchema,
+    load{{pascalCase name}}ByPageAdapter()
+  );
+  fastify.delete("/{{camelCase name}}/delete", delete{{pascalCase name}}Schema, delete{{pascalCase name}}Adapter());
+  fastify.patch("/{{camelCase name}}/update", update{{pascalCase name}}Schema, update{{pascalCase name}}Adapter());
+}
+export { {{camelCase name}} };
