@@ -16,14 +16,14 @@ export const makeFastifyInstance = async (externalMongoClient = null) => {
       timeWindow: "10 minutes",
     });
     if (env.environment === "production") {
-      await fastify.register(require("@fastify/under-pressure"), {
-        maxEventLoopDelay: 1000,
-        maxHeapUsedBytes: 100000000,
-        maxRssBytes: 100000000,
-        maxEventLoopUtilization: 0.98,
-        message: "Estamos sobrecarregados!",
-        retryAfter: 50,
-      });
+      // await fastify.register(require("@fastify/under-pressure"), {
+      //   maxEventLoopDelay: 1000,
+      //   maxHeapUsedBytes: 100000000,
+      //   maxRssBytes: 100000000,
+      //   maxEventLoopUtilization: 0.98,
+      //   message: "Estamos sobrecarregados!",
+      //   retryAfter: 50,
+      // });
     }
     await fastify.register(fastifyRequestContextPlugin, {
       hook: "onRequest",
