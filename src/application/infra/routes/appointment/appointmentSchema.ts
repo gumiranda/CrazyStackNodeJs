@@ -131,6 +131,7 @@ const queryStringJsonloadAvailableTimesSchema = {
 };
 const loadAvailableTimesResponse = {
   type: "object",
+  nullable: true,
   properties: {
     timeAvailableProfessional: { type: "array" },
     timeAvailable: { type: "array" },

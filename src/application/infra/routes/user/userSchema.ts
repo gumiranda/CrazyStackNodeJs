@@ -59,6 +59,8 @@ const loadUserResponse = {
     _id: { type: "string", maxLength: 24, minLength: 24 },
     name: { type: "string" },
     serviceIds: { type: "array", items: { type: "string", maxLength: 24, minLength: 24 } },
+    ownerId: { type: "string", maxLength: 24, minLength: 24 },
+    myOwnerId: { type: "string", maxLength: 24, minLength: 24 },
     active: { type: "boolean" },
     createdById: { type: "string" },
     createdAt: { type: "string" },
