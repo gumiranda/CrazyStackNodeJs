@@ -5,6 +5,7 @@ import {
   deleteRatingResultAdapter,
   updateRatingResultAdapter,
   loadRatingResultByPageAdapter,
+  loadAverageRatingResultAdapter,
 } from "./ratingResultAdapter";
 import {
   addRatingResultPostSchema,
@@ -23,7 +24,20 @@ async function ratingResult(fastify: any, options: any) {
     loadRatingResultByPageGetSchema,
     loadRatingResultByPageAdapter()
   );
-  fastify.delete("/ratingResult/delete", deleteRatingResultSchema, deleteRatingResultAdapter());
-  fastify.patch("/ratingResult/update", updateRatingResultSchema, updateRatingResultAdapter());
+  fastify.get(
+    "/ratingResult/loadAverage",
+    loadRatingResultByPageGetSchema,
+    loadAverageRatingResultAdapter()
+  );
+  fastify.delete(
+    "/ratingResult/delete",
+    deleteRatingResultSchema,
+    deleteRatingResultAdapter()
+  );
+  fastify.patch(
+    "/ratingResult/update",
+    updateRatingResultSchema,
+    updateRatingResultAdapter()
+  );
 }
 export { ratingResult };

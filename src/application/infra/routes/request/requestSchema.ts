@@ -1,4 +1,4 @@
-const bodyAddAppointmentJsonSchema = {
+const bodyAddRequestJsonSchema = {
   type: "object",
   required: [
     "message",
@@ -15,7 +15,6 @@ const bodyAddAppointmentJsonSchema = {
     "haveFidelity",
     "haveRide",
     "type",
-    "requestId",
     "status",
   ],
   properties: {
@@ -23,7 +22,6 @@ const bodyAddAppointmentJsonSchema = {
     serviceId: { type: "string", maxLength: 24, minLength: 24 },
     ownerId: { type: "string", maxLength: 24, minLength: 24 },
     clientId: { type: "string", maxLength: 24, minLength: 24 },
-    requestId: { type: "string", maxLength: 24, minLength: 24 },
     clientUserId: { type: "string", maxLength: 24, minLength: 24 },
     professionalId: { type: "string", maxLength: 24, minLength: 24 },
     createdForId: { type: "string", maxLength: 24, minLength: 24 },
@@ -44,7 +42,7 @@ const headersJsonSchema = {
   },
   required: ["authorization"],
 };
-const addAppointmentResponse = {
+const addRequestResponse = {
   type: "object",
   properties: {
     _id: { type: "string", maxLength: 24, minLength: 24 },
@@ -52,7 +50,6 @@ const addAppointmentResponse = {
     serviceId: { type: "string", maxLength: 24, minLength: 24 },
     ownerId: { type: "string", maxLength: 24, minLength: 24 },
     clientId: { type: "string", maxLength: 24, minLength: 24 },
-    requestId: { type: "string", maxLength: 24, minLength: 24 },
     clientUserId: { type: "string", maxLength: 24, minLength: 24 },
     professionalId: { type: "string", maxLength: 24, minLength: 24 },
     createdForId: { type: "string", maxLength: 24, minLength: 24 },
@@ -69,22 +66,22 @@ const addAppointmentResponse = {
     createdAt: { type: "string" },
   },
 };
-export const addAppointmentPostSchema = {
+export const addRequestPostSchema = {
   schema: {
-    body: bodyAddAppointmentJsonSchema,
-    response: { 200: addAppointmentResponse },
+    body: bodyAddRequestJsonSchema,
+    response: { 200: addRequestResponse },
     headers: headersJsonSchema,
   },
 };
 
-const queryStringJsonLoadAppointmentSchema = {
+const queryStringJsonLoadRequestSchema = {
   type: "object",
   properties: {
     _id: { type: "string", maxLength: 24, minLength: 24 },
   },
   required: ["_id"],
 };
-const loadAppointmentResponse = {
+const loadRequestResponse = {
   type: "object",
   properties: {
     _id: { type: "string", maxLength: 24, minLength: 24 },
@@ -92,7 +89,6 @@ const loadAppointmentResponse = {
     serviceId: { type: "string", maxLength: 24, minLength: 24 },
     ownerId: { type: "string", maxLength: 24, minLength: 24 },
     clientId: { type: "string", maxLength: 24, minLength: 24 },
-    requestId: { type: "string", maxLength: 24, minLength: 24 },
     clientUserId: { type: "string", maxLength: 24, minLength: 24 },
     professionalId: { type: "string", maxLength: 24, minLength: 24 },
     createdForId: { type: "string", maxLength: 24, minLength: 24 },
@@ -109,67 +105,40 @@ const loadAppointmentResponse = {
     createdAt: { type: "string" },
   },
 };
-export const loadAppointmentGetSchema = {
+export const loadRequestGetSchema = {
   schema: {
     headers: headersJsonSchema,
-    querystring: queryStringJsonLoadAppointmentSchema,
+    querystring: queryStringJsonLoadRequestSchema,
     response: {
-      200: loadAppointmentResponse,
+      200: loadRequestResponse,
     },
   },
 };
-
-const queryStringJsonloadAvailableTimesSchema = {
-  type: "object",
-  properties: {
-    professionalId: { type: "string", maxLength: 24, minLength: 24 },
-    serviceId: { type: "string", maxLength: 24, minLength: 24 },
-    ownerId: { type: "string", maxLength: 24, minLength: 24 },
-    date: { type: "string" },
-  },
-  required: ["professionalId", "date", "serviceId", "ownerId"],
-};
-const loadAvailableTimesResponse = {
-  type: "object",
-  properties: {
-    timeAvailableProfessional: { type: "array" },
-    timeAvailable: { type: "array" },
-  },
-};
-export const loadAvailableTimesSchema = {
-  schema: {
-    headers: headersJsonSchema,
-    querystring: queryStringJsonloadAvailableTimesSchema,
-    response: {
-      200: loadAvailableTimesResponse,
-    },
-  },
-};
-const deleteAppointmentResponse = { type: "boolean" };
-const queryStringJsonDeleteAppointmentSchema = {
+const deleteRequestResponse = { type: "boolean" };
+const queryStringJsonDeleteRequestSchema = {
   type: "object",
   properties: {
     _id: { type: "string", maxLength: 24, minLength: 24 },
   },
   required: ["_id"],
 };
-export const deleteAppointmentSchema = {
+export const deleteRequestSchema = {
   schema: {
     headers: headersJsonSchema,
-    querystring: queryStringJsonDeleteAppointmentSchema,
+    querystring: queryStringJsonDeleteRequestSchema,
     response: {
-      200: deleteAppointmentResponse,
+      200: deleteRequestResponse,
     },
   },
 };
-const queryStringJsonUpdateAppointmentSchema = {
+const queryStringJsonUpdateRequestSchema = {
   type: "object",
   properties: {
     _id: { type: "string", maxLength: 24, minLength: 24 },
   },
   required: ["_id"],
 };
-const updateAppointmentResponse = {
+const updateRequestResponse = {
   type: "object",
   properties: {
     _id: { type: "string", maxLength: 24, minLength: 24 },
@@ -177,7 +146,6 @@ const updateAppointmentResponse = {
     serviceId: { type: "string", maxLength: 24, minLength: 24 },
     ownerId: { type: "string", maxLength: 24, minLength: 24 },
     clientId: { type: "string", maxLength: 24, minLength: 24 },
-    requestId: { type: "string", maxLength: 24, minLength: 24 },
     clientUserId: { type: "string", maxLength: 24, minLength: 24 },
     professionalId: { type: "string", maxLength: 24, minLength: 24 },
     createdForId: { type: "string", maxLength: 24, minLength: 24 },
@@ -192,14 +160,13 @@ const updateAppointmentResponse = {
     createdById: { type: "string" },
   },
 };
-const updateAppointmentBody = {
+const updateRequestBody = {
   type: "object",
   properties: {
     message: { type: "string" },
     serviceId: { type: "string", maxLength: 24, minLength: 24 },
     ownerId: { type: "string", maxLength: 24, minLength: 24 },
     clientId: { type: "string", maxLength: 24, minLength: 24 },
-    requestId: { type: "string", maxLength: 24, minLength: 24 },
     clientUserId: { type: "string", maxLength: 24, minLength: 24 },
     professionalId: { type: "string", maxLength: 24, minLength: 24 },
     createdForId: { type: "string", maxLength: 24, minLength: 24 },
@@ -213,17 +180,17 @@ const updateAppointmentBody = {
     status: { type: "integer" },
   },
 };
-export const updateAppointmentSchema = {
+export const updateRequestSchema = {
   schema: {
     headers: headersJsonSchema,
-    querystring: queryStringJsonUpdateAppointmentSchema,
-    body: updateAppointmentBody,
+    querystring: queryStringJsonUpdateRequestSchema,
+    body: updateRequestBody,
     response: {
-      200: updateAppointmentResponse,
+      200: updateRequestResponse,
     },
   },
 };
-const queryStringJsonLoadAppointmentByPageSchema = {
+const queryStringJsonLoadRequestByPageSchema = {
   type: "object",
   properties: {
     page: { type: "integer", minimum: 1 },
@@ -232,10 +199,10 @@ const queryStringJsonLoadAppointmentByPageSchema = {
   },
   required: ["page"],
 };
-const loadAppointmentByPageResponse = {
+const loadRequestByPageResponse = {
   type: "object",
   properties: {
-    appointments: {
+    requests: {
       type: "array",
       maxItems: 10,
       items: {
@@ -246,7 +213,6 @@ const loadAppointmentByPageResponse = {
           serviceId: { type: "string", maxLength: 24, minLength: 24 },
           ownerId: { type: "string", maxLength: 24, minLength: 24 },
           clientId: { type: "string", maxLength: 24, minLength: 24 },
-          requestId: { type: "string", maxLength: 24, minLength: 24 },
           clientUserId: { type: "string", maxLength: 24, minLength: 24 },
           professionalId: { type: "string", maxLength: 24, minLength: 24 },
           createdForId: { type: "string", maxLength: 24, minLength: 24 },
@@ -267,12 +233,12 @@ const loadAppointmentByPageResponse = {
     total: { type: "integer" },
   },
 };
-export const loadAppointmentByPageGetSchema = {
+export const loadRequestByPageGetSchema = {
   schema: {
     headers: headersJsonSchema,
-    querystring: queryStringJsonLoadAppointmentByPageSchema,
+    querystring: queryStringJsonLoadRequestByPageSchema,
     response: {
-      200: loadAppointmentByPageResponse,
+      200: loadRequestByPageResponse,
     },
   },
 };

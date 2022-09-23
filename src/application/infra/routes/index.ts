@@ -3,6 +3,12 @@ import { auth } from "./auth";
 import { account } from "./account";
 import { category } from "./category";
 // IMPORT MODULE FILES
+import { client } from "./client";
+import { fidelity } from "./fidelity";
+import { order } from "./order";
+import { recurrence } from "./recurrence";
+import { ride } from "./ride";
+import { request } from "./request";
 import { appointment } from "./appointment";
 import { ratingResult } from "./ratingResult";
 import { rating } from "./rating";
@@ -16,6 +22,12 @@ const routes = [
   account,
   category,
   // ADD FUNCTION IMPORTS
+client,
+fidelity,
+order,
+recurrence,
+ride,
+request,
 appointment,
 ratingResult,
 rating,

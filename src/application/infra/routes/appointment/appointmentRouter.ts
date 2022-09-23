@@ -5,6 +5,7 @@ import {
   deleteAppointmentAdapter,
   updateAppointmentAdapter,
   loadAppointmentByPageAdapter,
+  loadAvailableTimesAdapter,
 } from "./appointmentAdapter";
 import {
   addAppointmentPostSchema,
@@ -12,6 +13,7 @@ import {
   deleteAppointmentSchema,
   updateAppointmentSchema,
   loadAppointmentByPageGetSchema,
+  loadAvailableTimesSchema,
 } from "./appointmentSchema";
 
 async function appointment(fastify: any, options: any) {
@@ -19,11 +21,24 @@ async function appointment(fastify: any, options: any) {
   fastify.post("/appointment/add", addAppointmentPostSchema, addAppointmentAdapter());
   fastify.get("/appointment/load", loadAppointmentGetSchema, loadAppointmentAdapter());
   fastify.get(
+    "/appointment/loadAvailableTimes",
+    loadAvailableTimesSchema,
+    loadAvailableTimesAdapter()
+  );
+  fastify.get(
     "/appointment/loadByPage",
     loadAppointmentByPageGetSchema,
     loadAppointmentByPageAdapter()
   );
-  fastify.delete("/appointment/delete", deleteAppointmentSchema, deleteAppointmentAdapter());
-  fastify.patch("/appointment/update", updateAppointmentSchema, updateAppointmentAdapter());
+  fastify.delete(
+    "/appointment/delete",
+    deleteAppointmentSchema,
+    deleteAppointmentAdapter()
+  );
+  fastify.patch(
+    "/appointment/update",
+    updateAppointmentSchema,
+    updateAppointmentAdapter()
+  );
 }
 export { appointment };
