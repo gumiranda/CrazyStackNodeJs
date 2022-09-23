@@ -24,11 +24,7 @@ async function ratingResult(fastify: any, options: any) {
     loadRatingResultByPageGetSchema,
     loadRatingResultByPageAdapter()
   );
-  fastify.get(
-    "/ratingResult/loadAverage",
-    loadRatingResultByPageGetSchema,
-    loadAverageRatingResultAdapter()
-  );
+  fastify.get("/ratingResult/loadAverage", loadAverageRatingResultAdapter());
   fastify.delete(
     "/ratingResult/delete",
     deleteRatingResultSchema,
