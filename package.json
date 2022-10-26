@@ -43,6 +43,7 @@
     "@": "dist"
   },
   "dependencies": {
+    "@fastify/cors": "^8.1.1",
     "@fastify/helmet": "^10.0.0",
     "@fastify/mongodb": "^6.1.0",
     "@fastify/rate-limit": "^7.4.0",
