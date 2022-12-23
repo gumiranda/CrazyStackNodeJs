@@ -6,7 +6,7 @@ export class UnauthorizedError extends Error {
 }
 export class ForbiddenError extends Error {
   constructor(error: any) {
-    super("Forbidden");
+    super(error?.message ?? "Forbidden");
     this.name = "ForbiddenError";
     this.stack = error?.stack;
   }

@@ -3,12 +3,10 @@ import "./application/infra/config/module-alias";
 import { env, routes, MongoHelper } from "@/application/infra";
 import Fastify, { FastifyInstance } from "fastify";
 const { fastifyRequestContextPlugin } = require("@fastify/request-context");
-const fastify: FastifyInstance = Fastify({ logger: true });
-
-// Run the server!
-const start = async () => {
+export const makeFastifyInstance = async (externalMongoClient = null) => {
+  const fastify: FastifyInstance = Fastify({ logger: true });
   try {
-    const client = await MongoHelper.connect(env.mongoUri);
+    const client = externalMongoClient ?? (await MongoHelper.connect(env.mongoUri));
     await fastify.register(require("@fastify/helmet"), {
       contentSecurityPolicy: false,
       global: true,
@@ -38,12 +36,18 @@ const start = async () => {
     for (const route of routes) {
       fastify.register(route, { prefix: "/api" });
     }
-    const port: any = env?.port ?? 3000;
-    await fastify.listen({ port, host: "0.0.0.0" });
-    fastify.log.info(`server listening on ${port}`);
-  } catch (err) {
-    fastify.log.error(err);
+    return fastify;
+  } catch (error) {
+    fastify.log.error(error);
     process.exit(1);
   }
+};
+// Run the server!
+const start = async () => {
+  const fastifyInstance = await makeFastifyInstance();
+  if (!fastifyInstance) return;
+  const port: any = env?.port ?? 3000;
+  await fastifyInstance.listen({ port, host: "0.0.0.0" });
+  fastifyInstance.log.info(`server listening on ${port}`);
 };
 start();
