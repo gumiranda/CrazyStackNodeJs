@@ -60,7 +60,7 @@ describe("LoadAccountController", () => {
     await testInstance.execute(testInstanceParams);
     expect(loadAccount).toHaveBeenCalledWith({
       fields: {
-        userId: testInstanceParams.userId,
+        createdById: testInstanceParams.userId,
         refreshToken: testInstanceParams.headers.refreshtoken,
         isFutureexpiresAt: new Date(),
       },

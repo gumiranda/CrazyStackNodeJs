@@ -30,7 +30,7 @@ export class LoadAccountController extends Controller {
     }
     const accountExists = await this.loadAccount({
       fields: {
-        userId: httpRequest?.userId,
+        createdById: httpRequest?.userId,
         refreshToken: httpRequest?.headers?.refreshtoken,
         isFutureexpiresAt: new Date(),
       },
