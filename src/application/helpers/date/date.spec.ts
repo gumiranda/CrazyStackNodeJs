@@ -1,4 +1,5 @@
 import MockDate from "mockdate";
+import { dayOfWeek, endOfDay, formatISO, startOfDay } from "../dateFns";
 import {
   BusinessHoursInput,
   getHoursObject,
@@ -13,6 +14,7 @@ import {
   AddTimeInArrayInput,
   addTimeInArray,
   secondStep,
+  queryDateGenerator,
 } from "./date";
 
 describe("date tests business rules", () => {
@@ -583,7 +585,7 @@ describe("date tests business rules", () => {
     ]);
   });
   test("firstStep function when i have lunch time and appointment inside first half", async () => {
-    const mockFirstStepCustom = {
+    let mockFirstStepCustom = {
       hourStart: new Date(2021, 10, 10, 8, 0, 0), //11:00
       hourEnd: new Date(2021, 10, 10, 19, 0, 0), //22:00
       hourLunchStart: new Date(2021, 10, 10, 11, 0, 0), //14:00
@@ -604,7 +606,7 @@ describe("date tests business rules", () => {
     ]);
   });
   test("firstStep function when i have lunch time and appointment inside first half with haveOnlyOneAppointment === true", async () => {
-    const mockFirstStepCustom = {
+    let mockFirstStepCustom = {
       hourStart: new Date(2021, 10, 10, 8, 0, 0), //11:00
       hourEnd: new Date(2021, 10, 10, 19, 0, 0), //22:00
       hourLunchStart: new Date(2021, 10, 10, 11, 0, 0), //14:00
@@ -633,7 +635,7 @@ describe("date tests business rules", () => {
     ]);
   });
   test("firstStep function when i have lunch time and appointment inside second half", async () => {
-    const mockFirstStepCustom = {
+    let mockFirstStepCustom = {
       hourStart: new Date(2021, 10, 10, 8, 0, 0), //11:00
       hourEnd: new Date(2021, 10, 10, 19, 0, 0), //22:00
       hourLunchStart: new Date(2021, 10, 10, 11, 0, 0), //14:00
@@ -658,7 +660,7 @@ describe("date tests business rules", () => {
     ]);
   });
   test("firstStep function when i have lunch time and appointment inside second half and haveOnlyOneAppointment === true", async () => {
-    const mockFirstStepCustom = {
+    let mockFirstStepCustom = {
       hourStart: new Date(2021, 10, 10, 8, 0, 0), //11:00
       hourEnd: new Date(2021, 10, 10, 19, 0, 0), //22:00
       hourLunchStart: new Date(2021, 10, 10, 11, 0, 0), //14:00
@@ -687,7 +689,7 @@ describe("date tests business rules", () => {
     ]);
   });
   test("secondStep function with appointments with 2 appointments inside first half", async () => {
-    const mockSecondStepCustom = {
+    let mockSecondStepCustom = {
       hourStart: new Date(2021, 10, 10, 8, 0, 0), //11:00
       hourEnd: new Date(2021, 10, 10, 19, 0, 0), //22:00
       hourLunchStart: new Date(2021, 10, 10, 11, 0, 0), //14:00
@@ -720,7 +722,7 @@ describe("date tests business rules", () => {
     ]);
   });
   test("secondStep function when i pass null", async () => {
-    const mockSecondStepCustom = {
+    let mockSecondStepCustom = {
       hourStart: new Date(2021, 10, 10, 8, 0, 0), //11:00
       hourEnd: new Date(2021, 10, 10, 19, 0, 0), //22:00
       hourLunchStart: new Date(2021, 10, 10, 11, 0, 0), //14:00
@@ -744,7 +746,7 @@ describe("date tests business rules", () => {
     expect(mockSecondStepCustom.timeAvailableProfessional).toStrictEqual([]);
   });
   test("secondStep function with appointments with 1 appointments inside first half and 1 appointment inside second half", async () => {
-    const mockSecondStepCustom = {
+    let mockSecondStepCustom = {
       hourStart: new Date(2021, 10, 10, 8, 0, 0), //11:00
       hourEnd: new Date(2021, 10, 10, 19, 0, 0), //22:00
       hourLunchStart: new Date(2021, 10, 10, 11, 0, 0), //14:00
@@ -781,7 +783,7 @@ describe("date tests business rules", () => {
     ]);
   });
   test("secondStep function with appointments with 2 appointments inside second half", async () => {
-    const mockSecondStepCustom = {
+    let mockSecondStepCustom = {
       hourStart: new Date(2021, 10, 10, 8, 0, 0), //11:00
       hourEnd: new Date(2021, 10, 10, 19, 0, 0), //22:00
       hourLunchStart: new Date(2021, 10, 10, 11, 0, 0), //14:00
@@ -823,7 +825,7 @@ describe("date tests business rules", () => {
   });
 
   test("secondStep function without lunch time", async () => {
-    const mockSecondStepCustom = {
+    let mockSecondStepCustom = {
       hourStart: new Date(2021, 10, 10, 8, 0, 0), //11:00
       hourEnd: new Date(2021, 10, 10, 19, 0, 0), //22:00
       hourLunchStart: null,
@@ -885,7 +887,7 @@ describe("date tests business rules", () => {
         saturday3: true,
       },
     };
-    const mockCustomGetArrayTimes = {
+    let mockCustomGetArrayTimes = {
       infoOwner: infoOwnerAux,
       dayOfWeekFound: "friday",
       dateQuery: new Date(2021, 9, 14, 3, 0),
@@ -1018,7 +1020,7 @@ describe("date tests business rules", () => {
         saturday3: true,
       },
     };
-    const mockCustomGetArrayTimes2 = {
+    let mockCustomGetArrayTimes2 = {
       infoOwner: infoOwnerAux2,
       dayOfWeekFound: "friday",
       dateQuery: new Date(2021, 9, 14, 3, 0),
@@ -1115,6 +1117,29 @@ describe("date tests business rules", () => {
           initDate: new Date("2021-10-14T16:00:00.000Z"),
         },
       ],
+    });
+  });
+  test("testing queryDateGenerator function when date passed is before today", () => {
+    const dateTest = queryDateGenerator("2021-09-18T10:00:00.000Z");
+    expect(dateTest).toBeNull();
+  });
+  test("testing queryDateGenerator function when date passed is after today", () => {
+    const dateTest = queryDateGenerator("2099-09-18T10:00:00.000Z");
+    expect(dateTest).toEqual({
+      dateQuery: startOfDay(new Date("2099-09-18T10:00:00.000Z")),
+      dayOfWeekFound: "friday",
+      endDay: "2099-09-18T23:59:59-03:00",
+      initDay: "2099-09-18T00:00:00-03:00",
+    });
+  });
+  test("testing queryDateGenerator function when date passed is today", () => {
+    const date = new Date().setMilliseconds(0);
+    const dateTest = queryDateGenerator(formatISO(date));
+    expect(dateTest).toEqual({
+      dateQuery: new Date(date),
+      dayOfWeekFound: dayOfWeek(new Date()),
+      endDay: formatISO(endOfDay(new Date())),
+      initDay: formatISO(startOfDay(new Date())),
     });
   });
 });
