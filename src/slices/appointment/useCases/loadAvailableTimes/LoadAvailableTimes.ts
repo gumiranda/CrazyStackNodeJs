@@ -1,15 +1,9 @@
 import { LoadServiceRepository } from "@/slices/service/repositories";
 import { LoadAvailableTimesRepository } from "@/slices/appointment/repositories";
-import {
-  AvailableTimesModelRepository,
-  QueryAvailableTimesRepository,
-  OwnerAppointmentInfo,
-  QueryAvailableTimes,
-} from "@/slices/appointment/entities";
+import { OwnerAppointmentInfo, QueryAvailableTimes } from "@/slices/appointment/entities";
 import { getArrayTimes, queryDateGenerator } from "@/application/helpers/date";
 import { LoadUserRepository } from "@/slices/user/repositories";
 import { LoadOwnerRepository } from "@/slices/owner/repositories";
-import { OwnerData } from "@/slices/owner/entities";
 
 export type LoadAvailableTimes = (query: QueryAvailableTimes) => Promise<any | null>;
 export type LoadAvailableTimesSignature = (

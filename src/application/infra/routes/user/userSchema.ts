@@ -1,70 +1,216 @@
-const bodyJsonSchema = {
+const bodyAddUserJsonSchema = {
   type: "object",
-  required: ["requiredKey"],
+  required: ["name", "email", "password", "passwordConfirmation", "role", "serviceIds"],
   properties: {
-    someKey: { type: "string" },
-    someOtherKey: { type: "number" },
-    requiredKey: {
-      type: "array",
-      maxItems: 3,
-      items: { type: "integer" },
-    },
-    nullableKey: { type: ["number", "null"] }, // or { type: 'number', nullable: true }
-    multipleTypesKey: { type: ["boolean", "number"] },
-    multipleRestrictedTypesKey: {
-      oneOf: [
-        { type: "string", maxLength: 5 },
-        { type: "number", minimum: 10 },
-      ],
-    },
-    enumKey: {
+    name: { type: "string" },
+    email: { type: "string" },
+    role: {
       type: "string",
-      enum: ["John", "Foo"],
+      enum: ["professional"],
     },
-    notTypeKey: {
-      not: { type: "array" },
-    },
-  },
-};
-const queryStringJsonSchema = {
-  type: "object",
-  properties: {
-    ids: {
-      type: "array",
-      default: [],
+    password: { type: "string" },
+    passwordConfirmation: { type: "string" },
+    serviceIds: { type: "array", items: { type: "string", maxLength: 24, minLength: 24 } },
+    coord: {
+      type: "object",
+      properties: {
+        type: { type: "string", enum: ["Point"] },
+        coordinates: { type: "array", items: { type: "number" } },
+      },
     },
   },
 };
-const paramsJsonSchema = {
-  type: "object",
-  properties: {
-    par1: { type: "string" },
-    par2: { type: "number" },
-  },
-};
-
 const headersJsonSchema = {
   type: "object",
   properties: {
-    test: { type: "string" },
+    authorization: { type: "string" },
   },
-  required: ["test"],
+  required: ["authorization"],
+};
+const addUserResponse = {
+  type: "object",
+  properties: {
+    _id: { type: "string", maxLength: 24, minLength: 24 },
+    name: { type: "string" },
+    email: { type: "string" },
+    active: { type: "boolean" },
+    createdById: { type: "string" },
+    createdAt: { type: "string" },
+  },
+};
+export const addUserPostSchema = {
+  schema: {
+    body: bodyAddUserJsonSchema,
+    response: { 200: addUserResponse },
+    headers: headersJsonSchema,
+  },
 };
 
-export const userPostSchema = {
+const queryStringJsonLoadUserSchema = {
+  type: "object",
+  properties: {
+    _id: { type: "string", maxLength: 24, minLength: 24 },
+  },
+  required: ["_id"],
+};
+const loadUserResponse = {
+  type: "object",
+  properties: {
+    _id: { type: "string", maxLength: 24, minLength: 24 },
+    name: { type: "string" },
+    serviceIds: { type: "array", items: { type: "string", maxLength: 24, minLength: 24 } },
+    ownerId: { type: "string", maxLength: 24, minLength: 24 },
+    myOwnerId: { type: "string", maxLength: 24, minLength: 24 },
+    active: { type: "boolean" },
+    createdById: { type: "string" },
+    createdAt: { type: "string" },
+  },
+};
+export const loadUserGetSchema = {
   schema: {
-    querystring: queryStringJsonSchema,
-    body: bodyJsonSchema,
-    params: paramsJsonSchema,
     headers: headersJsonSchema,
+    querystring: queryStringJsonLoadUserSchema,
     response: {
-      200: {
+      200: loadUserResponse,
+    },
+  },
+};
+const deleteUserResponse = { type: "boolean" };
+const queryStringJsonDeleteUserSchema = {
+  type: "object",
+  properties: {
+    _id: { type: "string", maxLength: 24, minLength: 24 },
+  },
+  required: ["_id"],
+};
+export const deleteUserSchema = {
+  schema: {
+    headers: headersJsonSchema,
+    querystring: queryStringJsonDeleteUserSchema,
+    response: {
+      200: deleteUserResponse,
+    },
+  },
+};
+const queryStringJsonUpdateUserSchema = {
+  type: "object",
+  properties: {
+    _id: { type: "string", maxLength: 24, minLength: 24 },
+  },
+  required: ["_id"],
+};
+const updateUserResponse = {
+  type: "object",
+  properties: {
+    _id: { type: "string", maxLength: 24, minLength: 24 },
+    name: { type: "string" },
+    createdById: { type: "string" },
+  },
+};
+const updateUserBody = {
+  type: "object",
+  properties: {
+    name: { type: "string" },
+  },
+};
+export const updateUserSchema = {
+  schema: {
+    headers: headersJsonSchema,
+    querystring: queryStringJsonUpdateUserSchema,
+    body: updateUserBody,
+    response: {
+      200: updateUserResponse,
+    },
+  },
+};
+const queryStringJsonLoadUserByPageSchema = {
+  type: "object",
+  properties: {
+    page: { type: "integer", minimum: 1 },
+    sortBy: { type: "string" },
+    typeSort: { type: "string" },
+  },
+  required: ["page"],
+};
+const loadUserByPageResponse = {
+  type: "object",
+  properties: {
+    users: {
+      type: "array",
+      maxItems: 10,
+      items: {
         type: "object",
         properties: {
-          acknowledged: { type: "boolean" },
-          insertedId: { type: "string" },
+          _id: { type: "string", maxLength: 24, minLength: 24 },
+          name: { type: "string" },
+          role: {
+            type: "string",
+            enum: ["professional", "owner", "client", "visitor"],
+          },
+          serviceIds: {
+            type: "array",
+            items: { type: "string", maxLength: 24, minLength: 24 },
+          },
+          active: { type: "boolean" },
+          createdById: { type: "string" },
+          createdAt: { type: "string" },
         },
       },
+    },
+    total: { type: "integer" },
+  },
+};
+export const loadUserByPageGetSchema = {
+  schema: {
+    headers: headersJsonSchema,
+    querystring: queryStringJsonLoadUserByPageSchema,
+    response: {
+      200: loadUserByPageResponse,
+    },
+  },
+};
+const loadUserGeoNearResponse = {
+  type: "object",
+  properties: {
+    users: {
+      type: "array",
+      maxItems: 10,
+      items: {
+        type: "object",
+        properties: {
+          _id: { type: "string", maxLength: 24, minLength: 24 },
+          name: { type: "string" },
+          distance: { type: "number" },
+          role: {
+            type: "string",
+            enum: ["professional", "owner", "client", "guest"],
+          },
+          serviceIds: {
+            type: "array",
+            items: { type: "string", maxLength: 24, minLength: 24 },
+          },
+          createdAt: { type: "string" },
+        },
+      },
+    },
+    total: { type: "integer" },
+  },
+};
+const queryStringJsonLoadUserGeoNearSchema = {
+  type: "object",
+  properties: {
+    page: { type: "integer", minimum: 1 },
+    sortBy: { type: "string" },
+    typeSort: { type: "string" },
+  },
+  required: ["page"],
+};
+export const loadUserByGeoNearSchema = {
+  schema: {
+    headers: headersJsonSchema,
+    querystring: queryStringJsonLoadUserGeoNearSchema,
+    response: {
+      200: loadUserGeoNearResponse,
     },
   },
 };

@@ -27,6 +27,7 @@ describe("UpdateOwner", () => {
       hourStart1: fakeOwnerEntity?.hourStart1,
       hourEnd1: fakeOwnerEntity?.hourEnd1,
       days1: fakeOwnerEntity?.days1,
+      name: fakeOwnerEntity?.name,
     } as any);
     expect(updateOwnerRepository.updateOwner).toHaveBeenCalledTimes(1);
   });

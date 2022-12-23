@@ -59,6 +59,7 @@ module.exports = function (plop) {
       ...repositoryCreations,
       ...useCasesFactoriesCreations,
       ...controllersCreations,
+      ...routesCreations,
     ],
   });
   plop.setGenerator("test", {
