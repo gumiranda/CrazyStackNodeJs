@@ -1,6 +1,7 @@
 import { AppointmentEntity } from "./AppointmentEntity";
 import MockDate from "mockdate";
 import { parseISO } from "@/application/helpers/dateFns";
+import { queryDateGenerator } from "@/application/helpers/date";
 
 export const fakeAppointmentEntity = {
   _id: "123",
@@ -146,6 +147,11 @@ export const fakeQueryVerifyAvailableTimes = {
   date: new Date(2021, 9, 14, 3, 0).toISOString(),
   initDate: new Date(2021, 9, 14, 9, 0).toISOString(),
   endDate: new Date(2021, 9, 14, 10, 0).toISOString(),
+};
+export const fakeQueryAvailableTimesRepository = {
+  professionalId: "fakeUserId",
+  endDay: queryDateGenerator(new Date().toISOString())?.endDay,
+  initDay: queryDateGenerator(new Date().toISOString())?.initDay,
 };
 describe("Appointment", () => {
   beforeAll(async () => {
