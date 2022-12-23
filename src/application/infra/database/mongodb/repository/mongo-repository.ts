@@ -7,6 +7,20 @@ import { Repository } from "@/application/infra/contracts/repository";
 import { Collection, ObjectId } from "mongodb";
 
 export class MongoRepository extends Repository {
+  async deleteMany(query: any): Promise<any> {
+    const collection = await this.getCollection();
+    const session = await MongoHelper.getSession();
+    if (query._id) {
+      query._id = new ObjectId(query._id);
+    }
+    const result = (await collection.deleteMany(mapQueryParamsToQueryMongo(query), {
+      session,
+    })) as any;
+    if (result?.deletedCount > 0) {
+      return true;
+    }
+    return false;
+  }
   public collectionName: string;
   constructor(collectionName: string) {
     super();

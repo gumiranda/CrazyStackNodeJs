@@ -51,6 +51,22 @@ describe("Mongo Repository tests", () => {
     const userDeleted = await sut.deleteOne({ _id: new ObjectId() });
     expect(userDeleted).toBeFalsy();
   });
+  test("Should deleteMany user with success", async () => {
+    const sut = makeSut();
+    const user = {
+      name: "John Doe",
+      email: "any_email@mail.com",
+      password: "any_password",
+    };
+    const { insertedId } = await userCollection.insertOne(user);
+    const userDeleted = await sut.deleteMany({ _id: insertedId });
+    expect(userDeleted).toBeTruthy();
+  });
+  test("Should deleteMany user fails", async () => {
+    const sut = makeSut();
+    const userDeleted = await sut.deleteMany({ _id: new ObjectId() });
+    expect(userDeleted).toBeFalsy();
+  });
   test("Should return an user add success", async () => {
     const sut = makeSut();
     const user = await sut.add(mockUser);
