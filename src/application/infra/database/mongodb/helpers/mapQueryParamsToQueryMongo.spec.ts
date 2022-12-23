@@ -21,9 +21,13 @@ describe("mapQueryParamsToQueryMongo", () => {
       userIds: `${fakeId1},${fakeId2}`,
       userId: fakeId3,
       anyField: "anyValue",
+      price: "5",
+      comissionoperatorgt: "50",
     });
     expect(objectMapped).toEqual({
       anyField: "anyValue",
+      price: { $eq: Number("5") },
+      comission: { $gt: Number("50") },
       userId: new ObjectId(fakeId3),
       userIds: {
         $elemMatch: { $in: [new ObjectId(fakeId1), new ObjectId(fakeId2)] },

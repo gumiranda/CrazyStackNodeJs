@@ -41,33 +41,48 @@ export class OrderHandler extends AbstractHandler {
         throw new Error("Não foi possível criar o pedido");
       }
       const incrementAppointmentsService =
-        await this.serviceRepository.incrementAppointmentsTotal(request?.serviceId);
+        await this.serviceRepository.incrementAppointmentsTotal({
+          fields: { _id: request?.serviceId },
+          options: {},
+        });
       if (!incrementAppointmentsService) {
         throw new Error("Erro ao incrementar o total de agendamentos da tabela service");
       }
       const incrementAppointmentsProfessional =
-        await this.userRepository.incrementAppointmentsTotal(request?.professionalId);
+        await this.userRepository.incrementAppointmentsTotal({
+          fields: { _id: request?.professionalId },
+          options: {},
+        });
       if (!incrementAppointmentsProfessional) {
         throw new Error(
           "Erro ao incrementar o total de agendamentos da tabela user para professional"
         );
       }
       const incrementAppointmentsOwner =
-        await this.userRepository.incrementAppointmentsTotal(request?.ownerId);
+        await this.userRepository.incrementAppointmentsTotal({
+          fields: { _id: request?.ownerId },
+          options: {},
+        });
       if (!incrementAppointmentsOwner) {
         throw new Error(
           "Erro ao incrementar o total de agendamentos da tabela user para owner"
         );
       }
       const incrementAppointmentsClientUserId =
-        await this.userRepository.incrementAppointmentsTotal(request?.clientUserId);
+        await this.userRepository.incrementAppointmentsTotal({
+          fields: { _id: request?.clientUserId },
+          options: {},
+        });
       if (!incrementAppointmentsClientUserId) {
         throw new Error(
           "Erro ao incrementar o total de agendamentos da tabela user para client"
         );
       }
       const incrementAppointmentsClientId =
-        await this.clientRepository.incrementAppointmentsTotal(request?.clientId);
+        await this.clientRepository.incrementAppointmentsTotal({
+          fields: { _id: request?.clientId },
+          options: {},
+        });
       if (!incrementAppointmentsClientId) {
         throw new Error(
           "Erro ao incrementar o total de agendamentos da tabela client para client"
