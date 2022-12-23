@@ -9,7 +9,7 @@
     "test": "jest --passWithNoTests --silent --noStackTrace --runInBand",
     "generate": "yarn plop --plopfile ./generators/plopfile.js",
     "format": "prettier --write \"**/*.{js,ts,tsx,json,md}\"",
-    "lint": "yarn format && eslint src --fix"
+    "lint": "eslint --ext .ts --fix"
   },
   "license": "MIT",
   "devDependencies": {
