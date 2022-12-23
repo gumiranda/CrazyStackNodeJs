@@ -12,7 +12,7 @@ export type AppointmentData = {
   clientId?: string;
   professionalId?: string;
   serviceId?: string;
-  status?: string;
+  status?: number;
   createdForId?: string;
   read?: boolean;
   cancelled?: boolean;
@@ -42,7 +42,7 @@ export class AppointmentEntity {
   clientId?: string;
   professionalId?: string;
   serviceId?: string;
-  status?: string;
+  status?: number;
   createdForId?: string;
   read?: boolean;
   cancelled?: boolean;
