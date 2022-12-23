@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 import "./application/infra/config/module-alias";
 import { env, routes, MongoHelper } from "@/application/infra";
 import Fastify, { FastifyInstance } from "fastify";
@@ -35,7 +36,7 @@ const start = async () => {
       client,
     });
     for (const route of routes) {
-      fastify.register(route);
+      fastify.register(route, { prefix: "/api" });
     }
     const port: any = env?.port ?? 3000;
     await fastify.listen({ port, host: "0.0.0.0" });
