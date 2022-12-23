@@ -1,5 +1,4 @@
 import { fakeCategoryEntity } from "@/slices/category/entities/CategoryEntity.spec";
-import { CategoryEntity } from "@/slices/category/entities";
 import { DeleteCategoryRepository } from "@/slices/category/repositories/contracts";
 import MockDate from "mockdate";
 
