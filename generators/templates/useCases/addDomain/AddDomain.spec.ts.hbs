@@ -1,0 +1,43 @@
+import { fake{{pascalCase name}}Entity } from "@/slices/{{camelCase name}}/entities/{{pascalCase name}}Entity.spec";
+import { {{pascalCase name}}Entity } from "@/slices/{{camelCase name}}/entities";
+import { Add{{pascalCase name}}Repository } from "@/slices/{{camelCase name}}/repositories/contracts";
+import MockDate from "mockdate";
+
+import { mock, MockProxy } from "jest-mock-extended";
+import { add{{pascalCase name}} } from "./Add{{pascalCase name}}";
+
+describe("add{{pascalCase name}}", () => {
+    let testInstance: any;
+    let add{{pascalCase name}}Repository: MockProxy<Add{{pascalCase name}}Repository>;
+    beforeAll(async () => {
+        MockDate.set(new Date());
+        add{{pascalCase name}}Repository = mock();
+        add{{pascalCase name}}Repository.add{{pascalCase name}}.mockResolvedValue(fake{{pascalCase name}}Entity);
+    });
+    beforeEach(() => {
+        testInstance = add{{pascalCase name}}(add{{pascalCase name}}Repository);
+    });
+    afterAll(async () => {
+        MockDate.reset();
+    });
+    it("should call add{{pascalCase name}} of Add{{pascalCase name}}Repository with correct values", async () => {
+        await testInstance(fake{{pascalCase name}}Entity);
+        expect(add{{pascalCase name}}Repository.add{{pascalCase name}}).toHaveBeenCalledWith(
+            new {{pascalCase name}}Entity(fake{{pascalCase name}}Entity)
+        );
+        expect(add{{pascalCase name}}Repository.add{{pascalCase name}}).toHaveBeenCalledTimes(1);
+    });
+    it("should return a new {{camelCase name}} created when add{{pascalCase name}}Repository insert it", async () => {
+        const {{camelCase name}} = await testInstance(fake{{pascalCase name}}Entity);
+        expect({{camelCase name}}).toEqual(fake{{pascalCase name}}Entity);
+    });
+    it("should return null a new {{camelCase name}} created when add{{pascalCase name}}Repository insert it", async () => {
+        add{{pascalCase name}}Repository.add{{pascalCase name}}.mockResolvedValue(null);
+        const {{camelCase name}} = await testInstance(fake{{pascalCase name}}Entity);
+        expect({{camelCase name}}).toBeNull();
+    });
+    it("should rethrow if add{{pascalCase name}} of Add{{pascalCase name}}Repository throws", async () => {
+        add{{pascalCase name}}Repository.add{{pascalCase name}}.mockRejectedValueOnce(new Error("any_error"));
+        await expect(testInstance(fake{{pascalCase name}}Entity)).rejects.toThrowError("any_error");
+    });
+});

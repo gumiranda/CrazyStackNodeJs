@@ -1,0 +1,9 @@
+import { Add{{pascalCase name}}Repository } from "@/slices/{{camelCase name}}/repositories";
+import { {{pascalCase name}}Entity, {{pascalCase name}}Data } from "@/slices/{{camelCase name}}/entities";
+
+export type Add{{pascalCase name}} = (data: {{pascalCase name}}Data) => Promise<{{pascalCase name}}Entity | null>;
+export type Add{{pascalCase name}}Signature = (add{{pascalCase name}}: Add{{pascalCase name}}Repository) => Add{{pascalCase name}};
+export const add{{pascalCase name}}: Add{{pascalCase name}}Signature =
+    (add{{pascalCase name}}Repository: Add{{pascalCase name}}Repository) => (data: {{pascalCase name}}Data) => {
+        return add{{pascalCase name}}Repository.add{{pascalCase name}}(new {{pascalCase name}}Entity(data));
+    };
