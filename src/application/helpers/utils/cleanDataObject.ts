@@ -1,8 +1,8 @@
-export const cleanDataObject = (
-  forbiddenFields: string[],
-  allowedFields: string[],
-  bodyObject: any
-) => {
+export const cleanDataObject = ({
+  forbiddenFields,
+  allowedFields,
+  bodyObject,
+}: CleanDataObjectInput) => {
   const cleanObject: any = {};
   Object.keys(bodyObject).forEach((key) => {
     if (forbiddenFields.includes(key)) {
@@ -13,4 +13,9 @@ export const cleanDataObject = (
     }
   });
   return cleanObject;
+};
+type CleanDataObjectInput = {
+  forbiddenFields: string[];
+  allowedFields: string[];
+  bodyObject: any;
 };

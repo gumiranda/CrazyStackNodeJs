@@ -4,6 +4,7 @@ import { mock, MockProxy } from "jest-mock-extended";
 import { Query } from "@/application/types";
 import { fakeCategoryEntity } from "@/slices/category/entities/CategoryEntity.spec";
 import { UpdateCategory, updateCategory } from "./UpdateCategory";
+import { cleanDataObject } from "@/application/helpers";
 
 describe("UpdateCategory", () => {
   let fakeQuery: Query;
@@ -25,7 +26,11 @@ describe("UpdateCategory", () => {
     await testInstance(fakeQuery, fakeCategoryEntity);
     expect(updateCategoryRepository.updateCategory).toHaveBeenCalledWith(
       fakeQuery,
-      fakeCategoryEntity
+      cleanDataObject({
+        forbiddenFields: ["_id", "createdById", "active"],
+        allowedFields: ["name", "description", "image", "updatedAt"],
+        bodyObject: fakeCategoryEntity,
+      })
     );
     expect(updateCategoryRepository.updateCategory).toHaveBeenCalledTimes(1);
   });

@@ -1,0 +1,87 @@
+import MockDate from "mockdate";
+import { badRequest, ok, Validation } from "@/application/helpers";
+import { MockProxy, mock } from "jest-mock-extended";
+import { Load{{pascalCase name}}ByPageController } from "./load{{pascalCase name}}ByPageController";
+import {
+  fake{{pascalCase name}}Entity,
+  fake{{pascalCase name}}Paginated,
+} from "@/slices/{{camelCase name}}/entities/{{pascalCase name}}Entity.spec";
+import { Controller } from "@/application/infra/contracts";
+import { MissingParamError } from "@/application/errors";
+import { fakeUserEntity } from "@/slices/user/entities/UserEntity.spec";
+
+describe("Load{{pascalCase name}}ByPageController", () => {
+  let testInstance: Load{{pascalCase name}}ByPageController;
+  let load{{pascalCase name}}ByPage: jest.Mock;
+  let validation: MockProxy<Validation>;
+  let fakeQuery: any;
+  let fakeQueryParams: any;
+  let fakeRestQuery: any;
+  beforeAll(async () => {
+    MockDate.set(new Date());
+    load{{pascalCase name}}ByPage = jest.fn();
+    load{{pascalCase name}}ByPage.mockResolvedValue(fake{{pascalCase name}}Paginated);
+    validation = mock();
+    validation.validate.mockResolvedValue([] as never);
+  });
+  afterAll(() => {
+    MockDate.reset();
+  });
+  beforeEach(() => {
+    fakeQueryParams = { _id: fake{{pascalCase name}}Entity._id };
+    fakeRestQuery = { page: 1, sortBy: "name", typeSort: "asc" };
+    fakeQuery = { ...fakeQueryParams, ...fakeRestQuery };
+    testInstance = new Load{{pascalCase name}}ByPageController(validation, load{{pascalCase name}}ByPage);
+  });
+  it("should extends class Controller", async () => {
+    expect(testInstance).toBeInstanceOf(Controller);
+  });
+  test("should call validation with correct params", async () => {
+    await testInstance.execute({ query: fakeQuery });
+    expect(validation.validate).toHaveBeenCalledWith(fakeQuery);
+    expect(validation.validate).toHaveBeenCalledTimes(1);
+  });
+  test("should call load{{pascalCase name}}ByPage with correct params", async () => {
+    const result = await testInstance.execute({
+      query: fakeQuery,
+      userId: fakeUserEntity?._id,
+    });
+    expect(result).toEqual(ok(fake{{pascalCase name}}Paginated));
+    expect(load{{pascalCase name}}ByPage).toHaveBeenCalledWith({
+      fields: fakeQueryParams,
+      options: { sort: { [fakeRestQuery?.sortBy]: 1 }, page: fakeRestQuery?.page },
+    });
+    expect(load{{pascalCase name}}ByPage).toHaveBeenCalledTimes(1);
+  });
+  test("should call load{{pascalCase name}}ByPage with correct params in desc order", async () => {
+    const result = await testInstance.execute({
+      query: { ...fakeQuery, typeSort: "desc" },
+      userId: fakeUserEntity?._id,
+    });
+    expect(result).toEqual(ok(fake{{pascalCase name}}Paginated));
+    expect(load{{pascalCase name}}ByPage).toHaveBeenCalledWith({
+      fields: fakeQueryParams,
+      options: { sort: { [fakeRestQuery?.sortBy]: -1 }, page: fakeRestQuery?.page },
+    });
+    expect(load{{pascalCase name}}ByPage).toHaveBeenCalledTimes(1);
+  });
+  test("should call load{{pascalCase name}}ByPage with correct params without http query", async () => {
+    const result = await testInstance.execute({
+      userId: fakeUserEntity?._id,
+    });
+    expect(result).toEqual(ok(fake{{pascalCase name}}Paginated));
+  });
+  test("should throws if load{{pascalCase name}}ByPage throw", async () => {
+    load{{pascalCase name}}ByPage.mockRejectedValueOnce(new Error("error"));
+    const result = testInstance.execute({
+      query: fakeQuery,
+      userId: fakeUserEntity?._id,
+    });
+    await expect(result).rejects.toThrow(new Error("error"));
+  });
+  test("should return bad request if i dont pass any required field", async () => {
+    validation.validate.mockReturnValueOnce([new MissingParamError("page")]);
+    const httpResponse = await testInstance.execute({ query: fakeQuery });
+    expect(httpResponse).toEqual(badRequest([new MissingParamError("page")]));
+  });
+});

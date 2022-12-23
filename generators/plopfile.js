@@ -22,6 +22,17 @@ module.exports = function (plop) {
     ],
     actions: [...repositoryCreations],
   });
+  plop.setGenerator("controllers", {
+    description: "Create a new controller",
+    prompts: [
+      {
+        type: "input",
+        name: "name",
+        message: "What is the name of the controller?",
+      },
+    ],
+    actions: [...controllersCreations],
+  });
   plop.setGenerator("usecasesfactories", {
     description: "Create a new use case factory",
     prompts: [
@@ -36,7 +47,13 @@ module.exports = function (plop) {
   plop.setGenerator("all", {
     description: "Create a new domain",
     prompts: [{ type: "input", name: "name", message: "What is the name of the domain?" }],
-    actions: [...entitiesCreations, ...useCasesCreations, ...repositoryCreations],
+    actions: [
+      ...entitiesCreations,
+      ...useCasesCreations,
+      ...repositoryCreations,
+      ...useCasesFactoriesCreations,
+      ...controllersCreations,
+    ],
   });
   plop.setGenerator("test", {
     description: "Create a new test",
@@ -261,5 +278,119 @@ const useCasesFactoriesCreations = [
     type: "add",
     path: "../src/slices/{{camelCase name}}/useCases/load{{pascalCase name}}/Load{{pascalCase name}}Factory.ts",
     templateFile: "./templates/useCases/loadDomain/LoadDomainFactory.ts.hbs",
+  },
+];
+const controllersCreations = [
+  {
+    type: "add",
+    path: "../src/slices/{{camelCase name}}/controllers/index.ts",
+    templateFile: "./templates/controllers/index.ts.hbs",
+  },
+  {
+    type: "add",
+    path: "../src/slices/{{camelCase name}}/controllers/load{{pascalCase name}}ByPage/load{{pascalCase name}}ByPageController.ts",
+    templateFile:
+      "./templates/controllers/loadDomainByPage/loadDomainByPageController.ts.hbs",
+  },
+  {
+    type: "add",
+    path: "../src/slices/{{camelCase name}}/controllers/load{{pascalCase name}}ByPage/load{{pascalCase name}}ByPageControllerFactory.ts",
+    templateFile:
+      "./templates/controllers/loadDomainByPage/loadDomainByPageControllerFactory.ts.hbs",
+  },
+  {
+    type: "add",
+    path: "../src/slices/{{camelCase name}}/controllers/load{{pascalCase name}}ByPage/load{{pascalCase name}}ByPageController.spec.ts",
+    templateFile:
+      "./templates/controllers/loadDomainByPage/loadDomainByPageController.spec.ts.hbs",
+  },
+  {
+    type: "add",
+    path: "../src/slices/{{camelCase name}}/controllers/load{{pascalCase name}}ByPage/index.ts",
+    templateFile: "./templates/controllers/loadDomainByPage/index.ts.hbs",
+  },
+  {
+    type: "add",
+    path: "../src/slices/{{camelCase name}}/controllers/load{{pascalCase name}}/load{{pascalCase name}}Controller.ts",
+    templateFile: "./templates/controllers/loadDomain/loadDomainController.ts.hbs",
+  },
+  {
+    type: "add",
+    path: "../src/slices/{{camelCase name}}/controllers/load{{pascalCase name}}/load{{pascalCase name}}ControllerFactory.ts",
+    templateFile: "./templates/controllers/loadDomain/loadDomainControllerFactory.ts.hbs",
+  },
+  {
+    type: "add",
+    path: "../src/slices/{{camelCase name}}/controllers/load{{pascalCase name}}/load{{pascalCase name}}Controller.spec.ts",
+    templateFile: "./templates/controllers/loadDomain/loadDomainController.spec.ts.hbs",
+  },
+  {
+    type: "add",
+    path: "../src/slices/{{camelCase name}}/controllers/load{{pascalCase name}}/index.ts",
+    templateFile: "./templates/controllers/loadDomain/index.ts.hbs",
+  },
+  {
+    type: "add",
+    path: "../src/slices/{{camelCase name}}/controllers/add{{pascalCase name}}/add{{pascalCase name}}Controller.ts",
+    templateFile: "./templates/controllers/addDomain/addDomainController.ts.hbs",
+  },
+  {
+    type: "add",
+    path: "../src/slices/{{camelCase name}}/controllers/add{{pascalCase name}}/add{{pascalCase name}}ControllerFactory.ts",
+    templateFile: "./templates/controllers/addDomain/addDomainControllerFactory.ts.hbs",
+  },
+  {
+    type: "add",
+    path: "../src/slices/{{camelCase name}}/controllers/add{{pascalCase name}}/add{{pascalCase name}}Controller.spec.ts",
+    templateFile: "./templates/controllers/addDomain/addDomainController.spec.ts.hbs",
+  },
+  {
+    type: "add",
+    path: "../src/slices/{{camelCase name}}/controllers/add{{pascalCase name}}/index.ts",
+    templateFile: "./templates/controllers/addDomain/index.ts.hbs",
+  },
+  {
+    type: "add",
+    path: "../src/slices/{{camelCase name}}/controllers/delete{{pascalCase name}}/delete{{pascalCase name}}Controller.ts",
+    templateFile: "./templates/controllers/deleteDomain/deleteDomainController.ts.hbs",
+  },
+  {
+    type: "add",
+    path: "../src/slices/{{camelCase name}}/controllers/delete{{pascalCase name}}/delete{{pascalCase name}}ControllerFactory.ts",
+    templateFile:
+      "./templates/controllers/deleteDomain/deleteDomainControllerFactory.ts.hbs",
+  },
+  {
+    type: "add",
+    path: "../src/slices/{{camelCase name}}/controllers/delete{{pascalCase name}}/delete{{pascalCase name}}Controller.spec.ts",
+    templateFile:
+      "./templates/controllers/deleteDomain/deleteDomainController.spec.ts.hbs",
+  },
+  {
+    type: "add",
+    path: "../src/slices/{{camelCase name}}/controllers/delete{{pascalCase name}}/index.ts",
+    templateFile: "./templates/controllers/deleteDomain/index.ts.hbs",
+  },
+  {
+    type: "add",
+    path: "../src/slices/{{camelCase name}}/controllers/update{{pascalCase name}}/update{{pascalCase name}}Controller.ts",
+    templateFile: "./templates/controllers/updateDomain/updateDomainController.ts.hbs",
+  },
+  {
+    type: "add",
+    path: "../src/slices/{{camelCase name}}/controllers/update{{pascalCase name}}/update{{pascalCase name}}ControllerFactory.ts",
+    templateFile:
+      "./templates/controllers/updateDomain/updateDomainControllerFactory.ts.hbs",
+  },
+  {
+    type: "add",
+    path: "../src/slices/{{camelCase name}}/controllers/update{{pascalCase name}}/update{{pascalCase name}}Controller.spec.ts",
+    templateFile:
+      "./templates/controllers/updateDomain/updateDomainController.spec.ts.hbs",
+  },
+  {
+    type: "add",
+    path: "../src/slices/{{camelCase name}}/controllers/update{{pascalCase name}}/index.ts",
+    templateFile: "./templates/controllers/updateDomain/index.ts.hbs",
   },
 ];
