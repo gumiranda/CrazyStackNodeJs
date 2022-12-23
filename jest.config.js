@@ -12,6 +12,7 @@ module.exports = {
     "!**/*spec.ts",
     "!**/*specdb.ts",
   ],
+  preset: "@shelf/jest-mongodb",
   coverageDirectory: "coverage",
   testEnvironment: "node",
   transform: {
