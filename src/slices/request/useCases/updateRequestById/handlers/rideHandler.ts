@@ -12,13 +12,13 @@ export class RideHandler extends AbstractHandler {
     ) {
       const rideCreated = await this.rideRepository.addRide({
         requestId: request?._id,
-        name: "recorrenciaCriada",
+        name: "corridaCriada",
         createdById: request?.createdById,
         createdAt: new Date(),
         updatedAt: new Date(),
         active: true,
-        initDate: request?.initDate,
-        endDate: request?.endDate,
+        initDate: request?.ride?.initDate,
+        endDate: request?.ride?.endDate,
         driverUserType: request?.ride?.driverUserType,
         origin: request?.ride?.origin,
         destiny: request?.ride?.destiny,

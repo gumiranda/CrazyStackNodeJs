@@ -261,6 +261,36 @@ describe("UpdateRequestById useCase", () => {
       })
     ).rejects.toThrow("Não foi possível criar o pedido");
   });
+  test("should call mockOrder.addOrder method with correct values", async () => {
+    await testInstance.updateRequestById(fakeRequestEntity._id, {
+      ...fakeRequestEntity,
+      status: 10,
+      initDate: subMinutes(new Date(), 4000).toISOString(),
+    });
+    expect(mockOrder.addOrder).toHaveBeenCalledWith({
+      name: "pedidoEfetivado",
+      createdById: fakeRequestEntity?.createdById,
+      createdAt: new Date(),
+      percentageAdopted: fakeRequestEntity?.order?.percentageAdopted,
+      paymentForm: fakeRequestEntity?.order?.paymentForm,
+      orderPaidByClient: fakeRequestEntity?.order?.orderPaidByClient,
+      comissionPaidByOwner: fakeRequestEntity?.order?.comissionPaidByOwner,
+      comissionValue: fakeRequestEntity?.order?.comissionValue,
+      totalValue: fakeRequestEntity?.order?.totalValue,
+      ownerId: fakeRequestEntity?.ownerId,
+      clientId: fakeRequestEntity?.clientId,
+      extraCost: fakeRequestEntity?.order?.extraCost,
+      normalCost: fakeRequestEntity?.order?.normalCost,
+      haveFidelity: fakeRequestEntity?.haveFidelity,
+      haveDelivery: fakeRequestEntity?.haveDelivery,
+      professionalId: fakeRequestEntity?.professionalId,
+      pointsUsed: fakeRequestEntity?.order?.pointsUsed,
+      appointmentDate: fakeRequestEntity?.order?.appointmentDate,
+      updatedAt: new Date(),
+      active: true,
+    });
+    expect(mockOrder.addOrder).toHaveBeenCalledTimes(1);
+  });
   it("Should throws if was not add recurrence after call addRecurrence of recurrenceRepository when status updated is 0", async () => {
     mockRecurrence.addRecurrence.mockResolvedValueOnce(null);
     mockRepo.updateRequest.mockResolvedValueOnce({
@@ -351,6 +381,7 @@ describe("UpdateRequestById useCase", () => {
       })
     ).rejects.toThrow("Não foi possível criar o agendamento");
   });
+
   it("Should throws if was not add appointment after call updateAppointment of appointmentRepository when status updated is 2", async () => {
     mockAppointment.updateAppointment.mockResolvedValueOnce(null);
     mockRepo.updateRequest.mockResolvedValueOnce({
@@ -421,6 +452,24 @@ describe("UpdateRequestById useCase", () => {
       })
     ).rejects.toThrow("Erro ao adicionar os pontos de fidelidade pro cliente");
   });
+  test("should call mockFidelity.addFidelity method with correct values", async () => {
+    await testInstance.updateRequestById(fakeRequestEntity._id, {
+      ...fakeRequestEntity,
+      status: 10,
+      initDate: subMinutes(new Date(), 4000).toISOString(),
+    });
+    expect(mockFidelity.addFidelity).toHaveBeenCalledWith({
+      active: true,
+      ownerId: fakeRequestEntity?.ownerId,
+      points: fakeRequestEntity?.fidelity?.points,
+      clientId: fakeRequestEntity?.clientId,
+      name: fakeRequestEntity?.name,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      createdById: fakeRequestEntity?.createdById,
+    });
+    expect(mockFidelity.addFidelity).toHaveBeenCalledTimes(1);
+  });
   it("Should throws if was not add fidelity after call addfidelity of fidelityRepository STATUS===11", async () => {
     mockFidelity.addFidelity.mockResolvedValueOnce(null);
     mockRepo.updateRequest.mockResolvedValueOnce({
@@ -435,5 +484,82 @@ describe("UpdateRequestById useCase", () => {
         initDate: subMinutes(new Date(), 4000).toISOString(),
       })
     ).rejects.toThrow("Erro ao adicionar os pontos de fidelidade pro cliente");
+  });
+  test("should call mockAppointment.addAppointment method with correct values", async () => {
+    const newfakeRequestEntity = { ...fakeRequestEntity, status: 7 };
+    mockRepo.updateRequest.mockResolvedValueOnce(newfakeRequestEntity);
+    await testInstance.updateRequestById("123", fakeRequestEntity);
+    expect(mockAppointment.addAppointment).toHaveBeenCalledWith({
+      requestId: "123",
+      name: "agendamentoCriado",
+      message: "mensagem",
+      serviceId: fakeRequestEntity?.serviceId,
+      ownerId: fakeRequestEntity?.ownerId,
+      clientId: fakeRequestEntity?.clientId,
+      status: 1,
+      createdById: fakeRequestEntity?.createdById,
+      read: false,
+      push: false,
+      email: false,
+      active: true,
+      initDate: fakeRequestEntity?.initDate,
+      endDate: fakeRequestEntity?.endDate,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      cancelled: false,
+      professionalId: fakeRequestEntity?.professionalId,
+    });
+    expect(mockAppointment.addAppointment).toHaveBeenCalledTimes(1);
+  });
+  test("should call mockRecurrence.addRecurrence method with correct values", async () => {
+    const newfakeRequestEntity = { ...fakeRequestEntity, status: 6 };
+    mockRepo.updateRequest.mockResolvedValueOnce(newfakeRequestEntity);
+    await testInstance.updateRequestById("123", fakeRequestEntity);
+    expect(mockRecurrence.addRecurrence).toHaveBeenCalledWith({
+      createdAt: new Date(),
+      type: fakeRequestEntity?.recurrence?.type,
+      createdById: fakeRequestEntity?.createdById,
+      accept: false,
+      appointmentsWasInserted: false,
+      initDate: fakeRequestEntity?.initDate,
+      endDate: fakeRequestEntity?.endDate,
+      professionalId: fakeRequestEntity?.professionalId,
+      clientId: fakeRequestEntity?.clientId,
+      serviceId: fakeRequestEntity?.serviceId,
+      ownerId: fakeRequestEntity?.ownerId,
+      frequency: fakeRequestEntity?.recurrence?.frequency,
+      requestId: "123",
+      name: "recorrenciaCriada",
+      updatedAt: new Date(),
+      active: true,
+    });
+    expect(mockRecurrence.addRecurrence).toHaveBeenCalledTimes(1);
+  });
+  test("should call mockRide.addRide method with correct values", async () => {
+    const newfakeRequestEntity = { ...fakeRequestEntity, status: 1 };
+    mockRepo.updateRequest.mockResolvedValueOnce(newfakeRequestEntity);
+    await testInstance.updateRequestById("123", fakeRequestEntity);
+    expect(mockRide.addRide).toHaveBeenCalledWith({
+      createdAt: new Date(),
+      name: "corridaCriada",
+      createdById: fakeRequestEntity?.createdById,
+      driverUserType: fakeRequestEntity?.ride?.driverUserType,
+      origin: fakeRequestEntity?.ride?.origin,
+      destiny: fakeRequestEntity?.ride?.destiny,
+      distance: fakeRequestEntity?.ride?.distance,
+      distanceTime: fakeRequestEntity?.ride?.distanceTime,
+      maxCostEstimated: fakeRequestEntity?.ride?.maxCostEstimated,
+      minCostEstimated: fakeRequestEntity?.ride?.minCostEstimated,
+      finalCost: fakeRequestEntity?.ride?.finalCost,
+      costDefinedByOwner: fakeRequestEntity?.ride?.costDefinedByOwner,
+      initDate: fakeRequestEntity?.ride?.initDate,
+      endDateEstimated: fakeRequestEntity?.ride?.endDateEstimated,
+      endDate: fakeRequestEntity?.ride?.endDate,
+      status: 0,
+      requestId: "123",
+      updatedAt: new Date(),
+      active: true,
+    });
+    expect(mockRide.addRide).toHaveBeenCalledTimes(1);
   });
 });
