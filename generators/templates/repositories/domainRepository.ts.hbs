@@ -1,0 +1,43 @@
+import { Repository } from "@/application/infra/contracts/repository";
+import { {{pascalCase name}}Data, {{pascalCase name}}Paginated } from "@/slices/{{camelCase name}}/entities";
+import {
+    Add{{pascalCase name}}Repository,
+    Delete{{pascalCase name}}Repository,
+    Load{{pascalCase name}}ByPageRepository,
+    Load{{pascalCase name}}Repository,
+    Update{{pascalCase name}}Repository,
+} from "./contracts";
+import { Query } from "@/application/types";
+export class {{pascalCase name}}Repository
+    implements
+        Add{{pascalCase name}}Repository,
+        Delete{{pascalCase name}}Repository,
+        Load{{pascalCase name}}ByPageRepository,
+        Load{{pascalCase name}}Repository,
+        Update{{pascalCase name}}Repository
+{
+    constructor(private readonly repository: Repository) {}
+    async add{{pascalCase name}}({{camelCase name}}: {{pascalCase name}}Data): Promise<{{pascalCase name}}Data | null> {
+        return this.repository.add({{camelCase name}});
+    }
+    async delete{{pascalCase name}}(query: Query): Promise<{{pascalCase name}}Data | null> {
+        return this.repository.deleteOne(query?.fields);
+    }
+    async load{{pascalCase name}}ByPage(query: Query): Promise<{{pascalCase name}}Paginated | null> {
+        const {{camelCase name}}s = await this.repository.getPaginate(
+            query?.options?.page ?? 0,
+            query?.fields ?? {},
+            query?.options?.sort ?? { createdAt: -1 },
+            10,
+            query?.options?.projection ?? {}
+        );
+        const total = await this.repository.getCount(query?.fields ?? {});
+        return { {{camelCase name}}s, total };
+    }
+    async load{{pascalCase name}}(query: Query): Promise<{{pascalCase name}}Data | null> {
+        return this.repository.getOne(query?.fields ?? {}, query?.options ?? {});
+    }
+    async update{{pascalCase name}}(query: Query, data: {{pascalCase name}}Data): Promise<{{pascalCase name}}Data | null> {
+        return this.repository.update(query?.fields ?? {}, data);
+    }
+}

@@ -11,10 +11,21 @@ module.exports = function (plop) {
     ],
     actions: [...useCasesCreations],
   });
+  plop.setGenerator("repositories", {
+    description: "Create a new repository",
+    prompts: [
+      {
+        type: "input",
+        name: "name",
+        message: "What is the name of the repository?",
+      },
+    ],
+    actions: [...repositoryCreations],
+  });
   plop.setGenerator("all", {
     description: "Create a new domain",
     prompts: [{ type: "input", name: "name", message: "What is the name of the domain?" }],
-    actions: [...entitiesCreations, ...useCasesCreations],
+    actions: [...entitiesCreations, ...useCasesCreations, ...repositoryCreations],
   });
   plop.setGenerator("test", {
     description: "Create a new test",
@@ -159,5 +170,23 @@ const entitiesCreations = [
     type: "add",
     path: "../src/slices/{{camelCase name}}/entities/index.ts",
     templateFile: "./templates/entities/index.ts.hbs",
+  },
+];
+const repositoryCreations = [
+  {
+    type: "modify",
+    path: "../src/slices/{{camelCase name}}/repositories/index.ts",
+    pattern: /(\/\/ IMPORT MODULE FILES)/g,
+    template: '$1\nexport * from "./{{camelCase name}}Repository";',
+  },
+  {
+    type: "add",
+    path: "../src/slices/{{camelCase name}}/repositories/{{camelCase name}}Repository.ts",
+    templateFile: "./templates/repositories/domainRepository.ts.hbs",
+  },
+  {
+    type: "add",
+    path: "../src/slices/{{camelCase name}}/repositories/{{camelCase name}}Repository.specdb.ts",
+    templateFile: "./templates/repositories/domainRepository.specdb.ts.hbs",
   },
 ];
