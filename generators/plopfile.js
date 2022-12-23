@@ -22,6 +22,17 @@ module.exports = function (plop) {
     ],
     actions: [...repositoryCreations],
   });
+  plop.setGenerator("usecasesfactories", {
+    description: "Create a new use case factory",
+    prompts: [
+      {
+        type: "input",
+        name: "name",
+        message: "What is the name of the use case factory?",
+      },
+    ],
+    actions: [...useCasesFactoriesCreations],
+  });
   plop.setGenerator("all", {
     description: "Create a new domain",
     prompts: [{ type: "input", name: "name", message: "What is the name of the domain?" }],
@@ -188,5 +199,67 @@ const repositoryCreations = [
     type: "add",
     path: "../src/slices/{{camelCase name}}/repositories/{{camelCase name}}Repository.specdb.ts",
     templateFile: "./templates/repositories/domainRepository.specdb.ts.hbs",
+  },
+];
+const useCasesFactoriesCreations = [
+  {
+    type: "add",
+    path: "../src/slices/{{camelCase name}}/useCases/index.ts",
+    templateFile: "./templates/useCases/index.ts.hbs",
+  },
+  {
+    type: "modify",
+    path: "../src/slices/{{camelCase name}}/useCases/load{{pascalCase name}}ByPage/index.ts",
+    pattern: /(\/\/ IMPORT MODULE FILES)/g,
+    template: '$1\nexport * from "./Load{{pascalCase name}}ByPageFactory";',
+  },
+  {
+    type: "modify",
+    path: "../src/slices/{{camelCase name}}/useCases/load{{pascalCase name}}/index.ts",
+    pattern: /(\/\/ IMPORT MODULE FILES)/g,
+    template: '$1\nexport * from "./Load{{pascalCase name}}Factory";',
+  },
+  {
+    type: "modify",
+    path: "../src/slices/{{camelCase name}}/useCases/update{{pascalCase name}}/index.ts",
+    pattern: /(\/\/ IMPORT MODULE FILES)/g,
+    template: '$1\nexport * from "./Update{{pascalCase name}}Factory";',
+  },
+  {
+    type: "modify",
+    path: "../src/slices/{{camelCase name}}/useCases/delete{{pascalCase name}}/index.ts",
+    pattern: /(\/\/ IMPORT MODULE FILES)/g,
+    template: '$1\nexport * from "./Delete{{pascalCase name}}Factory";',
+  },
+  {
+    type: "modify",
+    path: "../src/slices/{{camelCase name}}/useCases/add{{pascalCase name}}/index.ts",
+    pattern: /(\/\/ IMPORT MODULE FILES)/g,
+    template: '$1\nexport * from "./Add{{pascalCase name}}Factory";',
+  },
+  {
+    type: "add",
+    path: "../src/slices/{{camelCase name}}/useCases/load{{pascalCase name}}ByPage/Load{{pascalCase name}}ByPageFactory.ts",
+    templateFile: "./templates/useCases/loadDomainByPage/LoadDomainByPageFactory.ts.hbs",
+  },
+  {
+    type: "add",
+    path: "../src/slices/{{camelCase name}}/useCases/update{{pascalCase name}}/Update{{pascalCase name}}Factory.ts",
+    templateFile: "./templates/useCases/updateDomain/UpdateDomainFactory.ts.hbs",
+  },
+  {
+    type: "add",
+    path: "../src/slices/{{camelCase name}}/useCases/add{{pascalCase name}}/Add{{pascalCase name}}Factory.ts",
+    templateFile: "./templates/useCases/addDomain/AddDomainFactory.ts.hbs",
+  },
+  {
+    type: "add",
+    path: "../src/slices/{{camelCase name}}/useCases/delete{{pascalCase name}}/Delete{{pascalCase name}}Factory.ts",
+    templateFile: "./templates/useCases/deleteDomain/DeleteDomainFactory.ts.hbs",
+  },
+  {
+    type: "add",
+    path: "../src/slices/{{camelCase name}}/useCases/load{{pascalCase name}}/Load{{pascalCase name}}Factory.ts",
+    templateFile: "./templates/useCases/loadDomain/LoadDomainFactory.ts.hbs",
   },
 ];

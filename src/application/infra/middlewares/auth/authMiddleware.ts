@@ -8,7 +8,7 @@ import {
   unauthorized,
 } from "@/application/helpers";
 import { Middleware } from "@/application/infra/contracts";
-import { LoadUser } from "@/slices/user/useCases/loadUser";
+import { LoadUser } from "@/slices/user/useCases";
 import { AccessDeniedError } from "@/application/errors";
 import { env } from "@/application/infra/config";
 import { ObjectId } from "mongodb";
