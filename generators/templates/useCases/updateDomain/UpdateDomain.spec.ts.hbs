@@ -1,0 +1,49 @@
+import { Update{{pascalCase name}}Repository } from "@/slices/{{camelCase name}}/repositories";
+import MockDate from "mockdate";
+import { mock, MockProxy } from "jest-mock-extended";
+import { Query } from "@/application/types";
+import { fake{{pascalCase name}}Entity } from "@/slices/{{camelCase name}}/entities/{{pascalCase name}}Entity.spec";
+import { Update{{pascalCase name}}, update{{pascalCase name}} } from "./Update{{pascalCase name}}";
+
+describe("Update{{pascalCase name}}", () => {
+    let fakeQuery: Query;
+    let testInstance: Update{{pascalCase name}};
+    let update{{pascalCase name}}Repository: MockProxy<Update{{pascalCase name}}Repository>;
+    beforeAll(async () => {
+        MockDate.set(new Date());
+        update{{pascalCase name}}Repository = mock();
+        fakeQuery = { fields: { name: "123" }, options: {} };
+        update{{pascalCase name}}Repository.update{{pascalCase name}}.mockResolvedValue(fake{{pascalCase name}}Entity);
+    });
+    beforeEach(() => {
+        testInstance = update{{pascalCase name}}(update{{pascalCase name}}Repository);
+    });
+    afterAll(async () => {
+        MockDate.reset();
+    });
+    it("should call update{{pascalCase name}} of Update{{pascalCase name}}Repository with correct values", async () => {
+        await testInstance(fakeQuery, fake{{pascalCase name}}Entity);
+        expect(update{{pascalCase name}}Repository.update{{pascalCase name}}).toHaveBeenCalledWith(
+            fakeQuery,
+            fake{{pascalCase name}}Entity
+        );
+        expect(update{{pascalCase name}}Repository.update{{pascalCase name}}).toHaveBeenCalledTimes(1);
+    });
+    it("should return a {{camelCase name}} updateed when update{{pascalCase name}}Repository insert it", async () => {
+        const {{camelCase name}} = await testInstance(fakeQuery, fake{{pascalCase name}}Entity);
+        expect({{camelCase name}}).toEqual(fake{{pascalCase name}}Entity);
+    });
+    it("should return null a new {{camelCase name}} updateed when update{{pascalCase name}}Repository return it", async () => {
+        update{{pascalCase name}}Repository.update{{pascalCase name}}.mockResolvedValue(null);
+        const {{camelCase name}} = await testInstance(fakeQuery, fake{{pascalCase name}}Entity);
+        expect({{camelCase name}}).toBeNull();
+    });
+    it("should rethrow if update{{pascalCase name}} of Update{{pascalCase name}}Repository throws", async () => {
+        update{{pascalCase name}}Repository.update{{pascalCase name}}.mockRejectedValueOnce(
+            new Error("any_error")
+        );
+        await expect(testInstance(fakeQuery, fake{{pascalCase name}}Entity)).rejects.toThrowError(
+            "any_error"
+        );
+    });
+});
