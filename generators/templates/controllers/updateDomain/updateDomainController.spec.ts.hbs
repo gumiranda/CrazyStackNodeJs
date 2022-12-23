@@ -60,12 +60,9 @@ describe("Update{{pascalCase name}}Controller", () => {
       })
     );
     expect(update{{pascalCase name}}).toHaveBeenCalledWith(
-       {
-        fields: {
-         ...fake{{pascalCase name}}Entity,
-          createdById: fakeUserEntity?._id,
-        },
-        options: {},
+      {
+        ...fake{{pascalCase name}}Entity,
+        createdById: fakeUserEntity?._id,
       },
       fake{{pascalCase name}}Entity
     );

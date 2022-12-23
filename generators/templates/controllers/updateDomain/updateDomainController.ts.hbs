@@ -28,11 +28,8 @@ export class Update{{pascalCase name}}Controller extends Controller {
     }
     const {{camelCase name}}Updated = await this.update{{pascalCase name}}(
       {
-        fields: {
-          ...httpRequest?.query,
-          createdById: httpRequest?.userId,
-        },
-        options: {},
+        ...httpRequest?.query,
+        createdById: httpRequest?.userId,
       },
       httpRequest?.body
     );

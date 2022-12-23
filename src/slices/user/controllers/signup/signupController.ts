@@ -33,25 +33,25 @@ export class SignupController extends Controller {
       return badRequest(errors);
     }
     const { email, password } = httpRequest?.body;
-    //  if (env.environment !== "test") {
-    const { validators = null } = (await emailValidator(email)) || {};
-    const {
-      regex = null,
-      typo = null,
-      disposable = null,
-      smtp = null,
-      mx = null,
-    } = validators || {};
-    if (
-      !regex?.valid ||
-      !typo?.valid ||
-      !disposable?.valid ||
-      (!smtp?.valid && smtp?.reason !== "Timeout") ||
-      !mx?.valid
-    ) {
-      return badRequest([new InvalidParamError("email")]);
+    if (env.environment !== "test") {
+      const { validators = null } = (await emailValidator(email)) || {};
+      const {
+        regex = null,
+        typo = null,
+        disposable = null,
+        smtp = null,
+        mx = null,
+      } = validators || {};
+      if (
+        !regex?.valid ||
+        !typo?.valid ||
+        !disposable?.valid ||
+        (!smtp?.valid && smtp?.reason !== "Timeout") ||
+        !mx?.valid
+      ) {
+        return badRequest([new InvalidParamError("email")]);
+      }
     }
-    // }
     const userExists = await this.loadUser({
       fields: { email },
       options: { projection: { password: 0 } },
