@@ -24,9 +24,9 @@ describe("UpdateRequestController", () => {
       updatedById: fakeUserEntity?._id,
     });
     validationQuery = mock();
-    validationQuery.validate.mockReturnValue([] as never);
+    validationQuery.validate.mockResolvedValue([] as never);
     validationBody = mock();
-    validationBody.validate.mockReturnValue([] as never);
+    validationBody.validate.mockResolvedValue([] as never);
   });
   afterAll(() => {
     MockDate.reset();
@@ -90,7 +90,13 @@ describe("UpdateRequestController", () => {
       userId: fakeUserEntity?._id,
       userLogged: fakeUserEntity,
     });
-    expect(result).toEqual(badRequest([]));
+    expect(result).toEqual(
+      badRequest(
+        new Promise(() => {
+          return {};
+        })
+      )
+    );
     expect(validateAvailableTimes).toHaveBeenCalledWith({
       date: new Date().toISOString(),
       initDate: fakeRequestEntity.initDate,
