@@ -1,0 +1,48 @@
+import { Load{{pascalCase name}}ByPageRepository } from "@/slices/{{camelCase name}}/repositories";
+import MockDate from "mockdate";
+import { mock, MockProxy } from "jest-mock-extended";
+import { Query } from "@/application/types";
+import { fake{{pascalCase name}}Paginated } from "@/slices/{{camelCase name}}/entities/{{pascalCase name}}Entity.spec";
+import { Load{{pascalCase name}}ByPage, load{{pascalCase name}}ByPage } from "./Load{{pascalCase name}}ByPage";
+
+describe("Load{{pascalCase name}}ByPage", () => {
+    let fakeQuery: Query;
+    let testInstance: Load{{pascalCase name}}ByPage;
+    let load{{pascalCase name}}ByPageRepository: MockProxy<Load{{pascalCase name}}ByPageRepository>;
+    beforeAll(async () => {
+        MockDate.set(new Date());
+        load{{pascalCase name}}ByPageRepository = mock();
+        fakeQuery = { fields: { name: "123" }, options: {} };
+        load{{pascalCase name}}ByPageRepository.load{{pascalCase name}}ByPage.mockResolvedValue(
+            fake{{pascalCase name}}Paginated
+        );
+    });
+    beforeEach(() => {
+        testInstance = load{{pascalCase name}}ByPage(load{{pascalCase name}}ByPageRepository);
+    });
+    afterAll(async () => {
+        MockDate.reset();
+    });
+    it("should call load{{pascalCase name}}ByPage of Load{{pascalCase name}}ByPageRepository with correct values", async () => {
+        await testInstance(fakeQuery);
+        expect(load{{pascalCase name}}ByPageRepository.load{{pascalCase name}}ByPage).toHaveBeenCalledWith(
+            fakeQuery
+        );
+        expect(load{{pascalCase name}}ByPageRepository.load{{pascalCase name}}ByPage).toHaveBeenCalledTimes(1);
+    });
+    it("should return a {{camelCase name}} loaded when load{{pascalCase name}}ByPageRepository insert it", async () => {
+        const {{camelCase name}} = await testInstance(fakeQuery);
+        expect({{camelCase name}}).toEqual(fake{{pascalCase name}}Paginated);
+    });
+    it("should return null a new {{camelCase name}} loaded when load{{pascalCase name}}ByPageRepository return it", async () => {
+        load{{pascalCase name}}ByPageRepository.load{{pascalCase name}}ByPage.mockResolvedValue(null);
+        const {{camelCase name}} = await testInstance(fakeQuery);
+        expect({{camelCase name}}).toBeNull();
+    });
+    it("should rethrow if load{{pascalCase name}}ByPage of Load{{pascalCase name}}ByPageRepository throws", async () => {
+        load{{pascalCase name}}ByPageRepository.load{{pascalCase name}}ByPage.mockRejectedValueOnce(
+            new Error("any_error")
+        );
+        await expect(testInstance(fakeQuery)).rejects.toThrowError("any_error");
+    });
+});
