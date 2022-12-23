@@ -1,0 +1,12 @@
+import { Delete{{pascalCase name}}Repository } from "@/slices/{{camelCase name}}/repositories";
+import { {{pascalCase name}}Data } from "@/slices/{{camelCase name}}/entities";
+import { Query } from "@/application/types";
+
+export type Delete{{pascalCase name}} = (query: Query) => Promise<{{pascalCase name}}Data | null>;
+export type Delete{{pascalCase name}}Signature = (
+    delete{{pascalCase name}}: Delete{{pascalCase name}}Repository
+) => Delete{{pascalCase name}};
+export const delete{{pascalCase name}}: Delete{{pascalCase name}}Signature =
+    (delete{{pascalCase name}}Repository: Delete{{pascalCase name}}Repository) => (query: Query) => {
+        return delete{{pascalCase name}}Repository.delete{{pascalCase name}}(query);
+    };

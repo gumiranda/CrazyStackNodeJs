@@ -42,6 +42,11 @@ const useCasesCreations = [
     },
     {
         type: "add",
+        path: "../src/slices/{{camelCase name}}/repositories/contracts/Delete{{pascalCase name}}Repository.ts",
+        templateFile: "./templates/repositories/contracts/DeleteDomainRepository.ts.hbs",
+    },
+    {
+        type: "add",
         path: "../src/slices/{{camelCase name}}/repositories/contracts/Load{{pascalCase name}}ByPageRepository.ts",
         templateFile:
             "./templates/repositories/contracts/loadDomainByPageRepository.ts.hbs",
@@ -100,6 +105,21 @@ const useCasesCreations = [
         type: "add",
         path: "../src/slices/{{camelCase name}}/useCases/load{{pascalCase name}}ByPage/index.ts",
         templateFile: "./templates/useCases/loadDomainByPage/index.ts.hbs",
+    },
+    {
+        type: "add",
+        path: "../src/slices/{{camelCase name}}/useCases/delete{{pascalCase name}}/Delete{{pascalCase name}}.ts",
+        templateFile: "./templates/useCases/deleteDomain/DeleteDomain.ts.hbs",
+    },
+    {
+        type: "add",
+        path: "../src/slices/{{camelCase name}}/useCases/delete{{pascalCase name}}/Delete{{pascalCase name}}.spec.ts",
+        templateFile: "./templates/useCases/deleteDomain/DeleteDomain.spec.ts.hbs",
+    },
+    {
+        type: "add",
+        path: "../src/slices/{{camelCase name}}/useCases/delete{{pascalCase name}}/index.ts",
+        templateFile: "./templates/useCases/deleteDomain/index.ts.hbs",
     },
 ];
 const entitiesCreations = [

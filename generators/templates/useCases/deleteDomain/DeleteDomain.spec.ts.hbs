@@ -1,0 +1,46 @@
+import { fake{{pascalCase name}}Entity } from "@/slices/{{camelCase name}}/entities/{{pascalCase name}}Entity.spec";
+import { {{pascalCase name}}Entity } from "@/slices/{{camelCase name}}/entities";
+import { Delete{{pascalCase name}}Repository } from "@/slices/{{camelCase name}}/repositories/contracts";
+import MockDate from "mockdate";
+
+import { mock, MockProxy } from "jest-mock-extended";
+import { delete{{pascalCase name}} } from "./Delete{{pascalCase name}}";
+import { Query } from "@/application/types";
+
+describe("delete{{pascalCase name}}", () => {
+    let testInstance: any;
+    let fakeQuery: Query;
+    let delete{{pascalCase name}}Repository: MockProxy<Delete{{pascalCase name}}Repository>;
+    beforeAll(async () => {
+        MockDate.set(new Date());
+        delete{{pascalCase name}}Repository = mock();
+        fakeQuery = { fields: { name: "123" }, options: {} };
+        delete{{pascalCase name}}Repository.delete{{pascalCase name}}.mockResolvedValue(fake{{pascalCase name}}Entity);
+    });
+    beforeEach(() => {
+        testInstance = delete{{pascalCase name}}(delete{{pascalCase name}}Repository);
+    });
+    afterAll(async () => {
+        MockDate.reset();
+    });
+    it("should call delete{{pascalCase name}} of Delete{{pascalCase name}}Repository with correct values", async () => {
+        await testInstance(fakeQuery);
+        expect(delete{{pascalCase name}}Repository.delete{{pascalCase name}}).toHaveBeenCalledWith(fakeQuery);
+        expect(delete{{pascalCase name}}Repository.delete{{pascalCase name}}).toHaveBeenCalledTimes(1);
+    });
+    it("should return a new {{camelCase name}} deleted when delete{{pascalCase name}}Repository delete it", async () => {
+        const {{camelCase name}} = await testInstance(fakeQuery);
+        expect({{camelCase name}}).toEqual(fake{{pascalCase name}}Entity);
+    });
+    it("should return null a new {{camelCase name}} deleted when delete{{pascalCase name}}Repository delete it", async () => {
+        delete{{pascalCase name}}Repository.delete{{pascalCase name}}.mockResolvedValue(null);
+        const {{camelCase name}} = await testInstance(fake{{pascalCase name}}Entity);
+        expect({{camelCase name}}).toBeNull();
+    });
+    it("should rethrow if delete{{pascalCase name}} of Delete{{pascalCase name}}Repository throws", async () => {
+        delete{{pascalCase name}}Repository.delete{{pascalCase name}}.mockRejectedValueOnce(
+            new Error("any_error")
+        );
+        await expect(testInstance(fakeQuery)).rejects.toThrowError("any_error");
+    });
+});
