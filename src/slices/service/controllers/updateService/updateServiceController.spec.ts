@@ -61,8 +61,11 @@ describe("UpdateServiceController", () => {
     );
     expect(updateService).toHaveBeenCalledWith(
       {
-        ...fakeServiceEntity,
-        createdById: fakeUserEntity?._id,
+        fields: {
+          ...fakeServiceEntity,
+          createdById: fakeUserEntity?._id,
+        },
+        options: {},
       },
       fakeServiceEntity
     );

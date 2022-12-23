@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import MockDate from "mockdate";
 import {
   addDays,
@@ -13,8 +14,40 @@ import { SignupController } from "./signupController";
 import { fakeUserEntity } from "@/slices/user/entities/UserEntity.spec";
 import { fakeAccountEntity } from "@/slices/account/entities/AccountEntity.spec";
 import { Controller } from "@/application/infra/contracts";
-import { EmailInUseError, MissingParamError } from "@/application/errors";
-
+import {
+  EmailInUseError,
+  InvalidParamError,
+  MissingParamError,
+} from "@/application/errors";
+jest.mock("deep-email-validator", () => {
+  return {
+    __esModule: true,
+    default: jest
+      .fn()
+      .mockResolvedValue({
+        validators: {
+          regex: { valid: true },
+          typo: { valid: true },
+          disposable: { valid: true },
+          smtp: { valid: true },
+          mx: { valid: true },
+        },
+      })
+      .mockResolvedValueOnce({
+        validators: {
+          regex: { valid: false },
+          typo: { valid: true },
+          disposable: { valid: true },
+          smtp: { valid: true },
+          mx: { valid: true },
+        },
+      })
+      .mockResolvedValueOnce(null)
+      .mockResolvedValueOnce({
+        validators: { regex: null },
+      }),
+  };
+});
 describe("SignUpController", () => {
   let testInstance: SignupController;
   let addUser: jest.Mock;
@@ -49,6 +82,18 @@ describe("SignUpController", () => {
       authentication,
       addAccount
     );
+  });
+  test("should return badrequest when email is invalid", async () => {
+    const httpResponse = await testInstance.execute({ body: fakeUserEntity });
+    expect(httpResponse).toEqual(badRequest([new InvalidParamError("email")]));
+  });
+  test("should return badrequest when email is invalid and validators is null", async () => {
+    const httpResponse = await testInstance.execute({ body: fakeUserEntity });
+    expect(httpResponse).toEqual(badRequest([new InvalidParamError("email")]));
+  });
+  test("should return badrequest when email is invalid and validators regex and others is null", async () => {
+    const httpResponse = await testInstance.execute({ body: fakeUserEntity });
+    expect(httpResponse).toEqual(badRequest([new InvalidParamError("email")]));
   });
   it("should extends class Controller", async () => {
     expect(testInstance).toBeInstanceOf(Controller);

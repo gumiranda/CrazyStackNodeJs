@@ -28,8 +28,11 @@ export class UpdateRideController extends Controller {
     }
     const rideUpdated = await this.updateRide(
       {
-        ...httpRequest?.query,
-        createdById: httpRequest?.userId,
+        fields: {
+          ...httpRequest?.query,
+          createdById: httpRequest?.userId,
+        },
+        options: {},
       },
       httpRequest?.body
     );

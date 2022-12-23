@@ -7,13 +7,13 @@ import {
   ok,
 } from "@/application/helpers";
 import { Controller } from "@/application/infra/contracts";
-import { UpdateCategory } from "@/slices/category/useCases";
+import { UpdateUser } from "@/slices/user/useCases";
 
-export class UpdateCategoryController extends Controller {
+export class UpdateUserController extends Controller {
   constructor(
     private readonly validationQuery: Validation,
     private readonly validationBody: Validation,
-    private readonly updateCategory: UpdateCategory
+    private readonly updateUser: UpdateUser
   ) {
     super();
   }
@@ -26,16 +26,24 @@ export class UpdateCategoryController extends Controller {
     if (errorsQuery?.length > 0) {
       return badRequest(errorsQuery);
     }
-    const categoryUpdated = await this.updateCategory(
-      {
-        fields: {
-          ...httpRequest?.query,
-          createdById: httpRequest?.userId,
-        },
-        options: {},
-      },
+    const query =
+      httpRequest?.userLogged?.role === "admin"
+        ? httpRequest?.query
+        : {
+            ...httpRequest?.query,
+            createdById: httpRequest?.userId,
+          };
+    const userUpdated = await this.updateUser(
+      { fields: query, options: {} },
       httpRequest?.body
     );
-    return ok(categoryUpdated);
+    if (userUpdated) {
+      return ok(userUpdated);
+    }
+    const myUserUpdated = await this.updateUser(
+      { fields: { _id: httpRequest?.userId }, options: {} },
+      httpRequest?.body
+    );
+    return ok(myUserUpdated);
   }
 }

@@ -28,8 +28,11 @@ export class UpdateRatingController extends Controller {
     }
     const ratingUpdated = await this.updateRating(
       {
-        ...httpRequest?.query,
-        createdById: httpRequest?.userId,
+        fields: {
+          ...httpRequest?.query,
+          createdById: httpRequest?.userId,
+        },
+        options: {},
       },
       httpRequest?.body
     );

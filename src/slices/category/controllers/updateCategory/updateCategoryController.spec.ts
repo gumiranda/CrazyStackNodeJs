@@ -61,8 +61,11 @@ describe("UpdateCategoryController", () => {
     );
     expect(updateCategory).toHaveBeenCalledWith(
       {
-        ...fakeCategoryEntity,
-        createdById: fakeUserEntity?._id,
+        fields: {
+          ...fakeCategoryEntity,
+          createdById: fakeUserEntity?._id,
+        },
+        options: {},
       },
       fakeCategoryEntity
     );

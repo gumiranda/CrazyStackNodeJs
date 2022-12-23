@@ -57,8 +57,11 @@ describe("UpdateRideController", () => {
     );
     expect(updateRide).toHaveBeenCalledWith(
       {
-        ...fakeRideEntity,
-        createdById: fakeUserEntity?._id,
+        fields: {
+          ...fakeRideEntity,
+          createdById: fakeUserEntity?._id,
+        },
+        options: {},
       },
       fakeRideEntity
     );
