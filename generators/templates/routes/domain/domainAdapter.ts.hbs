@@ -1,0 +1,15 @@
+import { adaptRoute } from "@/application/adapters";
+import {
+  makeAdd{{pascalCase name}}Controller,
+  makeLoad{{pascalCase name}}Controller,
+  makeDelete{{pascalCase name}}Controller,
+  makeUpdate{{pascalCase name}}Controller,
+  makeLoad{{pascalCase name}}ByPageController,
+} from "@/slices/{{camelCase name}}/controllers";
+
+export const add{{pascalCase name}}Adapter = () => adaptRoute(makeAdd{{pascalCase name}}Controller());
+export const load{{pascalCase name}}Adapter = () => adaptRoute(makeLoad{{pascalCase name}}Controller());
+export const load{{pascalCase name}}ByPageAdapter = () =>
+  adaptRoute(makeLoad{{pascalCase name}}ByPageController());
+export const delete{{pascalCase name}}Adapter = () => adaptRoute(makeDelete{{pascalCase name}}Controller());
+export const update{{pascalCase name}}Adapter = () => adaptRoute(makeUpdate{{pascalCase name}}Controller());

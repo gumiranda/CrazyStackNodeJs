@@ -5,7 +5,21 @@ import { makeAddRequestFactory } from "@/slices/request/useCases";
 import { AddRequestController } from "@/slices/request/controllers";
 
 export const makeAddRequestController = (): Controller => {
-  const requiredFields = ["name"];
+  const requiredFields = [
+    "status",
+    "message",
+    "serviceId",
+    "ownerId",
+    "clientId",
+    "professionalId",
+    "createdForId",
+    "haveDelivery",
+    "haveRecurrence",
+    "haveFidelity",
+    "haveRide",
+    "initDate",
+    "endDate",
+  ];
   return makeLogController(
     "addRequest",
     new AddRequestController(

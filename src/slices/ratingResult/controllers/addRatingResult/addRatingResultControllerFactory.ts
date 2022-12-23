@@ -5,7 +5,7 @@ import { makeAddRatingResultFactory } from "@/slices/ratingResult/useCases";
 import { AddRatingResultController } from "@/slices/ratingResult/controllers";
 
 export const makeAddRatingResultController = (): Controller => {
-  const requiredFields = ["name"];
+  const requiredFields = ["ratingId", "requestId", "ratingType", "rating", "comment"];
   return makeLogController(
     "addRatingResult",
     new AddRatingResultController(

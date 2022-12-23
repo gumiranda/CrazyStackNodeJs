@@ -1,0 +1,144 @@
+const bodyAdd{{pascalCase name}}JsonSchema = {
+  type: "object",
+  required: ["name"],
+  properties: {
+    name: { type: "string" },
+  },
+};
+const headersJsonSchema = {
+  type: "object",
+  properties: {
+    authorization: { type: "string" },
+  },
+  required: ["authorization"],
+};
+const add{{pascalCase name}}Response = {
+  type: "object",
+  properties: {
+    _id: { type: "string", maxLength: 24, minLength: 24 },
+    name: { type: "string" },
+    active: { type: "boolean" },
+    createdById: { type: "string" },
+    createdAt: { type: "string" },
+  },
+};
+export const add{{pascalCase name}}PostSchema = {
+  schema: {
+    body: bodyAdd{{pascalCase name}}JsonSchema,
+    response: { 200: add{{pascalCase name}}Response },
+    headers: headersJsonSchema,
+  },
+};
+
+const queryStringJsonLoad{{pascalCase name}}Schema = {
+  type: "object",
+  properties: {
+    _id: { type: "string", maxLength: 24, minLength: 24 },
+  },
+  required: ["_id"],
+};
+const load{{pascalCase name}}Response = {
+  type: "object",
+  properties: {
+    _id: { type: "string", maxLength: 24, minLength: 24 },
+    name: { type: "string" },
+    active: { type: "boolean" },
+    createdById: { type: "string" },
+    createdAt: { type: "string" },
+  },
+};
+export const load{{pascalCase name}}GetSchema = {
+  schema: {
+    headers: headersJsonSchema,
+    querystring: queryStringJsonLoad{{pascalCase name}}Schema,
+    response: {
+      200: load{{pascalCase name}}Response,
+    },
+  },
+};
+const delete{{pascalCase name}}Response = { type: "boolean" };
+const queryStringJsonDelete{{pascalCase name}}Schema = {
+  type: "object",
+  properties: {
+    _id: { type: "string", maxLength: 24, minLength: 24 },
+  },
+  required: ["_id"],
+};
+export const delete{{pascalCase name}}Schema = {
+  schema: {
+    headers: headersJsonSchema,
+    querystring: queryStringJsonDelete{{pascalCase name}}Schema,
+    response: {
+      200: delete{{pascalCase name}}Response,
+    },
+  },
+};
+const queryStringJsonUpdate{{pascalCase name}}Schema = {
+  type: "object",
+  properties: {
+    _id: { type: "string", maxLength: 24, minLength: 24 },
+  },
+  required: ["_id"],
+};
+const update{{pascalCase name}}Response = {
+  type: "object",
+  properties: {
+    _id: { type: "string", maxLength: 24, minLength: 24 },
+    name: { type: "string" },
+    createdById: { type: "string" },
+  },
+};
+const update{{pascalCase name}}Body = {
+  type: "object",
+  properties: {
+    name: { type: "string" },
+  },
+};
+export const update{{pascalCase name}}Schema = {
+  schema: {
+    headers: headersJsonSchema,
+    querystring: queryStringJsonUpdate{{pascalCase name}}Schema,
+    body: update{{pascalCase name}}Body,
+    response: {
+      200: update{{pascalCase name}}Response,
+    },
+  },
+};
+const queryStringJsonLoad{{pascalCase name}}ByPageSchema = {
+  type: "object",
+  properties: {
+    page: { type: "integer", minimum: 1 },
+    sortBy: { type: "string" },
+    typeSort: { type: "string" },
+  },
+  required: ["page"],
+};
+const load{{pascalCase name}}ByPageResponse = {
+  type: "object",
+  properties: {
+    {{camelCase name}}s: {
+      type: "array",
+      maxItems: 10,
+      items: {
+        type: "object",
+        properties: {
+          _id: { type: "string", maxLength: 24, minLength: 24 },
+          name: { type: "string" },
+          active: { type: "boolean" },
+          createdById: { type: "string" },
+          createdAt: { type: "string" },
+        },
+      },
+    },
+    total: { type: "integer" },
+  },
+};
+export const load{{pascalCase name}}ByPageGetSchema = {
+  schema: {
+    headers: headersJsonSchema,
+    querystring: queryStringJsonLoad{{pascalCase name}}ByPageSchema,
+    response: {
+      200: load{{pascalCase name}}ByPageResponse,
+    },
+  },
+};
