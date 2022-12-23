@@ -14,7 +14,7 @@ export const mapQueryParamsToQueryMongo = (queryParams: any): any => {
   ) {
     return null;
   }
-  let newQuery: any = {};
+  const newQuery: any = {};
   const keys = Object.keys(queryParams);
   for (const key of keys) {
     if (key?.includes?.("Ids")) {
