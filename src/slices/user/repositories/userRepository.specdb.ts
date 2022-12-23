@@ -1,18 +1,11 @@
 import { fakeUserEntity, fakeUserPaginated } from "@/slices/user/entities/UserEntity.spec";
 import { Repository } from "@/application/infra/contracts/repository";
-import { UserData, UserPaginated } from "@/slices/user/entities";
-import {
-  AddUserRepository,
-  DeleteUserRepository,
-  LoadUserByPageRepository,
-  LoadUserRepository,
-  UpdateUserRepository,
-} from "./contracts";
 import { Query } from "@/application/types";
 import MockDate from "mockdate";
 import { mock, MockProxy } from "jest-mock-extended";
 import { UserRepository } from "./userRepository";
-
+import { ObjectId } from "mongodb";
+const fakeId = new ObjectId();
 describe("User Mongo Repository", () => {
   let fakeQuery: Query;
   let testInstance: UserRepository;
@@ -193,5 +186,201 @@ describe("User Mongo Repository", () => {
     repository.increment.mockRejectedValueOnce(new Error("Error"));
     const result = testInstance.incrementAppointmentsTotal(fakeQuery);
     await expect(result).rejects.toThrow("Error");
+  });
+  test("should return null if i dont pass the userLoggedId", async () => {
+    repository.getOne.mockResolvedValueOnce({
+      ...fakeUserEntity,
+      coord: { coordinates: [43.6589, -69.094] },
+    });
+    const user = await testInstance.loadUserByPageGeoNear({
+      ...fakeQuery,
+      fields: { text: "fake_text" },
+    });
+    expect(user).toBeNull();
+  });
+  test("should call getPaginate of loadUserByPageGeoNear with text filter with correct values", async () => {
+    repository.getOne.mockResolvedValueOnce({
+      ...fakeUserEntity,
+      coord: { coordinates: [43.6589, -69.094] },
+    });
+    const user = await testInstance.loadUserByPageGeoNear({
+      ...fakeQuery,
+      options: { userLoggedId: fakeId.toString() },
+      fields: { text: "fake_text" },
+    });
+    expect(repository.getPaginate).toHaveBeenCalledWith(
+      0,
+      {
+        $text: {
+          $caseSensitive: false,
+          $diacriticSensitive: false,
+          $search: "fake_text",
+        },
+        _id: {
+          $ne: new ObjectId(fakeId),
+        },
+        active: true,
+      },
+      { createdAt: -1 },
+      10,
+      {}
+    );
+    expect(repository.getPaginate).toHaveBeenCalledTimes(1);
+    expect(user).toEqual(fakeUserPaginated);
+  });
+  test("should return empty array if was not created anything after call with text filter of loadUserByGeoNear", async () => {
+    repository.getPaginate.mockResolvedValueOnce(null);
+    repository.getCount.mockResolvedValueOnce(0);
+    const user = await testInstance.loadUserByPageGeoNear({
+      ...fakeQuery,
+      options: { userLoggedId: fakeId.toString() },
+      fields: { text: "fake_text" },
+    });
+    expect(user).toEqual({ users: [], total: 0 });
+  });
+  test("getCount default null", async () => {
+    repository.getPaginate.mockResolvedValueOnce(null);
+    repository.getCount.mockResolvedValueOnce(null);
+    const user = await testInstance.loadUserByPageGeoNear({
+      ...fakeQuery,
+      options: { userLoggedId: fakeId.toString() },
+      fields: { text: "fake_text" },
+    });
+    expect(user).toEqual({ users: [], total: 0 });
+  });
+  test("should rethrow if method of loadUserByGeoNear throws", async () => {
+    repository.getOne.mockResolvedValueOnce({
+      ...fakeUserEntity,
+      coord: { coordinates: [43.6589, -69.094] },
+    });
+    repository.getPaginate.mockRejectedValueOnce(new Error("Error"));
+    await expect(
+      testInstance.loadUserByPageGeoNear({
+        ...fakeQuery,
+        options: { userLoggedId: fakeId.toString() },
+        fields: { text: "fake_text" },
+      })
+    ).rejects.toThrow("Error");
+  });
+  test("should call aggregate of loadUserByPageGeoNear with query default with correct values", async () => {
+    repository.getOne.mockResolvedValueOnce({
+      ...fakeUserEntity,
+      coord: { coordinates: [43.6589, -69.094] },
+    });
+    repository.aggregate
+      .mockResolvedValueOnce(fakeUserPaginated.users)
+      .mockResolvedValueOnce([{ name: fakeUserPaginated.total }]);
+    const user = await testInstance.loadUserByPageGeoNear({
+      ...fakeQuery,
+      options: { userLoggedId: fakeId.toString() },
+    });
+    expect(repository.aggregate).toHaveBeenCalledWith([
+      {
+        $geoNear: {
+          distanceField: "distance",
+          maxDistance: 20000000,
+          near: { coordinates: [43.6589, -69.094], type: "Point" },
+          query: {
+            _id: { $ne: new ObjectId(fakeId) },
+            active: true,
+            name: "123",
+          },
+          spherical: true,
+        },
+      },
+      { $sort: { distance: 1 } },
+      { $skip: -10 },
+      { $limit: 10 },
+      { $project: { password: 0 } },
+    ]);
+  });
+  test("should return null when coord is null", async () => {
+    repository.getOne.mockResolvedValueOnce(null as any);
+    const user = await testInstance.loadUserByPageGeoNear({
+      ...fakeQuery,
+      fields: null,
+      options: { userLoggedId: fakeId.toString() },
+    });
+    expect(user).toBeNull();
+  });
+  test("should rethrow if aggregate of loadUserByPageGeoNear with query default throws", async () => {
+    repository.getOne.mockResolvedValueOnce({
+      ...fakeUserEntity,
+      coord: { coordinates: [43.6589, -69.094] },
+    });
+    repository.aggregate.mockRejectedValueOnce(new Error("any_error"));
+    const user = testInstance.loadUserByPageGeoNear({
+      ...fakeQuery,
+      options: { userLoggedId: fakeId.toString() },
+    });
+    await expect(user).rejects.toThrow("any_error");
+  });
+  test("should return null in loadUserByPageGeoNear if i pass null as parameter", async () => {
+    const user = await testInstance.loadUserByPageGeoNear(null as any);
+    expect(user).toBeNull();
+  });
+  test("should rethrow in second call if aggregate of loadUserByPageGeoNear with query default throws", async () => {
+    repository.getOne.mockResolvedValueOnce({
+      ...fakeUserEntity,
+      coord: { coordinates: [43.6589, -69.094] },
+    });
+    repository.aggregate
+      .mockResolvedValueOnce(fakeUserPaginated.users)
+      .mockRejectedValueOnce(new Error("any_error"));
+    const user = testInstance.loadUserByPageGeoNear({
+      ...fakeQuery,
+      options: { userLoggedId: fakeId.toString() },
+    });
+    await expect(user).rejects.toThrow("any_error");
+  });
+  test("should return empty array in loadUserByPageGeoNear with query default with correct values", async () => {
+    repository.getOne.mockResolvedValueOnce({
+      ...fakeUserEntity,
+      coord: { coordinates: [43.6589, -69.094] },
+    });
+    repository.aggregate
+      .mockResolvedValueOnce(null as any)
+      .mockResolvedValueOnce(null as any);
+    const user = await testInstance.loadUserByPageGeoNear({
+      ...fakeQuery,
+      options: { userLoggedId: fakeId.toString() },
+    });
+    expect(repository.aggregate).toHaveBeenCalledWith([
+      {
+        $geoNear: {
+          distanceField: "distance",
+          maxDistance: 20000000,
+          near: { coordinates: [43.6589, -69.094], type: "Point" },
+          query: {
+            _id: { $ne: new ObjectId(fakeId) },
+            active: true,
+            name: "123",
+          },
+          spherical: true,
+        },
+      },
+      { $sort: { distance: 1 } },
+      { $skip: -10 },
+      { $limit: 10 },
+      { $project: { password: 0 } },
+    ]);
+    expect(repository.aggregate).toHaveBeenCalledWith([
+      {
+        $geoNear: {
+          distanceField: "distance",
+          maxDistance: 20000000,
+          near: { coordinates: [43.6589, -69.094], type: "Point" },
+          query: {
+            _id: { $ne: new ObjectId(fakeId) },
+            active: true,
+            name: "123",
+          },
+          spherical: true,
+        },
+      },
+      { $count: "name" },
+    ]);
+    expect(repository.aggregate).toHaveBeenCalledTimes(2);
+    expect(user).toEqual({ users: [], total: 0 });
   });
 });

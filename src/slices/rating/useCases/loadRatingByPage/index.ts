@@ -1,1 +1,1 @@
-export * from "./LoadCategoryByPage";
+export * from "./LoadRatingByPage";
