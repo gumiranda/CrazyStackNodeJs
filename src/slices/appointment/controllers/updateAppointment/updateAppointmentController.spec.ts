@@ -61,11 +61,8 @@ describe("UpdateAppointmentController", () => {
     );
     expect(updateAppointment).toHaveBeenCalledWith(
       {
-        fields: {
-          ...fakeAppointmentEntity,
-          createdById: fakeUserEntity?._id,
-        },
-        options: {},
+        ...fakeAppointmentEntity,
+        createdById: fakeUserEntity?._id,
       },
       fakeAppointmentEntity
     );

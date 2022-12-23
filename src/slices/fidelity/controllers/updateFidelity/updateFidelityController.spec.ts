@@ -61,11 +61,8 @@ describe("UpdateFidelityController", () => {
     );
     expect(updateFidelity).toHaveBeenCalledWith(
       {
-        fields: {
-          ...fakeFidelityEntity,
-          createdById: fakeUserEntity?._id,
-        },
-        options: {},
+        ...fakeFidelityEntity,
+        createdById: fakeUserEntity?._id,
       },
       fakeFidelityEntity
     );

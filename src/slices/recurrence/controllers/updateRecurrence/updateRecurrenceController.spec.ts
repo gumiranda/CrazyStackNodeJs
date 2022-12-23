@@ -61,11 +61,8 @@ describe("UpdateRecurrenceController", () => {
     );
     expect(updateRecurrence).toHaveBeenCalledWith(
       {
-        fields: {
-          ...fakeRecurrenceEntity,
-          createdById: fakeUserEntity?._id,
-        },
-        options: {},
+        ...fakeRecurrenceEntity,
+        createdById: fakeUserEntity?._id,
       },
       fakeRecurrenceEntity
     );

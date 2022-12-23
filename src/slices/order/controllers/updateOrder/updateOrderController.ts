@@ -28,11 +28,8 @@ export class UpdateOrderController extends Controller {
     }
     const orderUpdated = await this.updateOrder(
       {
-        fields: {
-          ...httpRequest?.query,
-          createdById: httpRequest?.userId,
-        },
-        options: {},
+        ...httpRequest?.query,
+        createdById: httpRequest?.userId,
       },
       httpRequest?.body
     );

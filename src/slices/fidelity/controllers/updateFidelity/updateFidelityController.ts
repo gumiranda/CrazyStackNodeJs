@@ -28,11 +28,8 @@ export class UpdateFidelityController extends Controller {
     }
     const fidelityUpdated = await this.updateFidelity(
       {
-        fields: {
-          ...httpRequest?.query,
-          createdById: httpRequest?.userId,
-        },
-        options: {},
+        ...httpRequest?.query,
+        createdById: httpRequest?.userId,
       },
       httpRequest?.body
     );

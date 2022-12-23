@@ -28,11 +28,8 @@ export class UpdateProductController extends Controller {
     }
     const productUpdated = await this.updateProduct(
       {
-        fields: {
-          ...httpRequest?.query,
-          createdById: httpRequest?.userId,
-        },
-        options: {},
+        ...httpRequest?.query,
+        createdById: httpRequest?.userId,
       },
       httpRequest?.body
     );

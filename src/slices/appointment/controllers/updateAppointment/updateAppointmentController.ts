@@ -28,11 +28,8 @@ export class UpdateAppointmentController extends Controller {
     }
     const appointmentUpdated = await this.updateAppointment(
       {
-        fields: {
-          ...httpRequest?.query,
-          createdById: httpRequest?.userId,
-        },
-        options: {},
+        ...httpRequest?.query,
+        createdById: httpRequest?.userId,
       },
       httpRequest?.body
     );
