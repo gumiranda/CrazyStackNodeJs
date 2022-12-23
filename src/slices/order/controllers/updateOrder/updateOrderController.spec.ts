@@ -57,8 +57,11 @@ describe("UpdateOrderController", () => {
     );
     expect(updateOrder).toHaveBeenCalledWith(
       {
-        ...fakeOrderEntity,
-        createdById: fakeUserEntity?._id,
+        fields: {
+          ...fakeOrderEntity,
+          createdById: fakeUserEntity?._id,
+        },
+        options: {},
       },
       fakeOrderEntity
     );

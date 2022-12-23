@@ -28,8 +28,11 @@ export class UpdateClientController extends Controller {
     }
     const clientUpdated = await this.updateClient(
       {
-        ...httpRequest?.query,
-        createdById: httpRequest?.userId,
+        fields: {
+          ...httpRequest?.query,
+          createdById: httpRequest?.userId,
+        },
+        options: {},
       },
       httpRequest?.body
     );

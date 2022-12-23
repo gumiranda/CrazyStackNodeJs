@@ -28,8 +28,11 @@ export class UpdateServiceController extends Controller {
     }
     const serviceUpdated = await this.updateService(
       {
-        ...httpRequest?.query,
-        createdById: httpRequest?.userId,
+        fields: {
+          ...httpRequest?.query,
+          createdById: httpRequest?.userId,
+        },
+        options: {},
       },
       httpRequest?.body
     );

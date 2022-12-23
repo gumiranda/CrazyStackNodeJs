@@ -61,8 +61,11 @@ describe("UpdateRatingController", () => {
     );
     expect(updateRating).toHaveBeenCalledWith(
       {
-        ...fakeRatingEntity,
-        createdById: fakeUserEntity?._id,
+        fields: {
+          ...fakeRatingEntity,
+          createdById: fakeUserEntity?._id,
+        },
+        options: {},
       },
       fakeRatingEntity
     );

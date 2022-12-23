@@ -28,8 +28,11 @@ export class UpdateRecurrenceController extends Controller {
     }
     const recurrenceUpdated = await this.updateRecurrence(
       {
-        ...httpRequest?.query,
-        createdById: httpRequest?.userId,
+        fields: {
+          ...httpRequest?.query,
+          createdById: httpRequest?.userId,
+        },
+        options: {},
       },
       httpRequest?.body
     );

@@ -228,7 +228,7 @@ export const getArrayTimes = (
   const { infoOwner, dayOfWeekFound, dateQuery, appointments, duration } =
     getArrayTimesInput || {};
   const timeAvailable: any = [];
-  let timeAvailableProfessional: any = [];
+  const timeAvailableProfessional: any = [];
   const businessHours: BusinessHoursOutput | null = mapBusinessHours({
     infoOwner,
     dayOfWeekFound,

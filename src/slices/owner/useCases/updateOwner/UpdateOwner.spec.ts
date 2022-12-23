@@ -23,10 +23,11 @@ describe("UpdateOwner", () => {
   });
   it("should call updateOwner of UpdateOwnerRepository with correct values", async () => {
     await testInstance(fakeQuery, fakeOwnerEntity);
-    expect(updateOwnerRepository.updateOwner).toHaveBeenCalledWith(
-      fakeQuery,
-      fakeOwnerEntity
-    );
+    expect(updateOwnerRepository.updateOwner).toHaveBeenCalledWith(fakeQuery, {
+      hourStart1: fakeOwnerEntity?.hourStart1,
+      hourEnd1: fakeOwnerEntity?.hourEnd1,
+      days1: fakeOwnerEntity?.days1,
+    } as any);
     expect(updateOwnerRepository.updateOwner).toHaveBeenCalledTimes(1);
   });
   it("should return a owner updateed when updateOwnerRepository insert it", async () => {
