@@ -72,4 +72,45 @@ describe("Route api/account", () => {
       expect(response.statusCode).toBe(401);
     });
   });
+
+  describe("GET /api/account/whoAmI", () => {
+    test("Should return 200 on refresh", async () => {
+      const response = await fastify.inject({
+        method: "POST",
+        url: "/api/auth/signup",
+        payload: userBody,
+      });
+      const responseBody = JSON.parse(response.body);
+      const refreshtoken = responseBody.refreshToken;
+      expect(response.statusCode).toBe(200);
+      expect(responseBody.user).toBeTruthy();
+      expect(responseBody.accessToken).toBeTruthy();
+      expect(responseBody.refreshToken).toBeTruthy();
+      const responseRefresh = await fastify.inject({
+        method: "GET",
+        url: "/api/account/whoami",
+        headers: { refreshtoken },
+      });
+      const responseBodyRefresh = JSON.parse(responseRefresh.body);
+      expect(responseRefresh.statusCode).toBe(200);
+      expect(responseBodyRefresh.user).toBeTruthy();
+    });
+    test("Should return 400 for bad requests", async () => {
+      await userCollection.insertOne(userBody);
+      const response = await fastify.inject({
+        method: "GET",
+        url: "/api/account/whoami",
+      });
+      expect(response.statusCode).toBe(400);
+    });
+    test("Should return 401 for unauthorized refresh token", async () => {
+      await userCollection.insertOne(userBody);
+      const response = await fastify.inject({
+        method: "GET",
+        url: "/api/account/whoami",
+        headers: { refreshtoken: "invalid_token" },
+      });
+      expect(response.statusCode).toBe(401);
+    });
+  });
 });
