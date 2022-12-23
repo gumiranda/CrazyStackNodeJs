@@ -3,14 +3,6 @@ import {
   fakeAccountPaginated,
 } from "@/slices/account/entities/AccountEntity.spec";
 import { Repository } from "@/application/infra/contracts/repository";
-import { AccountData, AccountPaginated } from "@/slices/account/entities";
-import {
-  AddAccountRepository,
-  DeleteAccountRepository,
-  LoadAccountByPageRepository,
-  LoadAccountRepository,
-  UpdateAccountRepository,
-} from "./contracts";
 import { Query } from "@/application/types";
 import MockDate from "mockdate";
 import { mock, MockProxy } from "jest-mock-extended";
@@ -29,7 +21,7 @@ describe("Account Mongo Repository", () => {
     repository.update.mockResolvedValue(fakeAccountEntity);
     repository.getPaginate.mockResolvedValue(fakeAccountPaginated?.accounts);
     repository.getCount.mockResolvedValue(fakeAccountPaginated?.total);
-    repository.deleteOne.mockResolvedValue(true);
+    repository.deleteMany.mockResolvedValue(true);
   });
   beforeEach(async () => {
     testInstance = new AccountRepository(repository);
@@ -86,20 +78,20 @@ describe("Account Mongo Repository", () => {
   });
   test("should call delete of deleteAccount with correct values", async () => {
     await testInstance.deleteAccount(fakeQuery);
-    expect(repository.deleteOne).toHaveBeenCalledWith(fakeQuery?.fields);
-    expect(repository.deleteOne).toHaveBeenCalledTimes(1);
+    expect(repository.deleteMany).toHaveBeenCalledWith(fakeQuery?.fields);
+    expect(repository.deleteMany).toHaveBeenCalledTimes(1);
   });
   test("should return a new account created when deleteAccount insert it", async () => {
     const result = await testInstance.deleteAccount(fakeQuery);
     expect(result).toEqual(true);
   });
   test("should return null when deleteAccount returns null", async () => {
-    repository.deleteOne.mockResolvedValueOnce(null);
+    repository.deleteMany.mockResolvedValueOnce(null);
     const result = await testInstance.deleteAccount(fakeQuery);
     expect(result).toBeNull();
   });
   test("should rethrow if delete of deleteAccount throws", async () => {
-    repository.deleteOne.mockRejectedValueOnce(new Error("Error"));
+    repository.deleteMany.mockRejectedValueOnce(new Error("Error"));
     const result = testInstance.deleteAccount(fakeQuery);
     await expect(result).rejects.toThrow("Error");
   });

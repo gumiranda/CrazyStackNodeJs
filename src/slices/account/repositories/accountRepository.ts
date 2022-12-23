@@ -1,3 +1,4 @@
+/* eslint-disable indent */
 import { Repository } from "@/application/infra/contracts/repository";
 import { AccountData, AccountPaginated } from "@/slices/account/entities";
 import {
@@ -21,7 +22,7 @@ export class AccountRepository
     return this.repository.add(account);
   }
   async deleteAccount(query: Query): Promise<AccountData | null> {
-    return this.repository.deleteOne(query?.fields);
+    return this.repository.deleteMany(query?.fields);
   }
   async loadAccountByPage(query: Query): Promise<AccountPaginated | null> {
     const accounts = await this.repository.getPaginate(
