@@ -1,1 +1,1 @@
-export * from "./addCategoryRepository";
+export * from "./AddCategoryRepository";
