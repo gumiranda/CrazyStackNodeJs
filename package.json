@@ -10,14 +10,14 @@
     "test:all": "jest --passWithNoTests --silent --noStackTrace --runInBand -c jest-all-config.js",
     "test": "jest --passWithNoTests --silent --noStackTrace --runInBand",
     "test:v": "jest --passWithNoTests --noStackTrace --runInBand",
-    "generate": "yarn plop --plopfile ./generators/plopfile.js",
-    "format": "prettier --write \"**/*.{js,ts,tsx,json,md}\"",
-    "lint": "eslint --ext .ts --fix"
+    "generate": "yarn plop --plopfile ./generators/plopfile.js"
   },
   "license": "MIT",
   "devDependencies": {
     "@shelf/jest-mongodb": "^4.1.4",
+    "@types/bcrypt": "^5.0.0",
     "@types/jest": "^29.2.4",
+    "@types/module-alias": "^2.0.1",
     "@typescript-eslint/eslint-plugin": "^5.47.0",
     "@typescript-eslint/parser": "^5.47.0",
     "dotenv": "^16.0.3",
@@ -38,8 +38,10 @@
     "@": "dist"
   },
   "dependencies": {
+    "bcrypt": "^5.1.0",
     "date-fns": "^2.29.3",
     "date-fns-tz": "^1.3.7",
+    "module-alias": "^2.2.2",
     "mongodb": "^4.13.0"
   }
 }
