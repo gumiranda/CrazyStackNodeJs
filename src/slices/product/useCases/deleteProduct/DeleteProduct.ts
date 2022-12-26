@@ -4,9 +4,9 @@ import { Query } from "@/application/types";
 
 export type DeleteProduct = (query: Query) => Promise<ProductData | null>;
 export type DeleteProductSignature = (
-  deleteProduct: DeleteProductRepository
+    deleteProduct: DeleteProductRepository
 ) => DeleteProduct;
 export const deleteProduct: DeleteProductSignature =
-  (deleteProductRepository: DeleteProductRepository) => (query: Query) => {
-    return deleteProductRepository.deleteProduct(query);
-  };
+    (deleteProductRepository: DeleteProductRepository) => (query: Query) => {
+        return deleteProductRepository.deleteProduct(query);
+    };

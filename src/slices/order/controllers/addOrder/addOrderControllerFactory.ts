@@ -8,6 +8,9 @@ export const makeAddOrderController = (): Controller => {
   const requiredFields = ["name"];
   return makeLogController(
     "addOrder",
-    new AddOrderController(makeValidationComposite(requiredFields), makeAddOrderFactory())
+    new AddOrderController(
+      makeValidationComposite(requiredFields),
+      makeAddOrderFactory()
+    )
   );
 };

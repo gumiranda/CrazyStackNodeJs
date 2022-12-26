@@ -28,7 +28,11 @@ describe("UpdateOwnerController", () => {
     MockDate.reset();
   });
   beforeEach(() => {
-    testInstance = new UpdateOwnerController(validationQuery, validationBody, updateOwner);
+    testInstance = new UpdateOwnerController(
+      validationQuery,
+      validationBody,
+      updateOwner
+    );
   });
   it("should extends class Controller", async () => {
     expect(testInstance).toBeInstanceOf(Controller);
@@ -56,9 +60,9 @@ describe("UpdateOwnerController", () => {
       })
     );
     expect(updateOwner).toHaveBeenCalledWith(
-      {
+       {
         fields: {
-          ...fakeOwnerEntity,
+         ...fakeOwnerEntity,
           createdById: fakeUserEntity?._id,
         },
         options: {},

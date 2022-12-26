@@ -60,9 +60,9 @@ describe("UpdateRatingResultController", () => {
       })
     );
     expect(updateRatingResult).toHaveBeenCalledWith(
-      {
+       {
         fields: {
-          ...fakeRatingResultEntity,
+         ...fakeRatingResultEntity,
           createdById: fakeUserEntity?._id,
         },
         options: {},

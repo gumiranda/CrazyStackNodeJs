@@ -5,6 +5,6 @@ import { Query } from "@/application/types";
 export type LoadRequest = (query: Query) => Promise<RequestData | null>;
 export type LoadRequestSignature = (loadRequest: LoadRequestRepository) => LoadRequest;
 export const loadRequest: LoadRequestSignature =
-  (loadRequestRepository: LoadRequestRepository) => async (query: Query) => {
-    return loadRequestRepository.loadRequest(query);
-  };
+    (loadRequestRepository: LoadRequestRepository) => async (query: Query) => {
+        return loadRequestRepository.loadRequest(query);
+    };

@@ -4,9 +4,10 @@ import { Query } from "@/application/types";
 
 export type LoadUserByPage = (query: Query) => Promise<UserPaginated | null>;
 export type LoadUserByPageSignature = (
-  loadUserByPage: LoadUserByPageRepository
+    loadUserByPage: LoadUserByPageRepository
 ) => LoadUserByPage;
 export const loadUserByPage: LoadUserByPageSignature =
-  (loadUserByPageRepository: LoadUserByPageRepository) => async (query: Query) => {
-    return loadUserByPageRepository.loadUserByPage(query);
-  };
+    (loadUserByPageRepository: LoadUserByPageRepository) =>
+    async (query: Query) => {
+        return loadUserByPageRepository.loadUserByPage(query);
+    };

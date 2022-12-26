@@ -5,6 +5,6 @@ import { Query } from "@/application/types";
 export type LoadService = (query: Query) => Promise<ServiceData | null>;
 export type LoadServiceSignature = (loadService: LoadServiceRepository) => LoadService;
 export const loadService: LoadServiceSignature =
-  (loadServiceRepository: LoadServiceRepository) => async (query: Query) => {
-    return loadServiceRepository.loadService(query);
-  };
+    (loadServiceRepository: LoadServiceRepository) => async (query: Query) => {
+        return loadServiceRepository.loadService(query);
+    };

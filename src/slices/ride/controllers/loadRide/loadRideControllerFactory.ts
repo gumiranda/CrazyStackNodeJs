@@ -8,6 +8,9 @@ export const makeLoadRideController = (): Controller => {
   const requiredFields = ["_id"];
   return makeLogController(
     "loadRide",
-    new LoadRideController(makeValidationComposite(requiredFields), makeLoadRideFactory())
+    new LoadRideController(
+      makeValidationComposite(requiredFields),
+      makeLoadRideFactory()
+    )
   );
 };

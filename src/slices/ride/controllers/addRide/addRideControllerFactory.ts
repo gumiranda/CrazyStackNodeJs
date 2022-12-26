@@ -8,6 +8,9 @@ export const makeAddRideController = (): Controller => {
   const requiredFields = ["name"];
   return makeLogController(
     "addRide",
-    new AddRideController(makeValidationComposite(requiredFields), makeAddRideFactory())
+    new AddRideController(
+      makeValidationComposite(requiredFields),
+      makeAddRideFactory()
+    )
   );
 };

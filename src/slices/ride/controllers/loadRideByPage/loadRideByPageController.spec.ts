@@ -2,7 +2,10 @@ import MockDate from "mockdate";
 import { badRequest, ok, Validation } from "@/application/helpers";
 import { MockProxy, mock } from "jest-mock-extended";
 import { LoadRideByPageController } from "./loadRideByPageController";
-import { fakeRideEntity, fakeRidePaginated } from "@/slices/ride/entities/RideEntity.spec";
+import {
+  fakeRideEntity,
+  fakeRidePaginated,
+} from "@/slices/ride/entities/RideEntity.spec";
 import { Controller } from "@/application/infra/contracts";
 import { MissingParamError } from "@/application/errors";
 import { fakeUserEntity } from "@/slices/user/entities/UserEntity.spec";

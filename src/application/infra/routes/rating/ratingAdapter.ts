@@ -9,6 +9,7 @@ import {
 
 export const addRatingAdapter = () => adaptRoute(makeAddRatingController());
 export const loadRatingAdapter = () => adaptRoute(makeLoadRatingController());
-export const loadRatingByPageAdapter = () => adaptRoute(makeLoadRatingByPageController());
+export const loadRatingByPageAdapter = () =>
+  adaptRoute(makeLoadRatingByPageController());
 export const deleteRatingAdapter = () => adaptRoute(makeDeleteRatingController());
 export const updateRatingAdapter = () => adaptRoute(makeUpdateRatingController());

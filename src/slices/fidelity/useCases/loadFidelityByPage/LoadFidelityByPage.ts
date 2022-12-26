@@ -4,9 +4,10 @@ import { Query } from "@/application/types";
 
 export type LoadFidelityByPage = (query: Query) => Promise<FidelityPaginated | null>;
 export type LoadFidelityByPageSignature = (
-  loadFidelityByPage: LoadFidelityByPageRepository
+    loadFidelityByPage: LoadFidelityByPageRepository
 ) => LoadFidelityByPage;
 export const loadFidelityByPage: LoadFidelityByPageSignature =
-  (loadFidelityByPageRepository: LoadFidelityByPageRepository) => async (query: Query) => {
-    return loadFidelityByPageRepository.loadFidelityByPage(query);
-  };
+    (loadFidelityByPageRepository: LoadFidelityByPageRepository) =>
+    async (query: Query) => {
+        return loadFidelityByPageRepository.loadFidelityByPage(query);
+    };

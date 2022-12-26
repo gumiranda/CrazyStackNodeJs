@@ -4,9 +4,10 @@ import { Query } from "@/application/types";
 
 export type LoadClientByPage = (query: Query) => Promise<ClientPaginated | null>;
 export type LoadClientByPageSignature = (
-  loadClientByPage: LoadClientByPageRepository
+    loadClientByPage: LoadClientByPageRepository
 ) => LoadClientByPage;
 export const loadClientByPage: LoadClientByPageSignature =
-  (loadClientByPageRepository: LoadClientByPageRepository) => async (query: Query) => {
-    return loadClientByPageRepository.loadClientByPage(query);
-  };
+    (loadClientByPageRepository: LoadClientByPageRepository) =>
+    async (query: Query) => {
+        return loadClientByPageRepository.loadClientByPage(query);
+    };

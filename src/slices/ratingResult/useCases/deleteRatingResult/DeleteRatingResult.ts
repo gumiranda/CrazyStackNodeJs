@@ -4,9 +4,9 @@ import { Query } from "@/application/types";
 
 export type DeleteRatingResult = (query: Query) => Promise<RatingResultData | null>;
 export type DeleteRatingResultSignature = (
-  deleteRatingResult: DeleteRatingResultRepository
+    deleteRatingResult: DeleteRatingResultRepository
 ) => DeleteRatingResult;
 export const deleteRatingResult: DeleteRatingResultSignature =
-  (deleteRatingResultRepository: DeleteRatingResultRepository) => (query: Query) => {
-    return deleteRatingResultRepository.deleteRatingResult(query);
-  };
+    (deleteRatingResultRepository: DeleteRatingResultRepository) => (query: Query) => {
+        return deleteRatingResultRepository.deleteRatingResult(query);
+    };
