@@ -104,6 +104,10 @@ const updateUserResponse = {
   properties: {
     _id: { type: "string", maxLength: 24, minLength: 24 },
     name: { type: "string" },
+    serviceIds: {
+      type: "array",
+      items: { type: "string", maxLength: 24, minLength: 24 },
+    },
     createdById: { type: "string" },
   },
 };
