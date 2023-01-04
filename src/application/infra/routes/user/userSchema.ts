@@ -153,6 +153,7 @@ const loadUserByPageResponse = {
           },
           serviceIds: {
             type: "array",
+            nullable: true,
             items: { type: "string", maxLength: 24, minLength: 24 },
           },
           active: { type: "boolean" },
