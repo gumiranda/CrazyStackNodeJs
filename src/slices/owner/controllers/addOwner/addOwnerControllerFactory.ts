@@ -3,6 +3,7 @@ import { makeValidationComposite } from "@/application/factories";
 import { Controller } from "@/application/infra/contracts";
 import { makeAddOwnerFactory, makeLoadOwnerFactory } from "@/slices/owner/useCases";
 import { AddOwnerController } from "@/slices/owner/controllers";
+import { makeUpdateUserFactory } from "@/slices/user/useCases";
 
 export const makeAddOwnerController = (): Controller => {
   const requiredFields = [
@@ -18,7 +19,8 @@ export const makeAddOwnerController = (): Controller => {
     new AddOwnerController(
       makeValidationComposite(requiredFields),
       makeAddOwnerFactory(),
-      makeLoadOwnerFactory()
+      makeLoadOwnerFactory(),
+      makeUpdateUserFactory()
     )
   );
 };
