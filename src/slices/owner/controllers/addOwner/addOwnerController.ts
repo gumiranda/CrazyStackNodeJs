@@ -47,7 +47,7 @@ export class AddOwnerController extends Controller {
         },
         { ownerId: ownerCreated._id }
       );
-      if (userUpdated) {
+      if (!userUpdated) {
         return serverError(new Error("User not updated"));
       }
     }
