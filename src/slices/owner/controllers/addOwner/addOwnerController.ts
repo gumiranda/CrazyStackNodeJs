@@ -45,7 +45,7 @@ export class AddOwnerController extends Controller {
           fields: { _id: httpRequest?.userId },
           options: {},
         },
-        { ownerId: ownerCreated._id }
+        { ownerId: ownerCreated._id, myOwnerId: httpRequest?.userId }
       );
       if (!userUpdated) {
         return serverError(new Error("User not updated"));
