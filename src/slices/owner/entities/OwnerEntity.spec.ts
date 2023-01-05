@@ -57,7 +57,7 @@ describe("Owner", () => {
     expect(obj).toEqual({
       ...fakeOwnerEntity,
       _id: undefined,
-      active: false,
+      active: true,
       appointmentsTotal: 0,
       ratingsTotal: 0,
       createdAt: new Date(),

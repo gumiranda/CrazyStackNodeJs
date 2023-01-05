@@ -3,6 +3,7 @@ const bodyAddCategoryJsonSchema = {
   required: ["name"],
   properties: {
     name: { type: "string" },
+    active: { type: "boolean" },
   },
 };
 const headersJsonSchema = {
@@ -85,6 +86,7 @@ const updateCategoryResponse = {
   properties: {
     _id: { type: "string", maxLength: 24, minLength: 24 },
     name: { type: "string" },
+    active: { type: "boolean" },
     createdById: { type: "string" },
   },
 };
@@ -92,6 +94,7 @@ const updateCategoryBody = {
   type: "object",
   properties: {
     name: { type: "string" },
+    active: { type: "boolean" },
   },
 };
 export const updateCategorySchema = {
