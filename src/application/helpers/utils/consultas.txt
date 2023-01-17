@@ -1,0 +1,15 @@
+loadByGeoNear
+
+WITH location_points AS (
+  SELECT id, ST_Distance_Sphere(ST_MakePoint(-18.92986, -43.250575), location) AS distance
+  FROM table
+  WHERE active = true AND id != '63b5e40105498c9057eab1ca'
+)
+SELECT COUNT(*) as name
+FROM location_points
+WHERE distance < 20000000;
+
+Esse exemplo pressupõe que você tem uma coluna "location" que armazena pontos geográficos no formato PostGIS e uma coluna "active" e "id" na sua tabela. Certifique-se de ter a extensão postgis instalado e configurado corretamente.
+
+
+loadAverage

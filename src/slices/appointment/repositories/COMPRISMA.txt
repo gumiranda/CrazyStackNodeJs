@@ -1,0 +1,37 @@
+const data = await prisma.professional
+  .aggregate({
+    where: {
+      professionalId: '63bc2ee4b339572dc498b3b1',
+      initDate: { lte: '2023-01-30T23:59:59-03:00', gte: '2023-01-30T00:00:00-03:00' },
+      endDate: { lte: '2023-01-30T23:59:59-03:00', gte: '2023-01-30T00:00:00-03:00' },
+      cancelled: false,
+      active: true,
+    },
+    orderBy: { initDate: 'asc' },
+    join: {
+      professionalDetails: {
+        select: { ownerId: true },
+        join: {
+          owner: {
+            select: {
+              days1: true,
+              hourStart1: true,
+              hourEnd1: true,
+              hourLunchEnd1: true,
+              hourLunchStart1: true,
+              days2: true,
+              hourStart2: true,
+              hourEnd2: true,
+              hourLunchEnd2: true,
+              hourLunchStart2: true,
+              days3: true,
+              hourStart3: true,
+              hourEnd3: true,
+              hourLunchEnd3: true,
+              hourLunchStart3: true,
+            }
+          }
+        }
+      }
+    }
+  })

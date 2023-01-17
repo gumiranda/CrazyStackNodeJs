@@ -1,0 +1,32 @@
+SELECT
+  professional.initDate,
+  professional.endDate,
+  professionalDetails.ownerId,
+  owner.days1,
+  owner.hourStart1,
+  owner.hourEnd1,
+  owner.hourLunchEnd1,
+  owner.hourLunchStart1,
+  owner.days2,
+  owner.hourStart2,
+  owner.hourEnd2,
+  owner.hourLunchEnd2,
+  owner.hourLunchStart2,
+  owner.days3,
+  owner.hourStart3,
+  owner.hourEnd3,
+  owner.hourLunchEnd3,
+  owner.hourLunchStart3
+FROM professional
+  JOIN user AS professionalDetails ON professional.professionalId = professionalDetails._id
+  JOIN owner ON professionalDetails.ownerId = owner._id
+WHERE
+  professional.professionalId = '63bc2ee4b339572dc498b3b1'
+  AND professional.initDate BETWEEN '2023-01-30T00:00:00-03:00' AND '2023-01-30T23:59:59-03:00'
+  AND professional.endDate BETWEEN '2023-01-30T00:00:00-03:00' AND '2023-01-30T23:59:59-03:00'
+  AND professional.cancelled = false
+  AND professional.active = true
+GROUP BY
+  professionalDetails.ownerId
+ORDER BY
+  professional.initDate ASC

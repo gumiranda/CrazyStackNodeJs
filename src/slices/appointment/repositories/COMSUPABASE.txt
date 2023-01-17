@@ -1,0 +1,38 @@
+const data = await supabase
+  .from("professional")
+  .select(
+    "initDate",
+    "endDate",
+    "professionalDetails.ownerId",
+    "owner.days1",
+    "owner.hourStart1",
+    "owner.hourEnd1",
+    "owner.hourLunchEnd1",
+    "owner.hourLunchStart1",
+    "owner.days2",
+    "owner.hourStart2",
+    "owner.hourEnd2",
+    "owner.hourLunchEnd2",
+    "owner.hourLunchStart2",
+    "owner.days3",
+    "owner.hourStart3",
+    "owner.hourEnd3",
+    "owner.hourLunchEnd3",
+    "owner.hourLunchStart3"
+  )
+  .join("user", { "professional.professionalId": "user._id" }, "professionalDetails")
+  .join("owner", { "professionalDetails.ownerId": "owner._id" })
+  .where({
+    "professional.professionalId": "63bc2ee4b339572dc498b3b1",
+    "professional.initDate": {
+      ">=": "2023-01-30T00:00:00-03:00",
+      "<=": "2023-01-30T23:59:59-03:00",
+    },
+    "professional.endDate": {
+      ">=": "2023-01-30T00:00:00-03:00",
+      "<=": "2023-01-30T23:59:59-03:00",
+    },
+    "professional.cancelled": false,
+    "professional.active": true,
+  })
+  .orderBy({ initDate: "asc" });
