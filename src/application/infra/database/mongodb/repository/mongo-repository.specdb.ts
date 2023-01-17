@@ -6,6 +6,7 @@ import {
 import { Repository } from "@/application/infra/contracts/repository";
 import { Collection, ObjectId } from "mongodb";
 import MockDate from "mockdate";
+import { MongoMemoryServer } from "mongodb-memory-server";
 import { MongoRepository } from "./mongo-repository";
 const mockUser = {
   name: "valid_name",
@@ -18,9 +19,12 @@ const mockUser = {
 };
 describe("Mongo Repository tests", () => {
   let userCollection: Collection;
+  let mongo = null;
   beforeAll(async () => {
+    mongo = await MongoMemoryServer.create();
+    const uri = mongo.getUri();
+    await MongoHelper.connect(uri as string);
     MockDate.set(new Date());
-    await MongoHelper.connect(process.env.MONGO_URL as string);
     await MongoHelper.startSession();
   });
   afterAll(async () => {

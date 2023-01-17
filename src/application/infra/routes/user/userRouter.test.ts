@@ -2,6 +2,8 @@ import { makeFastifyInstance } from "@/index";
 import { Collection, ObjectId } from "mongodb";
 import { MongoHelper, env } from "@/application/infra";
 import { sign } from "jsonwebtoken";
+import { MongoMemoryServer } from "mongodb-memory-server";
+
 jest.setTimeout(50000);
 
 let userCollection: Collection;
@@ -32,8 +34,11 @@ const makeAccessToken = async (role: string, password: string): Promise<any> => 
 };
 describe("Route api/user", () => {
   let fastify: any;
+  let mongo = null;
   beforeAll(async () => {
-    const client = await MongoHelper.connect(process.env.MONGO_URL as string);
+    mongo = await MongoMemoryServer.create();
+    const uri = mongo.getUri();
+    const client = await MongoHelper.connect(uri as string);
     fastify = await makeFastifyInstance(client);
     await fastify.listen({ port: 3000, host: "0.0.0.0" });
   });

@@ -2,6 +2,8 @@ import { makeFastifyInstance } from "@/index";
 import { Collection } from "mongodb";
 import { MongoHelper } from "@/application/infra";
 import { hash } from "bcrypt";
+import { MongoMemoryServer } from "mongodb-memory-server";
+
 jest.setTimeout(50000);
 
 let userCollection: Collection;
@@ -17,8 +19,11 @@ const userBody = {
 
 describe("Route api/auth", () => {
   let fastify: any;
+  let mongo = null;
   beforeAll(async () => {
-    const client = await MongoHelper.connect(process.env.MONGO_URL as string);
+    mongo = await MongoMemoryServer.create();
+    const uri = mongo.getUri();
+    const client = await MongoHelper.connect(uri as string);
     fastify = await makeFastifyInstance(client);
     await fastify.listen({ port: 3000, host: "0.0.0.0" });
   });

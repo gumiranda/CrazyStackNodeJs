@@ -2,12 +2,17 @@ import MockDate from "mockdate";
 import { LogMongoRepository } from "./logMongoRepository";
 import { MongoHelper } from "@/application/infra";
 import { Collection } from "mongodb";
+import { MongoMemoryServer } from "mongodb-memory-server";
+
 describe("LogMongoRepository", () => {
   let testInstance: LogMongoRepository;
   let errorCollection: Collection;
+  let mongo = null;
   beforeAll(async () => {
+    mongo = await MongoMemoryServer.create();
+    const uri = mongo.getUri();
+    await MongoHelper.connect(uri as string);
     MockDate.set(new Date());
-    await MongoHelper.connect(process.env.MONGO_URL as string);
   });
   afterAll(async () => {
     MockDate.reset();
