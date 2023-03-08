@@ -18,8 +18,8 @@ import {
 import { onSendRedis, preHandlerRedis } from "../redis";
 async function user(fastify: any, options: any) {
   fastify.addHook("preHandler", authLogged());
-  fastify.addHook("preHandler", preHandlerRedis());
-  fastify.addHook("onSend", onSendRedis());
+  fastify.addHook("preHandler", preHandlerRedis("user"));
+  fastify.addHook("onSend", onSendRedis("user"));
   fastify.post("/user/add", addUserPostSchema, addUserAdapter());
   fastify.get("/user/load", loadUserGetSchema, loadUserAdapter());
   fastify.get("/user/loadByPage", loadUserByPageGetSchema, loadUserByPageAdapter());

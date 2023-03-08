@@ -36,19 +36,20 @@ export const parseJson = (json: any): any => {
   }
 };
 
-export const onSendRedis = () => async (req: any, reply: any, payload: any) => {
-  if (!payload) {
-    return;
-  }
-  if (req.method === "GET" && parseJson(payload) && !parseJson(payload)?.cache) {
-    const cacheKey = `user:${req.url}`;
-    setRedis(cacheKey, JSON.stringify(parseJson(payload)));
-  }
-  return payload;
-};
-export const preHandlerRedis = () => async (req: any, reply: any) => {
+export const onSendRedis =
+  (domain: string) => async (req: any, reply: any, payload: any) => {
+    if (!payload) {
+      return;
+    }
+    if (req.method === "GET" && parseJson(payload) && !parseJson(payload)?.cache) {
+      const cacheKey = `${domain}:${req.url}`;
+      setRedis(cacheKey, JSON.stringify(parseJson(payload)));
+    }
+    return payload;
+  };
+export const preHandlerRedis = (domain: string) => async (req: any, reply: any) => {
   if (req.method === "GET") {
-    const cacheKey = `user:${req.url}`;
+    const cacheKey = `${domain}:${req.url}`;
     try {
       const cachedData = await getRedis(cacheKey);
       if (cachedData && parseJson(cachedData)) {
