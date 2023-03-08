@@ -17,8 +17,7 @@ export const getRedis = async (key: string) => {
 
 export const setRedis = async (key: string, value: string) => {
   try {
-    await clientRedis.del(key);
-    await clientRedis.set(key, value);
+    await clientRedis.set(key, value, "EX", 120); //1dia 60 * 60 * 24);
   } catch (error) {
     console.error("Error setting Redis value:", error);
   }
