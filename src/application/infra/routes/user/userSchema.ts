@@ -163,6 +163,7 @@ const loadUserByPageResponse = {
       },
     },
     total: { type: "integer" },
+    cache: { type: "boolean", nullable: true },
   },
 };
 export const loadUserByPageGetSchema = {

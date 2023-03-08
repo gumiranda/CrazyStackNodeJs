@@ -4,4 +4,7 @@ export const env = {
   jwtRefreshSecret: process.env.JWT_REFRESH_SECRET ?? "secret",
   port: process.env.PORT ?? 8080,
   environment: process.env.NODE_ENV ?? "development",
+  redisPort: process.env.REDIS_PORT ?? 40043,
+  redisUrl: process.env.REDIS_URL ?? "us1-active-example-40043.upstash.io",
+  redisPassword: process.env.REDIS_PASSWORD ?? "YOUR_PASSWORD",
 };
