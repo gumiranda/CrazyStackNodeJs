@@ -37,6 +37,7 @@ const requestBody = {
   haveRide: false,
   type: "serv",
   status: 0,
+  duration: 30,
 };
 const makeAccessToken = async (role: string, password: string): Promise<any> => {
   const result = await userCollection.insertOne({ ...userBody, password, role });
@@ -181,6 +182,7 @@ describe("Route api/request", () => {
         haveRide: false,
         type: "serv",
         status: 0,
+        duration: 30,
       };
       const responseAdd = await fastify.inject({
         method: "POST",

@@ -42,6 +42,7 @@ export type OwnerPaginated = {
 };
 
 export class OwnerEntity {
+  _id?: string;
   createdById: string;
   name: string;
   active?: boolean;
@@ -79,7 +80,7 @@ export class OwnerEntity {
   constructor(data: OwnerData) {
     this.createdById = data.createdById;
     this.name = data.name;
-    this.active = false;
+    this.active = data.active;
     this.createdAt = new Date();
     this.updatedAt = new Date();
     this.appointmentsTotal = 0;

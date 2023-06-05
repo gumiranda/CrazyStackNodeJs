@@ -58,7 +58,11 @@ const loadUserResponse = {
   properties: {
     _id: { type: "string", maxLength: 24, minLength: 24 },
     name: { type: "string" },
-    serviceIds: { type: "array", items: { type: "string", maxLength: 24, minLength: 24 } },
+    serviceIds: {
+      type: "array",
+      nullable: true,
+      items: { type: "string", maxLength: 24, minLength: 24 },
+    },
     ownerId: { type: "string", maxLength: 24, minLength: 24 },
     myOwnerId: { type: "string", maxLength: 24, minLength: 24 },
     active: { type: "boolean" },
@@ -104,6 +108,11 @@ const updateUserResponse = {
   properties: {
     _id: { type: "string", maxLength: 24, minLength: 24 },
     name: { type: "string" },
+    serviceIds: {
+      type: "array",
+      nullable: true,
+      items: { type: "string", maxLength: 24, minLength: 24 },
+    },
     createdById: { type: "string" },
   },
 };
@@ -149,6 +158,7 @@ const loadUserByPageResponse = {
           },
           serviceIds: {
             type: "array",
+            nullable: true,
             items: { type: "string", maxLength: 24, minLength: 24 },
           },
           active: { type: "boolean" },
@@ -187,6 +197,7 @@ const loadUserGeoNearResponse = {
           },
           serviceIds: {
             type: "array",
+            nullable: true,
             items: { type: "string", maxLength: 24, minLength: 24 },
           },
           createdAt: { type: "string" },
@@ -194,6 +205,7 @@ const loadUserGeoNearResponse = {
       },
     },
     total: { type: "integer" },
+    cache: { type: "boolean", nullable: true },
   },
 };
 const queryStringJsonLoadUserGeoNearSchema = {

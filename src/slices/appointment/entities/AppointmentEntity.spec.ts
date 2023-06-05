@@ -62,7 +62,7 @@ export const fakeAvailableTimesEntity = {
       tuesday1: true,
       thursday1: true,
       friday1: true,
-      wednsday1: false,
+      wednesday1: false,
       saturday1: false,
     },
     days2: {
@@ -71,7 +71,7 @@ export const fakeAvailableTimesEntity = {
       tuesday2: false,
       thursday2: false,
       friday2: false,
-      wednsday2: true,
+      wednesday2: true,
       saturday2: false,
     },
     days3: {
@@ -80,7 +80,7 @@ export const fakeAvailableTimesEntity = {
       tuesday3: false,
       thursday3: false,
       friday3: false,
-      wednsday3: false,
+      wednesday3: false,
       saturday3: true,
     },
   },

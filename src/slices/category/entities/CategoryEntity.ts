@@ -25,7 +25,7 @@ export class CategoryEntity {
   constructor(data: CategoryData) {
     this.createdById = data.createdById;
     this.name = data.name;
-    this.active = false;
+    this.active = data.active;
     this.description = data.description;
     this.image = data.image;
     this.createdAt = new Date();

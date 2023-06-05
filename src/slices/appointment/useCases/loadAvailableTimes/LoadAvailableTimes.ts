@@ -55,9 +55,9 @@ export const loadAvailableTimes: LoadAvailableTimesSignature =
         });
       }
       if (ownerId) {
-        const { ownerId: _id = null }: any =
+        const { myOwnerId: _id = null }: any =
           (await userRepository.loadUser({
-            fields: { _id: ownerId },
+            fields: { ownerId },
             options: {},
           })) || {};
         if (_id) {
@@ -78,7 +78,7 @@ export const loadAvailableTimes: LoadAvailableTimesSignature =
             hourStart3 = null,
             days3 = null,
           }: any = (await ownerRepository.loadOwner({
-            fields: { _id },
+            fields: { createdById: _id },
             options: {},
           })) || {};
           if (!days1 || !hourEnd1 || !hourStart1) {

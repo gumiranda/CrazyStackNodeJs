@@ -72,7 +72,7 @@ export const getValidStatusForNewStatus = (newStatus: number): number[] => {
     case 1:
     case 2:
     case 3:
-      return [0];
+      return [0, 1];
     case 5:
     case 6:
       return [0, 1, 2, 3, 4, 7];

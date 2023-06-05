@@ -41,7 +41,7 @@ describe("Category", () => {
     expect(obj).toEqual({
       ...fakeCategoryEntity,
       _id: undefined,
-      active: false,
+      active: true,
       createdAt: new Date(),
       updatedAt: new Date(),
     });

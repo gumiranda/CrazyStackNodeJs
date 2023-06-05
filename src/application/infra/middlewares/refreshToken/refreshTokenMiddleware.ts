@@ -26,7 +26,7 @@ export class RefreshTokenMiddleware implements Middleware {
     try {
       const authHeader = httpRequest?.headers?.["refreshtoken"];
       if (authHeader) {
-        const decoded = await this.verifyToken(authHeader, env.jwtSecret);
+        const decoded = await this.verifyToken(authHeader, env.jwtRefreshSecret);
         if (!decoded) {
           return unauthorized();
         }

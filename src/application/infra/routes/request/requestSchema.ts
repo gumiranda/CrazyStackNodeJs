@@ -16,9 +16,11 @@ const bodyAddRequestJsonSchema = {
     "haveRide",
     "type",
     "status",
+    "duration",
   ],
   properties: {
     message: { type: "string" },
+    duration: { type: "number" },
     serviceId: { type: "string", maxLength: 24, minLength: 24 },
     ownerId: { type: "string", maxLength: 24, minLength: 24 },
     clientId: { type: "string", maxLength: 24, minLength: 24 },
@@ -47,6 +49,7 @@ const addRequestResponse = {
   properties: {
     _id: { type: "string", maxLength: 24, minLength: 24 },
     message: { type: "string" },
+    duration: { type: "number" },
     serviceId: { type: "string", maxLength: 24, minLength: 24 },
     ownerId: { type: "string", maxLength: 24, minLength: 24 },
     clientId: { type: "string", maxLength: 24, minLength: 24 },
@@ -86,6 +89,7 @@ const loadRequestResponse = {
   properties: {
     _id: { type: "string", maxLength: 24, minLength: 24 },
     message: { type: "string" },
+    duration: { type: "number" },
     serviceId: { type: "string", maxLength: 24, minLength: 24 },
     ownerId: { type: "string", maxLength: 24, minLength: 24 },
     clientId: { type: "string", maxLength: 24, minLength: 24 },
@@ -143,6 +147,7 @@ const updateRequestResponse = {
   properties: {
     _id: { type: "string", maxLength: 24, minLength: 24 },
     message: { type: "string" },
+    duration: { type: "number" },
     serviceId: { type: "string", maxLength: 24, minLength: 24 },
     ownerId: { type: "string", maxLength: 24, minLength: 24 },
     clientId: { type: "string", maxLength: 24, minLength: 24 },
@@ -164,6 +169,7 @@ const updateRequestBody = {
   type: "object",
   properties: {
     message: { type: "string" },
+    duration: { type: "number" },
     serviceId: { type: "string", maxLength: 24, minLength: 24 },
     ownerId: { type: "string", maxLength: 24, minLength: 24 },
     clientId: { type: "string", maxLength: 24, minLength: 24 },
@@ -210,6 +216,7 @@ const loadRequestByPageResponse = {
         properties: {
           _id: { type: "string", maxLength: 24, minLength: 24 },
           message: { type: "string" },
+          duration: { type: "number" },
           serviceId: { type: "string", maxLength: 24, minLength: 24 },
           ownerId: { type: "string", maxLength: 24, minLength: 24 },
           clientId: { type: "string", maxLength: 24, minLength: 24 },

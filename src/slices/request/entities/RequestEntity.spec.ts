@@ -35,6 +35,7 @@ export const fakeRequestEntity = {
   ride: fakeRideEntity,
   updatedById: "61c1f9d0e399d2917bdff44e",
   updatedByRole: "admin",
+  duration: 10,
 };
 export const fakeRequestPaginated = {
   total: 11,

@@ -34,6 +34,7 @@ export type RequestData = {
   initDate: string;
   endDate: string;
   cancelledAt?: Date | null;
+  duration?: number;
 };
 
 export type RequestPaginated = {
@@ -71,6 +72,7 @@ export class RequestEntity {
   initDate: string;
   endDate: string;
   cancelledAt?: Date | null;
+  duration?: number;
   constructor(data: RequestData) {
     this.createdById = data.createdById;
     this.name = data.name;
@@ -99,6 +101,7 @@ export class RequestEntity {
     this.recurrence = data.recurrence;
     this.order = data.order;
     this.ride = data.ride;
+    this.duration = data.duration;
     this.updatedById = null;
     this.updatedByRole = null;
   }

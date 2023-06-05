@@ -11,12 +11,18 @@ describe("AddOwnerController", () => {
   let testInstance: AddOwnerController;
   let addOwner: jest.Mock;
   let loadOwner: jest.Mock;
+  let updateUser: jest.Mock;
   let validation: MockProxy<Validation>;
   beforeAll(async () => {
     MockDate.set(new Date());
     addOwner = jest.fn();
     addOwner.mockResolvedValue({
       ...fakeOwnerEntity,
+      createdById: fakeUserEntity?._id,
+    });
+    updateUser = jest.fn();
+    updateUser.mockResolvedValue({
+      ...fakeUserEntity,
       createdById: fakeUserEntity?._id,
     });
     loadOwner = jest.fn();
@@ -28,7 +34,7 @@ describe("AddOwnerController", () => {
     MockDate.reset();
   });
   beforeEach(() => {
-    testInstance = new AddOwnerController(validation, addOwner, loadOwner);
+    testInstance = new AddOwnerController(validation, addOwner, loadOwner, updateUser);
   });
   it("should extends class Controller", async () => {
     expect(testInstance).toBeInstanceOf(Controller);

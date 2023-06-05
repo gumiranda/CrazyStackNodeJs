@@ -20,7 +20,7 @@ export const fakeOwnerEntity = {
     tuesday1: true,
     thursday1: true,
     friday1: true,
-    wednsday1: true,
+    wednesday1: true,
     saturday1: true,
   },
   hourEnd1: "23:59",
@@ -57,7 +57,7 @@ describe("Owner", () => {
     expect(obj).toEqual({
       ...fakeOwnerEntity,
       _id: undefined,
-      active: false,
+      active: true,
       appointmentsTotal: 0,
       ratingsTotal: 0,
       createdAt: new Date(),

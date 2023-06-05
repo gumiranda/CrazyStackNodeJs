@@ -19,6 +19,7 @@ const addClientResponse = {
     name: { type: "string" },
     active: { type: "boolean" },
     createdById: { type: "string" },
+    userId: { type: "string" },
     createdAt: { type: "string" },
   },
 };
@@ -44,6 +45,7 @@ const loadClientResponse = {
     name: { type: "string" },
     active: { type: "boolean" },
     createdById: { type: "string" },
+    userId: { type: "string" },
     createdAt: { type: "string" },
   },
 };
@@ -86,6 +88,7 @@ const updateClientResponse = {
     _id: { type: "string", maxLength: 24, minLength: 24 },
     name: { type: "string" },
     createdById: { type: "string" },
+    userId: { type: "string" },
   },
 };
 const updateClientBody = {
@@ -126,6 +129,7 @@ const loadClientByPageResponse = {
           name: { type: "string" },
           active: { type: "boolean" },
           createdById: { type: "string" },
+          userId: { type: "string" },
           createdAt: { type: "string" },
         },
       },
