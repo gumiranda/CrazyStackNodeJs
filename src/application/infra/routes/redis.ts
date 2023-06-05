@@ -44,7 +44,7 @@ export const onSendRedis =
       req.method === "GET" &&
       parseJson(payload) &&
       !parseJson(payload)?.cache &&
-      parseJson(payload)?.statusCode !== 401
+      !parseJson(payload)?.statusCode
     ) {
       const cacheKey = `${domain}:${req.url}`;
       setRedis(cacheKey, JSON.stringify(parseJson(payload)));
