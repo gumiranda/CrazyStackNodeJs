@@ -40,7 +40,12 @@ export const onSendRedis =
     if (!payload) {
       return;
     }
-    if (req.method === "GET" && parseJson(payload) && !parseJson(payload)?.cache) {
+    if (
+      req.method === "GET" &&
+      parseJson(payload) &&
+      !parseJson(payload)?.cache &&
+      parseJson(payload)?.statusCode !== 401
+    ) {
       const cacheKey = `${domain}:${req.url}`;
       setRedis(cacheKey, JSON.stringify(parseJson(payload)));
     }
