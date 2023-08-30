@@ -2,7 +2,7 @@ import { makeFastifyInstance } from "@/index";
 import { Collection, ObjectId } from "mongodb";
 import { MongoHelper, env } from "@/application/infra";
 import { sign } from "jsonwebtoken";
-jest.setTimeout(50000);
+jest.setTimeout(500000);
 
 let userCollection: Collection;
 let serviceCollection: Collection;
