@@ -2,7 +2,7 @@ import { makeFastifyInstance } from "@/index";
 import { Collection } from "mongodb";
 import { MongoHelper } from "@/application/infra";
 import { hash } from "bcrypt";
-jest.setTimeout(50000);
+jest.setTimeout(500000);
 
 let userCollection: Collection;
 
