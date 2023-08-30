@@ -1,5 +1,6 @@
 import { Collection } from "mongodb";
 import { MongoHelper } from "./mongodb-helper";
+jest.setTimeout(500000);
 
 describe("Mongo Helper", () => {
   let userCollection: Collection;
