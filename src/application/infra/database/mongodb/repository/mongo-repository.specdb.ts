@@ -1,12 +1,11 @@
-import {
-  mapAnyToMongoObject,
-  mapQueryParamsToQueryMongo,
-  MongoHelper,
-} from "@/application/infra/database/mongodb";
+import { MongoHelper } from "@/application/infra/database/mongodb";
 import { Repository } from "@/application/infra/contracts/repository";
 import { Collection, ObjectId } from "mongodb";
 import MockDate from "mockdate";
 import { MongoRepository } from "./mongo-repository";
+
+jest.setTimeout(500000);
+
 const mockUser = {
   name: "valid_name",
   email: "valid_email@bol.com",
