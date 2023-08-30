@@ -18,11 +18,7 @@ async function rating(fastify: any, options: any) {
   fastify.addHook("preHandler", authLogged());
   fastify.post("/rating/add", addRatingPostSchema, addRatingAdapter());
   fastify.get("/rating/load", loadRatingGetSchema, loadRatingAdapter());
-  fastify.get(
-    "/rating/loadByPage",
-    loadRatingByPageGetSchema,
-    loadRatingByPageAdapter()
-  );
+  fastify.get("/rating/loadByPage", loadRatingByPageGetSchema, loadRatingByPageAdapter());
   fastify.delete("/rating/delete", deleteRatingSchema, deleteRatingAdapter());
   fastify.patch("/rating/update", updateRatingSchema, updateRatingAdapter());
 }

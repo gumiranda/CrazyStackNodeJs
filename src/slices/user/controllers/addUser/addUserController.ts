@@ -10,10 +10,7 @@ import { Controller } from "@/application/infra/contracts";
 import { AddUser } from "@/slices/user/useCases";
 
 export class AddUserController extends Controller {
-  constructor(
-    private readonly validation: Validation,
-    private readonly addUser: AddUser
-  ) {
+  constructor(private readonly validation: Validation, private readonly addUser: AddUser) {
     super();
   }
   async execute(httpRequest: HttpRequest<any>): Promise<HttpResponse<any>> {

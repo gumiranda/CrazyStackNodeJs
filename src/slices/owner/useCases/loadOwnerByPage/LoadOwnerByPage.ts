@@ -4,10 +4,9 @@ import { Query } from "@/application/types";
 
 export type LoadOwnerByPage = (query: Query) => Promise<OwnerPaginated | null>;
 export type LoadOwnerByPageSignature = (
-    loadOwnerByPage: LoadOwnerByPageRepository
+  loadOwnerByPage: LoadOwnerByPageRepository
 ) => LoadOwnerByPage;
 export const loadOwnerByPage: LoadOwnerByPageSignature =
-    (loadOwnerByPageRepository: LoadOwnerByPageRepository) =>
-    async (query: Query) => {
-        return loadOwnerByPageRepository.loadOwnerByPage(query);
-    };
+  (loadOwnerByPageRepository: LoadOwnerByPageRepository) => async (query: Query) => {
+    return loadOwnerByPageRepository.loadOwnerByPage(query);
+  };

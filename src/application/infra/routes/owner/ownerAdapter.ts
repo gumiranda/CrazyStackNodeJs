@@ -9,7 +9,6 @@ import {
 
 export const addOwnerAdapter = () => adaptRoute(makeAddOwnerController());
 export const loadOwnerAdapter = () => adaptRoute(makeLoadOwnerController());
-export const loadOwnerByPageAdapter = () =>
-  adaptRoute(makeLoadOwnerByPageController());
+export const loadOwnerByPageAdapter = () => adaptRoute(makeLoadOwnerByPageController());
 export const deleteOwnerAdapter = () => adaptRoute(makeDeleteOwnerController());
 export const updateOwnerAdapter = () => adaptRoute(makeUpdateOwnerController());

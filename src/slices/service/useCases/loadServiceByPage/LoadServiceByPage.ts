@@ -4,10 +4,9 @@ import { Query } from "@/application/types";
 
 export type LoadServiceByPage = (query: Query) => Promise<ServicePaginated | null>;
 export type LoadServiceByPageSignature = (
-    loadServiceByPage: LoadServiceByPageRepository
+  loadServiceByPage: LoadServiceByPageRepository
 ) => LoadServiceByPage;
 export const loadServiceByPage: LoadServiceByPageSignature =
-    (loadServiceByPageRepository: LoadServiceByPageRepository) =>
-    async (query: Query) => {
-        return loadServiceByPageRepository.loadServiceByPage(query);
-    };
+  (loadServiceByPageRepository: LoadServiceByPageRepository) => async (query: Query) => {
+    return loadServiceByPageRepository.loadServiceByPage(query);
+  };

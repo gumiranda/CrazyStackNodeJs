@@ -4,9 +4,9 @@ import { Query } from "@/application/types";
 
 export type DeleteAccount = (query: Query) => Promise<AccountData | null>;
 export type DeleteAccountSignature = (
-    deleteAccount: DeleteAccountRepository
+  deleteAccount: DeleteAccountRepository
 ) => DeleteAccount;
 export const deleteAccount: DeleteAccountSignature =
-    (deleteAccountRepository: DeleteAccountRepository) => (query: Query) => {
-        return deleteAccountRepository.deleteAccount(query);
-    };
+  (deleteAccountRepository: DeleteAccountRepository) => (query: Query) => {
+    return deleteAccountRepository.deleteAccount(query);
+  };

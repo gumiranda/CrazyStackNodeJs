@@ -55,20 +55,11 @@ export const loadAvailableTimes: LoadAvailableTimesSignature =
         });
       }
       if (ownerId) {
-        const { myOwnerId = null }: any =
+        const { myOwnerId: _id = null }: any =
           (await userRepository.loadUser({
             fields: { ownerId },
             options: {},
           })) || {};
-        let _id = myOwnerId;
-        if (_id === null) {
-          const res: any =
-            (await userRepository.loadUser({
-              fields: { _id: ownerId },
-              options: {},
-            })) || {};
-          _id = res?.myOwnerId;
-        }
         if (_id) {
           const {
             hourEnd1 = null,

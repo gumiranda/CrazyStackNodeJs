@@ -9,7 +9,6 @@ import {
 
 export const addClientAdapter = () => adaptRoute(makeAddClientController());
 export const loadClientAdapter = () => adaptRoute(makeLoadClientController());
-export const loadClientByPageAdapter = () =>
-  adaptRoute(makeLoadClientByPageController());
+export const loadClientByPageAdapter = () => adaptRoute(makeLoadClientByPageController());
 export const deleteClientAdapter = () => adaptRoute(makeDeleteClientController());
 export const updateClientAdapter = () => adaptRoute(makeUpdateClientController());

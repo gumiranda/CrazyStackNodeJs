@@ -8,9 +8,6 @@ export const makeLoadUserController = (): Controller => {
   const requiredFields = ["_id"];
   return makeLogController(
     "loadUser",
-    new LoadUserController(
-      makeValidationComposite(requiredFields),
-      makeLoadUserFactory()
-    )
+    new LoadUserController(makeValidationComposite(requiredFields), makeLoadUserFactory())
   );
 };

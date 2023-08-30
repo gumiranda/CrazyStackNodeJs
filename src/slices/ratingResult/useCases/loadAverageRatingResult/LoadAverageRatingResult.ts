@@ -3,15 +3,15 @@ import { RatingResultAverage } from "@/slices/ratingResult/entities";
 import { Query } from "@/application/types";
 
 export type LoadAverageRatingResult = (
-    query: Query
+  query: Query
 ) => Promise<RatingResultAverage | null>;
 
 export type LoadAverageRatingResultSignature = (
-    loadAverageRatingResult: LoadAverageRatingResultRepository
+  loadAverageRatingResult: LoadAverageRatingResultRepository
 ) => LoadAverageRatingResult;
 
 export const loadAverageRatingResult: LoadAverageRatingResultSignature =
-    (loadAverageRatingResultRepository: LoadAverageRatingResultRepository) =>
-    async (query: Query) => {
-        return loadAverageRatingResultRepository.loadAverageRatingResult(query);
-    };
+  (loadAverageRatingResultRepository: LoadAverageRatingResultRepository) =>
+  async (query: Query) => {
+    return loadAverageRatingResultRepository.loadAverageRatingResult(query);
+  };

@@ -31,7 +31,10 @@ describe("LoadRatingResultByPageController", () => {
     fakeQueryParams = { _id: fakeRatingResultEntity._id };
     fakeRestQuery = { page: 1, sortBy: "name", typeSort: "asc" };
     fakeQuery = { ...fakeQueryParams, ...fakeRestQuery };
-    testInstance = new LoadRatingResultByPageController(validation, loadRatingResultByPage);
+    testInstance = new LoadRatingResultByPageController(
+      validation,
+      loadRatingResultByPage
+    );
   });
   it("should extends class Controller", async () => {
     expect(testInstance).toBeInstanceOf(Controller);

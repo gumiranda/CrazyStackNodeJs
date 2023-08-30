@@ -18,11 +18,7 @@ async function owner(fastify: any, options: any) {
   fastify.addHook("preHandler", authLogged());
   fastify.post("/owner/add", addOwnerPostSchema, addOwnerAdapter());
   fastify.get("/owner/load", loadOwnerGetSchema, loadOwnerAdapter());
-  fastify.get(
-    "/owner/loadByPage",
-    loadOwnerByPageGetSchema,
-    loadOwnerByPageAdapter()
-  );
+  fastify.get("/owner/loadByPage", loadOwnerByPageGetSchema, loadOwnerByPageAdapter());
   fastify.delete("/owner/delete", deleteOwnerSchema, deleteOwnerAdapter());
   fastify.patch("/owner/update", updateOwnerSchema, updateOwnerAdapter());
 }

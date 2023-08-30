@@ -18,11 +18,7 @@ async function order(fastify: any, options: any) {
   fastify.addHook("preHandler", authLogged());
   fastify.post("/order/add", addOrderPostSchema, addOrderAdapter());
   fastify.get("/order/load", loadOrderGetSchema, loadOrderAdapter());
-  fastify.get(
-    "/order/loadByPage",
-    loadOrderByPageGetSchema,
-    loadOrderByPageAdapter()
-  );
+  fastify.get("/order/loadByPage", loadOrderByPageGetSchema, loadOrderByPageAdapter());
   fastify.delete("/order/delete", deleteOrderSchema, deleteOrderAdapter());
   fastify.patch("/order/update", updateOrderSchema, updateOrderAdapter());
 }
