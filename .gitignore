@@ -5,3 +5,4 @@ globalConfig.json
 .env
 yarn.lock
 dist
+.vscode/launch.json
