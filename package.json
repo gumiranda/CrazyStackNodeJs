@@ -58,6 +58,6 @@
     "fastify": "4.14.1",
     "jsonwebtoken": "^9.0.0",
     "module-alias": "^2.2.2",
-    "mongodb": "^4.13.0"
+    "mongodb": "^6.0.0"
   }
 }
