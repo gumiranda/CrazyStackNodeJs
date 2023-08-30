@@ -1,4 +1,4 @@
-export * from "./addCategoryRepository";
+export * from "./AddCategoryRepository";
 export * from "./LoadCategoryRepository";
 export * from "./LoadCategoryByPageRepository";
 export * from "./DeleteCategoryRepository";
