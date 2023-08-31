@@ -1,8 +1,10 @@
 const bodyAddMapRouteJsonSchema = {
   type: "object",
-  required: ["name"],
+  required: ["name", "source_id", "destination_id"],
   properties: {
     name: { type: "string" },
+    source_id: { type: "string" },
+    destination_id: { type: "string" },
   },
 };
 const headersJsonSchema = {
@@ -17,6 +19,36 @@ const addMapRouteResponse = {
   properties: {
     _id: { type: "string", maxLength: 24, minLength: 24 },
     name: { type: "string" },
+    source: {
+      type: "object",
+      properties: {
+        name: { type: "string" },
+        location: {
+          type: "object",
+          properties: {
+            lat: { type: "number" },
+            lng: { type: "number" },
+          },
+        },
+      },
+    },
+    destination: {
+      type: "object",
+      properties: {
+        name: { type: "string" },
+        location: {
+          type: "object",
+          properties: {
+            lat: { type: "number" },
+            lng: { type: "number" },
+          },
+        },
+      },
+    },
+    distance: { type: "number" },
+    duration: { type: "number" },
+    directions: { type: "string" },
+    routeDriver: { type: "array" },
     active: { type: "boolean" },
     createdById: { type: "string" },
     createdAt: { type: "string" },
@@ -43,6 +75,36 @@ const loadMapRouteResponse = {
     _id: { type: "string", maxLength: 24, minLength: 24 },
     name: { type: "string" },
     active: { type: "boolean" },
+    source: {
+      type: "object",
+      properties: {
+        name: { type: "string" },
+        location: {
+          type: "object",
+          properties: {
+            lat: { type: "number" },
+            lng: { type: "number" },
+          },
+        },
+      },
+    },
+    destination: {
+      type: "object",
+      properties: {
+        name: { type: "string" },
+        location: {
+          type: "object",
+          properties: {
+            lat: { type: "number" },
+            lng: { type: "number" },
+          },
+        },
+      },
+    },
+    distance: { type: "number" },
+    duration: { type: "number" },
+    directions: { type: "string" },
+    routeDriver: { type: "array" },
     createdById: { type: "string" },
     createdAt: { type: "string" },
   },
@@ -125,6 +187,36 @@ const loadMapRouteByPageResponse = {
           _id: { type: "string", maxLength: 24, minLength: 24 },
           name: { type: "string" },
           active: { type: "boolean" },
+          source: {
+            type: "object",
+            properties: {
+              name: { type: "string" },
+              location: {
+                type: "object",
+                properties: {
+                  lat: { type: "number" },
+                  lng: { type: "number" },
+                },
+              },
+            },
+          },
+          destination: {
+            type: "object",
+            properties: {
+              name: { type: "string" },
+              location: {
+                type: "object",
+                properties: {
+                  lat: { type: "number" },
+                  lng: { type: "number" },
+                },
+              },
+            },
+          },
+          distance: { type: "number" },
+          duration: { type: "number" },
+          directions: { type: "string" },
+          routeDriver: { type: "array" },
           createdById: { type: "string" },
           createdAt: { type: "string" },
         },

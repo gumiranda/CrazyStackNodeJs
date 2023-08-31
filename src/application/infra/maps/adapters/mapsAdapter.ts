@@ -1,11 +1,9 @@
 import { Directions, Place } from "@/application/infra/maps/protocols";
 import {
   DirectionsRequest,
-  DirectionsResponse,
   Client as GoogleMapsClient,
   PlaceInputType,
   TravelMode,
-  FindPlaceFromTextResponse,
   FindPlaceFromTextResponseData,
 } from "@googlemaps/google-maps-services-js";
 import { env } from "@/application/infra/config";

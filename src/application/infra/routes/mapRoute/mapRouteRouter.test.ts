@@ -17,6 +17,8 @@ const userBody = {
 };
 const mapRouteBody = {
   name: "test",
+  source_id: "ChIJN1t_tDeuEmsRUsoyG83frY4",
+  destination_id: "ChIJP3Sa8ziYEmsRUKgyFmh9AQM",
 };
 const makeAccessToken = async (role: string, password: string): Promise<any> => {
   const result = await userCollection.insertOne({ ...userBody, password, role });
