@@ -60,9 +60,9 @@ describe("UpdateMapRouteController", () => {
       })
     );
     expect(updateMapRoute).toHaveBeenCalledWith(
-       {
+      {
         fields: {
-         ...fakeMapRouteEntity,
+          ...fakeMapRouteEntity,
           createdById: fakeUserEntity?._id,
         },
         options: {},

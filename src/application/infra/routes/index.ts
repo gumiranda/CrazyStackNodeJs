@@ -23,7 +23,7 @@ const routes = [
   account,
   category,
   // ADD FUNCTION IMPORTS
-mapRoute,
+  mapRoute,
   client,
   fidelity,
   order,

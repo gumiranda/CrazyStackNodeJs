@@ -5,6 +5,6 @@ import { Query } from "@/application/types";
 export type LoadMapRoute = (query: Query) => Promise<MapRouteData | null>;
 export type LoadMapRouteSignature = (loadMapRoute: LoadMapRouteRepository) => LoadMapRoute;
 export const loadMapRoute: LoadMapRouteSignature =
-    (loadMapRouteRepository: LoadMapRouteRepository) => async (query: Query) => {
-        return loadMapRouteRepository.loadMapRoute(query);
-    };
+  (loadMapRouteRepository: LoadMapRouteRepository) => async (query: Query) => {
+    return loadMapRouteRepository.loadMapRoute(query);
+  };

@@ -4,9 +4,9 @@ import { Query } from "@/application/types";
 
 export type DeleteMapRoute = (query: Query) => Promise<MapRouteData | null>;
 export type DeleteMapRouteSignature = (
-    deleteMapRoute: DeleteMapRouteRepository
+  deleteMapRoute: DeleteMapRouteRepository
 ) => DeleteMapRoute;
 export const deleteMapRoute: DeleteMapRouteSignature =
-    (deleteMapRouteRepository: DeleteMapRouteRepository) => (query: Query) => {
-        return deleteMapRouteRepository.deleteMapRoute(query);
-    };
+  (deleteMapRouteRepository: DeleteMapRouteRepository) => (query: Query) => {
+    return deleteMapRouteRepository.deleteMapRoute(query);
+  };

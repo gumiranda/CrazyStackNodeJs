@@ -4,10 +4,9 @@ import { Query } from "@/application/types";
 
 export type LoadMapRouteByPage = (query: Query) => Promise<MapRoutePaginated | null>;
 export type LoadMapRouteByPageSignature = (
-    loadMapRouteByPage: LoadMapRouteByPageRepository
+  loadMapRouteByPage: LoadMapRouteByPageRepository
 ) => LoadMapRouteByPage;
 export const loadMapRouteByPage: LoadMapRouteByPageSignature =
-    (loadMapRouteByPageRepository: LoadMapRouteByPageRepository) =>
-    async (query: Query) => {
-        return loadMapRouteByPageRepository.loadMapRouteByPage(query);
-    };
+  (loadMapRouteByPageRepository: LoadMapRouteByPageRepository) => async (query: Query) => {
+    return loadMapRouteByPageRepository.loadMapRouteByPage(query);
+  };

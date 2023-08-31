@@ -1,3 +1,3 @@
-export * from './contracts';
+export * from "./contracts";
 // IMPORT MODULE FILES
 export * from "./mapRouteRepository";
