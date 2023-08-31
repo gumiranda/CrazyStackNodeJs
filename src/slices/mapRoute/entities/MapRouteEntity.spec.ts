@@ -8,6 +8,18 @@ export const fakeMapRouteEntity = {
   active: true,
   createdAt: new Date(),
   updatedAt: new Date(),
+  source: {
+    name: "yrd",
+    location: { lat: -33.8688197, lng: 151.2092955 },
+  },
+  destination: {
+    name: "yrd",
+    location: { lat: -33.8688197, lng: 151.2092955 },
+  },
+  distance: 0,
+  duration: 0,
+  directions: "{}",
+  routeDriver: [],
 };
 export const fakeMapRoutePaginated = {
   total: 11,
