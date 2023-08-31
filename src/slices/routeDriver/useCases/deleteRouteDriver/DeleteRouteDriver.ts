@@ -4,9 +4,9 @@ import { Query } from "@/application/types";
 
 export type DeleteRouteDriver = (query: Query) => Promise<RouteDriverData | null>;
 export type DeleteRouteDriverSignature = (
-    deleteRouteDriver: DeleteRouteDriverRepository
+  deleteRouteDriver: DeleteRouteDriverRepository
 ) => DeleteRouteDriver;
 export const deleteRouteDriver: DeleteRouteDriverSignature =
-    (deleteRouteDriverRepository: DeleteRouteDriverRepository) => (query: Query) => {
-        return deleteRouteDriverRepository.deleteRouteDriver(query);
-    };
+  (deleteRouteDriverRepository: DeleteRouteDriverRepository) => (query: Query) => {
+    return deleteRouteDriverRepository.deleteRouteDriver(query);
+  };

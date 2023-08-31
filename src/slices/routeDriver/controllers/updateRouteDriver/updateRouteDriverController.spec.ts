@@ -60,9 +60,9 @@ describe("UpdateRouteDriverController", () => {
       })
     );
     expect(updateRouteDriver).toHaveBeenCalledWith(
-       {
+      {
         fields: {
-         ...fakeRouteDriverEntity,
+          ...fakeRouteDriverEntity,
           createdById: fakeUserEntity?._id,
         },
         options: {},
