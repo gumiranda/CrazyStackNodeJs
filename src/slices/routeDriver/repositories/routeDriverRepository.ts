@@ -34,6 +34,10 @@ export class RouteDriverRepository
     const total = await this.repository.getCount(query?.fields ?? {});
     return { routeDrivers, total };
   }
+  async countRouteDrive(query: Query): Promise<number> {
+    const total = (await this.repository.getCount(query?.fields ?? {})) ?? 0;
+    return total;
+  }
   async loadRouteDriver(query: Query): Promise<RouteDriverData | null> {
     return this.repository.getOne(query?.fields ?? {}, query?.options ?? {});
   }
