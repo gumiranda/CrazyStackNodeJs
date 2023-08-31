@@ -25,6 +25,9 @@ export class AddMapRouteController extends Controller {
       ...httpRequest?.body,
       createdById: httpRequest?.userId,
     });
-    return ok(mapRouteCreated);
+    return ok({
+      ...mapRouteCreated,
+      //directions: JSON.parse(mapRouteCreated?.directions as string),
+    });
   }
 }
