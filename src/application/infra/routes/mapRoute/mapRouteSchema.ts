@@ -137,7 +137,7 @@ const queryStringJsonLoadPlacesSchema = {
   properties: {
     text: { type: "string" },
   },
-  required: ["originId", "destinationId"],
+  required: ["text"],
 };
 export const loadPlacesGetSchema = {
   schema: {
