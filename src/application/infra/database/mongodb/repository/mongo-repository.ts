@@ -38,7 +38,7 @@ export class MongoRepository extends Repository {
     const collection = await this.getCollection();
     const session = await MongoHelper.getSession();
     const { insertedId } = (await this.insertOne(data)) || {};
-    if (!!insertedId) {
+    if (insertedId) {
       const objInserted = await collection.findOne(
         { _id: new ObjectId(insertedId) },
         { session }
@@ -57,6 +57,18 @@ export class MongoRepository extends Repository {
       mapQueryParamsToQueryMongo(query),
       { $set: mapAnyToMongoObject(data) },
       { upsert: false, session }
+    );
+  }
+  async upsertAndPush(query: any, data: any, pushData: any): Promise<any> {
+    const collection = await this.getCollection();
+    const session = await MongoHelper.getSession();
+    if (query._id) {
+      query._id = new ObjectId(query._id);
+    }
+    return collection.findOneAndUpdate(
+      mapQueryParamsToQueryMongo(query),
+      { $set: mapAnyToMongoObject(data), $push: pushData },
+      { upsert: true, session, returnDocument: "after" }
     );
   }
   async update(query: any, data: any): Promise<any> {

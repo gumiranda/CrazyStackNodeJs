@@ -21,7 +21,7 @@ async function user(fastify: any, options: any) {
   fastify.addHook("preHandler", authLogged());
   if (process.env.NODE_ENV === "production") {
     fastify.addHook("preHandler", preHandlerRedis("user"));
-    fastify.addHook("onSend", onSendRedis("user"));
+    fastify.addHook("onSend", onSendRedis("user", 120));
   }
   fastify.post("/user/add", addUserPostSchema, addUserAdapter());
   fastify.get("/user/load", loadUserGetSchema, loadUserAdapter());
