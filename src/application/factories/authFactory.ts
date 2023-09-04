@@ -4,7 +4,7 @@ import { UserRepository } from "@/slices/user/repositories";
 export const makeDbAuthentication = (): Authentication => {
   const salt = 12;
   const bcryptAdapter = new BcryptAdapter(salt);
-  const jwtAdapter = new JwtAdapter(env.jwtSecret, "60d");
+  const jwtAdapter = new JwtAdapter(env.jwtSecret, "40d"); //expiração do token na api será de 40 segundos
   const jwtRefreshTokenAdapter = new JwtAdapter(env.jwtRefreshSecret, "90d");
   const userMongoRepository = new MongoRepository("user");
   const userRepository = new UserRepository(userMongoRepository);

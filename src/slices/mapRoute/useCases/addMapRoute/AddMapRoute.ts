@@ -1,5 +1,5 @@
 import { AddMapRouteRepository } from "@/slices/mapRoute/repositories";
-import { MapRouteEntity, MapRouteData, CreateRouteDto } from "@/slices/mapRoute/entities";
+import { MapRouteEntity, CreateRouteDto } from "@/slices/mapRoute/entities";
 import { Directions } from "@/application/infra/maps";
 
 export type AddMapRoute = (data: CreateRouteDto) => Promise<MapRouteEntity | null>;
@@ -14,7 +14,14 @@ export const addMapRoute: AddMapRouteSignature =
     const { available_travel_modes, geocoded_waypoints, routes, request } =
       await directions.getDirections(source_id, destination_id);
     const legs = routes[0].legs[0];
-    const { start_address, start_location, end_location, end_address, distance } = legs;
+    const {
+      start_address,
+      start_location,
+      end_location,
+      end_address,
+      distance,
+      duration = 0,
+    } = legs;
     const mapRoute = {
       ...data,
       source: {
@@ -26,7 +33,7 @@ export const addMapRoute: AddMapRouteSignature =
         location: { lat: end_location.lat, lng: end_location.lng },
       },
       distance: distance.value,
-      duration: 0,
+      duration: duration?.value ?? 0,
       routeDriver: [],
       directions: JSON.stringify({
         available_travel_modes,

@@ -13,7 +13,7 @@ export const makeFastifyInstance = async (externalMongoClient = null) => {
       global: true,
     });
     await fastify.register(import("@fastify/rate-limit"), {
-      max: 100,
+      max: 1000,
       timeWindow: "10 minutes",
     });
     await fastify.register(cors, {

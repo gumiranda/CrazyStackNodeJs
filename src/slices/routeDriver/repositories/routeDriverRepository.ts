@@ -8,6 +8,7 @@ import {
   UpdateRouteDriverRepository,
 } from "./contracts";
 import { Query } from "@/application/types";
+
 export class RouteDriverRepository
   implements
     AddRouteDriverRepository,
@@ -45,6 +46,10 @@ export class RouteDriverRepository
     query: Query,
     data: RouteDriverData
   ): Promise<RouteDriverData | null> {
-    return this.repository.update(query?.fields ?? {}, data);
+    return this.repository.upsertAndPush({ routeId: query?.fields?.routeId } ?? {}, data, {
+      points: {
+        location: { lat: query?.fields?.lat, lng: query?.fields?.lng },
+      },
+    });
   }
 }

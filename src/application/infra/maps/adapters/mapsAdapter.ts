@@ -1,4 +1,4 @@
-import { Directions, Place } from "@/application/infra/maps/protocols";
+import { Directions, Places } from "@/application/infra/maps/protocols";
 import {
   DirectionsRequest,
   Client as GoogleMapsClient,
@@ -8,7 +8,7 @@ import {
 } from "@googlemaps/google-maps-services-js";
 import { env } from "@/application/infra/config";
 
-export class MapsAdapter implements Directions, Place {
+export class MapsAdapter implements Directions, Places {
   constructor(private readonly googleMapsClient: GoogleMapsClient) {
     this.googleMapsClient = googleMapsClient;
   }
@@ -48,8 +48,10 @@ export class MapsAdapter implements Directions, Place {
         inputtype: PlaceInputType.textQuery,
         fields: ["place_id", "formatted_address", "geometry", "name"],
         key: env.googleMapsKey,
+        locationbias: undefined,
       },
     });
+    console.log({ data });
     return data;
   }
 }

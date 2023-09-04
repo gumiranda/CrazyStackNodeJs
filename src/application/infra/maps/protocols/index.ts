@@ -1,2 +1,2 @@
-export * from "./place";
+export * from "./places";
 export * from "./directions";
