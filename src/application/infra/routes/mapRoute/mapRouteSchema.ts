@@ -118,6 +118,33 @@ export const loadMapRouteGetSchema = {
     },
   },
 };
+const queryStringJsonLoadDirectionsSchema = {
+  type: "object",
+  properties: {
+    originId: { type: "string" },
+    destinationId: { type: "string" },
+  },
+  required: ["originId", "destinationId"],
+};
+export const loadDirectionsGetSchema = {
+  schema: {
+    headers: headersJsonSchema,
+    querystring: queryStringJsonLoadDirectionsSchema,
+  },
+};
+const queryStringJsonLoadPlacesSchema = {
+  type: "object",
+  properties: {
+    text: { type: "string" },
+  },
+  required: ["originId", "destinationId"],
+};
+export const loadPlacesGetSchema = {
+  schema: {
+    headers: headersJsonSchema,
+    querystring: queryStringJsonLoadPlacesSchema,
+  },
+};
 const deleteMapRouteResponse = { type: "boolean" };
 const queryStringJsonDeleteMapRouteSchema = {
   type: "object",
