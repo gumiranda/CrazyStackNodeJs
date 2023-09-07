@@ -16,6 +16,8 @@ export const makeFastifyInstance = async (externalMongoClient = null) => {
       max: 1000,
       timeWindow: "10 minutes",
     });
+    await fastify.register(require("@fastify/websocket"));
+
     await fastify.register(cors, {
       origin: "*",
       methods: ["POST", "GET", "PATCH", "DELETE"],
