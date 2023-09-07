@@ -1,8 +1,10 @@
 const bodyAddRouteDriverJsonSchema = {
   type: "object",
-  required: ["name"],
+  required: ["name", "status", "routeId"],
   properties: {
     name: { type: "string" },
+    routeId: { type: "string", maxLength: 24, minLength: 24 },
+    status: { type: "string" },
   },
 };
 const headersJsonSchema = {
@@ -17,6 +19,8 @@ const addRouteDriverResponse = {
   properties: {
     _id: { type: "string", maxLength: 24, minLength: 24 },
     name: { type: "string" },
+    routeId: { type: "string", maxLength: 24, minLength: 24 },
+    status: { type: "string" },
     active: { type: "boolean" },
     createdById: { type: "string" },
     createdAt: { type: "string" },
@@ -42,6 +46,8 @@ const loadRouteDriverResponse = {
   properties: {
     _id: { type: "string", maxLength: 24, minLength: 24 },
     name: { type: "string" },
+    routeId: { type: "string", maxLength: 24, minLength: 24 },
+    status: { type: "string" },
     active: { type: "boolean" },
     createdById: { type: "string" },
     createdAt: { type: "string" },
@@ -76,17 +82,17 @@ export const deleteRouteDriverSchema = {
 const queryStringJsonUpdateRouteDriverSchema = {
   type: "object",
   properties: {
-    _id: { type: "string", maxLength: 24, minLength: 24 },
+    routeId: { type: "string", maxLength: 24, minLength: 24 },
   },
-  required: ["_id"],
+  required: ["routeId"],
 };
 const updateRouteDriverResponse = {
   type: "object",
-  properties: {
-    _id: { type: "string", maxLength: 24, minLength: 24 },
-    name: { type: "string" },
-    createdById: { type: "string" },
-  },
+  // properties: {
+  //   _id: { type: "string", maxLength: 24, minLength: 24 },
+  //   name: { type: "string" },
+  //   createdById: { type: "string" },
+  // },
 };
 const updateRouteDriverBody = {
   type: "object",
@@ -99,9 +105,9 @@ export const updateRouteDriverSchema = {
     headers: headersJsonSchema,
     querystring: queryStringJsonUpdateRouteDriverSchema,
     body: updateRouteDriverBody,
-    response: {
-      200: updateRouteDriverResponse,
-    },
+    // response: {
+    //   200: updateRouteDriverResponse,
+    // },
   },
 };
 const queryStringJsonLoadRouteDriverByPageSchema = {
@@ -124,6 +130,8 @@ const loadRouteDriverByPageResponse = {
         properties: {
           _id: { type: "string", maxLength: 24, minLength: 24 },
           name: { type: "string" },
+          status: { type: "string" },
+          routeId: { type: "string", maxLength: 24, minLength: 24 },
           active: { type: "boolean" },
           createdById: { type: "string" },
           createdAt: { type: "string" },
