@@ -3,6 +3,7 @@ import "./application/infra/config/module-alias";
 import { env, routes, MongoHelper } from "@/application/infra";
 import Fastify, { FastifyInstance } from "fastify";
 import cors from "@fastify/cors";
+import websocket from "@fastify/websocket";
 const { fastifyRequestContextPlugin } = require("@fastify/request-context");
 export const makeFastifyInstance = async (externalMongoClient = null) => {
   const fastify: FastifyInstance = Fastify({ logger: true });
@@ -16,7 +17,7 @@ export const makeFastifyInstance = async (externalMongoClient = null) => {
       max: 1000,
       timeWindow: "10 minutes",
     });
-    await fastify.register(require("@fastify/websocket"));
+    await fastify.register(websocket);
 
     await fastify.register(cors, {
       origin: "*",
