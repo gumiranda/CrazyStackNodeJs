@@ -1,10 +1,11 @@
 const bodyAddRouteDriverJsonSchema = {
   type: "object",
-  required: ["name", "status", "routeId"],
+  required: ["name", "status", "routeId", "points"],
   properties: {
     name: { type: "string" },
     routeId: { type: "string", maxLength: 24, minLength: 24 },
     status: { type: "string" },
+    points: { type: "array" },
   },
 };
 const headersJsonSchema = {
@@ -21,6 +22,7 @@ const addRouteDriverResponse = {
     name: { type: "string" },
     routeId: { type: "string", maxLength: 24, minLength: 24 },
     status: { type: "string" },
+    points: { type: "array" },
     active: { type: "boolean" },
     createdById: { type: "string" },
     createdAt: { type: "string" },
@@ -48,6 +50,7 @@ const loadRouteDriverResponse = {
     name: { type: "string" },
     routeId: { type: "string", maxLength: 24, minLength: 24 },
     status: { type: "string" },
+    points: { type: "array" },
     active: { type: "boolean" },
     createdById: { type: "string" },
     createdAt: { type: "string" },
@@ -82,9 +85,10 @@ export const deleteRouteDriverSchema = {
 const queryStringJsonUpdateRouteDriverSchema = {
   type: "object",
   properties: {
-    routeId: { type: "string", maxLength: 24, minLength: 24 },
+    routeId: { type: "string" },
+    _id: { type: "string" },
   },
-  required: ["routeId"],
+  required: ["routeId", "_id"],
 };
 const updateRouteDriverResponse = {
   type: "object",
@@ -98,6 +102,7 @@ const updateRouteDriverBody = {
   type: "object",
   properties: {
     name: { type: "string" },
+    status: { type: "string" },
   },
 };
 export const updateRouteDriverSchema = {

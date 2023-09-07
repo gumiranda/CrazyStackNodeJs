@@ -6,7 +6,7 @@ import { UpdateRouteDriverController } from "@/slices/routeDriver/controllers";
 import { makeLoadMapRouteFactory } from "@/slices/mapRoute/useCases";
 
 export const makeUpdateRouteDriverController = (): Controller => {
-  const requiredFieldsQuery = ["routeId", "lat", "lng"];
+  const requiredFieldsQuery = ["_id", "routeId", "lat", "lng"];
   const requiredFieldsBody: any = [];
   return makeLogController(
     "updateRouteDriver",
