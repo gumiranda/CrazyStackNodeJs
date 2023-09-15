@@ -1,4 +1,4 @@
-const useCasesTodo = {
+export const useCasesTodo = {
   owner: {
     fields: [
       "appointmentsTotal",
@@ -160,3 +160,4 @@ const useCasesTodo = {
     },
   ],
 };
+export const commands = ["ncu --interactive --format group"];

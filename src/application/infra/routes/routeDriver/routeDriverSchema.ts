@@ -90,14 +90,7 @@ const queryStringJsonUpdateRouteDriverSchema = {
   },
   required: ["routeId", "_id"],
 };
-const updateRouteDriverResponse = {
-  type: "object",
-  // properties: {
-  //   _id: { type: "string", maxLength: 24, minLength: 24 },
-  //   name: { type: "string" },
-  //   createdById: { type: "string" },
-  // },
-};
+
 const updateRouteDriverBody = {
   type: "object",
   properties: {

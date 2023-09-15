@@ -148,9 +148,8 @@ describe("Route api/request", () => {
         createdAt: new Date(),
         updatedAt: new Date(),
       };
-      const { insertedId: professionalId } = await userCollection.insertOne(
-        professionalToAdd
-      );
+      const { insertedId: professionalId } =
+        await userCollection.insertOne(professionalToAdd);
       const { insertedId: clientUserId } = await userCollection.insertOne({ ...userBody });
       const clientToAdd = {
         name: "zzzz",
