@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable no-unsafe-optional-chaining */
 import jwt from "jsonwebtoken";
 import {
   forbidden,
