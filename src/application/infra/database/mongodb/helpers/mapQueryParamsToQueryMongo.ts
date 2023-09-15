@@ -10,9 +10,10 @@ export const mapQueryParamsToQueryMongo = (queryParams: any): any => {
     !queryParams ||
     typeof queryParams !== "object" ||
     !Object.keys(queryParams) ||
+    !Object.keys(queryParams) ||
     Object.keys(queryParams)?.length === 0
   ) {
-    return null;
+    return undefined;
   }
   const newQuery: any = {};
   const keys = Object.keys(queryParams);
@@ -60,6 +61,13 @@ export const mapQueryParamsToQueryMongo = (queryParams: any): any => {
     } else if (!key?.includes?.("endDate")) {
       newQuery[key] = queryParams[key];
     }
+  }
+  if (
+    !Object.keys(newQuery) ||
+    !Object.keys(newQuery) ||
+    Object.keys(newQuery)?.length === 0
+  ) {
+    return undefined;
   }
   return newQuery;
 };

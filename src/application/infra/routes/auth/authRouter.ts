@@ -12,7 +12,7 @@ async function auth(fastify: any, options: any) {
   fastify.post("/auth/signup", signupPostSchema, signupAdapter());
   fastify.post("/auth/login", loginPostSchema, loginAdapter());
   fastify.get(
-    "/chat",
+    "/socket",
     { websocket: true },
     webSocketAdapter.handleConnection.bind(webSocketAdapter)
   );

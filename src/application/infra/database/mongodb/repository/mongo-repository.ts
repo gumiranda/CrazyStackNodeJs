@@ -143,8 +143,9 @@ export class MongoRepository extends Repository {
     if (query._id) {
       query._id = new ObjectId(query._id);
     }
+    const queryGenerated = mapQueryParamsToQueryMongo(query);
     return collection
-      .find(mapQueryParamsToQueryMongo(query), { session })
+      .find(queryGenerated, { session })
       .project(projection)
       .skip((page - 1) * limit)
       .limit(limit)
