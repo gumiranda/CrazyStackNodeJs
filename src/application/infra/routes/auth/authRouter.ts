@@ -1,50 +1,88 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { FastifyRequest } from "fastify";
 import { signupAdapter, loginAdapter } from "./authAdapter";
 import { signupPostSchema, loginPostSchema } from "./authSchema";
-/*
-fastify.addHook('preValidation', async (request, reply) => {
-  // check if the request is authenticated
-  if (!request.isAuthenticated()) {
-    await reply.code(401).send("not authenticated");
+
+class WebSocketAdapter {
+  private fastify: any;
+  constructor(fastify: any) {
+    this.fastify = fastify;
   }
-})
-*/
+
+  handleConnection(connection: any, req: FastifyRequest) {
+    connection.socket.on("message", async (message: any) => {
+      try {
+        const payload = this.parseMessage(message);
+        if (payload.action === "auth") {
+          this.handleAuthentication(payload, connection);
+        } else {
+          this.handlePayload(payload, connection);
+        }
+      } catch (error) {
+        this.handleError(error, connection);
+      }
+    });
+  }
+  private parseMessage(message: any) {
+    return JSON.parse(message.toString());
+  }
+
+  private handlePayload(payload: any, connection: any) {
+    if (this.isValidPayload(payload, connection)) {
+      this.broadcast(payload);
+      connection.socket.send("Message processed successfully");
+    } else {
+      connection.socket.send("Invalid payload");
+    }
+  }
+
+  private handleError(error: any, connection: any) {
+    console.error("Error processing message:", error);
+    connection.socket.send("Error processing message");
+  }
+  private handleAuthentication(payload: any, connection: any) {
+    const tokenIsValid = this.verifyToken(payload.token);
+
+    if (tokenIsValid) {
+      const userId = payload?._id;
+      if (userId) {
+        connection.socket._id = userId;
+      }
+      connection.socket.authenticated = true;
+      connection.socket.send("Authentication successful");
+    } else {
+      connection.socket.send("Invalid token");
+    }
+  }
+
+  private verifyToken(token: string): boolean {
+    // Add your token verification logic here
+    return true;
+  }
+
+  private isValidPayload(payload: any, connection: any): boolean {
+    return (
+      connection.socket.authenticated && payload.route_id && payload.lat && payload.lng
+    );
+  }
+
+  private broadcast(message: any) {
+    for (const client of this.fastify.websocketServer.clients) {
+      console.log({ clientId: client?._id });
+      if (client?._id) {
+        client.send(JSON.stringify(message));
+      }
+    }
+  }
+}
 async function auth(fastify: any, options: any) {
+  const webSocketAdapter = new WebSocketAdapter(fastify);
   fastify.post("/auth/signup", signupPostSchema, signupAdapter());
   fastify.post("/auth/login", loginPostSchema, loginAdapter());
   fastify.get(
-    "/socket",
+    "/chat",
     { websocket: true },
-    function wsHandler(connection: any, req: any) {
-      // bound to fastify server
-
-      connection.socket.on("message", async (message: any) => {
-        try {
-          const payload = JSON.parse(message.toString());
-          console.log({ payload });
-          if (payload.route_id && payload.lat && payload.lng) {
-            // Assuming this.newPointsQueue and this.routesDriverService are available in your scope
-            broadcast(payload, fastify);
-            //await this.newPointsQueue.add(payload, { attempts: 1 });
-            //await this.routesDriverService.createOrUpdate(payload);
-
-            // You can send a response back to the client if needed
-            connection.socket.send("Message processed successfully");
-          } else {
-            connection.socket.send("Invalid payload");
-          }
-        } catch (error) {
-          console.error("Error processing message:", error);
-          connection.socket.send("Error processing message");
-        }
-      });
-    }
+    webSocketAdapter.handleConnection.bind(webSocketAdapter)
   );
 }
 export { auth };
-
-function broadcast(message: any, fastify: any) {
-  for (const client of fastify.websocketServer.clients) {
-    client.send(JSON.stringify(message));
-  }
-}
