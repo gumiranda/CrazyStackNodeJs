@@ -60,8 +60,12 @@ describe("UpdateRouteDriverController", () => {
     });
     expect(result).toEqual(
       ok({
-        ...fakeRouteDriverEntity,
-        createdById: fakeUserEntity?._id,
+        countRouteDriver: undefined,
+        routeDriver: undefined,
+        routeDriverOutput: {
+          ...fakeRouteDriverEntity,
+          createdById: fakeUserEntity?._id,
+        },
       })
     );
     expect(updateRouteDriver).toHaveBeenCalledWith(
