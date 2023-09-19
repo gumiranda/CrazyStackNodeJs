@@ -3,6 +3,7 @@ import "./application/infra/config/module-alias";
 import { env, routes, MongoHelper } from "@/application/infra";
 import Fastify, { FastifyInstance } from "fastify";
 import cors from "@fastify/cors";
+import websocket from "@fastify/websocket";
 const { fastifyRequestContextPlugin } = require("@fastify/request-context");
 export const makeFastifyInstance = async (externalMongoClient = null) => {
   const fastify: FastifyInstance = Fastify({ logger: true });
@@ -21,6 +22,8 @@ export const makeFastifyInstance = async (externalMongoClient = null) => {
       methods: ["POST", "GET", "PATCH", "DELETE"],
       allowedHeaders: ["Content-Type", "Authorization", "authorization", "refreshtoken"],
     });
+    await fastify.register(websocket);
+
     if (env.environment === "production") {
       // await fastify.register(require("@fastify/under-pressure"), {
       //   maxEventLoopDelay: 1000,
