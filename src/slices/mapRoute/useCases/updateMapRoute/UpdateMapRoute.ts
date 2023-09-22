@@ -1,16 +1,20 @@
 import { UpdateMapRouteRepository } from "@/slices/mapRoute/repositories";
-import { MapRouteData } from "@/slices/mapRoute/entities";
+import { CreateRouteDto, MapRouteData } from "@/slices/mapRoute/entities";
 import { Query } from "@/application/types";
+import { Directions } from "@/application/infra/maps";
+import { handleDirections } from "../handleDirections";
 
 export type UpdateMapRoute = (
   query: Query,
-  data: MapRouteData
+  data: CreateRouteDto
 ) => Promise<MapRouteData | null>;
 export type UpdateMapRouteSignature = (
-  updateMapRoute: UpdateMapRouteRepository
+  updateMapRoute: UpdateMapRouteRepository,
+  directions: Directions
 ) => UpdateMapRoute;
 export const updateMapRoute: UpdateMapRouteSignature =
-  (updateMapRouteRepository: UpdateMapRouteRepository) =>
-  async (query: Query, data: MapRouteData) => {
-    return updateMapRouteRepository.updateMapRoute(query, data);
+  (updateMapRouteRepository: UpdateMapRouteRepository, directions: Directions) =>
+  async (query: Query, data: CreateRouteDto) => {
+    const mapRoute = await handleDirections(data, directions);
+    return updateMapRouteRepository.updateMapRoute(query, mapRoute);
   };

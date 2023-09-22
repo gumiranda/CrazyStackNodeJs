@@ -1,4 +1,9 @@
-import { fakeMapRouteEntity } from "@/slices/mapRoute/entities/MapRouteEntity.spec";
+import {
+  fakeDestinationId,
+  fakeDirectionsData,
+  fakeMapRouteEntity,
+  fakeOriginId,
+} from "@/slices/mapRoute/entities/MapRouteEntity.spec";
 import { MapRouteEntity } from "@/slices/mapRoute/entities";
 import { AddMapRouteRepository } from "@/slices/mapRoute/repositories/contracts";
 import MockDate from "mockdate";
@@ -7,42 +12,6 @@ import { addMapRoute } from "./AddMapRoute";
 import { Directions } from "@/application/infra/maps";
 import { TravelMode } from "@googlemaps/google-maps-services-js";
 
-const fakeOriginId = "place_id:ChIJN1t_tDeuEmsRUsoyG83frY4";
-const fakeDestinationId = "place_id:ChIJP3Sa8ziYEmsRUKgyFmh9AQM";
-
-const fakeDirectionsData = {
-  geocoded_waypoints: [
-    {
-      geocoder_status: "OK",
-      place_id: fakeOriginId,
-      types: ["locality", "political"],
-    },
-    {
-      geocoder_status: "OK",
-      place_id: fakeDestinationId,
-      types: ["locality", "political"],
-    },
-  ],
-  routes: [
-    {
-      legs: [
-        {
-          start_address: "",
-          end_address: "",
-          distance: { value: 22 },
-          start_location: {
-            lat: -33.8674869,
-            lng: 151.2069902,
-          },
-          end_location: {
-            lat: -33.8688197,
-            lng: 151.2092955,
-          },
-        },
-      ],
-    },
-  ],
-};
 describe("addMapRoute", () => {
   let testInstance: any;
   let addMapRouteRepository: MockProxy<AddMapRouteRepository>;

@@ -224,7 +224,7 @@ describe("Route api/mapRoute", () => {
         method: "PATCH",
         url: `/api/mapRoute/update?_id=${insertedId.toString()}`,
         headers: { authorization: `Bearer ${token}` },
-        body: { name: "new name" },
+        body: { ...mapRouteBody, name: "new name" },
       });
       const responseBody = JSON.parse(response.body);
       expect(response.statusCode).toBe(200);
@@ -235,7 +235,7 @@ describe("Route api/mapRoute", () => {
         method: "PATCH",
         url: `/api/mapRoute/update?_id=${new ObjectId().toString()}`,
         headers: { authorization: "Bearer invalid_token" },
-        body: { name: "new name" },
+        body: { ...mapRouteBody, name: "new name" },
       });
       expect(response.statusCode).toBe(401);
     });
