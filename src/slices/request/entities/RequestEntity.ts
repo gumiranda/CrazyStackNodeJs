@@ -1,3 +1,4 @@
+import { CarData } from "@/slices/car/entities";
 import { FidelityData } from "@/slices/fidelity/entities";
 import { OrderData } from "@/slices/order/entities";
 import { RecurrenceData } from "@/slices/recurrence/entities";
@@ -31,6 +32,7 @@ export type RequestData = {
   ride?: RideData;
   recurrence?: RecurrenceData;
   order?: OrderData;
+  car?: CarData;
   initDate: string;
   endDate: string;
   cancelledAt?: Date | null;
@@ -73,6 +75,7 @@ export class RequestEntity {
   endDate: string;
   cancelledAt?: Date | null;
   duration?: number;
+  car?: CarData;
   constructor(data: RequestData) {
     this.createdById = data.createdById;
     this.name = data.name;
@@ -102,6 +105,7 @@ export class RequestEntity {
     this.order = data.order;
     this.ride = data.ride;
     this.duration = data.duration;
+    this.car = data.car;
     this.updatedById = null;
     this.updatedByRole = null;
   }

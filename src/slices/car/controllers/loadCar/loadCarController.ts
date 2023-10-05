@@ -7,24 +7,24 @@ import {
   ok,
 } from "@/application/helpers";
 import { Controller } from "@/application/infra/contracts";
-import { AddUser } from "@/slices/user/useCases";
+import { LoadCar } from "@/slices/car/useCases";
 
-export class AddUserController extends Controller {
+export class LoadCarController extends Controller {
   constructor(
     private readonly validation: Validation,
-    private readonly addUser: AddUser
+    private readonly loadCar: LoadCar
   ) {
     super();
   }
   async execute(httpRequest: HttpRequest<any>): Promise<HttpResponse<any>> {
-    const errors = this.validation.validate(httpRequest?.body);
+    const errors = this.validation.validate(httpRequest?.query);
     if (errors?.length > 0) {
       return badRequest(errors);
     }
-    const userCreated = await this.addUser({
-      ...httpRequest?.body,
-      createdById: httpRequest?.userId,
+    const carLoaded = await this.loadCar({
+      fields: httpRequest?.query,
+      options: {},
     });
-    return ok(userCreated);
+    return ok(carLoaded);
   }
 }

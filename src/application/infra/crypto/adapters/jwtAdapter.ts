@@ -2,7 +2,10 @@ import jwt from "jsonwebtoken";
 import { TokenDecrypter, TokenGenerator } from "@/application/infra/crypto/protocols";
 
 export class JwtAdapter implements TokenDecrypter, TokenGenerator {
-  constructor(private readonly secret: string, private readonly expirationTime: string) {
+  constructor(
+    private readonly secret: string,
+    private readonly expirationTime: string
+  ) {
     this.secret = secret;
     this.expirationTime = expirationTime;
   }

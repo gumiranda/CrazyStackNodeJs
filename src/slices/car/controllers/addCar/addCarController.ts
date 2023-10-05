@@ -7,12 +7,12 @@ import {
   ok,
 } from "@/application/helpers";
 import { Controller } from "@/application/infra/contracts";
-import { AddUser } from "@/slices/user/useCases";
+import { AddCar } from "@/slices/car/useCases";
 
-export class AddUserController extends Controller {
+export class AddCarController extends Controller {
   constructor(
     private readonly validation: Validation,
-    private readonly addUser: AddUser
+    private readonly addCar: AddCar
   ) {
     super();
   }
@@ -21,10 +21,10 @@ export class AddUserController extends Controller {
     if (errors?.length > 0) {
       return badRequest(errors);
     }
-    const userCreated = await this.addUser({
+    const carCreated = await this.addCar({
       ...httpRequest?.body,
       createdById: httpRequest?.userId,
     });
-    return ok(userCreated);
+    return ok(carCreated);
   }
 }

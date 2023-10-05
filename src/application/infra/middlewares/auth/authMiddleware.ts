@@ -14,7 +14,10 @@ import { env } from "@/application/infra/config";
 import { ObjectId } from "mongodb";
 
 export class AuthMiddleware implements Middleware {
-  constructor(private readonly loadUser: LoadUser, private readonly roles: string[]) {}
+  constructor(
+    private readonly loadUser: LoadUser,
+    private readonly roles: string[]
+  ) {}
   private async verifyToken(token: string, secret: string): Promise<any> {
     try {
       return jwt.verify(token, secret);
