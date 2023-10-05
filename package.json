@@ -49,7 +49,7 @@
     "@fastify/cors": "^8.3.0",
     "@fastify/helmet": "^10.1.0",
     "@fastify/mongodb": "^6.2.0",
-    "@fastify/rate-limit": "^7.6.0",
+    "@fastify/rate-limit": "^8.0.3",
     "@fastify/request-context": "^4.2.0",
     "@fastify/under-pressure": "^8.2.0",
     "@googlemaps/google-maps-services-js": "^3.3.36",
