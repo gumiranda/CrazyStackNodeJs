@@ -52,10 +52,12 @@ export const makeKafkaAdapter = () => {
   return new KafkaAdapter(env.kafkaHost, env.kafkaClientId);
 };
 export async function sendMessageKafka({ topic, message }: SendMessageInput) {
-  const kafkaAdapterInstance = makeKafkaAdapter();
-  await kafkaAdapterInstance.connectProducer();
-  await kafkaAdapterInstance.sendMessage(topic, message);
-  await kafkaAdapterInstance.disconnectProducer();
+  if (process.env.NODE_ENV === "production") {
+    const kafkaAdapterInstance = makeKafkaAdapter();
+    await kafkaAdapterInstance.connectProducer();
+    await kafkaAdapterInstance.sendMessage(topic, message);
+    await kafkaAdapterInstance.disconnectProducer();
+  }
 }
 export async function consumeMessageKafka({ consumers }: KafkaConsumerInput) {
   const kafkaAdapterInstance = makeKafkaAdapter();

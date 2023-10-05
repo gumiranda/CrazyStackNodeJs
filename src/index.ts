@@ -133,7 +133,9 @@ const start = async () => {
     await fastifyInstance.listen({ port, host: "0.0.0.0" });
     fastifyInstance.log.info(`server listening on ${port}`);
     gracefulServer.setReady();
-    kafkaAdapter = await consumeMessageKafka({ consumers: kafkaConsumers });
+    if (process.env.NODE_ENV === "production") {
+      kafkaAdapter = await consumeMessageKafka({ consumers: kafkaConsumers });
+    }
   } catch (err) {
     process.exit(1);
   }
