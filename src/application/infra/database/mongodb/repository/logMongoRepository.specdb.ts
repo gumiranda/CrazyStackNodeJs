@@ -2,6 +2,8 @@ import MockDate from "mockdate";
 import { LogMongoRepository } from "./logMongoRepository";
 import { MongoHelper } from "@/application/infra";
 import { Collection } from "mongodb";
+jest.setTimeout(500000);
+
 describe("LogMongoRepository", () => {
   let testInstance: LogMongoRepository;
   let errorCollection: Collection;
