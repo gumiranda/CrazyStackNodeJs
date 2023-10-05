@@ -55,6 +55,7 @@
     "@fastify/under-pressure": "^8.3.0",
     "@fastify/websocket": "^8.2.0",
     "@googlemaps/google-maps-services-js": "^3.3.38",
+    "@gquittet/graceful-server": "^4.0.8",
     "bcrypt": "^5.1.1",
     "date-fns": "^2.30.0",
     "date-fns-tz": "^2.0.0",
@@ -62,6 +63,7 @@
     "fastify": "4.23.2",
     "ioredis": "^5.3.2",
     "jsonwebtoken": "^9.0.2",
+    "kafkajs": "^2.2.4",
     "module-alias": "^2.2.3",
     "mongodb": "^6.1.0"
   }

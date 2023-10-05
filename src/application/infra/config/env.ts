@@ -8,4 +8,8 @@ export const env = {
   redisUrl: process.env.REDIS_URL ?? "us1-active-example-40043.upstash.io",
   redisPassword: process.env.REDIS_PASSWORD ?? "YOUR_PASSWORD",
   googleMapsKey: process.env.GOOGLE_MAPS_API_KEY ?? "YOUR_GOOGLE_MAPS_KEY",
+  kafkaUsername: process.env.KAFKA_USERNAME ?? "YOUR_KAFKA_USERNAME",
+  kafkaPassword: process.env.KAFKA_PASSWORD ?? "YOUR_KAFKA_PASSWORD",
+  kafkaHost: process.env.KAFKA_HOST ?? "YOUR_KAFKA_HOST",
+  kafkaClientId: process.env.KAFKA_CLIENT_ID ?? "YOUR_KAFKA_CLIENT_ID",
 };

@@ -1,6 +1,7 @@
 import { FastifyInstance } from "fastify";
 import { Middleware } from "@/application/infra/contracts";
 import { WebSocketProtocol } from "../protocols";
+import { sendMessageKafka } from "./kafkaAdapter";
 
 export class WebSocketAdapter implements WebSocketProtocol {
   private fastify: FastifyInstance;
@@ -56,6 +57,10 @@ export class WebSocketAdapter implements WebSocketProtocol {
   private handlePayload(payload: any, connection: any) {
     if (this.isValidPayload(payload, connection)) {
       this.broadcast(payload);
+      sendMessageKafka({
+        topic: payload?.topic,
+        message: JSON.stringify({ ...payload, userId: connection.socket.userId }),
+      });
       connection.socket.send("Message processed successfully");
       return;
     }
