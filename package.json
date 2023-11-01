@@ -61,6 +61,6 @@
     "ioredis": "^5.3.2",
     "jsonwebtoken": "^9.0.0",
     "module-alias": "^2.2.2",
-    "mongodb": "^4.13.0"
+    "mongodb": "^6.2.0"
   }
 }
