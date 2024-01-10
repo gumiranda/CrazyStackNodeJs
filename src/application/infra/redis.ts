@@ -15,9 +15,9 @@ export const getRedis = async (key: string) => {
   }
 };
 
-export const setRedis = async (key: string, value: string) => {
+export const setRedis = async (key: string, value: string, expirationTime: number) => {
   try {
-    await clientRedis.set(key, value, "EX", 120); //1dia 60 * 60 * 24);
+    await clientRedis.set(key, value, "EX", expirationTime); //1dia 60 * 60 * 24);
   } catch (error) {
     console.error("Error setting Redis value:", error);
   }
@@ -36,7 +36,8 @@ export const parseJson = (json: any): any => {
 };
 
 export const onSendRedis =
-  (domain: string) => async (req: any, reply: any, payload: any) => {
+  (domain: string, expirationTime: number) =>
+  async (req: any, reply: any, payload: any) => {
     if (!payload) {
       return;
     }
@@ -47,7 +48,7 @@ export const onSendRedis =
       !parseJson(payload)?.statusCode
     ) {
       const cacheKey = `${domain}:${req.url}`;
-      setRedis(cacheKey, JSON.stringify(parseJson(payload)));
+      setRedis(cacheKey, JSON.stringify(parseJson(payload)), expirationTime);
     }
     return payload;
   };

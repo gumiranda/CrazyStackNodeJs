@@ -31,12 +31,15 @@ describe("UpdateRouteDriver", () => {
   });
   it("should return a routeDriver updateed when updateRouteDriverRepository insert it", async () => {
     const routeDriver = await testInstance(fakeQuery, fakeRouteDriverEntity);
-    expect(routeDriver).toEqual(fakeRouteDriverEntity);
+    expect(routeDriver).toEqual({
+      countRouteDriver: undefined,
+      routeDriver: fakeRouteDriverEntity,
+    });
   });
   it("should return null a new routeDriver updateed when updateRouteDriverRepository return it", async () => {
     updateRouteDriverRepository.updateRouteDriver.mockResolvedValue(null);
     const routeDriver = await testInstance(fakeQuery, fakeRouteDriverEntity);
-    expect(routeDriver).toBeNull();
+    expect(routeDriver).toEqual({ countRouteDriver: undefined, routeDriver: null });
   });
   it("should rethrow if updateRouteDriver of UpdateRouteDriverRepository throws", async () => {
     updateRouteDriverRepository.updateRouteDriver.mockRejectedValueOnce(

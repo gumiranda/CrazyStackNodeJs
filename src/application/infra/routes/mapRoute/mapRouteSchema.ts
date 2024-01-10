@@ -118,6 +118,33 @@ export const loadMapRouteGetSchema = {
     },
   },
 };
+const queryStringJsonLoadDirectionsSchema = {
+  type: "object",
+  properties: {
+    originId: { type: "string" },
+    destinationId: { type: "string" },
+  },
+  required: ["originId", "destinationId"],
+};
+export const loadDirectionsGetSchema = {
+  schema: {
+    headers: headersJsonSchema,
+    querystring: queryStringJsonLoadDirectionsSchema,
+  },
+};
+const queryStringJsonLoadPlacesSchema = {
+  type: "object",
+  properties: {
+    text: { type: "string" },
+  },
+  required: ["text"],
+};
+export const loadPlacesGetSchema = {
+  schema: {
+    headers: headersJsonSchema,
+    querystring: queryStringJsonLoadPlacesSchema,
+  },
+};
 const deleteMapRouteResponse = { type: "boolean" };
 const queryStringJsonDeleteMapRouteSchema = {
   type: "object",
@@ -147,13 +174,48 @@ const updateMapRouteResponse = {
   properties: {
     _id: { type: "string", maxLength: 24, minLength: 24 },
     name: { type: "string" },
+    source: {
+      type: "object",
+      properties: {
+        name: { type: "string" },
+        location: {
+          type: "object",
+          properties: {
+            lat: { type: "number" },
+            lng: { type: "number" },
+          },
+        },
+      },
+    },
+    destination: {
+      type: "object",
+      properties: {
+        name: { type: "string" },
+        location: {
+          type: "object",
+          properties: {
+            lat: { type: "number" },
+            lng: { type: "number" },
+          },
+        },
+      },
+    },
+    distance: { type: "number" },
+    duration: { type: "number" },
+    directions: { type: "string" },
+    routeDriver: { type: "array" },
+    active: { type: "boolean" },
     createdById: { type: "string" },
+    createdAt: { type: "string" },
   },
 };
 const updateMapRouteBody = {
   type: "object",
+  required: ["name", "source_id", "destination_id"],
   properties: {
     name: { type: "string" },
+    source_id: { type: "string" },
+    destination_id: { type: "string" },
   },
 };
 export const updateMapRouteSchema = {

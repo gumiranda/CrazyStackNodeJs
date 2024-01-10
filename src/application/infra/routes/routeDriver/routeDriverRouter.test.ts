@@ -17,11 +17,19 @@ const userBody = {
 };
 const routeDriverBody = {
   name: "test",
+  status: "initialized",
+  routeId: new ObjectId().toString(),
+  points: [],
 };
 const makeAccessToken = async (role: string, password: string): Promise<any> => {
   const result = await userCollection.insertOne({ ...userBody, password, role });
   const _id = result?.insertedId;
   return { _id, token: sign({ _id }, env.jwtSecret) };
+};
+const mapRouteBody = {
+  name: "test",
+  source_id: "ChIJN1t_tDeuEmsRUsoyG83frY4",
+  destination_id: "ChIJP3Sa8ziYEmsRUKgyFmh9AQM",
 };
 describe("Route api/routeDriver", () => {
   let fastify: any;
@@ -214,24 +222,41 @@ describe("Route api/routeDriver", () => {
     });
     test("Should return 200 on update", async () => {
       const { token, _id } = await makeAccessToken("admin", "password");
-      const { insertedId } = await routeDriverCollection.insertOne({
-        ...routeDriverBody,
-        createdById: _id,
+      const responseAdd = await fastify.inject({
+        method: "POST",
+        url: "/api/mapRoute/add",
+        headers: { authorization: `Bearer ${token}` },
+        payload: mapRouteBody,
       });
+      const responseBodyAdd = JSON.parse(responseAdd.body);
+
+      const responseAddUpdate = await fastify.inject({
+        method: "POST",
+        url: "/api/routeDriver/add",
+        headers: { authorization: `Bearer ${token}` },
+        payload: {
+          ...routeDriverBody,
+          createdById: _id,
+          routeId: responseBodyAdd?._id,
+          source_id: responseBodyAdd?.source_id,
+          destination_id: responseBodyAdd?.destination_id,
+        },
+      });
+      const responseBodyAdded = JSON.parse(responseAddUpdate.body);
       const response = await fastify.inject({
         method: "PATCH",
-        url: `/api/routeDriver/update?_id=${insertedId.toString()}`,
+        url: `/api/routeDriver/update?_id=${responseBodyAdded?._id}&routeId=${responseBodyAdd?._id}&lat=-33.8689604&lng=151.2092021`,
         headers: { authorization: `Bearer ${token}` },
         body: { name: "new name" },
       });
       const responseBody = JSON.parse(response.body);
       expect(response.statusCode).toBe(200);
-      expect(responseBody.name).toEqual("new name");
+      expect(responseBody.routeDriverOutput).toBeTruthy();
     });
     test("Should return 401 for unauthorized access token", async () => {
       const response = await fastify.inject({
         method: "PATCH",
-        url: `/api/routeDriver/update?_id=${new ObjectId().toString()}`,
+        url: `/api/routeDriver/update?_id=${new ObjectId().toString()}&routeId=${new ObjectId().toString()}lat=-33.8689604&lng=151.2092021`,
         headers: { authorization: "Bearer invalid_token" },
         body: { name: "new name" },
       });

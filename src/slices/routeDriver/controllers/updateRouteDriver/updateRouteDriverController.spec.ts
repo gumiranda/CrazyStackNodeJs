@@ -6,19 +6,23 @@ import { fakeRouteDriverEntity } from "@/slices/routeDriver/entities/RouteDriver
 import { Controller } from "@/application/infra/contracts";
 import { MissingParamError } from "@/application/errors";
 import { fakeUserEntity } from "@/slices/user/entities/UserEntity.spec";
+import { fakeMapRouteEntity } from "@/slices/mapRoute/entities/MapRouteEntity.spec";
 
 describe("UpdateRouteDriverController", () => {
   let testInstance: UpdateRouteDriverController;
   let updateRouteDriver: jest.Mock;
+  let loadMapRoute: jest.Mock;
   let validationQuery: MockProxy<Validation>;
   let validationBody: MockProxy<Validation>;
   beforeAll(async () => {
     MockDate.set(new Date());
     updateRouteDriver = jest.fn();
+    loadMapRoute = jest.fn();
     updateRouteDriver.mockResolvedValue({
       ...fakeRouteDriverEntity,
       createdById: fakeUserEntity?._id,
     });
+    loadMapRoute.mockResolvedValue(fakeMapRouteEntity);
     validationQuery = mock();
     validationQuery.validate.mockResolvedValue([] as never);
     validationBody = mock();
@@ -31,7 +35,8 @@ describe("UpdateRouteDriverController", () => {
     testInstance = new UpdateRouteDriverController(
       validationQuery,
       validationBody,
-      updateRouteDriver
+      updateRouteDriver,
+      loadMapRoute
     );
   });
   it("should extends class Controller", async () => {
@@ -55,8 +60,12 @@ describe("UpdateRouteDriverController", () => {
     });
     expect(result).toEqual(
       ok({
-        ...fakeRouteDriverEntity,
-        createdById: fakeUserEntity?._id,
+        countRouteDriver: undefined,
+        routeDriver: undefined,
+        routeDriverOutput: {
+          ...fakeRouteDriverEntity,
+          createdById: fakeUserEntity?._id,
+        },
       })
     );
     expect(updateRouteDriver).toHaveBeenCalledWith(

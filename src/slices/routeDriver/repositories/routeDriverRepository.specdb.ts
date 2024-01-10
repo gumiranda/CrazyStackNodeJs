@@ -18,7 +18,7 @@ describe("RouteDriver Mongo Repository", () => {
     repository = mock<Repository>();
     repository.add.mockResolvedValue(fakeRouteDriverEntity);
     repository.getOne.mockResolvedValue(fakeRouteDriverEntity);
-    repository.update.mockResolvedValue(fakeRouteDriverEntity);
+    repository.upsertAndPush.mockResolvedValue(fakeRouteDriverEntity);
     repository.getPaginate.mockResolvedValue(fakeRouteDriverPaginated?.routeDrivers);
     repository.getCount.mockResolvedValue(fakeRouteDriverPaginated?.total);
     repository.deleteOne.mockResolvedValue(true);
@@ -49,17 +49,21 @@ describe("RouteDriver Mongo Repository", () => {
     await expect(result).rejects.toThrow("Error");
   });
   test("should rethrow if update of updateRouteDriver throws", async () => {
-    repository.update.mockRejectedValueOnce(new Error("Error"));
+    repository.upsertAndPush.mockRejectedValueOnce(new Error("Error"));
     const result = testInstance.updateRouteDriver(fakeQuery, fakeRouteDriverEntity);
     await expect(result).rejects.toThrow("Error");
   });
   test("should call update of updateRouteDriver with correct values", async () => {
-    await testInstance.updateRouteDriver(fakeQuery, fakeRouteDriverEntity);
-    expect(repository.update).toHaveBeenCalledWith(
-      fakeQuery?.fields,
+    await testInstance.updateRouteDriver(
+      { ...fakeQuery, fields: { routeId: 123, _id: 1234, lat: 33, lng: 33 } },
       fakeRouteDriverEntity
     );
-    expect(repository.update).toHaveBeenCalledTimes(1);
+    expect(repository.upsertAndPush).toHaveBeenCalledWith(
+      { _id: 1234, routeId: 123 },
+      { ...fakeRouteDriverEntity },
+      { points: { location: { lat: 33, lng: 33 } } }
+    );
+    expect(repository.upsertAndPush).toHaveBeenCalledTimes(1);
   });
   test("should return a routeDriver updated when updateRouteDriver update it", async () => {
     const result = await testInstance.updateRouteDriver(fakeQuery, fakeRouteDriverEntity);
@@ -73,12 +77,12 @@ describe("RouteDriver Mongo Repository", () => {
     expect(result).toEqual(fakeRouteDriverEntity);
   });
   test("should return null when updateRouteDriver returns null", async () => {
-    repository.update.mockResolvedValueOnce(null);
+    repository.upsertAndPush.mockResolvedValueOnce(null);
     const result = await testInstance.updateRouteDriver(fakeQuery, fakeRouteDriverEntity);
     expect(result).toBeNull();
   });
   test("should rethrow if update of updateRouteDriver throws", async () => {
-    repository.update.mockRejectedValueOnce(new Error("Error"));
+    repository.upsertAndPush.mockRejectedValueOnce(new Error("Error"));
     const result = testInstance.updateRouteDriver(fakeQuery, fakeRouteDriverEntity);
     await expect(result).rejects.toThrow("Error");
   });

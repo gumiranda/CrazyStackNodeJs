@@ -12,7 +12,7 @@ export const mapQueryParamsToQueryMongo = (queryParams: any): any => {
     !Object.keys(queryParams) ||
     Object.keys(queryParams)?.length === 0
   ) {
-    return null;
+    return undefined;
   }
   const newQuery: any = {};
   const keys = Object.keys(queryParams);

@@ -23,6 +23,42 @@ export const fakeMapRouteEntity = {
     '{"geocoded_waypoints":[{"geocoder_status":"OK","place_id":"place_id:ChIJN1t_tDeuEmsRUsoyG83frY4","types":["locality","political"]},{"geocoder_status":"OK","place_id":"place_id:ChIJP3Sa8ziYEmsRUKgyFmh9AQM","types":["locality","political"]}],"routes":[{"legs":[{"start_address":"","end_address":"","distance":{"value":22},"start_location":{"lat":-33.8674869,"lng":151.2069902},"end_location":{"lat":-33.8688197,"lng":151.2092955}}]}],"request":{"origin":{"place_id":"place_id:ChIJN1t_tDeuEmsRUsoyG83frY4","location":{"lat":-33.8674869,"lng":151.2069902}},"destination":{"place_id":"place_id:ChIJP3Sa8ziYEmsRUKgyFmh9AQM","location":{"lat":-33.8688197,"lng":151.2092955}}}}',
   routeDriver: [],
 };
+export const fakeOriginId = "place_id:ChIJN1t_tDeuEmsRUsoyG83frY4";
+export const fakeDestinationId = "place_id:ChIJP3Sa8ziYEmsRUKgyFmh9AQM";
+
+export const fakeDirectionsData = {
+  geocoded_waypoints: [
+    {
+      geocoder_status: "OK",
+      place_id: fakeOriginId,
+      types: ["locality", "political"],
+    },
+    {
+      geocoder_status: "OK",
+      place_id: fakeDestinationId,
+      types: ["locality", "political"],
+    },
+  ],
+  routes: [
+    {
+      legs: [
+        {
+          start_address: "",
+          end_address: "",
+          distance: { value: 22 },
+          start_location: {
+            lat: -33.8674869,
+            lng: 151.2069902,
+          },
+          end_location: {
+            lat: -33.8688197,
+            lng: 151.2092955,
+          },
+        },
+      ],
+    },
+  ],
+};
 export const fakeMapRoutePaginated = {
   total: 11,
   mapRoutes: [
