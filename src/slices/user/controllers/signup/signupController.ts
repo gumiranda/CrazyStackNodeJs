@@ -15,7 +15,6 @@ import { AddUser, LoadUser } from "@/slices/user/useCases";
 import { AddAccount } from "@/slices/account/useCases";
 import { EmailInUseError, InvalidParamError } from "@/application/errors";
 import emailValidator from "deep-email-validator";
-import { env } from "@/application/infra";
 
 export class SignupController extends Controller {
   constructor(

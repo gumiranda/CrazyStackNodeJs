@@ -1,4 +1,4 @@
-import { signupAdapter, loginAdapter } from "./authAdapter";
+import { signupAdapter, loginAdapter, signupOwnerAdapter } from "./authAdapter";
 import { signupPostSchema, loginPostSchema } from "./authSchema";
 import { WebSocketAdapter } from "@/application/infra/messaging";
 import { makeAuthMiddleware } from "@/application/infra/middlewares";
@@ -9,6 +9,7 @@ async function auth(fastify: any, options: any) {
     makeAuthMiddleware(["client", "owner", "admin", "professional"])
   );
   fastify.post("/auth/signup", signupPostSchema, signupAdapter());
+  fastify.post("/auth/signupOwner", signupPostSchema, signupOwnerAdapter());
   fastify.post("/auth/login", loginPostSchema, loginAdapter());
   fastify.get(
     "/socket",
