@@ -1,5 +1,5 @@
 import { parseJSON } from "@/application/helpers/utils/parseJSON";
-import { makeCompleteOwnerFactory } from "@/slices/user/useCases";
+import { makeCompleteOwnerFactory, makeLoadUserFactory } from "@/slices/user/useCases";
 export const newOwnerConsumer = {
   topic: "newOwner",
   callback: async (message: string) => {
@@ -10,7 +10,15 @@ export const newOwnerConsumer = {
     }
     const { userCreated } = parsedMessage || {};
     const completeOwnerFunction = makeCompleteOwnerFactory();
-    const result = await completeOwnerFunction(userCreated);
-    console.log({ userCreated, result });
+    const loadUser = makeLoadUserFactory();
+    const user = await loadUser({
+      fields: { email: userCreated?.email },
+      options: { projection: { password: 1 } },
+    });
+    const result = await completeOwnerFunction({
+      ...userCreated,
+      password: user?.password,
+    });
+    console.log("processou usuario");
   },
 };

@@ -1,18 +1,20 @@
-import { AddUser } from "@/slices/user/useCases";
 import { AddCategory } from "@/slices/category/useCases";
 import { AddService } from "@/slices/service/useCases";
 import { AddOwner } from "@/slices/owner/useCases";
+import { AddUserRepository } from "@/slices/user/repositories";
+import { UserEntity } from "@/slices/user/entities";
+
 export type CompleteOwner = (userCreated: any) => Promise<any | null>;
 
 export type CompleteOwnerSignature = (
-  addUser: AddUser,
+  addUser: AddUserRepository,
   addCategory: AddCategory,
   addService: AddService,
   addOwner: AddOwner
 ) => CompleteOwner;
 export const completeOwner: CompleteOwnerSignature =
   (
-    addUser: AddUser,
+    addUser: AddUserRepository,
     addCategory: AddCategory,
     addService: AddService,
     addOwner: AddOwner
@@ -77,25 +79,29 @@ export const completeOwner: CompleteOwnerSignature =
       typeTax: "fixed",
       active: true,
     });
-    const professionalData: any = await addUser({
-      name: userCreated?.name as string,
-      createdById: userCreated?._id as string,
-      serviceIds: [serviceData?._id?.toString?.()],
-      email: ("profissional" + userCreated?.email) as string,
-      role: "professional",
-      password: "",
-      ownerId: userCreated?._id as string,
-      myOwnerId: ownerData?._id as string,
-      active: true,
-    });
-    const clientData: any = await addUser({
-      name: userCreated?.name as string,
-      createdById: userCreated?._id as string,
-      email: ("cliente" + userCreated?.email) as string,
-      role: "client",
-      password: "",
-      active: true,
-    });
+    const professionalData: any = await addUser.addUser(
+      new UserEntity({
+        name: userCreated?.name as string,
+        createdById: userCreated?._id as string,
+        serviceIds: [serviceData?._id?.toString?.()],
+        email: ("profissional" + userCreated?.email) as string,
+        role: "professional",
+        password: userCreated?.password ?? "",
+        ownerId: userCreated?._id as string,
+        myOwnerId: ownerData?._id as string,
+        active: true,
+      })
+    );
+    const clientData: any = await addUser.addUser(
+      new UserEntity({
+        name: userCreated?.name as string,
+        createdById: userCreated?._id as string,
+        email: ("cliente" + userCreated?.email) as string,
+        role: "client",
+        password: userCreated?.password ?? "",
+        active: true,
+      })
+    );
     console.log({ professionalData, clientData, categoryData, serviceData, ownerData });
 
     return {

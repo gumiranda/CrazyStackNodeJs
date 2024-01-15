@@ -79,7 +79,11 @@ export class SignupOwnerController extends Controller {
     sendMessageKafka({
       topic: "newOwner",
       message: JSON.stringify({
-        userCreated,
+        userCreated: {
+          email: userCreated?.email,
+          name: userCreated?.name,
+          _id: userCreated?._id,
+        },
       }),
     });
     return ok({ user: userCreated, accessToken, refreshToken });
