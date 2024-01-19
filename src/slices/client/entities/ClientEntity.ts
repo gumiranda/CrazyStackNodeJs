@@ -11,6 +11,7 @@ export type ClientData = {
   ownerId: string;
   birthDate?: Date;
   appointmentsTotal?: number;
+  myOwnerId?: string;
 };
 
 export type ClientPaginated = {
@@ -30,6 +31,7 @@ export class ClientEntity {
   ownerId: string;
   birthDate?: Date;
   appointmentsTotal?: number;
+  myOwnerId?: string;
   constructor(data: ClientData) {
     this.createdById = data.createdById;
     this.name = data.name;
@@ -42,5 +44,6 @@ export class ClientEntity {
     this.ownerId = data.ownerId;
     this.birthDate = data.birthDate;
     this.appointmentsTotal = 0;
+    this.myOwnerId = data.myOwnerId;
   }
 }

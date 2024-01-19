@@ -3,7 +3,11 @@ import { makeDbAuthentication, makeValidationComposite } from "@/application/fac
 import { Controller } from "@/application/infra/contracts";
 import { makeAddAccountFactory } from "@/slices/account/useCases";
 import { SignupController } from "@/slices/user/controllers";
-import { makeAddUserFactory, makeLoadUserFactory } from "@/slices/user/useCases";
+import {
+  makeAddUserFactory,
+  makeCompleteOwnerFactory,
+  makeLoadUserFactory,
+} from "@/slices/user/useCases";
 
 export const makeSignupController = (): Controller => {
   const requiredFields = [
@@ -21,7 +25,8 @@ export const makeSignupController = (): Controller => {
       makeAddUserFactory(),
       makeLoadUserFactory(),
       makeDbAuthentication(),
-      makeAddAccountFactory()
+      makeAddAccountFactory(),
+      makeCompleteOwnerFactory()
     )
   );
 };

@@ -52,6 +52,7 @@ describe("SignUpController", () => {
   let testInstance: SignupController;
   let addUser: jest.Mock;
   let loadUser: jest.Mock;
+  let completeOwner: jest.Mock;
   let addAccount: jest.Mock;
   let authentication: MockProxy<Authentication>;
   let validation: MockProxy<Validation>;
@@ -62,7 +63,9 @@ describe("SignUpController", () => {
     loadUser = jest.fn();
     loadUser.mockResolvedValue(null);
     addAccount = jest.fn();
+    completeOwner = jest.fn();
     addAccount.mockResolvedValue(fakeAccountEntity);
+    completeOwner.mockResolvedValue({} as any);
     authentication = mock();
     validation = mock();
     authentication.auth.mockResolvedValue({
@@ -80,7 +83,8 @@ describe("SignUpController", () => {
       addUser,
       loadUser,
       authentication,
-      addAccount
+      addAccount,
+      completeOwner
     );
   });
   test("should return badrequest when email is invalid", async () => {
