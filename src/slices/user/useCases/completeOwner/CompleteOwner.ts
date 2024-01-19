@@ -1,23 +1,26 @@
 import { AddCategory } from "@/slices/category/useCases";
 import { AddService } from "@/slices/service/useCases";
 import { AddOwner } from "@/slices/owner/useCases";
-import { AddUserRepository } from "@/slices/user/repositories";
+import { AddUserRepository, UpdateUserRepository } from "@/slices/user/repositories";
 import { UserEntity } from "@/slices/user/entities";
+import { AddClient } from "@/slices/client/useCases";
 
 export type CompleteOwner = (userCreated: any) => Promise<any | null>;
 
 export type CompleteOwnerSignature = (
-  addUser: AddUserRepository,
+  userRepository: AddUserRepository & UpdateUserRepository,
   addCategory: AddCategory,
   addService: AddService,
-  addOwner: AddOwner
+  addOwner: AddOwner,
+  addClient: AddClient
 ) => CompleteOwner;
 export const completeOwner: CompleteOwnerSignature =
   (
-    addUser: AddUserRepository,
+    userRepository: AddUserRepository & UpdateUserRepository,
     addCategory: AddCategory,
     addService: AddService,
-    addOwner: AddOwner
+    addOwner: AddOwner,
+    addClient: AddClient
   ) =>
   async (userCreated: any) => {
     const categoryData: any = await addCategory({
@@ -25,8 +28,9 @@ export const completeOwner: CompleteOwnerSignature =
       createdById: userCreated?._id as string,
       active: true,
     });
+    const serviceName = "Corte de Cabelo";
     const serviceData: any = await addService({
-      name: "Corte de Cabelo",
+      name: serviceName,
       categoryId: categoryData?._id,
       duration: 30,
       createdById: userCreated?._id as string,
@@ -79,20 +83,21 @@ export const completeOwner: CompleteOwnerSignature =
       typeTax: "fixed",
       active: true,
     });
-    const professionalData: any = await addUser.addUser(
+    const professionalData: any = await userRepository.addUser(
       new UserEntity({
         name: userCreated?.name as string,
         createdById: userCreated?._id as string,
         serviceIds: [serviceData?._id?.toString?.()],
+        serviceOptions: [{ label: serviceName, value: serviceData?._id?.toString?.() }],
         email: ("profissional" + userCreated?.email) as string,
         role: "professional",
         password: userCreated?.password ?? "",
-        ownerId: userCreated?._id as string,
-        myOwnerId: ownerData?._id as string,
+        myOwnerId: userCreated?._id as string,
+        ownerId: ownerData?._id as string,
         active: true,
       })
     );
-    const clientData: any = await addUser.addUser(
+    const clientUserData: any = await userRepository.addUser(
       new UserEntity({
         name: userCreated?.name as string,
         createdById: userCreated?._id as string,
@@ -100,10 +105,35 @@ export const completeOwner: CompleteOwnerSignature =
         role: "client",
         password: userCreated?.password ?? "",
         active: true,
+        myOwnerId: userCreated?._id as string,
+        ownerId: ownerData?._id as string,
       })
     );
-    console.log({ professionalData, clientData, categoryData, serviceData, ownerData });
-
+    const clientData: any = await addClient({
+      name: userCreated?.name as string,
+      createdById: userCreated?._id as string,
+      active: true,
+      myOwnerId: userCreated?._id as string,
+      ownerId: ownerData?._id as string,
+      userId: clientUserData?._id as string,
+    });
+    const updateUser: any = await userRepository.updateUser(
+      { fields: { _id: userCreated?._id } },
+      {
+        myOwnerId: userCreated?._id as string,
+        ownerId: ownerData?._id as string,
+        createdById: userCreated?._id,
+      }
+    );
+    console.log({
+      updateUser,
+      professionalData,
+      clientData,
+      categoryData,
+      serviceData,
+      ownerData,
+      clientUserData,
+    });
     return {
       ownerData,
       professionalData,
