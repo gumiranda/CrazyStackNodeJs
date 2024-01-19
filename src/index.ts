@@ -6,10 +6,11 @@ import cors from "@fastify/cors";
 import websocket from "@fastify/websocket";
 const { fastifyRequestContextPlugin } = require("@fastify/request-context");
 import { consumeMessageKafka } from "./application/infra/messaging/adapters/kafkaAdapter";
-import { makeUpdateRouteDriverController } from "./slices/routeDriver/controllers";
-import { HttpRequest } from "./application/helpers";
-import { makeUpdateRouteDriverFactory } from "./slices/routeDriver/useCases";
 import GracefulServer from "@gquittet/graceful-server";
+import {
+  routeDriverFinishedConsumer,
+  updatePositionConsumer,
+} from "./application/infra/messaging/consumers";
 
 export const makeFastifyInstance = async (externalMongoClient = null) => {
   const fastify: FastifyInstance = Fastify({ logger: true });
@@ -65,57 +66,7 @@ const start = async () => {
   try {
     const fastifyInstance = await makeFastifyInstance();
     if (!fastifyInstance) return;
-    const kafkaConsumers = [
-      {
-        topic: "updatePosition",
-        callback: async (message: string) => {
-          const parsedMessage = parseJSON(message);
-          if (!parsedMessage) {
-            return;
-          }
-          const { userId, routeDriverId, lat, lng, route_id } = parsedMessage || {};
-          const controller = makeUpdateRouteDriverController();
-          const httpRequest: HttpRequest = {
-            body: { updatedAt: new Date() },
-            params: {},
-            headers: {},
-            userId,
-            query: {
-              _id: routeDriverId,
-              lat,
-              lng,
-              routeId: route_id,
-            },
-            userLogged: {},
-          };
-          const { statusCode, data } = await controller.handle(httpRequest);
-          console.log({ statusCode, parsedMessage, data });
-        },
-      },
-      {
-        topic: "routeDriverFinished",
-        callback: async (message: string) => {
-          const parsedMessage = parseJSON(message);
-          if (!parsedMessage) {
-            return;
-          }
-          const { routeDriverId, routeId, newStatus, currentStatus, userId } =
-            parsedMessage || {};
-          if (currentStatus === "finished") {
-            return;
-          }
-          const updateRouteDriver = makeUpdateRouteDriverFactory();
-          const updatedRouteDriver = await updateRouteDriver(
-            {
-              fields: { _id: routeDriverId, routeId, createdById: userId },
-              options: {},
-            },
-            { status: newStatus } as any
-          );
-          console.log({ parsedMessage, updatedRouteDriver });
-        },
-      },
-    ];
+    const kafkaConsumers = [updatePositionConsumer, routeDriverFinishedConsumer];
     const gracefulServer = GracefulServer(fastifyInstance.server);
     gracefulServer.on(GracefulServer.READY, () => {
       console.log("O pai ta on");
@@ -141,11 +92,3 @@ const start = async () => {
 if (env.environment === "production") {
   start();
 }
-export const parseJSON = (json: any): any => {
-  try {
-    const parsedJson = JSON.parse(json);
-    return parsedJson;
-  } catch (e) {
-    return null;
-  }
-};
