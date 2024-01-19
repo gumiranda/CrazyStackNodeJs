@@ -15,8 +15,9 @@ import { AddUser, LoadUser } from "@/slices/user/useCases";
 import { AddAccount } from "@/slices/account/useCases";
 import { EmailInUseError, InvalidParamError } from "@/application/errors";
 import emailValidator from "deep-email-validator";
+import { sendMessageKafka } from "@/application/infra/messaging/adapters/kafkaAdapter";
 
-export class SignupController extends Controller {
+export class SignupOwnerController extends Controller {
   constructor(
     private readonly validation: Validation,
     private readonly addUser: AddUser,
@@ -32,7 +33,9 @@ export class SignupController extends Controller {
       return badRequest(errors);
     }
     const { email, password } = httpRequest?.body;
+
     //  if (env.environment !== "test") {
+
     const { validators = null } = (await emailValidator(email)) || {};
     const {
       regex = null,
@@ -50,6 +53,7 @@ export class SignupController extends Controller {
     ) {
       return badRequest([new InvalidParamError("email")]);
     }
+
     // }
     const userExists = await this.loadUser({
       fields: { email },
@@ -71,6 +75,16 @@ export class SignupController extends Controller {
       refreshToken,
       active: true,
       expiresAt: addDays(new Date(), 1) as unknown as string,
+    });
+    sendMessageKafka({
+      topic: "newOwner",
+      message: JSON.stringify({
+        userCreated: {
+          email: userCreated?.email,
+          name: userCreated?.name,
+          _id: userCreated?._id,
+        },
+      }),
     });
     return ok({ user: userCreated, accessToken, refreshToken });
   }

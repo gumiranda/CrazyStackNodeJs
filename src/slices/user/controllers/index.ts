@@ -5,4 +5,5 @@ export * from "./updateUser";
 export * from "./loadUserByPageGeoNear";
 export * from "./loadUserByPage";
 export * from "./signup";
+export * from "./signupOwner";
 export * from "./login";

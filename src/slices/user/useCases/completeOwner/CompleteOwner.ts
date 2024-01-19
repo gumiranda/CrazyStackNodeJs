@@ -1,0 +1,144 @@
+import { AddCategory } from "@/slices/category/useCases";
+import { AddService } from "@/slices/service/useCases";
+import { AddOwner } from "@/slices/owner/useCases";
+import { AddUserRepository, UpdateUserRepository } from "@/slices/user/repositories";
+import { UserEntity } from "@/slices/user/entities";
+import { AddClient } from "@/slices/client/useCases";
+
+export type CompleteOwner = (userCreated: any) => Promise<any | null>;
+
+export type CompleteOwnerSignature = (
+  userRepository: AddUserRepository & UpdateUserRepository,
+  addCategory: AddCategory,
+  addService: AddService,
+  addOwner: AddOwner,
+  addClient: AddClient
+) => CompleteOwner;
+export const completeOwner: CompleteOwnerSignature =
+  (
+    userRepository: AddUserRepository & UpdateUserRepository,
+    addCategory: AddCategory,
+    addService: AddService,
+    addOwner: AddOwner,
+    addClient: AddClient
+  ) =>
+  async (userCreated: any) => {
+    const categoryData: any = await addCategory({
+      name: "Beleza e Estética",
+      createdById: userCreated?._id as string,
+      active: true,
+    });
+    const serviceName = "Corte de Cabelo";
+    const serviceData: any = await addService({
+      name: serviceName,
+      categoryId: categoryData?._id,
+      duration: 30,
+      createdById: userCreated?._id as string,
+      active: true,
+      comission: 100,
+      price: 50,
+    });
+    const ownerData: any = await addOwner({
+      createdById: userCreated?._id as string,
+      minimumTimeForReSchedule: 30,
+      name: userCreated?.name as string,
+      hourStart1: "9:00",
+      hourEnd1: "18:00",
+      hourStart2: "8:00",
+      hourEnd2: "18:00",
+      hourStart3: "8:00",
+      hourEnd3: "18:00",
+      hourLunchStart1: "12:00",
+      hourLunchEnd1: "13:00",
+      days1: {
+        monday1: true,
+        tuesday1: true,
+        wednesday1: true,
+        thursday1: true,
+        friday1: true,
+        saturday1: false,
+        sunday1: false,
+      },
+      days2: {
+        monday2: false,
+        tuesday2: false,
+        wednesday2: false,
+        thursday2: false,
+        friday2: false,
+        saturday2: false,
+        sunday2: false,
+      },
+      days3: {
+        monday3: false,
+        tuesday3: false,
+        wednesday3: false,
+        thursday3: false,
+        friday3: false,
+        saturday3: false,
+        sunday3: false,
+      },
+      haveDelivery: false,
+      appointmentsTotal: 0,
+      ratingsTotal: 0,
+      typeTax: "fixed",
+      active: true,
+    });
+    const professionalData: any = await userRepository.addUser(
+      new UserEntity({
+        name: userCreated?.name as string,
+        createdById: userCreated?._id as string,
+        serviceIds: [serviceData?._id?.toString?.()],
+        serviceOptions: [{ label: serviceName, value: serviceData?._id?.toString?.() }],
+        email: ("profissional" + userCreated?.email) as string,
+        role: "professional",
+        password: userCreated?.password ?? "",
+        myOwnerId: userCreated?._id as string,
+        ownerId: ownerData?._id as string,
+        active: true,
+      })
+    );
+    const clientUserData: any = await userRepository.addUser(
+      new UserEntity({
+        name: userCreated?.name as string,
+        createdById: userCreated?._id as string,
+        email: ("cliente" + userCreated?.email) as string,
+        role: "client",
+        password: userCreated?.password ?? "",
+        active: true,
+        myOwnerId: userCreated?._id as string,
+        ownerId: ownerData?._id as string,
+      })
+    );
+    const clientData: any = await addClient({
+      name: userCreated?.name as string,
+      createdById: userCreated?._id as string,
+      active: true,
+      myOwnerId: userCreated?._id as string,
+      ownerId: ownerData?._id as string,
+      userId: clientUserData?._id as string,
+    });
+    const updateUser: any = await userRepository.updateUser(
+      { fields: { _id: userCreated?._id } },
+      {
+        myOwnerId: userCreated?._id as string,
+        ownerId: ownerData?._id as string,
+        createdById: userCreated?._id,
+      }
+    );
+    console.log({
+      updateUser,
+      professionalData,
+      clientData,
+      categoryData,
+      serviceData,
+      ownerData,
+      clientUserData,
+    });
+    return {
+      ownerData,
+      professionalData,
+      clientData,
+      categoryData,
+      serviceData,
+    };
+  };
