@@ -15,6 +15,7 @@ import { AddUser, CompleteOwner, LoadUser } from "@/slices/user/useCases";
 import { AddAccount } from "@/slices/account/useCases";
 import { EmailInUseError, InvalidParamError } from "@/application/errors";
 import emailValidator from "deep-email-validator";
+import { sendMessageKafka } from "@/application/infra/messaging/adapters/kafkaAdapter";
 
 export class SignupController extends Controller {
   constructor(
@@ -74,11 +75,21 @@ export class SignupController extends Controller {
       expiresAt: addDays(new Date(), 1) as unknown as string,
     });
     if (role === "owner") {
-      await this.completeOwner({
-        _id: userCreated?._id as string,
-        name: userCreated?.name as string,
-        email: userCreated?.email as string,
-        password: "random_password",
+      // await this.completeOwner({
+      //   _id: userCreated?._id as string,
+      //   name: userCreated?.name as string,
+      //   email: userCreated?.email as string,
+      //   password: "random_password",
+      // });
+      sendMessageKafka({
+        topic: "newOwner",
+        message: JSON.stringify({
+          userCreated: {
+            email: userCreated?.email,
+            name: userCreated?.name,
+            _id: userCreated?._id,
+          },
+        }),
       });
     }
     return ok({ user: userCreated, accessToken, refreshToken });

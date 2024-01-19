@@ -71,13 +71,6 @@ const loginResponse = {
           name: { type: "string" },
           role: { type: "string" },
           active: { type: "boolean" },
-          coord: {
-            type: "object",
-            properties: {
-              type: { type: "string", enum: ["Point"] },
-              coordinates: { type: "array", items: { type: "number" } },
-            },
-          },
         },
       },
     },

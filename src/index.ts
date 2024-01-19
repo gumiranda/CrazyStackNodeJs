@@ -11,6 +11,7 @@ import {
   routeDriverFinishedConsumer,
   updatePositionConsumer,
 } from "./application/infra/messaging/consumers";
+import { newOwnerConsumer } from "./application/infra/messaging/consumers/OwnerConsumer";
 
 export const makeFastifyInstance = async (externalMongoClient = null) => {
   const fastify: FastifyInstance = Fastify({ logger: true });
@@ -66,7 +67,11 @@ const start = async () => {
   try {
     const fastifyInstance = await makeFastifyInstance();
     if (!fastifyInstance) return;
-    const kafkaConsumers = [updatePositionConsumer, routeDriverFinishedConsumer];
+    const kafkaConsumers = [
+      updatePositionConsumer,
+      routeDriverFinishedConsumer,
+      newOwnerConsumer,
+    ];
     const gracefulServer = GracefulServer(fastifyInstance.server);
     gracefulServer.on(GracefulServer.READY, () => {
       console.log("O pai ta on");
