@@ -22,7 +22,13 @@ export class LoadOrderByPageController extends Controller {
       return badRequest(errors);
     }
     const { page, sortBy, typeSort = "asc", ...rest } = httpRequest?.query || {};
-    const fields = rest;
+    const fields =
+      httpRequest?.userLogged?.role === "admin"
+        ? rest
+        : {
+            ...rest,
+            createdById: httpRequest?.userId,
+          };
     const sort = { [sortBy]: typeSort === "asc" ? 1 : -1 };
     const options = { sort, page };
     const orderLoaded = await this.loadOrderByPage({
