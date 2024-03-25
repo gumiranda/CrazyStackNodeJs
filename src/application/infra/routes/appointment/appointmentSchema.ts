@@ -80,9 +80,9 @@ export const addAppointmentPostSchema = {
 const queryStringJsonLoadAppointmentSchema = {
   type: "object",
   properties: {
-    _id: { type: "string", maxLength: 24, minLength: 24 },
+    requestId: { type: "string", maxLength: 24, minLength: 24 },
   },
-  required: ["_id"],
+  required: ["requestId"],
 };
 const loadAppointmentResponse = {
   type: "object",
@@ -150,9 +150,9 @@ const deleteAppointmentResponse = { type: "boolean" };
 const queryStringJsonDeleteAppointmentSchema = {
   type: "object",
   properties: {
-    _id: { type: "string", maxLength: 24, minLength: 24 },
+    requestId: { type: "string", maxLength: 24, minLength: 24 },
   },
-  required: ["_id"],
+  required: ["requestId"],
 };
 export const deleteAppointmentSchema = {
   schema: {
@@ -166,9 +166,9 @@ export const deleteAppointmentSchema = {
 const queryStringJsonUpdateAppointmentSchema = {
   type: "object",
   properties: {
-    _id: { type: "string", maxLength: 24, minLength: 24 },
+    requestId: { type: "string", maxLength: 24, minLength: 24 },
   },
-  required: ["_id"],
+  required: ["requestId"],
 };
 const updateAppointmentResponse = {
   type: "object",
@@ -232,6 +232,36 @@ const queryStringJsonLoadAppointmentByPageSchema = {
     typeSort: { type: "string" },
   },
   required: ["page"],
+};
+export const loadInvoiceSchema = {
+  schema: {
+    headers: headersJsonSchema,
+    querystring: {
+      type: "object",
+      properties: {
+        initDate: { type: "string" },
+        endDate: { type: "string" },
+      },
+      required: ["initDate", "endDate"],
+    },
+    response: {
+      // 200: {
+      //   type: "object",
+      //   properties: {
+      //     appointments: {
+      //       type: "array",
+      //       items: {
+      //         type: "object",
+      //         properties: {
+      //           _id: { type: "string" },
+      //           total: { type: "number" },
+      //         },
+      //       },
+      //     },
+      //   },
+      // },
+    },
+  },
 };
 const loadAppointmentByPageResponse = {
   type: "object",

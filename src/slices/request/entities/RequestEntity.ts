@@ -35,6 +35,10 @@ export type RequestData = {
   endDate: string;
   cancelledAt?: Date | null;
   duration?: number;
+  serviceName?: string;
+  professionalName?: string;
+  clientName?: string;
+  ownerName?: string;
 };
 
 export type RequestPaginated = {
@@ -73,6 +77,11 @@ export class RequestEntity {
   endDate: string;
   cancelledAt?: Date | null;
   duration?: number;
+  serviceName?: string;
+  professionalName?: string;
+  clientName?: string;
+  ownerName?: string;
+
   constructor(data: RequestData) {
     this.createdById = data.createdById;
     this.name = data.name;
@@ -104,5 +113,9 @@ export class RequestEntity {
     this.duration = data.duration;
     this.updatedById = null;
     this.updatedByRole = null;
+    this.serviceName = data.serviceName;
+    this.professionalName = data.professionalName;
+    this.clientName = data.clientName;
+    this.ownerName = data.ownerName;
   }
 }

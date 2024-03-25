@@ -10,8 +10,8 @@ import GracefulServer from "@gquittet/graceful-server";
 import {
   routeDriverFinishedConsumer,
   updatePositionConsumer,
+  newOwnerConsumer,
 } from "./application/infra/messaging/consumers";
-import { newOwnerConsumer } from "./application/infra/messaging/consumers/OwnerConsumer";
 
 export const makeFastifyInstance = async (externalMongoClient = null) => {
   const fastify: FastifyInstance = Fastify({ logger: true });

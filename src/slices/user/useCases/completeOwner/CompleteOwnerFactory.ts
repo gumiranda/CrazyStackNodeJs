@@ -7,7 +7,7 @@ import { makeAddOwnerFactory } from "@/slices/owner/useCases";
 import { makeAddClientFactory } from "@/slices/client/useCases";
 
 export const makeCompleteOwnerFactory = (): CompleteOwner => {
-  const repository = new UserRepository(new MongoRepository("users"));
+  const repository = new UserRepository(new MongoRepository("user"));
   return completeOwner(
     repository,
     makeAddCategoryFactory(),

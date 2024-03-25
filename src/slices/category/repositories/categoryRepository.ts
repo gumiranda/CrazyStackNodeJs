@@ -25,7 +25,7 @@ export class CategoryRepository
   }
   async loadCategoryByPage(query: Query): Promise<CategoryPaginated | null> {
     const categorys = await this.repository.getPaginate(
-      query?.options?.page ?? 0,
+      query!.options!.page ?? 0,
       query?.fields ?? {},
       query?.options?.sort ?? { createdAt: -1 },
       10,

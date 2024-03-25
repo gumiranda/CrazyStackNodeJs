@@ -501,7 +501,7 @@ describe("UpdateRequestById useCase", () => {
     expect(mockAppointment.addAppointment).toHaveBeenCalledWith({
       requestId: "123",
       name: "agendamentoCriado",
-      message: "mensagem",
+      message: fakeRequestEntity?.message,
       serviceId: fakeRequestEntity?.serviceId,
       ownerId: fakeRequestEntity?.ownerId,
       clientId: fakeRequestEntity?.clientId,

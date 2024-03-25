@@ -3,6 +3,9 @@ const bodyAddClientJsonSchema = {
   required: ["name"],
   properties: {
     name: { type: "string" },
+    phone: { type: "string" },
+    userId: { type: "string" },
+    active: { type: "boolean" },
   },
 };
 const headersJsonSchema = {
@@ -21,6 +24,7 @@ const addClientResponse = {
     createdById: { type: "string" },
     userId: { type: "string" },
     createdAt: { type: "string" },
+    phone: { type: "string" },
   },
 };
 export const addClientPostSchema = {
@@ -47,6 +51,7 @@ const loadClientResponse = {
     createdById: { type: "string" },
     userId: { type: "string" },
     createdAt: { type: "string" },
+    phone: { type: "string" },
   },
 };
 export const loadClientGetSchema = {
@@ -89,12 +94,14 @@ const updateClientResponse = {
     name: { type: "string" },
     createdById: { type: "string" },
     userId: { type: "string" },
+    phone: { type: "string" },
   },
 };
 const updateClientBody = {
   type: "object",
   properties: {
     name: { type: "string" },
+    phone: { type: "string" },
   },
 };
 export const updateClientSchema = {
@@ -131,6 +138,7 @@ const loadClientByPageResponse = {
           createdById: { type: "string" },
           userId: { type: "string" },
           createdAt: { type: "string" },
+          phone: { type: "string" },
         },
       },
     },

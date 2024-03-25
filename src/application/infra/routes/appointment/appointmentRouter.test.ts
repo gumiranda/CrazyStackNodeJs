@@ -38,7 +38,7 @@ const appointmentBody = {
   haveRide: false,
   type: "serv",
   status: 0,
-  requestId: "61d83b7a146de5690b0fcac8",
+  requestId: new ObjectId("61d83b7a146de5690b0fcac8"),
 };
 const makeAccessToken = async (role: string, password: string): Promise<any> => {
   const result = await userCollection.insertOne({ ...userBody, password, role });
@@ -270,7 +270,7 @@ describe("Route api/appointment", () => {
       const { token } = await makeAccessToken("admin", "password");
       const response = await fastify.inject({
         method: "GET",
-        url: `/api/appointment/load?_id=${insertedId.toString()}`,
+        url: `/api/appointment/load?_id=${insertedId.toString()}&requestId=${appointmentBody.requestId}`,
         headers: { authorization: `Bearer ${token}` },
       });
       const responseBody = JSON.parse(response.body);

@@ -54,8 +54,8 @@ export const mapQueryParamsToQueryMongo = (queryParams: any): any => {
       };
     } else if (keys?.includes?.("endDate") && key?.includes?.("initDate")) {
       newQuery["initDate"] = {
-        $gte: queryParams["endDate"],
-        $lte: queryParams["initDate"],
+        $lte: queryParams["endDate"],
+        $gte: queryParams["initDate"],
       };
     } else if (!key?.includes?.("endDate")) {
       newQuery[key] = queryParams[key];

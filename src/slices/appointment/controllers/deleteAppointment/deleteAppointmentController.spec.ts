@@ -6,16 +6,29 @@ import { fakeAppointmentEntity } from "@/slices/appointment/entities/Appointment
 import { Controller } from "@/application/infra/contracts";
 import { MissingParamError } from "@/application/errors";
 import { fakeUserEntity } from "@/slices/user/entities/UserEntity.spec";
+import { fakeRequestEntity } from "@/slices/request/entities/RequestEntity.spec";
+import { IUpdateRequestById, UpdateRequest } from "@/slices/request/useCases";
 
 describe("DeleteAppointmentController", () => {
   let testInstance: DeleteAppointmentController;
   let deleteAppointment: jest.Mock;
   let validation: MockProxy<Validation>;
   let fakeQuery: any;
+  let updateRequest: MockProxy<IUpdateRequestById>;
+  let updateReq: MockProxy<UpdateRequest>;
+
   beforeAll(async () => {
     MockDate.set(new Date());
     deleteAppointment = jest.fn();
+    updateRequest = mock();
     deleteAppointment.mockResolvedValue(true);
+    updateRequest.updateRequestById.mockResolvedValue({
+      ...fakeRequestEntity,
+      updatedById: fakeUserEntity?._id,
+    });
+    updateReq = jest.fn();
+    fakeQuery = { fields: { name: "123" }, options: {} };
+
     validation = mock();
     validation.validate.mockResolvedValue([] as never);
   });
@@ -24,7 +37,12 @@ describe("DeleteAppointmentController", () => {
   });
   beforeEach(() => {
     fakeQuery = { _id: fakeAppointmentEntity._id };
-    testInstance = new DeleteAppointmentController(validation, deleteAppointment);
+    testInstance = new DeleteAppointmentController(
+      validation,
+      deleteAppointment,
+      updateRequest,
+      updateReq
+    );
   });
   it("should extends class Controller", async () => {
     expect(testInstance).toBeInstanceOf(Controller);

@@ -26,6 +26,32 @@ export class AppointmentRepository
     LoadAvailableTimesRepository
 {
   constructor(private readonly repository: Repository) {}
+  async loadInvoice(query: Query): Promise<any | null> {
+    if (!query?.fields?.initDate || !query?.fields?.endDate) {
+      return null;
+    }
+    const queryBuilded = new QueryBuilder()
+      .match({
+        initDate: { $gte: query?.fields?.initDate },
+        endDate: { $lte: query?.fields?.endDate },
+        cancelled: false,
+        active: true,
+      })
+      .lookup({
+        from: "service",
+        localField: "serviceId",
+        foreignField: "_id",
+        as: "serviceInfo",
+      })
+      .unwind({ path: "$serviceInfo" })
+      .group({
+        _id: "$serviceInfo",
+        total: { $sum: "$serviceInfo.price" },
+      })
+      .build();
+    const appointments = await this.repository.aggregate(queryBuilded);
+    return { appointments };
+  }
   async loadAvailableTimes(
     query: QueryAvailableTimesRepository
   ): Promise<AvailableTimesModelRepository | null> {

@@ -34,6 +34,10 @@ const bodyAddRequestJsonSchema = {
     haveFidelity: { type: "boolean" },
     haveRide: { type: "boolean" },
     type: { type: "string" },
+    serviceName: { type: "string" },
+    professionalName: { type: "string" },
+    clientName: { type: "string" },
+    ownerName: { type: "string" },
     status: { type: "integer" },
   },
 };
@@ -67,6 +71,10 @@ const addRequestResponse = {
     active: { type: "boolean" },
     createdById: { type: "string" },
     createdAt: { type: "string" },
+    serviceName: { type: "string" },
+    professionalName: { type: "string" },
+    clientName: { type: "string" },
+    ownerName: { type: "string" },
   },
 };
 export const addRequestPostSchema = {
@@ -107,6 +115,10 @@ const loadRequestResponse = {
     active: { type: "boolean" },
     createdById: { type: "string" },
     createdAt: { type: "string" },
+    serviceName: { type: "string" },
+    professionalName: { type: "string" },
+    clientName: { type: "string" },
+    ownerName: { type: "string" },
   },
 };
 export const loadRequestGetSchema = {
@@ -163,6 +175,10 @@ const updateRequestResponse = {
     type: { type: "string" },
     status: { type: "integer" },
     createdById: { type: "string" },
+    serviceName: { type: "string" },
+    professionalName: { type: "string" },
+    clientName: { type: "string" },
+    ownerName: { type: "string" },
   },
 };
 const updateRequestBody = {
@@ -184,6 +200,10 @@ const updateRequestBody = {
     haveRide: { type: "boolean" },
     type: { type: "string" },
     status: { type: "integer" },
+    serviceName: { type: "string" },
+    professionalName: { type: "string" },
+    clientName: { type: "string" },
+    ownerName: { type: "string" },
   },
 };
 export const updateRequestSchema = {
@@ -234,6 +254,10 @@ const loadRequestByPageResponse = {
           active: { type: "boolean" },
           createdById: { type: "string" },
           createdAt: { type: "string" },
+          serviceName: { type: "string" },
+          professionalName: { type: "string" },
+          clientName: { type: "string" },
+          ownerName: { type: "string" },
         },
       },
     },
