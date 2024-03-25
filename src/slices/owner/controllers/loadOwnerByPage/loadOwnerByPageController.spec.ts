@@ -28,7 +28,7 @@ describe("LoadOwnerByPageController", () => {
     MockDate.reset();
   });
   beforeEach(() => {
-    fakeQueryParams = { _id: fakeOwnerEntity._id };
+    fakeQueryParams = { _id: fakeOwnerEntity._id, createdById: fakeUserEntity?._id };
     fakeRestQuery = { page: 1, sortBy: "name", typeSort: "asc" };
     fakeQuery = { ...fakeQueryParams, ...fakeRestQuery };
     testInstance = new LoadOwnerByPageController(validation, loadOwnerByPage);

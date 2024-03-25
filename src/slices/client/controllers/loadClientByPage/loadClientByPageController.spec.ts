@@ -28,7 +28,7 @@ describe("LoadClientByPageController", () => {
     MockDate.reset();
   });
   beforeEach(() => {
-    fakeQueryParams = { _id: fakeClientEntity._id };
+    fakeQueryParams = { _id: fakeClientEntity._id, createdById: fakeUserEntity?._id };
     fakeRestQuery = { page: 1, sortBy: "name", typeSort: "asc" };
     fakeQuery = { ...fakeQueryParams, ...fakeRestQuery };
     testInstance = new LoadClientByPageController(validation, loadClientByPage);

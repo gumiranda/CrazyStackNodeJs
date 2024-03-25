@@ -52,6 +52,7 @@ export const makeKafkaAdapter = () => {
   return new KafkaAdapter(env.kafkaHost, env.kafkaClientId);
 };
 export async function sendMessageKafka({ topic, message }: SendMessageInput) {
+  if (process.env.NODE_ENV !== "production") return;
   const kafkaAdapterInstance = makeKafkaAdapter();
   await kafkaAdapterInstance.connectProducer();
   await kafkaAdapterInstance.sendMessage(topic, message);

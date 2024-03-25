@@ -14,6 +14,7 @@ import {
   updateAppointmentSchema,
   loadAppointmentByPageGetSchema,
   loadAvailableTimesSchema,
+  loadInvoiceSchema,
 } from "./appointmentSchema";
 
 async function appointment(fastify: any, options: any) {
