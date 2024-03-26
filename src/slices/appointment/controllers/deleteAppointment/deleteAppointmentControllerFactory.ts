@@ -5,12 +5,14 @@ import { makeDeleteAppointmentFactory } from "@/slices/appointment/useCases";
 import { DeleteAppointmentController } from "@/slices/appointment/controllers";
 
 export const makeDeleteAppointmentController = (): Controller => {
-  const requiredFields = ["_id"];
+  const requiredFields = ["requestId"];
   return makeLogController(
     "deleteAppointment",
     new DeleteAppointmentController(
       makeValidationComposite(requiredFields),
-      makeDeleteAppointmentFactory()
+      makeDeleteAppointmentFactory(),
+      makeUpdateRequestByIdFactory(),
+      makeUpdateRequestFactory()
     )
   );
 };
