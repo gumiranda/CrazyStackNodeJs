@@ -3,6 +3,9 @@ const bodyAddClientJsonSchema = {
   required: ["name"],
   properties: {
     name: { type: "string" },
+    phone: { type: "string" },
+    userId: { type: "string" },
+    active: { type: "boolean" },
   },
 };
 const headersJsonSchema = {
@@ -17,6 +20,7 @@ const addClientResponse = {
   properties: {
     _id: { type: "string", maxLength: 24, minLength: 24 },
     name: { type: "string" },
+    phone: { type: "string" },
     active: { type: "boolean" },
     createdById: { type: "string" },
     userId: { type: "string" },
@@ -43,6 +47,7 @@ const loadClientResponse = {
   properties: {
     _id: { type: "string", maxLength: 24, minLength: 24 },
     name: { type: "string" },
+    phone: { type: "string" },
     active: { type: "boolean" },
     createdById: { type: "string" },
     userId: { type: "string" },
@@ -87,6 +92,7 @@ const updateClientResponse = {
   properties: {
     _id: { type: "string", maxLength: 24, minLength: 24 },
     name: { type: "string" },
+    phone: { type: "string" },
     createdById: { type: "string" },
     userId: { type: "string" },
   },
@@ -95,6 +101,7 @@ const updateClientBody = {
   type: "object",
   properties: {
     name: { type: "string" },
+    phone: { type: "string" },
   },
 };
 export const updateClientSchema = {
@@ -127,6 +134,7 @@ const loadClientByPageResponse = {
         properties: {
           _id: { type: "string", maxLength: 24, minLength: 24 },
           name: { type: "string" },
+          phone: { type: "string" },
           active: { type: "boolean" },
           createdById: { type: "string" },
           userId: { type: "string" },
