@@ -1,5 +1,6 @@
-import { useMapBusinessHours, hourValidator, validateHours } from "./hourValidator";
 import MockDate from "mockdate";
+
+import { hourValidator, useMapBusinessHours, validateHours } from "./hourValidator";
 describe("hourValidation", () => {
   let fakeBody: any;
   beforeAll(async () => {
@@ -28,10 +29,10 @@ describe("hourValidation", () => {
     });
     expect(result).toStrictEqual({
       haveLunchTime: true,
-      hourEnd: new Date("2099-09-19T00:00:00.000Z"),
-      hourLunchEnd: new Date("2099-09-18T19:00:00.000Z"),
-      hourLunchStart: new Date("2099-09-18T18:00:00.000Z"),
-      hourStart: new Date("2099-09-18T14:00:00.000Z"),
+      hourEnd: new Date("2099-09-18T21:00:00.000Z"),
+      hourLunchEnd: new Date("2099-09-18T16:00:00.000Z"),
+      hourLunchStart: new Date("2099-09-18T15:00:00.000Z"),
+      hourStart: new Date("2099-09-18T11:00:00.000Z"),
     });
   });
   it("should return false in hourValidator if body is null", () => {

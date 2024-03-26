@@ -14,7 +14,7 @@ export const useMapBusinessHours = ({ body, index = 1 }: any) => {
         [`tuesday${index}`]: true,
         [`thursday${index}`]: true,
         [`friday${index}`]: true,
-        [`wednesday${index}`]: true,
+        [`wednsday${index}`]: true,
         [`saturday${index}`]: true,
       },
     },
