@@ -1,4 +1,3 @@
-import { fakeAvailableTimesModel } from "./../entities/AppointmentEntity.spec";
 import {
   fakeAppointmentEntity,
   fakeAppointmentPaginated,
@@ -15,11 +14,20 @@ import { ObjectId } from "mongodb";
 describe("Appointment Mongo Repository", () => {
   let fakeQuery: Query;
   let fakeId: string;
+  let fakeInvoice: any;
   let testInstance: AppointmentRepository;
   let repository: MockProxy<Repository>;
   beforeAll(async () => {
     fakeId = new ObjectId().toString();
     fakeQuery = { fields: { name: "123" }, options: {} };
+    fakeInvoice = {
+      appointments: [
+        {
+          _id: "serviceInfo",
+          total: 100,
+        },
+      ],
+    };
     MockDate.set(new Date());
     repository = mock<Repository>();
     repository.add.mockResolvedValue(fakeAppointmentEntity);
@@ -268,5 +276,69 @@ describe("Appointment Mongo Repository", () => {
       professionalId: fakeId,
     });
     await expect(appointments).rejects.toThrow("Error");
+  });
+  test("should return null if initDate or endDate is not provided", async () => {
+    const result = await testInstance.loadInvoice({ fields: {} });
+    expect(result).toBeNull();
+  });
+
+  test("should call aggregate of loadInvoice with correct values", async () => {
+    fakeQuery = {
+      ...fakeQuery,
+      fields: {
+        ...fakeQuery.fields,
+        initDate: new Date(),
+        endDate: new Date(),
+      },
+    };
+    await testInstance.loadInvoice(fakeQuery);
+    expect(repository.aggregate).toHaveBeenCalledWith([
+      {
+        $match: {
+          initDate: { $gte: fakeQuery.fields.initDate },
+          endDate: { $lte: fakeQuery.fields.endDate },
+          cancelled: false,
+          active: true,
+        },
+      },
+      {
+        $lookup: {
+          from: "service",
+          localField: "serviceId",
+          foreignField: "_id",
+          as: "serviceInfo",
+        },
+      },
+      { $unwind: { path: "$serviceInfo" } },
+      {
+        $group: {
+          _id: "$serviceInfo",
+          total: { $sum: "$serviceInfo.price" },
+        },
+      },
+    ]);
+    expect(repository.aggregate).toHaveBeenCalledTimes(1);
+  });
+
+  test("should return invoice when loadInvoice is called", async () => {
+    repository.aggregate.mockResolvedValueOnce(fakeInvoice.appointments);
+    const result = await testInstance.loadInvoice({
+      fields: {
+        initDate: new Date(),
+        endDate: new Date(),
+      },
+    });
+    expect(result).toEqual(fakeInvoice);
+  });
+
+  test("should return empty array if loadInvoice returns no appointments", async () => {
+    repository.aggregate.mockResolvedValueOnce([]);
+    const result = await testInstance.loadInvoice({
+      fields: {
+        initDate: new Date(),
+        endDate: new Date(),
+      },
+    });
+    expect(result).toEqual({ appointments: [] });
   });
 });
