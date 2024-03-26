@@ -22,6 +22,10 @@ export type AppointmentData = {
   endDate?: Date;
   cancelledAt?: Date | null;
   cancelledBy?: string;
+  serviceName?: string;
+  professionalName?: string;
+  clientName?: string;
+  ownerName?: string;
 };
 
 export type AppointmentPaginated = {
@@ -52,6 +56,10 @@ export class AppointmentEntity {
   endDate?: Date;
   cancelledAt?: Date | null;
   cancelledBy?: string;
+  serviceName?: string;
+  professionalName?: string;
+  clientName?: string;
+  ownerName?: string;
   constructor(data: AppointmentData) {
     this.createdById = data.createdById;
     this.name = data.name;
@@ -74,6 +82,10 @@ export class AppointmentEntity {
     this.endDate = data.endDate;
     this.cancelledAt = data.cancelledAt;
     this.cancelledBy = data.cancelledBy;
+    this.serviceName = data.serviceName;
+    this.professionalName = data.professionalName;
+    this.clientName = data.clientName;
+    this.ownerName = data.ownerName;
   }
 }
 export type OwnerAppointmentInfo = {

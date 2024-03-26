@@ -18,7 +18,7 @@ export class AppointmentHandler extends AbstractHandler {
       const appointmentCreated = await this.appointmentRepository.addAppointment({
         requestId: request?._id,
         name: "agendamentoCriado",
-        message: "mensagem",
+        message: request?.message,
         serviceId: request?.serviceId,
         ownerId: request?.ownerId,
         professionalId: request?.professionalId,
@@ -34,6 +34,10 @@ export class AppointmentHandler extends AbstractHandler {
         initDate: request?.initDate,
         endDate: request?.endDate,
         cancelled: false,
+        serviceName: request?.serviceName,
+        professionalName: request?.professionalName,
+        clientName: request?.clientName,
+        ownerName: request?.ownerName,
       });
       if (!appointmentCreated) {
         throw new Error("Não foi possível criar o agendamento");
@@ -48,7 +52,7 @@ export class AppointmentHandler extends AbstractHandler {
         fields: { _id: request?._id },
         options: {},
       });
-      if (!!appointmentFound?._id) {
+      if (appointmentFound?._id) {
         const appointmentUpdated = await this.appointmentRepository.updateAppointment(
           {
             fields: { _id: appointmentFound?._id },

@@ -3,13 +3,11 @@ import { MockProxy, mock } from "jest-mock-extended";
 
 import { UpdateRequestById } from "@/slices/request/useCases/updateRequestById/UpdateRequestById";
 
-import { RequestData } from "@/slices/request/entities";
 import {
   LoadRequestRepository,
   UpdateRequestRepository,
 } from "@/slices/request/repositories";
 
-import { IUpdateRequestById } from "./contracts";
 import { AddOrderRepository } from "@/slices/order/repositories";
 import {
   AddAppointmentRepository,
@@ -501,7 +499,7 @@ describe("UpdateRequestById useCase", () => {
     expect(mockAppointment.addAppointment).toHaveBeenCalledWith({
       requestId: "123",
       name: "agendamentoCriado",
-      message: "mensagem",
+      message: fakeRequestEntity?.message,
       serviceId: fakeRequestEntity?.serviceId,
       ownerId: fakeRequestEntity?.ownerId,
       clientId: fakeRequestEntity?.clientId,
