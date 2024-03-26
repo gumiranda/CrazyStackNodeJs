@@ -1,4 +1,5 @@
 export * from "./addAppointment";
+export * from "./loadInvoice";
 export * from "./loadAppointment";
 export * from "./deleteAppointment";
 export * from "./updateAppointment";
