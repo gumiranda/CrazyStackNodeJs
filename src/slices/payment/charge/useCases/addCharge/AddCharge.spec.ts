@@ -9,13 +9,16 @@ import { addCharge } from "./AddCharge";
 describe("addCharge", () => {
   let testInstance: any;
   let addChargeRepository: MockProxy<AddChargeRepository>;
+  let fakePaymentProvider: any;
   beforeAll(async () => {
     MockDate.set(new Date());
     addChargeRepository = mock();
+    fakePaymentProvider = mock();
+
     addChargeRepository.addCharge.mockResolvedValue(fakeChargeEntity);
   });
   beforeEach(() => {
-    testInstance = addCharge(addChargeRepository);
+    testInstance = addCharge(addChargeRepository, fakePaymentProvider);
   });
   afterAll(async () => {
     MockDate.reset();

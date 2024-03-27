@@ -4,19 +4,19 @@ import { env } from "../config";
 
 export class WooviPaymentGateway extends PaymentGateway {
   private apiKey: string;
-  constructor() {
+  constructor(paymentKey: string) {
     super();
-    this.apiKey = env.paymentKey;
+    this.apiKey = paymentKey;
   }
   async createCharge(data: any): Promise<any> {
-    const { correlationId, value, comment } = data;
+    const { correlationID, value, comment } = data;
     try {
       const { data } = await axios.post(
         "https://api.openpix.com.br/api/v1/charge?return_existing=true",
-        { correlationId, value, comment },
+        { correlationID, value, comment },
         {
           headers: {
-            Authorization: `Bearer ${this.apiKey}`,
+            Authorization: this.apiKey,
             "content-type": "application/json",
           },
         }
@@ -31,3 +31,6 @@ export class WooviPaymentGateway extends PaymentGateway {
   async createCustomer(data: any): Promise<any> {}
   async getCustomer(data: any): Promise<any> {}
 }
+export const makeWooviAdapter = () => {
+  return new WooviPaymentGateway(env.paymentKey);
+};
