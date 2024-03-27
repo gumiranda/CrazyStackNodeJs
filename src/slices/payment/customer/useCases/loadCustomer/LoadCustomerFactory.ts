@@ -9,5 +9,9 @@ import {
 
 export const makeLoadCustomerFactory = (): LoadCustomer => {
   const repository = new CustomerRepository(new MongoRepository("customer"));
-  return loadCustomer(repository, makePaymentAdapter(), makeUpdateCustomerFactory());
+  return loadCustomer(
+    repository,
+    makePaymentAdapter("stripe"),
+    makeUpdateCustomerFactory()
+  );
 };

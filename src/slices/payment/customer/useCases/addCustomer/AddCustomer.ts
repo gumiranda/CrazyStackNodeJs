@@ -17,6 +17,7 @@ export const addCustomer: AddCustomerSignature =
         ...data,
         gatewayDetails: response?.customer,
         ...response?.customer,
+        correlationID: response?.customer?.id ?? data?.correlationID,
       })
     );
   };
