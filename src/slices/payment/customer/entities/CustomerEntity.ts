@@ -1,7 +1,5 @@
-export type TaxID = {
-  taxID: string;
-  type: string;
-};
+import { Customer, TaxID } from "../../paymentTypes";
+
 export type CustomerData = {
   _id?: string;
   createdById: string;
@@ -10,12 +8,6 @@ export type CustomerData = {
   updatedAt?: Date;
 } & Customer;
 
-export type Customer = {
-  name: string;
-  email: string;
-  phone: string;
-  taxID: TaxID;
-};
 export type CustomerPaginated = {
   customers: CustomerData[];
   total: number;
