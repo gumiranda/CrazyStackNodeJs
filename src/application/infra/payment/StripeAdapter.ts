@@ -11,13 +11,31 @@ export class StripePaymentGateway extends PaymentGateway {
       typescript: true,
     });
   }
+  async createPrice(amount: number): Promise<any> {
+    try {
+      const price = await this.stripe.prices.create({
+        currency: "brl",
+        unit_amount: amount,
+        recurring: {
+          interval: "month",
+        },
+        product_data: {
+          name: "Gold Plan",
+        },
+      });
+      return { price };
+    } catch (e: any) {
+      return e?.response?.data;
+    }
+  }
   async createSubscription(data: any): Promise<any> {
     try {
+      //const { price } = await this.createPrice(Number(data?.value));
       const subscription = await this.stripe.subscriptions.create({
         customer: data?.customer?.id ?? data?.customer?.correlationID,
         items: [
           {
-            price: data?.correlationID,
+            price: data?.priceId, //price?.id,
           },
         ],
       });

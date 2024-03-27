@@ -4,6 +4,7 @@ const bodyAddSubscriptionJsonSchema = {
   properties: {
     name: { type: "string" },
     comment: { type: "string" },
+    priceId: { type: "string" },
     value: { type: "number" },
     dayGenerateCharge: { type: "number" },
     customer: { type: "object" },

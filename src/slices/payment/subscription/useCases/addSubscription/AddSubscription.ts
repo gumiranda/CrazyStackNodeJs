@@ -28,6 +28,7 @@ export const addSubscription: AddSubscriptionSignature =
         dayGenerateCharge: data.dayGenerateCharge,
         chargeType: "DYNAMIC",
         dayDue: 7,
+        priceId: data?.priceId,
       });
       if (!subscription) return null;
       return addSubscriptionRepository.addSubscription(
@@ -35,6 +36,7 @@ export const addSubscription: AddSubscriptionSignature =
           ...data,
           ...subscription,
           gatewayDetails: subscription,
+          globalID: subscription?.id ?? data?.globalID,
         })
       );
     } catch (error) {

@@ -14,6 +14,7 @@ export type SubscriptionData = {
   dayGenerateCharge: string;
   globalID: string;
   gatewayDetails?: any;
+  priceId?: string;
 };
 
 export type SubscriptionPaginated = {
@@ -34,6 +35,7 @@ export class SubscriptionEntity {
   dayGenerateCharge: string;
   globalID: string;
   gatewayDetails?: any;
+  priceId?: string;
 
   constructor(data: SubscriptionData) {
     this.createdById = data.createdById;
@@ -48,5 +50,6 @@ export class SubscriptionEntity {
     this.dayGenerateCharge = data.dayGenerateCharge;
     this.globalID = data.globalID;
     this.gatewayDetails = data.gatewayDetails;
+    this.priceId = data.priceId;
   }
 }
