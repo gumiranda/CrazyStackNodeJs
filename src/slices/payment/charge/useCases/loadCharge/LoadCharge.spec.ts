@@ -9,14 +9,18 @@ describe("LoadCharge", () => {
   let fakeQuery: Query;
   let testInstance: LoadCharge;
   let loadChargeRepository: MockProxy<LoadChargeRepository>;
+  let fakePaymentProvider: any;
+  let updateCharge: any;
   beforeAll(async () => {
     MockDate.set(new Date());
     loadChargeRepository = mock();
+    fakePaymentProvider = mock();
+    updateCharge = mock();
     fakeQuery = { fields: { name: "123" }, options: {} };
     loadChargeRepository.loadCharge.mockResolvedValue(fakeChargeEntity);
   });
   beforeEach(() => {
-    testInstance = loadCharge(loadChargeRepository);
+    testInstance = loadCharge(loadChargeRepository, fakePaymentProvider, updateCharge);
   });
   afterAll(async () => {
     MockDate.reset();

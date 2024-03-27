@@ -8,6 +8,35 @@ export class WooviPaymentGateway extends PaymentGateway {
     super();
     this.apiKey = paymentKey;
   }
+  async deleteCharge(id: string): Promise<any> {
+    try {
+      const response = await axios.delete(
+        `https://api.openpix.com.br/api/v1/charge/${id}`,
+        {
+          headers: {
+            Authorization: this.apiKey,
+            "content-type": "application/json",
+          },
+        }
+      );
+      return response?.data;
+    } catch (e: any) {
+      return e?.response?.data;
+    }
+  }
+  async getCharge(id: string): Promise<any> {
+    try {
+      const response = await axios.get(`https://api.openpix.com.br/api/v1/charge/${id}`, {
+        headers: {
+          Authorization: this.apiKey,
+          "content-type": "application/json",
+        },
+      });
+      return response?.data;
+    } catch (e: any) {
+      return e?.response?.data;
+    }
+  }
   async createCharge(data: any): Promise<any> {
     const { correlationID, value, comment } = data;
     try {

@@ -1,5 +1,4 @@
 import { fakeChargeEntity } from "@/slices/payment/charge/entities/ChargeEntity.spec";
-import { ChargeEntity } from "@/slices/payment/charge/entities";
 import { DeleteChargeRepository } from "@/slices/payment/charge/repositories/contracts";
 import MockDate from "mockdate";
 
@@ -11,14 +10,17 @@ describe("deleteCharge", () => {
   let testInstance: any;
   let fakeQuery: Query;
   let deleteChargeRepository: MockProxy<DeleteChargeRepository>;
+  let fakePaymentProvider: any;
+
   beforeAll(async () => {
     MockDate.set(new Date());
     deleteChargeRepository = mock();
+    fakePaymentProvider = mock();
     fakeQuery = { fields: { name: "123" }, options: {} };
     deleteChargeRepository.deleteCharge.mockResolvedValue(fakeChargeEntity);
   });
   beforeEach(() => {
-    testInstance = deleteCharge(deleteChargeRepository);
+    testInstance = deleteCharge(deleteChargeRepository, fakePaymentProvider);
   });
   afterAll(async () => {
     MockDate.reset();
