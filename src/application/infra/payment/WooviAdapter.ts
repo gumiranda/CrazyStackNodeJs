@@ -3,18 +3,6 @@ import { PaymentGateway } from "../contracts";
 import { env } from "../config";
 
 export class WooviPaymentGateway extends PaymentGateway {
-  override createSubscription(data: any): Promise<any> {
-    throw new Error("Method not implemented." + data);
-  }
-  override getSubscription(data: any): Promise<any> {
-    throw new Error("Method not implemented." + data);
-  }
-  override createCustomer(data: any): Promise<any> {
-    throw new Error("Method not implemented." + data);
-  }
-  override getCustomer(data: any): Promise<any> {
-    throw new Error("Method not implemented." + data);
-  }
   private apiKey: string;
   constructor(paymentKey: string) {
     super();
@@ -62,6 +50,45 @@ export class WooviPaymentGateway extends PaymentGateway {
         }
       );
       return data;
+    } catch (e: any) {
+      return e?.response?.data;
+    }
+  }
+  override createSubscription(data: any): Promise<any> {
+    throw new Error("Method not implemented." + data);
+  }
+  override getSubscription(data: any): Promise<any> {
+    throw new Error("Method not implemented." + data);
+  }
+  async createCustomer(body: any): Promise<any> {
+    try {
+      const { data } = await axios.post(
+        "https://api.openpix.com.br/api/v1/customer",
+        body,
+        {
+          headers: {
+            Authorization: this.apiKey,
+            "content-type": "application/json",
+          },
+        }
+      );
+      return data;
+    } catch (e: any) {
+      return e?.response?.data;
+    }
+  }
+  async getCustomer(id: string): Promise<any> {
+    try {
+      const response = await axios.get(
+        `https://api.openpix.com.br/api/v1/customer/${id}`,
+        {
+          headers: {
+            Authorization: this.apiKey,
+            "content-type": "application/json",
+          },
+        }
+      );
+      return response?.data;
     } catch (e: any) {
       return e?.response?.data;
     }

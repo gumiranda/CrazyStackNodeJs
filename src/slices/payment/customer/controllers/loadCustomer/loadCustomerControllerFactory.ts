@@ -5,7 +5,7 @@ import { makeLoadCustomerFactory } from "@/slices/payment/customer/useCases";
 import { LoadCustomerController } from "@/slices/payment/customer/controllers";
 
 export const makeLoadCustomerController = (): Controller => {
-  const requiredFields = ["_id"];
+  const requiredFields = ["correlationID"];
   return makeLogController(
     "loadCustomer",
     new LoadCustomerController(

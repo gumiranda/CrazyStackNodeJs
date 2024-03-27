@@ -7,16 +7,20 @@ import { LoadCustomer, loadCustomer } from "./LoadCustomer";
 
 describe("LoadCustomer", () => {
   let fakeQuery: Query;
+  let paymentProvider: any;
+  let updateProvider: any;
   let testInstance: LoadCustomer;
   let loadCustomerRepository: MockProxy<LoadCustomerRepository>;
   beforeAll(async () => {
     MockDate.set(new Date());
     loadCustomerRepository = mock();
+    paymentProvider = mock();
+    updateProvider = mock();
     fakeQuery = { fields: { name: "123" }, options: {} };
     loadCustomerRepository.loadCustomer.mockResolvedValue(fakeCustomerEntity);
   });
   beforeEach(() => {
-    testInstance = loadCustomer(loadCustomerRepository);
+    testInstance = loadCustomer(loadCustomerRepository, paymentProvider, updateProvider);
   });
   afterAll(async () => {
     MockDate.reset();

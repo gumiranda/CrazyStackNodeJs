@@ -11,6 +11,16 @@ export const fakeCustomerEntity = {
   email: "fakeCustomerEntity",
   phone: "fakeCustomerEntity",
   taxID: { taxID: "123", type: "fakeCustomerEntity" },
+  address: {
+    zipcode: "123",
+    street: "fakeCustomerEntity",
+    number: "123",
+    neighborhood: "fakeCustomerEntity",
+    city: "fakeCustomerEntity",
+    state: "fakeCustomerEntity",
+    complement: "fakeCustomerEntity",
+    country: "fakeCustomerEntity",
+  },
 };
 export const fakeCustomerPaginated = {
   total: 11,

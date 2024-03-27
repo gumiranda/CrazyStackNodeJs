@@ -1,8 +1,12 @@
 const bodyAddCustomerJsonSchema = {
   type: "object",
-  required: ["name"],
+  required: ["name", "email", "cpf", "phone", "correlationID"],
   properties: {
     name: { type: "string" },
+    email: { type: "string" },
+    phone: { type: "string" },
+    cpf: { type: "string" },
+    correlationID: { type: "string" },
   },
 };
 const headersJsonSchema = {
@@ -20,6 +24,10 @@ const addCustomerResponse = {
     active: { type: "boolean" },
     createdById: { type: "string" },
     createdAt: { type: "string" },
+    email: { type: "string" },
+    phone: { type: "string" },
+    cpf: { type: "string" },
+    correlationID: { type: "string" },
   },
 };
 export const addCustomerPostSchema = {
@@ -33,9 +41,9 @@ export const addCustomerPostSchema = {
 const queryStringJsonLoadCustomerSchema = {
   type: "object",
   properties: {
-    _id: { type: "string", maxLength: 24, minLength: 24 },
+    correlationID: { type: "string" },
   },
-  required: ["_id"],
+  required: ["correlationID"],
 };
 const loadCustomerResponse = {
   type: "object",
@@ -45,6 +53,10 @@ const loadCustomerResponse = {
     active: { type: "boolean" },
     createdById: { type: "string" },
     createdAt: { type: "string" },
+    email: { type: "string" },
+    phone: { type: "string" },
+    cpf: { type: "string" },
+    correlationID: { type: "string" },
   },
 };
 export const loadCustomerGetSchema = {
@@ -60,7 +72,7 @@ const deleteCustomerResponse = { type: "boolean" };
 const queryStringJsonDeleteCustomerSchema = {
   type: "object",
   properties: {
-    _id: { type: "string", maxLength: 24, minLength: 24 },
+    _id: { type: "string" },
   },
   required: ["_id"],
 };
@@ -75,10 +87,8 @@ export const deleteCustomerSchema = {
 };
 const queryStringJsonUpdateCustomerSchema = {
   type: "object",
-  properties: {
-    _id: { type: "string", maxLength: 24, minLength: 24 },
-  },
-  required: ["_id"],
+  properties: { correlationID: { type: "string" } },
+  required: ["correlationID"],
 };
 const updateCustomerResponse = {
   type: "object",
@@ -86,6 +96,10 @@ const updateCustomerResponse = {
     _id: { type: "string", maxLength: 24, minLength: 24 },
     name: { type: "string" },
     createdById: { type: "string" },
+    email: { type: "string" },
+    phone: { type: "string" },
+    cpf: { type: "string" },
+    correlationID: { type: "string" },
   },
 };
 const updateCustomerBody = {
@@ -127,6 +141,10 @@ const loadCustomerByPageResponse = {
           active: { type: "boolean" },
           createdById: { type: "string" },
           createdAt: { type: "string" },
+          email: { type: "string" },
+          phone: { type: "string" },
+          cpf: { type: "string" },
+          correlationID: { type: "string" },
         },
       },
     },
