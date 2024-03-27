@@ -1,8 +1,13 @@
 const bodyAddSubscriptionJsonSchema = {
   type: "object",
-  required: ["name"],
+  required: ["name", "customer", "value", "dayGenerateCharge"],
   properties: {
     name: { type: "string" },
+    comment: { type: "string" },
+    value: { type: "number" },
+    dayGenerateCharge: { type: "number" },
+    customer: { type: "object" },
+    additionalInfo: { type: "array" },
   },
 };
 const headersJsonSchema = {
@@ -17,6 +22,12 @@ const addSubscriptionResponse = {
   properties: {
     _id: { type: "string", maxLength: 24, minLength: 24 },
     name: { type: "string" },
+    comment: { type: "string" },
+    globalID: { type: "string" },
+    value: { type: "number" },
+    dayGenerateCharge: { type: "number" },
+    customer: { type: "object" },
+    additionalInfo: { type: "array" },
     active: { type: "boolean" },
     createdById: { type: "string" },
     createdAt: { type: "string" },
@@ -33,15 +44,21 @@ export const addSubscriptionPostSchema = {
 const queryStringJsonLoadSubscriptionSchema = {
   type: "object",
   properties: {
-    _id: { type: "string", maxLength: 24, minLength: 24 },
+    globalID: { type: "string" },
   },
-  required: ["_id"],
+  required: ["globalID"],
 };
 const loadSubscriptionResponse = {
   type: "object",
   properties: {
     _id: { type: "string", maxLength: 24, minLength: 24 },
     name: { type: "string" },
+    comment: { type: "string" },
+    globalID: { type: "string" },
+    value: { type: "number" },
+    dayGenerateCharge: { type: "number" },
+    customer: { type: "object" },
+    additionalInfo: { type: "array" },
     active: { type: "boolean" },
     createdById: { type: "string" },
     createdAt: { type: "string" },
@@ -60,9 +77,9 @@ const deleteSubscriptionResponse = { type: "boolean" };
 const queryStringJsonDeleteSubscriptionSchema = {
   type: "object",
   properties: {
-    _id: { type: "string", maxLength: 24, minLength: 24 },
+    globalID: { type: "string" },
   },
-  required: ["_id"],
+  required: ["globalID"],
 };
 export const deleteSubscriptionSchema = {
   schema: {
@@ -76,15 +93,21 @@ export const deleteSubscriptionSchema = {
 const queryStringJsonUpdateSubscriptionSchema = {
   type: "object",
   properties: {
-    _id: { type: "string", maxLength: 24, minLength: 24 },
+    globalID: { type: "string" },
   },
-  required: ["_id"],
+  required: ["globalID"],
 };
 const updateSubscriptionResponse = {
   type: "object",
   properties: {
     _id: { type: "string", maxLength: 24, minLength: 24 },
     name: { type: "string" },
+    comment: { type: "string" },
+    globalID: { type: "string" },
+    value: { type: "number" },
+    dayGenerateCharge: { type: "number" },
+    customer: { type: "object" },
+    additionalInfo: { type: "array" },
     createdById: { type: "string" },
   },
 };
@@ -92,6 +115,11 @@ const updateSubscriptionBody = {
   type: "object",
   properties: {
     name: { type: "string" },
+    comment: { type: "string" },
+    value: { type: "number" },
+    dayGenerateCharge: { type: "number" },
+    customer: { type: "object" },
+    additionalInfo: { type: "array" },
   },
 };
 export const updateSubscriptionSchema = {
@@ -124,6 +152,12 @@ const loadSubscriptionByPageResponse = {
         properties: {
           _id: { type: "string", maxLength: 24, minLength: 24 },
           name: { type: "string" },
+          comment: { type: "string" },
+          globalID: { type: "string" },
+          value: { type: "number" },
+          dayGenerateCharge: { type: "number" },
+          customer: { type: "object" },
+          additionalInfo: { type: "array" },
           active: { type: "boolean" },
           createdById: { type: "string" },
           createdAt: { type: "string" },

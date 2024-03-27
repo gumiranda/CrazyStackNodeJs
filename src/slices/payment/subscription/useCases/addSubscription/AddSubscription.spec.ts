@@ -8,14 +8,16 @@ import { addSubscription } from "./AddSubscription";
 
 describe("addSubscription", () => {
   let testInstance: any;
+  let paymentProvider: any;
   let addSubscriptionRepository: MockProxy<AddSubscriptionRepository>;
   beforeAll(async () => {
     MockDate.set(new Date());
     addSubscriptionRepository = mock();
+    paymentProvider = mock();
     addSubscriptionRepository.addSubscription.mockResolvedValue(fakeSubscriptionEntity);
   });
   beforeEach(() => {
-    testInstance = addSubscription(addSubscriptionRepository);
+    testInstance = addSubscription(addSubscriptionRepository, paymentProvider);
   });
   afterAll(async () => {
     MockDate.reset();

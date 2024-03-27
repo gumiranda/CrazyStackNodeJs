@@ -54,11 +54,38 @@ export class WooviPaymentGateway extends PaymentGateway {
       return e?.response?.data;
     }
   }
-  override createSubscription(data: any): Promise<any> {
-    throw new Error("Method not implemented." + data);
+  async createSubscription(body: any): Promise<any> {
+    try {
+      const { data } = await axios.post(
+        "https://api.openpix.com.br/api/v1/subscriptions",
+        body,
+        {
+          headers: {
+            Authorization: this.apiKey,
+            "content-type": "application/json",
+          },
+        }
+      );
+      return data;
+    } catch (e: any) {
+      return e?.response?.data;
+    }
   }
-  override getSubscription(data: any): Promise<any> {
-    throw new Error("Method not implemented." + data);
+  async getSubscription(id: string): Promise<any> {
+    try {
+      const response = await axios.get(
+        `https://api.openpix.com.br/api/v1/subscriptions/${id}`,
+        {
+          headers: {
+            Authorization: this.apiKey,
+            "content-type": "application/json",
+          },
+        }
+      );
+      return response?.data;
+    } catch (e: any) {
+      return e?.response?.data;
+    }
   }
   async createCustomer(body: any): Promise<any> {
     try {

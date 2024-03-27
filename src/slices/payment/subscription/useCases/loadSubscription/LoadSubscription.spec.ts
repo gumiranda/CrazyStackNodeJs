@@ -9,14 +9,16 @@ describe("LoadSubscription", () => {
   let fakeQuery: Query;
   let testInstance: LoadSubscription;
   let loadSubscriptionRepository: MockProxy<LoadSubscriptionRepository>;
+  let fakePaymentProvider: any;
   beforeAll(async () => {
     MockDate.set(new Date());
     loadSubscriptionRepository = mock();
+    fakePaymentProvider = mock();
     fakeQuery = { fields: { name: "123" }, options: {} };
     loadSubscriptionRepository.loadSubscription.mockResolvedValue(fakeSubscriptionEntity);
   });
   beforeEach(() => {
-    testInstance = loadSubscription(loadSubscriptionRepository);
+    testInstance = loadSubscription(loadSubscriptionRepository, fakePaymentProvider);
   });
   afterAll(async () => {
     MockDate.reset();

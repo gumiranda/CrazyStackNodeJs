@@ -5,7 +5,7 @@ import { makeLoadSubscriptionFactory } from "@/slices/payment/subscription/useCa
 import { LoadSubscriptionController } from "@/slices/payment/subscription/controllers";
 
 export const makeLoadSubscriptionController = (): Controller => {
-  const requiredFields = ["_id"];
+  const requiredFields = ["globalID"];
   return makeLogController(
     "loadSubscription",
     new LoadSubscriptionController(
