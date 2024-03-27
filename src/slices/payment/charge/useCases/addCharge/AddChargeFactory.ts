@@ -5,5 +5,5 @@ import { addCharge, AddCharge } from "@/slices/payment/charge/useCases";
 
 export const makeAddChargeFactory = (): AddCharge => {
   const repository = new ChargeRepository(new MongoRepository("charge"));
-  return addCharge(repository, makePaymentAdapter());
+  return addCharge(repository, makePaymentAdapter("stripe"));
 };

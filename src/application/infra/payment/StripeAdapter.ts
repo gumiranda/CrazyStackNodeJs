@@ -37,7 +37,7 @@ export class StripePaymentGateway extends PaymentGateway {
 
   async deleteCharge(id: string): Promise<any> {
     try {
-      const charge = await this.stripe.charges.update(id, {
+      const charge = await this.stripe.paymentIntents.update(id, {
         metadata: { status: "canceled" },
       });
       return { charge, status: "OK" };
@@ -47,7 +47,7 @@ export class StripePaymentGateway extends PaymentGateway {
   }
   async getCharge(id: string): Promise<any> {
     try {
-      const charge = await this.stripe.charges.retrieve(id);
+      const charge = await this.stripe.paymentIntents.retrieve(id);
       return { charge };
     } catch (e: any) {
       return e?.response?.data;
@@ -55,11 +55,13 @@ export class StripePaymentGateway extends PaymentGateway {
   }
   async createCharge(data: any): Promise<any> {
     try {
-      const charge = await this.stripe.charges.create({
-        amount: data?.value,
+      const charge = await this.stripe.paymentIntents.create({
+        amount: Number(data?.value),
         currency: "brl",
-        source: data?.correlationID,
-        metadata: data,
+        metadata: { metadata: JSON.stringify(data) },
+        automatic_payment_methods: {
+          enabled: true,
+        },
       });
       return { charge };
     } catch (e: any) {
