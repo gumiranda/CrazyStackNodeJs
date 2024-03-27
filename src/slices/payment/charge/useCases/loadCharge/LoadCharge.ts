@@ -17,7 +17,7 @@ export const loadCharge: LoadChargeSignature =
     updateCharge: UpdateCharge
   ) =>
   async (query: Query) => {
-    const response = await paymentProvider.getCharge(query?.fields?._id);
+    const response = await paymentProvider.getCharge(query?.fields?.correlationID);
     if (!response?.charge) return null;
     await updateCharge(query, { ...response.charge });
     return loadChargeRepository.loadCharge(query);

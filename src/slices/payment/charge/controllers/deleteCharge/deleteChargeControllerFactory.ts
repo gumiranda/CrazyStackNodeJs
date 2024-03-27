@@ -5,7 +5,7 @@ import { makeDeleteChargeFactory } from "@/slices/payment/charge/useCases";
 import { DeleteChargeController } from "@/slices/payment/charge/controllers";
 
 export const makeDeleteChargeController = (): Controller => {
-  const requiredFields = ["_id"];
+  const requiredFields = ["correlationID"];
   return makeLogController(
     "deleteCharge",
     new DeleteChargeController(

@@ -1,8 +1,8 @@
 const bodyAddChargeJsonSchema = {
   type: "object",
-  required: ["name"],
+  required: ["correlationID"],
   properties: {
-    name: { type: "string" },
+    correlationID: { type: "string" },
   },
 };
 const headersJsonSchema = {
@@ -20,6 +20,18 @@ const addChargeResponse = {
     active: { type: "boolean" },
     createdById: { type: "string" },
     createdAt: { type: "string" },
+    status: { type: "string" },
+    customer: { type: "object" },
+    value: { type: "number" },
+    comment: { type: "string" },
+    correlationID: { type: "string" },
+    paymentLinkID: { type: "string" },
+    paymentLinkUrl: { type: "string" },
+    qrCodeImage: { type: "string" },
+    expiresIn: { type: "number" },
+    expiresDate: { type: "string" },
+    brCode: { type: "string" },
+    additionalInfo: { type: "array" },
   },
 };
 export const addChargePostSchema = {
@@ -33,15 +45,26 @@ export const addChargePostSchema = {
 const queryStringJsonLoadChargeSchema = {
   type: "object",
   properties: {
-    _id: { type: "string", maxLength: 24, minLength: 24 },
+    correlationID: { type: "string" },
   },
-  required: ["_id"],
+  required: ["correlationID"],
 };
 const loadChargeResponse = {
   type: "object",
   properties: {
     _id: { type: "string", maxLength: 24, minLength: 24 },
-    name: { type: "string" },
+    status: { type: "string" },
+    customer: { type: "object" },
+    value: { type: "number" },
+    comment: { type: "string" },
+    correlationID: { type: "string" },
+    paymentLinkID: { type: "string" },
+    paymentLinkUrl: { type: "string" },
+    qrCodeImage: { type: "string" },
+    expiresIn: { type: "number" },
+    expiresDate: { type: "string" },
+    brCode: { type: "string" },
+    additionalInfo: { type: "array" },
     active: { type: "boolean" },
     createdById: { type: "string" },
     createdAt: { type: "string" },
@@ -60,9 +83,9 @@ const deleteChargeResponse = { type: "boolean" };
 const queryStringJsonDeleteChargeSchema = {
   type: "object",
   properties: {
-    _id: { type: "string", maxLength: 24, minLength: 24 },
+    correlationID: { type: "string" },
   },
-  required: ["_id"],
+  required: ["correlationID"],
 };
 export const deleteChargeSchema = {
   schema: {
@@ -76,22 +99,44 @@ export const deleteChargeSchema = {
 const queryStringJsonUpdateChargeSchema = {
   type: "object",
   properties: {
-    _id: { type: "string", maxLength: 24, minLength: 24 },
+    correlationID: { type: "string" },
   },
-  required: ["_id"],
+  required: ["correlationID"],
 };
 const updateChargeResponse = {
   type: "object",
   properties: {
     _id: { type: "string", maxLength: 24, minLength: 24 },
-    name: { type: "string" },
+    status: { type: "string" },
+    customer: { type: "object" },
+    value: { type: "number" },
+    comment: { type: "string" },
+    correlationID: { type: "string" },
+    paymentLinkID: { type: "string" },
+    paymentLinkUrl: { type: "string" },
+    qrCodeImage: { type: "string" },
+    expiresIn: { type: "number" },
+    expiresDate: { type: "string" },
+    brCode: { type: "string" },
+    additionalInfo: { type: "array" },
     createdById: { type: "string" },
   },
 };
 const updateChargeBody = {
   type: "object",
   properties: {
-    name: { type: "string" },
+    status: { type: "string" },
+    customer: { type: "object" },
+    value: { type: "number" },
+    comment: { type: "string" },
+    correlationID: { type: "string" },
+    paymentLinkID: { type: "string" },
+    paymentLinkUrl: { type: "string" },
+    qrCodeImage: { type: "string" },
+    expiresIn: { type: "number" },
+    expiresDate: { type: "string" },
+    brCode: { type: "string" },
+    additionalInfo: { type: "array" },
   },
 };
 export const updateChargeSchema = {
@@ -123,7 +168,18 @@ const loadChargeByPageResponse = {
         type: "object",
         properties: {
           _id: { type: "string", maxLength: 24, minLength: 24 },
-          name: { type: "string" },
+          status: { type: "string" },
+          customer: { type: "object" },
+          value: { type: "number" },
+          comment: { type: "string" },
+          correlationID: { type: "string" },
+          paymentLinkID: { type: "string" },
+          paymentLinkUrl: { type: "string" },
+          qrCodeImage: { type: "string" },
+          expiresIn: { type: "number" },
+          expiresDate: { type: "string" },
+          brCode: { type: "string" },
+          additionalInfo: { type: "array" },
           active: { type: "boolean" },
           createdById: { type: "string" },
           createdAt: { type: "string" },

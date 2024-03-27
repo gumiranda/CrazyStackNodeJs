@@ -5,7 +5,7 @@ import { makeLoadChargeFactory } from "@/slices/payment/charge/useCases";
 import { LoadChargeController } from "@/slices/payment/charge/controllers";
 
 export const makeLoadChargeController = (): Controller => {
-  const requiredFields = ["_id"];
+  const requiredFields = ["correlationID"];
   return makeLogController(
     "loadCharge",
     new LoadChargeController(

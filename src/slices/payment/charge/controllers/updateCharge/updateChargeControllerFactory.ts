@@ -5,7 +5,7 @@ import { makeUpdateChargeFactory } from "@/slices/payment/charge/useCases";
 import { UpdateChargeController } from "@/slices/payment/charge/controllers";
 
 export const makeUpdateChargeController = (): Controller => {
-  const requiredFieldsQuery = ["_id"];
+  const requiredFieldsQuery = ["correlationID"];
   const requiredFieldsBody: any = [];
   return makeLogController(
     "updateCharge",

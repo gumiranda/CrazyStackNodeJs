@@ -3,6 +3,18 @@ import { PaymentGateway } from "../contracts";
 import { env } from "../config";
 
 export class WooviPaymentGateway extends PaymentGateway {
+  override createSubscription(data: any): Promise<any> {
+    throw new Error("Method not implemented." + data);
+  }
+  override getSubscription(data: any): Promise<any> {
+    throw new Error("Method not implemented." + data);
+  }
+  override createCustomer(data: any): Promise<any> {
+    throw new Error("Method not implemented." + data);
+  }
+  override getCustomer(data: any): Promise<any> {
+    throw new Error("Method not implemented." + data);
+  }
   private apiKey: string;
   constructor(paymentKey: string) {
     super();
@@ -15,7 +27,6 @@ export class WooviPaymentGateway extends PaymentGateway {
         {
           headers: {
             Authorization: this.apiKey,
-            "content-type": "application/json",
           },
         }
       );
@@ -55,10 +66,6 @@ export class WooviPaymentGateway extends PaymentGateway {
       return e?.response?.data;
     }
   }
-  async createSubscription(data: any): Promise<any> {}
-  async getSubscription(data: any): Promise<any> {}
-  async createCustomer(data: any): Promise<any> {}
-  async getCustomer(data: any): Promise<any> {}
 }
 export const makeWooviAdapter = () => {
   return new WooviPaymentGateway(env.paymentKey);
