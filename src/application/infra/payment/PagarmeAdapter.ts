@@ -2,7 +2,7 @@ import axios from "axios";
 import { PaymentGateway } from "../contracts";
 import { env } from "../config";
 
-export class WooviPaymentGateway extends PaymentGateway {
+export class PagarmePaymentGateway extends PaymentGateway {
   private apiKey: string;
   constructor(paymentKey: string) {
     super();
@@ -10,14 +10,11 @@ export class WooviPaymentGateway extends PaymentGateway {
   }
   async deleteCharge(id: string): Promise<any> {
     try {
-      const response = await axios.delete(
-        `https://api.openpix.com.br/api/v1/charge/${id}`,
-        {
-          headers: {
-            Authorization: this.apiKey,
-          },
-        }
-      );
+      const response = await axios.delete(`https://api.pagar.me/core/v5/customers/${id}`, {
+        headers: {
+          Authorization: `Basic ${this.apiKey}`,
+        },
+      });
       return response?.data;
     } catch (e: any) {
       return e?.response?.data;
@@ -25,9 +22,9 @@ export class WooviPaymentGateway extends PaymentGateway {
   }
   async getCharge(id: string): Promise<any> {
     try {
-      const response = await axios.get(`https://api.openpix.com.br/api/v1/charge/${id}`, {
+      const response = await axios.get(`https://api.pagar.me/core/v5/charge/${id}`, {
         headers: {
-          Authorization: this.apiKey,
+          Authorization: `Basic ${this.apiKey}`,
           "content-type": "application/json",
         },
       });
@@ -40,11 +37,11 @@ export class WooviPaymentGateway extends PaymentGateway {
     const { correlationID, value, comment } = data;
     try {
       const { data } = await axios.post(
-        "https://api.openpix.com.br/api/v1/charge?return_existing=true",
+        "https://api.pagar.me/core/v5/charge?return_existing=true",
         { correlationID, value, comment },
         {
           headers: {
-            Authorization: this.apiKey,
+            Authorization: `Basic ${this.apiKey}`,
             "content-type": "application/json",
           },
         }
@@ -57,11 +54,11 @@ export class WooviPaymentGateway extends PaymentGateway {
   async createSubscription(body: any): Promise<any> {
     try {
       const { data } = await axios.post(
-        "https://api.openpix.com.br/api/v1/subscriptions",
+        "https://api.pagar.me/core/v5/subscriptions",
         body,
         {
           headers: {
-            Authorization: this.apiKey,
+            Authorization: `Basic ${this.apiKey}`,
             "content-type": "application/json",
           },
         }
@@ -74,10 +71,10 @@ export class WooviPaymentGateway extends PaymentGateway {
   async getSubscription(id: string): Promise<any> {
     try {
       const response = await axios.get(
-        `https://api.openpix.com.br/api/v1/subscriptions/${id}`,
+        `https://api.pagar.me/core/v5/subscriptions/${id}`,
         {
           headers: {
-            Authorization: this.apiKey,
+            Authorization: `Basic ${this.apiKey}`,
             "content-type": "application/json",
           },
         }
@@ -89,16 +86,12 @@ export class WooviPaymentGateway extends PaymentGateway {
   }
   async createCustomer(body: any): Promise<any> {
     try {
-      const { data } = await axios.post(
-        "https://api.openpix.com.br/api/v1/customer",
-        body,
-        {
-          headers: {
-            Authorization: this.apiKey,
-            "content-type": "application/json",
-          },
-        }
-      );
+      const { data } = await axios.post("https://api.pagar.me/core/v5/customers", body, {
+        headers: {
+          Authorization: `Basic ${this.apiKey}`,
+          "content-type": "application/json",
+        },
+      });
       return data;
     } catch (e: any) {
       return e?.response?.data;
@@ -106,21 +99,18 @@ export class WooviPaymentGateway extends PaymentGateway {
   }
   async getCustomer(id: string): Promise<any> {
     try {
-      const response = await axios.get(
-        `https://api.openpix.com.br/api/v1/customer/${id}`,
-        {
-          headers: {
-            Authorization: this.apiKey,
-            "content-type": "application/json",
-          },
-        }
-      );
+      const response = await axios.get(`https://api.pagar.me/core/v5/customer/${id}`, {
+        headers: {
+          Authorization: `Basic ${this.apiKey}`,
+          "content-type": "application/json",
+        },
+      });
       return response?.data;
     } catch (e: any) {
       return e?.response?.data;
     }
   }
 }
-export const makeWooviAdapter = () => {
-  return new WooviPaymentGateway(env.wooviKey);
+export const makePagarmeAdapter = () => {
+  return new PagarmePaymentGateway(env.pagarmeKey);
 };

@@ -28,6 +28,7 @@ const addCustomerResponse = {
     phone: { type: "string" },
     cpf: { type: "string" },
     correlationID: { type: "string" },
+    gatewayDetails: {},
   },
 };
 export const addCustomerPostSchema = {
@@ -57,6 +58,7 @@ const loadCustomerResponse = {
     phone: { type: "string" },
     cpf: { type: "string" },
     correlationID: { type: "string" },
+    gatewayDetails: {},
   },
 };
 export const loadCustomerGetSchema = {
@@ -100,6 +102,7 @@ const updateCustomerResponse = {
     phone: { type: "string" },
     cpf: { type: "string" },
     correlationID: { type: "string" },
+    gatewayDetails: {},
   },
 };
 const updateCustomerBody = {
@@ -145,6 +148,7 @@ const loadCustomerByPageResponse = {
           phone: { type: "string" },
           cpf: { type: "string" },
           correlationID: { type: "string" },
+          gatewayDetails: {},
         },
       },
     },

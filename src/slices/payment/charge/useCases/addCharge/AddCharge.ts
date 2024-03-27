@@ -13,6 +13,6 @@ export const addCharge: AddChargeSignature =
     const response = await paymentProvider.createCharge(data);
     if (!response?.charge) return null;
     return addChargeRepository.addCharge(
-      new ChargeEntity({ ...data, ...response?.charge })
+      new ChargeEntity({ ...data, gatewayDetails: response?.charge, ...response?.charge })
     );
   };

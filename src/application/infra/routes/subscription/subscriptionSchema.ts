@@ -31,6 +31,7 @@ const addSubscriptionResponse = {
     active: { type: "boolean" },
     createdById: { type: "string" },
     createdAt: { type: "string" },
+    gatewayDetails: {},
   },
 };
 export const addSubscriptionPostSchema = {
@@ -62,6 +63,7 @@ const loadSubscriptionResponse = {
     active: { type: "boolean" },
     createdById: { type: "string" },
     createdAt: { type: "string" },
+    gatewayDetails: {},
   },
 };
 export const loadSubscriptionGetSchema = {
@@ -109,6 +111,7 @@ const updateSubscriptionResponse = {
     customer: { type: "object" },
     additionalInfo: { type: "array" },
     createdById: { type: "string" },
+    gatewayDetails: {},
   },
 };
 const updateSubscriptionBody = {
@@ -161,6 +164,7 @@ const loadSubscriptionByPageResponse = {
           active: { type: "boolean" },
           createdById: { type: "string" },
           createdAt: { type: "string" },
+          gatewayDetails: {},
         },
       },
     },

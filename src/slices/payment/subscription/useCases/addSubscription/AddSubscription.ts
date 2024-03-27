@@ -34,6 +34,7 @@ export const addSubscription: AddSubscriptionSignature =
         new SubscriptionEntity({
           ...data,
           ...subscription,
+          gatewayDetails: subscription,
         })
       );
     } catch (error) {

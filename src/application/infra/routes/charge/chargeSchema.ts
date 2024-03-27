@@ -32,6 +32,7 @@ const addChargeResponse = {
     expiresDate: { type: "string" },
     brCode: { type: "string" },
     additionalInfo: { type: "array" },
+    gatewayDetails: {},
   },
 };
 export const addChargePostSchema = {
@@ -68,6 +69,7 @@ const loadChargeResponse = {
     active: { type: "boolean" },
     createdById: { type: "string" },
     createdAt: { type: "string" },
+    gatewayDetails: {},
   },
 };
 export const loadChargeGetSchema = {
@@ -120,6 +122,7 @@ const updateChargeResponse = {
     brCode: { type: "string" },
     additionalInfo: { type: "array" },
     createdById: { type: "string" },
+    gatewayDetails: {},
   },
 };
 const updateChargeBody = {
@@ -137,6 +140,7 @@ const updateChargeBody = {
     expiresDate: { type: "string" },
     brCode: { type: "string" },
     additionalInfo: { type: "array" },
+    gatewayDetails: {},
   },
 };
 export const updateChargeSchema = {
@@ -183,6 +187,7 @@ const loadChargeByPageResponse = {
           active: { type: "boolean" },
           createdById: { type: "string" },
           createdAt: { type: "string" },
+          gatewayDetails: {},
         },
       },
     },

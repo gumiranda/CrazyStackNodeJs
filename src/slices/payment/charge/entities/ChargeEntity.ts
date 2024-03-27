@@ -19,6 +19,7 @@ export type ChargeData = {
   expiresDate: string;
   brCode: string;
   additionalInfo: AdditionalInfo[];
+  gatewayDetails?: any;
 };
 
 export type ChargePaginated = {
@@ -44,6 +45,8 @@ export class ChargeEntity {
   expiresDate: string;
   brCode: string;
   additionalInfo: AdditionalInfo[];
+  gatewayDetails?: any;
+
   constructor(data: ChargeData) {
     this.createdById = data.createdById;
     this.name = data.name;
@@ -62,5 +65,6 @@ export class ChargeEntity {
     this.expiresDate = data.expiresDate;
     this.brCode = data.brCode;
     this.additionalInfo = data.additionalInfo;
+    this.gatewayDetails = data.gatewayDetails;
   }
 }

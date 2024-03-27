@@ -8,6 +8,7 @@ export type CustomerData = {
   updatedAt?: Date;
   cpf?: string;
   correlationID?: string;
+  gatewayDetails?: any;
 } & Customer;
 
 export type CustomerPaginated = {
@@ -27,6 +28,7 @@ export class CustomerEntity {
   address?: Address;
   cpf?: string;
   correlationID?: string;
+  gatewayDetails?: any;
 
   constructor(data: CustomerData) {
     this.createdById = data.createdById;
@@ -40,5 +42,6 @@ export class CustomerEntity {
     this.address = data.address;
     this.cpf = data.cpf;
     this.correlationID = data.correlationID;
+    this.gatewayDetails = data.gatewayDetails;
   }
 }
