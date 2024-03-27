@@ -1,5 +1,5 @@
 import { MongoRepository } from "@/application/infra";
-import { makeWooviAdapter } from "@/application/infra/payment/WooviAdapter";
+import { makePaymentAdapter } from "@/application/infra/payment/paymentAdapter";
 import { CustomerRepository } from "@/slices/payment/customer/repositories";
 import {
   loadCustomer,
@@ -9,5 +9,5 @@ import {
 
 export const makeLoadCustomerFactory = (): LoadCustomer => {
   const repository = new CustomerRepository(new MongoRepository("customer"));
-  return loadCustomer(repository, makeWooviAdapter(), makeUpdateCustomerFactory());
+  return loadCustomer(repository, makePaymentAdapter(), makeUpdateCustomerFactory());
 };
