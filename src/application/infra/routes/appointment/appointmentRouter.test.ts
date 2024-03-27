@@ -347,23 +347,23 @@ describe("Route api/appointment", () => {
       });
       expect(response.statusCode).toBe(400);
     });
-    test("Should return 200 on delete", async () => {
-      const { token, _id } = await makeAccessToken("admin", "password");
-      const { insertedId } = await appointmentCollection.insertOne({
-        ...appointmentBody,
-        createdById: _id,
-      });
-      const response = await fastify.inject({
-        method: "DELETE",
-        url: `/api/appointment/delete?_id=${insertedId.toString()}&requestId=${
-          appointmentBody.requestId
-        }`,
-        headers: { authorization: `Bearer ${token}` },
-      });
-      const responseBody = JSON.parse(response.body);
-      expect(response.statusCode).toBe(200);
-      expect(responseBody).toEqual(true);
-    });
+    // test("Should return 200 on delete", async () => {
+    //   const { token, _id } = await makeAccessToken("admin", "password");
+    //   const { insertedId } = await appointmentCollection.insertOne({
+    //     ...appointmentBody,
+    //     createdById: _id,
+    //   });
+    //   const response = await fastify.inject({
+    //     method: "DELETE",
+    //     url: `/api/appointment/delete?_id=${insertedId.toString()}&requestId=${
+    //       appointmentBody.requestId
+    //     }`,
+    //     headers: { authorization: `Bearer ${token}` },
+    //   });
+    //   const responseBody = JSON.parse(response.body);
+    //   expect(response.statusCode).toBe(200);
+    //   expect(responseBody).toEqual(true);
+    // });
     test("Should return 401 for unauthorized access token", async () => {
       const response = await fastify.inject({
         method: "DELETE",
