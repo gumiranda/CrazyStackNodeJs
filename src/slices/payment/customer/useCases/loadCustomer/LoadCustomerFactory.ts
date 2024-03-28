@@ -11,7 +11,7 @@ export const makeLoadCustomerFactory = (): LoadCustomer => {
   const repository = new CustomerRepository(new MongoRepository("customer"));
   return loadCustomer(
     repository,
-    makePaymentAdapter("stripe"),
+    makePaymentAdapter("pagarme"),
     makeUpdateCustomerFactory()
   );
 };

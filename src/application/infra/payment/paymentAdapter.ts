@@ -3,11 +3,11 @@ import { makeStripeAdapter } from "./StripeAdapter";
 import { makeWooviAdapter } from "./WooviAdapter";
 
 export const makePaymentAdapter = (gateway = "woovi") => {
-  if (gateway === "pagarme") {
-    return makePagarmeAdapter();
-  }
-  if (gateway === "stripe") {
-    return makeStripeAdapter();
-  }
-  return makeWooviAdapter();
+  return adapters[gateway]();
+};
+
+const adapters: any = {
+  pagarme: makePagarmeAdapter,
+  stripe: makeStripeAdapter,
+  woovi: makeWooviAdapter,
 };

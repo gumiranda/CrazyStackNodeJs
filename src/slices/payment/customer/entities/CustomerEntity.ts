@@ -1,4 +1,4 @@
-import { Address, Customer, TaxID } from "../../paymentTypes";
+import { Address, Customer, TaxID, PagarmeCustomer } from "../../paymentTypes";
 
 export type CustomerData = {
   _id?: string;
@@ -9,6 +9,7 @@ export type CustomerData = {
   cpf?: string;
   correlationID?: string;
   gatewayDetails?: any;
+  pagarmeCustomer?: PagarmeCustomer;
 } & Customer;
 
 export type CustomerPaginated = {
@@ -29,6 +30,7 @@ export class CustomerEntity {
   cpf?: string;
   correlationID?: string;
   gatewayDetails?: any;
+  pagarmeCustomer?: PagarmeCustomer;
 
   constructor(data: CustomerData) {
     this.createdById = data.createdById;

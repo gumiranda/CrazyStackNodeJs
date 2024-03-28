@@ -1,3 +1,36 @@
+const pagarmeCustomer = {
+  type: "object",
+  properties: {
+    phones: {
+      type: "object",
+      properties: {
+        home_phone: {},
+        mobile_phone: {},
+      },
+      required: ["home_phone", "mobile_phone"],
+    },
+    birthdate: { type: "string" },
+    gender: { type: "string", enum: ["male", "female"] },
+    type: { type: "string", enum: ["individual", "company"] },
+    document_type: { type: "string", enum: ["CPF", "CNPJ", "PASSPORT"] },
+    document: { type: "string" },
+    code: { type: "string" },
+    address: {
+      type: "object",
+      properties: {
+        zip_code: { type: "string" },
+        line_1: { type: "string" },
+        line_2: { type: "string" },
+        city: { type: "string" },
+        state: { type: "string" },
+        country: { type: "string" },
+      },
+      required: [],
+    },
+    metadata: { type: "string" },
+  },
+  required: [],
+};
 const bodyAddCustomerJsonSchema = {
   type: "object",
   required: ["name", "email", "cpf", "phone", "correlationID"],
@@ -7,6 +40,7 @@ const bodyAddCustomerJsonSchema = {
     phone: { type: "string" },
     cpf: { type: "string" },
     correlationID: { type: "string" },
+    pagarmeCustomer,
   },
 };
 const headersJsonSchema = {
@@ -29,6 +63,7 @@ const addCustomerResponse = {
     cpf: { type: "string" },
     correlationID: { type: "string" },
     gatewayDetails: {},
+    pagarmeCustomer,
   },
 };
 export const addCustomerPostSchema = {
@@ -59,6 +94,7 @@ const loadCustomerResponse = {
     cpf: { type: "string" },
     correlationID: { type: "string" },
     gatewayDetails: {},
+    pagarmeCustomer,
   },
 };
 export const loadCustomerGetSchema = {
@@ -103,6 +139,7 @@ const updateCustomerResponse = {
     cpf: { type: "string" },
     correlationID: { type: "string" },
     gatewayDetails: {},
+    pagarmeCustomer,
   },
 };
 const updateCustomerBody = {
@@ -149,6 +186,7 @@ const loadCustomerByPageResponse = {
           cpf: { type: "string" },
           correlationID: { type: "string" },
           gatewayDetails: {},
+          pagarmeCustomer,
         },
       },
     },
