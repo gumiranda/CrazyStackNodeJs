@@ -5,5 +5,5 @@ import { deleteCharge, DeleteCharge } from "@/slices/payment/charge/useCases";
 
 export const makeDeleteChargeFactory = (): DeleteCharge => {
   const repository = new ChargeRepository(new MongoRepository("charge"));
-  return deleteCharge(repository, makePaymentAdapter("stripe"));
+  return deleteCharge(repository, makePaymentAdapter("pagarme"));
 };

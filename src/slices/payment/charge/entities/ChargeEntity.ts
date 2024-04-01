@@ -1,4 +1,4 @@
-import { AdditionalInfo, Customer } from "../../paymentTypes";
+import { AdditionalInfo, Customer, PagarmeOrder } from "../../paymentTypes";
 
 export type ChargeData = {
   _id?: string;
@@ -20,6 +20,7 @@ export type ChargeData = {
   brCode: string;
   additionalInfo: AdditionalInfo[];
   gatewayDetails?: any;
+  pagarmeOrder?: PagarmeOrder;
 };
 
 export type ChargePaginated = {

@@ -9,5 +9,5 @@ import {
 
 export const makeLoadChargeFactory = (): LoadCharge => {
   const repository = new ChargeRepository(new MongoRepository("charge"));
-  return loadCharge(repository, makePaymentAdapter("stripe"), makeUpdateChargeFactory());
+  return loadCharge(repository, makePaymentAdapter("pagarme"), makeUpdateChargeFactory());
 };

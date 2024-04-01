@@ -5,5 +5,5 @@ import { addSubscription, AddSubscription } from "@/slices/payment/subscription/
 
 export const makeAddSubscriptionFactory = (): AddSubscription => {
   const repository = new SubscriptionRepository(new MongoRepository("subscription"));
-  return addSubscription(repository, makePaymentAdapter("stripe"));
+  return addSubscription(repository, makePaymentAdapter("pagarme"));
 };

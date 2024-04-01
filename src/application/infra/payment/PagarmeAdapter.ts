@@ -11,7 +11,7 @@ export class PagarmePaymentGateway extends PaymentGateway {
   }
   async deleteCharge(id: string): Promise<any> {
     try {
-      const response = await axios.delete(`https://api.pagar.me/core/v5/customers/${id}`, {
+      const response = await axios.delete(`https://api.pagar.me/core/v5/charges/${id}`, {
         headers: {
           Authorization: `Basic ${this.apiKey}`,
         },
@@ -23,23 +23,23 @@ export class PagarmePaymentGateway extends PaymentGateway {
   }
   async getCharge(id: string): Promise<any> {
     try {
-      const response = await axios.get(`https://api.pagar.me/core/v5/charge/${id}`, {
+      const response = await axios.get(`https://api.pagar.me/core/v5/orders/${id}`, {
         headers: {
           Authorization: `Basic ${this.apiKey}`,
           "content-type": "application/json",
         },
       });
-      return response?.data;
+      return { charge: response?.data };
     } catch (e: any) {
       return e?.response?.data;
     }
   }
   async createCharge(data: any): Promise<any> {
-    const { correlationID, value, comment } = data;
+    const { pagarmeOrder } = data;
     try {
       const { data } = await axios.post(
-        "https://api.pagar.me/core/v5/charge?return_existing=true",
-        { correlationID, value, comment },
+        "https://api.pagar.me/core/v5/orders",
+        pagarmeOrder,
         {
           headers: {
             Authorization: `Basic ${this.apiKey}`,
@@ -47,7 +47,7 @@ export class PagarmePaymentGateway extends PaymentGateway {
           },
         }
       );
-      return data;
+      return { charge: data };
     } catch (e: any) {
       return e?.response?.data;
     }

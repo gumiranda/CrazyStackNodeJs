@@ -24,6 +24,35 @@ export type PagarmeCustomer = {
   address: AddressPagarme;
   metadata: string;
 };
+export type PagarmeOrder = {
+  customer_id: string;
+  items: {
+    amount: string;
+    description: string;
+    quantity: string;
+    code: string;
+  }[];
+  closed: string;
+  payments: {
+    credit_card: {
+      operation_type: string;
+      installments: string;
+      card: {
+        number: string;
+        holder_name: string;
+        holder_document: string;
+        exp_month: string;
+        exp_year: string;
+        cvv: string;
+        billing_address_id: string;
+        brand: string;
+      };
+      statement_descriptor: string;
+    };
+    payment_method: string;
+    amount: string;
+  }[];
+};
 
 export type AdditionalInfo = {
   key: string;
