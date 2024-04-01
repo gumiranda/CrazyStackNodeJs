@@ -1,4 +1,4 @@
-import { Customer } from "../../paymentTypes";
+import { Customer, PagarmeSubscription } from "../../paymentTypes";
 
 export type SubscriptionData = {
   _id?: string;
@@ -15,6 +15,7 @@ export type SubscriptionData = {
   globalID: string;
   gatewayDetails?: any;
   priceId?: string;
+  pagarmeSubscription?: PagarmeSubscription;
 };
 
 export type SubscriptionPaginated = {

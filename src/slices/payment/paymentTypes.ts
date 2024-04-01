@@ -53,7 +53,33 @@ export type PagarmeOrder = {
     amount: string;
   }[];
 };
-
+export type PagarmeSubscription = {
+  currency: string;
+  start_at: string;
+  interval: string;
+  minimum_price: string;
+  billing_type: string;
+  installments: string;
+  description: string;
+  card: {
+    number: string;
+    holder_name: string;
+    holder_document: string;
+    exp_month: string;
+    exp_year: string;
+    cvv: string;
+    billing_address_id: string;
+    brand: string;
+  };
+  quantity: string;
+  pricing_scheme: {
+    scheme_type: string;
+    price: string;
+  };
+  statement_descriptor: string;
+  customer_id: string;
+  payment_method: string;
+};
 export type AdditionalInfo = {
   key: string;
   value: string;

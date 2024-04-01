@@ -29,6 +29,7 @@ export const addSubscription: AddSubscriptionSignature =
         chargeType: "DYNAMIC",
         dayDue: 7,
         priceId: data?.priceId,
+        pagarmeSubscription: data?.pagarmeSubscription,
       });
       if (!subscription) return null;
       return addSubscriptionRepository.addSubscription(

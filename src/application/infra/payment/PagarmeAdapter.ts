@@ -56,7 +56,7 @@ export class PagarmePaymentGateway extends PaymentGateway {
     try {
       const { data } = await axios.post(
         "https://api.pagar.me/core/v5/subscriptions",
-        body,
+        body?.pagarmeSubscription,
         {
           headers: {
             Authorization: `Basic ${this.apiKey}`,
@@ -64,7 +64,7 @@ export class PagarmePaymentGateway extends PaymentGateway {
           },
         }
       );
-      return data;
+      return { subscription: data };
     } catch (e: any) {
       return e?.response?.data;
     }
@@ -80,7 +80,7 @@ export class PagarmePaymentGateway extends PaymentGateway {
           },
         }
       );
-      return response?.data;
+      return { subscription: response?.data };
     } catch (e: any) {
       return e?.response?.data;
     }
