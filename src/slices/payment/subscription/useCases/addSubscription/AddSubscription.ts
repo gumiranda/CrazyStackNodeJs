@@ -36,7 +36,7 @@ export const addSubscription: AddSubscriptionSignature =
           ...data,
           ...subscription,
           gatewayDetails: subscription,
-          globalID: subscription?.id ?? data?.globalID,
+          globalID: subscription?.id ?? subscription?.globalID ?? data?.globalID,
         })
       );
     } catch (error) {
