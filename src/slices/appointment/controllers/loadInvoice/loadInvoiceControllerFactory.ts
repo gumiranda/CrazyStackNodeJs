@@ -5,12 +5,8 @@ import { makeLoadInvoiceFactory } from "@/slices/appointment/useCases";
 import { LoadInvoiceController } from "@/slices/appointment/controllers";
 
 export const makeLoadInvoiceController = (): Controller => {
-  const requiredFields = ["_id"];
   return makeLogController(
     "loadInvoice",
-    new LoadInvoiceController(
-      makeValidationComposite(requiredFields),
-      makeLoadInvoiceFactory()
-    )
+    new LoadInvoiceController(makeValidationComposite([]), makeLoadInvoiceFactory())
   );
 };
