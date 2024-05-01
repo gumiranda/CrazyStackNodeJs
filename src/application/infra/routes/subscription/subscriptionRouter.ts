@@ -14,7 +14,7 @@ import {
   loadSubscriptionByPageGetSchema,
 } from "./subscriptionSchema";
 
-async function subscription(fastify: any, options: any) {
+async function subscription(fastify: any) {
   fastify.addHook("preHandler", authLogged());
   fastify.post("/subscription/add", addSubscriptionPostSchema, addSubscriptionAdapter());
   fastify.get("/subscription/load", loadSubscriptionGetSchema, loadSubscriptionAdapter());
@@ -23,7 +23,15 @@ async function subscription(fastify: any, options: any) {
     loadSubscriptionByPageGetSchema,
     loadSubscriptionByPageAdapter()
   );
-  fastify.delete("/subscription/delete", deleteSubscriptionSchema, deleteSubscriptionAdapter());
-  fastify.patch("/subscription/update", updateSubscriptionSchema, updateSubscriptionAdapter());
+  fastify.delete(
+    "/subscription/delete",
+    deleteSubscriptionSchema,
+    deleteSubscriptionAdapter()
+  );
+  fastify.patch(
+    "/subscription/update",
+    updateSubscriptionSchema,
+    updateSubscriptionAdapter()
+  );
 }
 export { subscription };

@@ -63,6 +63,7 @@ const addCustomerResponse = {
     cpf: { type: "string" },
     correlationID: { type: "string" },
     gatewayDetails: {},
+    error: {},
     pagarmeCustomer,
   },
 };

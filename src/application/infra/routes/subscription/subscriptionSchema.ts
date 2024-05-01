@@ -111,7 +111,7 @@ const queryStringJsonLoadSubscriptionSchema = {
   properties: {
     globalID: { type: "string" },
   },
-  required: ["globalID"],
+  required: [],
 };
 const loadSubscriptionResponse = {
   type: "object",
@@ -128,6 +128,7 @@ const loadSubscriptionResponse = {
     createdById: { type: "string" },
     createdAt: { type: "string" },
     gatewayDetails: {},
+    chargesByCustomer: {},
   },
 };
 export const loadSubscriptionGetSchema = {

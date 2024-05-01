@@ -11,7 +11,7 @@ export const addCustomer: AddCustomerSignature =
   (addCustomerRepository: AddCustomerRepository, paymentProvider: PaymentGateway) =>
   async (data: CustomerData) => {
     const response = await paymentProvider.createCustomer(data);
-    if (!response?.customer) return null;
+    if (!response?.customer) return { error: response?.error ?? response } as any;
     return addCustomerRepository.addCustomer(
       new CustomerEntity({
         ...data,
