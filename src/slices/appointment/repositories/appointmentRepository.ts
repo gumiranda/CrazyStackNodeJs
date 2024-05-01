@@ -17,6 +17,8 @@ import {
 import { Query } from "@/application/types";
 import { QueryBuilder } from "@/application/helpers/utils/queryBuilder";
 import { ObjectId } from "mongodb";
+import { mapQueryParamsToQueryMongo } from "@/application/infra";
+
 export class AppointmentRepository
   implements
     AddAppointmentRepository,
@@ -33,12 +35,15 @@ export class AppointmentRepository
       return null;
     }
     const queryBuilded = new QueryBuilder()
-      .match({
-        initDate: { $gte: query?.fields?.initDate },
-        endDate: { $lte: query?.fields?.endDate },
-        cancelled: false,
-        active: true,
-      })
+      .match(
+        mapQueryParamsToQueryMongo({
+          initDate: { $gte: query?.fields?.initDate },
+          endDate: { $lte: query?.fields?.endDate },
+          cancelled: false,
+          active: true,
+          ...query?.fields,
+        })
+      )
       .lookup({
         from: "service",
         localField: "serviceId",

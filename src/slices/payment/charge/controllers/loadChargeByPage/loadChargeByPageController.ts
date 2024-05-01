@@ -26,7 +26,7 @@ export class LoadChargeByPageController extends Controller {
     const sort = { [sortBy]: typeSort === "asc" ? 1 : -1 };
     const options = { sort, page };
     const chargeLoaded = await this.loadChargeByPage({
-      fields,
+      fields: { ...fields, createdById: httpRequest?.userId },
       options,
     });
     return ok(chargeLoaded);

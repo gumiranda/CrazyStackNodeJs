@@ -4,6 +4,7 @@ import {
   SubscriptionData,
 } from "@/slices/payment/subscription/entities";
 import { PaymentGateway } from "@/application/infra/contracts";
+import { whiteLabel } from "@/application/infra/config/whiteLabel";
 
 export type AddSubscription = (
   data: SubscriptionData
@@ -20,17 +21,18 @@ export const addSubscription: AddSubscriptionSignature =
   async (data: SubscriptionData) => {
     try {
       const { customer } = await paymentProvider.createCustomer({ ...data.customer });
-      const { subscription } = await paymentProvider.createSubscription({
+      const result = await paymentProvider.createSubscription({
         customer: customer ?? data.customer,
         value: Number(data.value),
         comment: data.comment,
         additionalInfo: data.additionalInfo,
-        dayGenerateCharge: data.dayGenerateCharge,
+        dayGenerateCharge: Number(data?.dayGenerateCharge ?? 5),
         chargeType: "DYNAMIC",
-        dayDue: 7,
+        dayDue: whiteLabel.paymentDaysDue,
         priceId: data?.priceId,
         pagarmeSubscription: data?.pagarmeSubscription,
       });
+      const { subscription } = result || {};
       if (!subscription) return null;
       return addSubscriptionRepository.addSubscription(
         new SubscriptionEntity({

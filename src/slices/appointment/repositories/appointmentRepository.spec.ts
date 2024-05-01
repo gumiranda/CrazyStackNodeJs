@@ -295,10 +295,10 @@ describe("Appointment Mongo Repository", () => {
     expect(repository.aggregate).toHaveBeenCalledWith([
       {
         $match: {
-          initDate: { $gte: fakeQuery.fields.initDate },
-          endDate: { $lte: fakeQuery.fields.endDate },
+          initDate: { $lte: fakeQuery.fields.initDate, $gte: fakeQuery.fields.endDate },
           cancelled: false,
           active: true,
+          name: "123",
         },
       },
       {

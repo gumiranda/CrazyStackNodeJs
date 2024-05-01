@@ -67,6 +67,7 @@ const loadUserResponse = {
     myOwnerId: { type: "string", maxLength: 24, minLength: 24 },
     active: { type: "boolean" },
     createdById: { type: "string" },
+    payDay: { type: "string" },
     createdAt: { type: "string" },
   },
 };
