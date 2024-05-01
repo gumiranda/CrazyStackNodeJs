@@ -120,6 +120,9 @@ export class WooviPaymentGateway extends PaymentGateway {
       return e?.response?.data;
     }
   }
+  getChargeByCustomer(data: any): Promise<any> {
+    return data;
+  }
 }
 export const makeWooviAdapter = () => {
   return new WooviPaymentGateway(env.wooviKey);

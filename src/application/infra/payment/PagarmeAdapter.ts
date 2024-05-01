@@ -3,6 +3,9 @@ import { PaymentGateway } from "../contracts";
 import { env } from "../config";
 
 export class PagarmePaymentGateway extends PaymentGateway {
+  getChargeByCustomer(data: any): Promise<any> {
+    return data;
+  }
   private apiKey: string;
   constructor(paymentKey: string) {
     super();

@@ -3,6 +3,9 @@ import { env } from "../config";
 import Stripe from "stripe";
 
 export class StripePaymentGateway extends PaymentGateway {
+  getChargeByCustomer(data: any): Promise<any> {
+    return data;
+  }
   private stripe: any;
   constructor(paymentKey: string) {
     super();
