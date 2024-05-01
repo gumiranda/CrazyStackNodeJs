@@ -33,7 +33,7 @@ export class SignupController extends Controller {
     if (errors?.length > 0) {
       return badRequest(errors);
     }
-    const { email, password, role } = httpRequest?.body;
+    const { email, password, role, cpf, cnpj } = httpRequest?.body;
     //  if (env.environment !== "test") {
     const { validators = null } = (await emailValidator(email)) || {};
     const {
@@ -53,12 +53,33 @@ export class SignupController extends Controller {
       return badRequest([new InvalidParamError("email")]);
     }
     // }
-    const userExists = await this.loadUser({
-      fields: { email },
-      options: { projection: { password: 0 } },
-    });
-    if (userExists) {
-      return forbidden(new EmailInUseError());
+    const userValidation = [
+      this.loadUser({
+        fields: { email },
+        options: { projection: { password: 0 } },
+      }),
+    ];
+    if (cpf?.length > 0) {
+      userValidation.push(
+        this.loadUser({
+          fields: { cpf },
+          options: { projection: { password: 0 } },
+        })
+      );
+    }
+    if (cnpj?.length > 0) {
+      userValidation.push(
+        this.loadUser({
+          fields: { cnpj },
+          options: { projection: { password: 0 } },
+        })
+      );
+    }
+    const userValidationResult = await Promise.all(userValidation);
+    for (const user of userValidationResult) {
+      if (user) {
+        return forbidden(new EmailInUseError());
+      }
     }
     delete httpRequest?.body?.passwordConfirmation;
     const userCreated = await this.addUser(httpRequest?.body);
@@ -81,15 +102,21 @@ export class SignupController extends Controller {
       //   email: userCreated?.email as string,
       //   password: "random_password",
       // });
+      const msg = {
+        userCreated: {
+          email: userCreated?.email,
+          name: userCreated?.name,
+          _id: userCreated?._id,
+          phone: userCreated?.phone,
+          cpf: userCreated?.cpf ?? "",
+          cnpj: userCreated?.cnpj ?? "",
+        },
+      };
+      const message = JSON.stringify(msg);
+
       sendMessageKafka({
         topic: "newOwner",
-        message: JSON.stringify({
-          userCreated: {
-            email: userCreated?.email,
-            name: userCreated?.name,
-            _id: userCreated?._id,
-          },
-        }),
+        message,
       });
     }
     return ok({ user: userCreated, accessToken, refreshToken });
