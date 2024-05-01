@@ -25,6 +25,7 @@
     "@types/jest": "^29.5.4",
     "@types/jsonwebtoken": "^9.0.2",
     "@types/module-alias": "^2.0.2",
+    "@types/uuid": "^9.0.8",
     "@types/ws": "^8.5.5",
     "@typescript-eslint/eslint-plugin": "^6.7.0",
     "@typescript-eslint/parser": "^6.7.0",
@@ -58,6 +59,8 @@
     "@gquittet/graceful-server": "^4.0.8",
     "axios": "^1.6.8",
     "bcrypt": "^5.1.1",
+    "core-js": "^3.37.0",
+    "crypto-js": "^4.2.0",
     "date-fns": "^2.30.0",
     "date-fns-tz": "^2.0.0",
     "deep-email-validator": "^0.1.21",
@@ -67,6 +70,7 @@
     "kafkajs": "^2.2.4",
     "module-alias": "^2.2.3",
     "mongodb": "^6.1.0",
-    "stripe": "^14.22.0"
+    "stripe": "^14.22.0",
+    "uuid": "^9.0.1"
   }
 }

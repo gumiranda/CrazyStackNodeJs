@@ -17,7 +17,6 @@ export const fakeUserEntity = {
   cardId: "string",
   ownerId: "string",
   myOwnerId: "string",
-  payDay: "string",
   photoUrl: "string",
   cpf: "string",
   phone: "string",
