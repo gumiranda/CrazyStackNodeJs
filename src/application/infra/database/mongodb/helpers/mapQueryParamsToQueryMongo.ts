@@ -23,7 +23,7 @@ export const mapQueryParamsToQueryMongo = (queryParams: any): any => {
         (elementId: string) => new ObjectId(elementId)
       );
       newQuery[key] = { $elemMatch: { $in: arrayIdsMapped } };
-    } else if (key?.includes?.("Id")) {
+    } else if (key?.includes?.("Id") && queryParams?.[key]?.length === 24) {
       newQuery[key] = new ObjectId(queryParams[key]);
     } else if (!isNaN(Number(queryParams[key])) && numberFields?.includes?.(key)) {
       newQuery[key] = { $eq: Number(queryParams[key]) };

@@ -1,4 +1,5 @@
 import { MongoRepository } from "@/application/infra";
+import { whiteLabel } from "@/application/infra/config/whiteLabel";
 import { makePaymentAdapter } from "@/application/infra/payment/paymentAdapter";
 import { CustomerRepository } from "@/slices/payment/customer/repositories";
 import {
@@ -11,7 +12,7 @@ export const makeLoadCustomerFactory = (): LoadCustomer => {
   const repository = new CustomerRepository(new MongoRepository("customer"));
   return loadCustomer(
     repository,
-    makePaymentAdapter("pagarme"),
+    makePaymentAdapter(whiteLabel.gatewayPix),
     makeUpdateCustomerFactory()
   );
 };

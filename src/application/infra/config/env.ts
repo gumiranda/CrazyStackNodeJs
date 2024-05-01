@@ -15,6 +15,7 @@ export const env = {
   pagarmeKeySecret: process.env.PAGARME_SECRET_KEY ?? "YOUR_PAYMENT",
   pagarmeKeyPublic: process.env.PAGARME_PUBLIC_KEY ?? "YOUR_PAYMENT",
   wooviKey: process.env.WOOVI_KEY ?? "YOUR_PAYMENT",
+  wooviWebhookKey: process.env.WOOVI_WEBHOOK_SECRET ?? "YOUR_PAYMENT",
   stripeKey: process.env.PUBLIC_STRIPE_KEY ?? "YOUR_PAYMENT",
   stripeKeySecret: process.env.SECRET_STRIPE_KEY ?? "YOUR_PAYMENT",
 };

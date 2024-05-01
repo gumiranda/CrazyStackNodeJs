@@ -1,7 +1,8 @@
 export const whiteLabel = {
   valueMonth: "2990",
   paymentDaysDue: 30,
-
+  gatewayPix: "woovi",
+  gatewayCreditCard: "pagarme",
   categories: [
     {
       name: "Beleza e Estética",
@@ -119,4 +120,5 @@ export const whiteLabel = {
     //   ],
     // },
   ],
-};
+} as const;
+export type WhiteLabelProps = keyof typeof whiteLabel;
