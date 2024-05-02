@@ -7,6 +7,7 @@ export type HttpRequest<T = any> = {
   query?: T;
   userLogged?: T;
   userId?: string;
+  daysToNextPayment?: any;
 };
 
 export const ok = <T = any>(data: T): HttpResponse<T> => ({ statusCode: 200, data });

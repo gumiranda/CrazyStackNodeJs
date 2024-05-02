@@ -31,12 +31,12 @@ export class LoadSubscriptionController extends Controller {
       },
       options: {},
     });
-    const chargeByCustomer = await this.loadChargeByCustomer({
+    const chargesByCustomer = await this.loadChargeByCustomer({
       fields: {
         correlationID: subscriptionLoaded?.gatewayDetails?.customer?.correlationID,
       },
       options: {},
     });
-    return ok({ ...subscriptionLoaded, chargeByCustomer });
+    return ok({ ...subscriptionLoaded, chargesByCustomer });
   }
 }

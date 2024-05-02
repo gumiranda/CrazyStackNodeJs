@@ -113,8 +113,7 @@ export class SignupController extends Controller {
         },
       };
       const message = JSON.stringify(msg);
-
-      sendMessageKafka({
+      await sendMessageKafka({
         topic: "newOwner",
         message,
       });

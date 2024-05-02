@@ -1,5 +1,6 @@
 import jwt from "jsonwebtoken";
 import {
+  calculateDaysToNextPayment,
   forbidden,
   HttpRequest,
   HttpResponse,
@@ -14,7 +15,10 @@ import { env } from "@/application/infra/config";
 import { ObjectId } from "mongodb";
 
 export class AuthMiddleware implements Middleware {
-  constructor(private readonly loadUser: LoadUser, private readonly roles: string[]) {}
+  constructor(
+    private readonly loadUser: LoadUser,
+    private readonly roles: string[]
+  ) {}
   private async verifyToken(token: string, secret: string): Promise<any> {
     try {
       return jwt.verify(token, secret);
@@ -26,7 +30,7 @@ export class AuthMiddleware implements Middleware {
     try {
       const authHeader = httpRequest?.headers?.["authorization"];
       if (authHeader) {
-        const [, accessToken] = authHeader?.split?.(" ");
+        const [, accessToken] = authHeader?.split?.(" ") ?? [];
         if (accessToken) {
           const decoded = await this.verifyToken(accessToken, env.jwtSecret);
           if (!decoded) {
@@ -41,8 +45,12 @@ export class AuthMiddleware implements Middleware {
             options: { projection: { password: 0 } },
           };
           const user = await this.loadUser(query);
-          if (user) {
-            return ok({ userId: user?._id, userLogged: user });
+
+          if (user && user?.payDay) {
+            const daysToNextPayment = calculateDaysToNextPayment(user?.payDay);
+            if (-30 < daysToNextPayment || user?.role !== "owner") {
+              return ok({ userId: user?._id, userLogged: user, daysToNextPayment });
+            }
           }
         }
       }
