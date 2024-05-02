@@ -22,7 +22,7 @@ export class LoadTransactionController extends Controller {
       return badRequest(errors);
     }
     const transactionLoaded = await this.loadTransaction({
-      fields: httpRequest?.query,
+      fields: { createdById: httpRequest?.userId },
       options: {},
     });
     return ok(transactionLoaded);

@@ -21,12 +21,12 @@ export class LoadTransactionByPageController extends Controller {
     if (errors?.length > 0) {
       return badRequest(errors);
     }
-    const { page, sortBy, typeSort = "asc", ...rest } = httpRequest?.query || {};
-    const fields = rest;
+
+    const { page, sortBy, typeSort = "asc" } = httpRequest?.query || {};
     const sort = { [sortBy]: typeSort === "asc" ? 1 : -1 };
     const options = { sort, page };
     const transactionLoaded = await this.loadTransactionByPage({
-      fields,
+      fields: { createdById: httpRequest?.userId },
       options,
     });
     return ok(transactionLoaded);

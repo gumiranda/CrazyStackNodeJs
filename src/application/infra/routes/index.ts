@@ -22,16 +22,19 @@ import { owner } from "./owner";
 import { user } from "./user";
 import { service } from "./service";
 import { product } from "./product";
+import { webhooks } from "./webhooks";
+
 const routes = [
+  webhooks,
   health,
   auth,
   account,
   category,
   // ADD FUNCTION IMPORTS
-transaction,
-charge,
-subscription,
-customer,
+  transaction,
+  charge,
+  subscription,
+  customer,
   routeDriver,
   mapRoute,
   client,
