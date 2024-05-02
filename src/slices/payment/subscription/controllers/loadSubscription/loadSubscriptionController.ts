@@ -32,7 +32,9 @@ export class LoadSubscriptionController extends Controller {
       options: {},
     });
     const chargeByCustomer = await this.loadChargeByCustomer({
-      fields: { correlationID: subscriptionLoaded?.gatewayDetails?.correlationID },
+      fields: {
+        correlationID: subscriptionLoaded?.gatewayDetails?.customer?.correlationID,
+      },
       options: {},
     });
     return ok({ ...subscriptionLoaded, chargeByCustomer });

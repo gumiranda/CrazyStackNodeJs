@@ -5,12 +5,8 @@ import { makeAddTransactionFactory } from "@/slices/payment/transaction/useCases
 import { AddTransactionController } from "@/slices/payment/transaction/controllers";
 
 export const makeAddTransactionController = (): Controller => {
-  const requiredFields = ["name"];
   return makeLogController(
     "addTransaction",
-    new AddTransactionController(
-      makeValidationComposite(requiredFields),
-      makeAddTransactionFactory()
-    )
+    new AddTransactionController(makeValidationComposite([]), makeAddTransactionFactory())
   );
 };
