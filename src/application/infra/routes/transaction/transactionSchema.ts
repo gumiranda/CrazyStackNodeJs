@@ -1,3 +1,5 @@
+import { webHookBody } from "../webhooks/paymentSchema";
+
 const bodyAddTransactionJsonSchema = {
   type: "object",
   required: ["name"],
@@ -37,22 +39,12 @@ const queryStringJsonLoadTransactionSchema = {
   },
   required: ["_id"],
 };
-const loadTransactionResponse = {
-  type: "object",
-  properties: {
-    _id: { type: "string", maxLength: 24, minLength: 24 },
-    name: { type: "string" },
-    active: { type: "boolean" },
-    createdById: { type: "string" },
-    createdAt: { type: "string" },
-  },
-};
 export const loadTransactionGetSchema = {
   schema: {
     headers: headersJsonSchema,
     querystring: queryStringJsonLoadTransactionSchema,
     response: {
-      200: loadTransactionResponse,
+      200: webHookBody,
     },
   },
 };
@@ -119,16 +111,7 @@ const loadTransactionByPageResponse = {
     transactions: {
       type: "array",
       maxItems: 10,
-      items: {
-        type: "object",
-        properties: {
-          _id: { type: "string", maxLength: 24, minLength: 24 },
-          name: { type: "string" },
-          active: { type: "boolean" },
-          createdById: { type: "string" },
-          createdAt: { type: "string" },
-        },
-      },
+      items: webHookBody,
     },
     total: { type: "integer" },
   },
