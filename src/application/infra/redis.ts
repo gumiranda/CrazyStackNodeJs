@@ -36,34 +36,41 @@ export const parseJson = (json: any): any => {
 };
 
 export const onSendRedis =
-  (domain: string, expirationTime: number) =>
+  (domain: string, expirationTime: number, endpointsAllowed: string[]) =>
   async (req: any, reply: any, payload: any) => {
     if (!payload) {
       return;
     }
+    const [, url] = req?.url?.split?.(`${domain}/`) ?? [req?.url];
+    const [urlWithoutParams] = url?.split?.("?") ?? [url];
     if (
       req.method === "GET" &&
       parseJson(payload) &&
       !parseJson(payload)?.cache &&
-      !parseJson(payload)?.statusCode
+      !parseJson(payload)?.statusCode &&
+      endpointsAllowed.includes(urlWithoutParams)
     ) {
       const cacheKey = `${domain}:${req.url}`;
       setRedis(cacheKey, JSON.stringify(parseJson(payload)), expirationTime);
     }
     return payload;
   };
-export const preHandlerRedis = (domain: string) => async (req: any, reply: any) => {
-  if (req.method === "GET") {
-    const cacheKey = `${domain}:${req.url}`;
-    try {
-      const cachedData = await getRedis(cacheKey);
-      if (cachedData && parseJson(cachedData)) {
-        const parsedJson = parseJson(cachedData);
-        reply.send(Object.assign(parsedJson, { cache: true }));
-        return;
+export const preHandlerRedis =
+  (domain: string, endpointsAllowed: string[]) => async (req: any, reply: any) => {
+    const [, url] = req?.url?.split?.(`${domain}/`) ?? [req?.url];
+    const [urlWithoutParams] = url?.split?.("?") ?? [url];
+
+    if (req.method === "GET" && endpointsAllowed.includes(urlWithoutParams)) {
+      const cacheKey = `${domain}:${req.url}`;
+      try {
+        const cachedData = await getRedis(cacheKey);
+        if (cachedData && parseJson(cachedData)) {
+          const parsedJson = parseJson(cachedData);
+          reply.send(Object.assign(parsedJson, { cache: true }));
+          return;
+        }
+      } catch (err) {
+        console.error(`Failed to read to cache: ${err}`);
       }
-    } catch (err) {
-      console.error(`Failed to read to cache: ${err}`);
     }
-  }
-};
+  };
