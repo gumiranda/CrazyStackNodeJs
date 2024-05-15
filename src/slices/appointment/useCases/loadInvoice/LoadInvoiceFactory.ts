@@ -1,8 +1,10 @@
 import { MongoRepository } from "@/application/infra";
-import { AppointmentRepository } from "@/slices/appointment/repositories";
 import { loadInvoice, LoadInvoice } from "@/slices/appointment/useCases";
+import { AppointmentAggregateRepository } from "../../repositories/aggregates/appointmentAggregateRepository";
 
 export const makeLoadInvoiceFactory = (): LoadInvoice => {
-  const repository = new AppointmentRepository(new MongoRepository("appointment"));
+  const repository = new AppointmentAggregateRepository(
+    new MongoRepository("appointment")
+  );
   return loadInvoice(repository);
 };
