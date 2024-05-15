@@ -40,6 +40,7 @@ export const fakeUserEntity = {
   addresses: [],
   clientId: "string",
   globalID: "string",
+  payDay: addDays(new Date(), 30),
 };
 export const fakeUserPaginated = {
   total: 11,
