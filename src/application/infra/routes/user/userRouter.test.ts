@@ -16,6 +16,7 @@ const ownerBody = {
   passwordConfirmation: "111123",
   coord: { type: "Point", coordinates: [-18.9512678, -41.1838365] },
   active: true,
+  payDay: addDays(new Date(), 30),
 };
 const userBody = {
   email: "any_email2@mail.com",
