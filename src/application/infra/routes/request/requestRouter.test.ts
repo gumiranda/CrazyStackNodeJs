@@ -2,6 +2,7 @@ import { makeFastifyInstance } from "@/index";
 import { Collection, ObjectId } from "mongodb";
 import { MongoHelper, env } from "@/application/infra";
 import { sign } from "jsonwebtoken";
+import { userBody } from "@/application/helpers/mocks/userBody";
 jest.setTimeout(500000);
 
 let userCollection: Collection;
@@ -12,14 +13,6 @@ let categoryCollection: Collection;
 let clientCollection: Collection;
 const requestUpdateBody = {
   endDate: new Date().toISOString(),
-};
-const userBody = {
-  email: "gustavoteste41@hotmail.com",
-  name: "Gustavo",
-  role: "client",
-  password: "123456",
-  passwordConfirmation: "123456",
-  coord: { type: "Point", coordinates: [-46.693419, -23.568704] },
 };
 const requestBody = {
   message: "any_email2@mail.com",

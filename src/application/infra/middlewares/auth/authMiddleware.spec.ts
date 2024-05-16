@@ -32,7 +32,9 @@ describe("auth middleware", () => {
   });
   test("should return 200 IF returns an user logged correctly", async () => {
     const httpResponse = await testInstance.handle(mockFakeRequestHeader());
-    expect(httpResponse).toEqual(ok({ userId: "123", userLogged: fakeUserEntity }));
+    expect(httpResponse).toEqual(
+      ok({ userId: "123", userLogged: fakeUserEntity, daysToNextPayment: 29 })
+    );
   });
   test("should return 401 IF returns null in verify token", async () => {
     jest.spyOn(testInstance, "verifyToken" as never).mockResolvedValueOnce(null as never);

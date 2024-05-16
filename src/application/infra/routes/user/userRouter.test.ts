@@ -2,6 +2,7 @@ import { makeFastifyInstance } from "@/index";
 import { Collection, ObjectId } from "mongodb";
 import { MongoHelper, env } from "@/application/infra";
 import { sign } from "jsonwebtoken";
+import { addDays } from "date-fns";
 
 jest.setTimeout(500000);
 
@@ -15,6 +16,7 @@ const ownerBody = {
   passwordConfirmation: "111123",
   coord: { type: "Point", coordinates: [-18.9512678, -41.1838365] },
   active: true,
+  payDay: addDays(new Date(), 30),
 };
 const userBody = {
   email: "any_email2@mail.com",
@@ -25,6 +27,7 @@ const userBody = {
   serviceIds: ["61dd880e81d2b01178d5962d"],
   coord: { type: "Point", coordinates: [-22.9512678, -43.1838365] },
   active: true,
+  payDay: addDays(new Date(), 30),
 };
 const makeAccessToken = async (role: string, password: string): Promise<any> => {
   const result = await userCollection.insertOne({ ...ownerBody, password, role });
