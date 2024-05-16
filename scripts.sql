@@ -121,6 +121,30 @@ CREATE TABLE owner (
     CONSTRAINT check_fixedTax CHECK (fixedTax >= 0),
     FOREIGN KEY (createdById) REFERENCES "user"(_id)
 );
+
+CREATE TABLE client (
+    _id UUID PRIMARY KEY,
+    createdById UUID NOT NULL,
+    name VARCHAR(255) NOT NULL,
+    active BOOLEAN DEFAULT TRUE,
+    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP  ,
+    cpf VARCHAR(14),
+    phone VARCHAR(15),
+    userId UUID NOT NULL,
+    ownerId UUID NOT NULL,
+    birthDate DATE,
+    appointmentsTotal INT,
+    myOwnerId UUID,
+    FOREIGN KEY (createdById) REFERENCES "user"(_id),
+    FOREIGN KEY (userId) REFERENCES "user"(_id),
+    FOREIGN KEY (ownerId) REFERENCES owner(_id),
+    FOREIGN KEY (myOwnerId) REFERENCES owner(_id)
+);
+
+
+
+
 CREATE TABLE request (
     _id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     createdById UUID NOT NULL,

@@ -16,6 +16,7 @@ import { AddAccount } from "@/slices/account/useCases";
 import { EmailInUseError, InvalidParamError } from "@/application/errors";
 import emailValidator from "deep-email-validator";
 import { sendMessageKafka } from "@/application/infra/messaging/adapters/kafkaAdapter";
+import { env } from "@/application/infra";
 
 export class SignupController extends Controller {
   constructor(
@@ -35,23 +36,23 @@ export class SignupController extends Controller {
     }
     const { email, password, role, cpf, cnpj } = httpRequest?.body;
     //  if (env.environment !== "test") {
-    const { validators = null } = (await emailValidator(email)) || {};
-    const {
-      regex = null,
-      typo = null,
-      disposable = null,
-      smtp = null,
-      mx = null,
-    } = validators || {};
-    if (
-      !regex?.valid ||
-      !typo?.valid ||
-      !disposable?.valid ||
-      (!smtp?.valid && smtp?.reason !== "Timeout") ||
-      !mx?.valid
-    ) {
-      return badRequest([new InvalidParamError("email")]);
-    }
+    // const { validators = null } = (await emailValidator(email)) || {};
+    // const {
+    //   regex = null,
+    //   typo = null,
+    //   disposable = null,
+    //   smtp = null,
+    //   mx = null,
+    // } = validators || {};
+    // if (
+    //   !regex?.valid ||
+    //   !typo?.valid ||
+    //   !disposable?.valid ||
+    //   (!smtp?.valid && smtp?.reason !== "Timeout") ||
+    //   !mx?.valid
+    // ) {
+    //   return badRequest([new InvalidParamError("email")]);
+    // }
     // }
     const userValidation = [
       this.loadUser({

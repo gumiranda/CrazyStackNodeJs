@@ -1,6 +1,6 @@
 export class SQLQueryBuilder {
-  private readonly steps: any = [];
-  private readonly values: any = [];
+  steps: any = [];
+  values: any = [];
 
   match(condition: any) {
     this.steps.push(`WHERE ${condition}`);

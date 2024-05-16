@@ -1,16 +1,7 @@
 /* eslint-disable quotes */
 import { Repository } from "@/application/infra/contracts/repository";
-import { Query } from "@/application/types";
-import { Pool, PoolClient } from "pg";
-const { PGHOST, PGDATABASE, PGUSER, PGPASSWORD } = process.env;
-const pool = new Pool({
-  user: PGUSER,
-  password: PGPASSWORD,
-  database: PGDATABASE,
-  port: 5432,
-  host: PGHOST,
-  ssl: true,
-});
+import { pool } from "../databaseConfig";
+
 export class PostgresRepository extends Repository {
   private tableName: string;
 
@@ -18,8 +9,17 @@ export class PostgresRepository extends Repository {
     super();
     this.tableName = tableName;
   }
+  async connect(): Promise<any> {
+    try {
+      const client = await pool.connect();
+      return client;
+    } catch (error) {
+      console.error("Erro ao conectar ao pool de conexões:", error);
+      throw error; // Propaga o erro para quem chamou o método connect()
+    }
+  }
   async insertOne(data: any) {
-    const client: PoolClient = await pool.connect();
+    const client = await this.connect();
     try {
       const columns = Object.keys(data).join(", ");
       const values = Object.values(data);
@@ -39,7 +39,7 @@ export class PostgresRepository extends Repository {
   }
 
   async updateOne(id: any, data: any) {
-    const client = await pool.connect();
+    const client = await this.connect();
     try {
       const updates = Object.keys(data)
         .map((key, index) => `${key} = $${index + 2}`)
@@ -54,7 +54,7 @@ export class PostgresRepository extends Repository {
   }
 
   async deleteOne(id: any) {
-    const client = await pool.connect();
+    const client = await this.connect();
     try {
       const query = `DELETE FROM ${this.tableName} WHERE id = $1`;
       const result = await client.query(query, [id]);
@@ -65,7 +65,7 @@ export class PostgresRepository extends Repository {
   }
 
   async getOne(query: any) {
-    const client = await pool.connect();
+    const client = await this.connect();
     try {
       const { whereClause, values } = this.buildWhereClause(query);
 
@@ -87,7 +87,7 @@ export class PostgresRepository extends Repository {
   }
 
   async getAll() {
-    const client = await pool.connect();
+    const client = await this.connect();
     try {
       const query = `SELECT * FROM ${this.tableName}`;
       const result = await client.query(query);
@@ -97,7 +97,7 @@ export class PostgresRepository extends Repository {
     }
   }
   async getPaginate(page = 0, fields: any, sort: any, limit = 10, projection: any) {
-    const client = await pool.connect();
+    const client = await this.connect();
     try {
       // Handle projection
       let columns = "*";
@@ -142,46 +142,10 @@ export class PostgresRepository extends Repository {
       client.release();
     }
   }
-  async aggregate(query: Query) {
-    const projection = query.options?.projection as any;
-    const sort = query.options?.sort as any;
-    const fields = query.fields;
-    const client = await pool.connect();
+  async aggregate(query: any) {
+    const client = await this.connect();
     try {
-      // Handle projection
-      let columns = "*";
-      if (Object.keys(projection).length > 0) {
-        columns = Object.keys(projection)
-          .filter((key) => projection[key])
-          .join(", ");
-      }
-
-      // Handle filtering (basic example, needs to be adjusted per use case)
-      let whereClause = "";
-      const filterConditions: string[] = [];
-      const filterValues: any[] = [];
-      Object.keys(fields).forEach((key) => {
-        const value = fields[key];
-        if (typeof value === "string" || typeof value === "number") {
-          filterConditions.push(`"${key}" = $${filterValues.length + 1}`);
-          filterValues.push(value);
-        } else {
-          filterConditions.push(`"${key}" LIKE '%' || $${filterValues.length + 1} || '%'`);
-          filterValues.push(value); // Adjust this accordingly if you're sanitizing your inputs
-        }
-      });
-      if (filterConditions.length > 0) {
-        whereClause = `WHERE ${filterConditions.join(" AND ")}`;
-      }
-
-      // Handle sorting
-      const orderBy = Object.keys(sort)
-        .map((key) => `"${key}" ${sort[key] === -1 ? "DESC" : "ASC"}`)
-        .join(", ");
-
-      // Construct query
-      const queryText = `SELECT ${columns} FROM "${this.tableName}" ${whereClause} ORDER BY ${orderBy}`;
-      const result = await client.query(queryText, filterValues);
+      const result = await client.query(query.text, query.values);
       return result.rows;
     } finally {
       client.release();
@@ -189,7 +153,7 @@ export class PostgresRepository extends Repository {
   }
 
   async getCount(query = {}) {
-    const client = await pool.connect();
+    const client = await this.connect();
     try {
       // Constructing WHERE clause based on the query object
       const whereClause = Object.keys(query)
@@ -206,7 +170,7 @@ export class PostgresRepository extends Repository {
   }
 
   async upsertAndPush(query: any, data: any, pushData: any) {
-    const client = await pool.connect();
+    const client = await this.connect();
     try {
       // Assuming pushData is an object where keys are columns and values are arrays to append
       // This example assumes there's a single key-value pair in pushData
@@ -246,7 +210,7 @@ export class PostgresRepository extends Repository {
   }
 
   async update(query: any, data: any) {
-    const client = await pool.connect();
+    const client = await this.connect();
     try {
       const setClause = Object.keys(data)
         .map((key, idx) => `"${key}" = $${idx + 1}`)
@@ -269,7 +233,7 @@ export class PostgresRepository extends Repository {
   }
 
   async increment(query: any, data: any) {
-    const client = await pool.connect();
+    const client = await this.connect();
     try {
       const setClause = Object.keys(data)
         .map((key, idx) => `"${key}" = "${key}" + $${idx + 1}`)
@@ -287,7 +251,7 @@ export class PostgresRepository extends Repository {
     }
   }
   async deleteMany(query: any) {
-    const client = await pool.connect();
+    const client = await this.connect();
     try {
       const whereClause = Object.keys(query)
         .map((key, idx) => `"${key}" = $${idx + 1}`)
@@ -303,5 +267,10 @@ export class PostgresRepository extends Repository {
   }
 }
 export async function closePool() {
-  await pool.end();
+  try {
+    await pool.end();
+  } catch (error) {
+    console.error("Erro ao fechar o pool de conexões:", error);
+    throw error; // Propaga o erro para quem chamou a função closePool()
+  }
 }

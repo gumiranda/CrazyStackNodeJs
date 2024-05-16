@@ -1,4 +1,3 @@
-import { MongoRepository } from "@/application/infra";
 import { Query } from "@/application/types";
 import { LoadAvailableTimesRepository, LoadInvoiceRepository } from "../../contracts";
 import {
@@ -6,11 +5,12 @@ import {
   QueryAvailableTimesRepository,
 } from "@/slices/appointment/entities";
 import { SQLQueryBuilder } from "@/application/helpers/utils/sqlQueryBuilder";
+import { PostgresRepository } from "@/application/infra/database/postgres/repository/pg-repository";
 
 export class AppointmentAggregatePgRepository
   implements LoadAvailableTimesRepository, LoadInvoiceRepository
 {
-  constructor(private readonly repository: MongoRepository) {}
+  constructor(private readonly repository: PostgresRepository) {}
   async loadInvoice(query: Query): Promise<any> {
     if (!query?.fields?.initDate || !query?.fields?.endDate) {
       return null;
@@ -69,7 +69,7 @@ export class AppointmentAggregatePgRepository
       .group({ _id: "owner", data: "ARRAY_AGG(*)" })
       .project("_id, data.initDate, data.endDate")
       .build();
-    const appointments = await this.repository.aggregate(queryBuilded);
+    const appointments: any = await this.repository.aggregate(queryBuilded);
 
     if (
       appointments &&
