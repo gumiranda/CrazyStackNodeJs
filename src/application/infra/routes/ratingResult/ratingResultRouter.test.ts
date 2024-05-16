@@ -2,19 +2,12 @@ import { makeFastifyInstance } from "@/index";
 import { Collection, ObjectId } from "mongodb";
 import { MongoHelper, env } from "@/application/infra";
 import { sign } from "jsonwebtoken";
+import { userBody } from "@/application/helpers/mocks/userBody";
 jest.setTimeout(500000);
 
 let userCollection: Collection;
 let ratingResultCollection: Collection;
 
-const userBody = {
-  email: "gustavoteste41@hotmail.com",
-  name: "Gustavo",
-  role: "client",
-  password: "123456",
-  passwordConfirmation: "123456",
-  coord: { type: "Point", coordinates: [-46.693419, -23.568704] },
-};
 const ratingResultBody = {
   ratingId: "61cdcb36f3b57355823528b0",
   requestId: "61dd8d09e7d6fd5019a7fa13",
