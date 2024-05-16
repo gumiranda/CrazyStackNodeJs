@@ -12,6 +12,7 @@ import {
   updatePositionConsumer,
 } from "./application/infra/messaging/consumers";
 import { newOwnerConsumer } from "./application/infra/messaging/consumers/OwnerConsumer";
+import { closePool } from "./application/infra/database/postgres/databaseConfig";
 
 export const makeFastifyInstance = async (externalMongoClient = null) => {
   const fastify: FastifyInstance = Fastify({ logger: true });
@@ -57,6 +58,7 @@ export const makeFastifyInstance = async (externalMongoClient = null) => {
     }
     return fastify;
   } catch (error) {
+    await closePool();
     fastify.log.error(error);
     process.exit(1);
   }
