@@ -1,10 +1,12 @@
+import { idSchema } from "@/application/types/id";
+
 const bodyAddRatingResultJsonSchema = {
   type: "object",
   required: ["ratingId", "requestId", "ratingForId", "ratingType", "rating", "comment"],
   properties: {
-    ratingId: { type: "string", maxLength: 24, minLength: 24 },
-    requestId: { type: "string", maxLength: 24, minLength: 24 },
-    ratingForId: { type: "string", maxLength: 24, minLength: 24 },
+    ratingId: idSchema,
+    requestId: idSchema,
+    ratingForId: idSchema,
     ratingType: { type: "string" },
     rating: { type: "string" },
     comment: { type: "object", properties: { ratingText: { type: "string" } } },
@@ -20,10 +22,10 @@ const headersJsonSchema = {
 const addRatingResultResponse = {
   type: "object",
   properties: {
-    _id: { type: "string", maxLength: 24, minLength: 24 },
-    ratingId: { type: "string", maxLength: 24, minLength: 24 },
-    requestId: { type: "string", maxLength: 24, minLength: 24 },
-    ratingForId: { type: "string", maxLength: 24, minLength: 24 },
+    _id: idSchema,
+    ratingId: idSchema,
+    requestId: idSchema,
+    ratingForId: idSchema,
     ratingType: { type: "string" },
     rating: { type: "string" },
     comment: { type: "object", properties: { ratingText: { type: "string" } } },
@@ -43,17 +45,17 @@ export const addRatingResultPostSchema = {
 const queryStringJsonLoadRatingResultSchema = {
   type: "object",
   properties: {
-    _id: { type: "string", maxLength: 24, minLength: 24 },
+    _id: idSchema,
   },
   required: ["_id"],
 };
 const loadRatingResultResponse = {
   type: "object",
   properties: {
-    _id: { type: "string", maxLength: 24, minLength: 24 },
-    ratingId: { type: "string", maxLength: 24, minLength: 24 },
-    requestId: { type: "string", maxLength: 24, minLength: 24 },
-    ratingForId: { type: "string", maxLength: 24, minLength: 24 },
+    _id: idSchema,
+    ratingId: idSchema,
+    requestId: idSchema,
+    ratingForId: idSchema,
     ratingType: { type: "string" },
     rating: { type: "string" },
     comment: { type: "object", properties: { ratingText: { type: "string" } } },
@@ -75,7 +77,7 @@ const deleteRatingResultResponse = { type: "boolean" };
 const queryStringJsonDeleteRatingResultSchema = {
   type: "object",
   properties: {
-    _id: { type: "string", maxLength: 24, minLength: 24 },
+    _id: idSchema,
   },
   required: ["_id"],
 };
@@ -91,17 +93,17 @@ export const deleteRatingResultSchema = {
 const queryStringJsonUpdateRatingResultSchema = {
   type: "object",
   properties: {
-    _id: { type: "string", maxLength: 24, minLength: 24 },
+    _id: idSchema,
   },
   required: ["_id"],
 };
 const updateRatingResultResponse = {
   type: "object",
   properties: {
-    _id: { type: "string", maxLength: 24, minLength: 24 },
-    ratingId: { type: "string", maxLength: 24, minLength: 24 },
-    requestId: { type: "string", maxLength: 24, minLength: 24 },
-    ratingForId: { type: "string", maxLength: 24, minLength: 24 },
+    _id: idSchema,
+    ratingId: idSchema,
+    requestId: idSchema,
+    ratingForId: idSchema,
     ratingType: { type: "string" },
     rating: { type: "string" },
     comment: { type: "object", properties: { ratingText: { type: "string" } } },
@@ -111,9 +113,9 @@ const updateRatingResultResponse = {
 const updateRatingResultBody = {
   type: "object",
   properties: {
-    ratingId: { type: "string", maxLength: 24, minLength: 24 },
-    requestId: { type: "string", maxLength: 24, minLength: 24 },
-    ratingForId: { type: "string", maxLength: 24, minLength: 24 },
+    ratingId: idSchema,
+    requestId: idSchema,
+    ratingForId: idSchema,
     ratingType: { type: "string" },
     rating: { type: "string" },
     comment: { type: "object", properties: { ratingText: { type: "string" } } },
@@ -147,10 +149,10 @@ const loadRatingResultByPageResponse = {
       items: {
         type: "object",
         properties: {
-          _id: { type: "string", maxLength: 24, minLength: 24 },
-          ratingId: { type: "string", maxLength: 24, minLength: 24 },
-          requestId: { type: "string", maxLength: 24, minLength: 24 },
-          ratingForId: { type: "string", maxLength: 24, minLength: 24 },
+          _id: idSchema,
+          ratingId: idSchema,
+          requestId: idSchema,
+          ratingForId: idSchema,
           ratingType: { type: "string" },
           rating: { type: "string" },
           comment: { type: "object", properties: { ratingText: { type: "string" } } },

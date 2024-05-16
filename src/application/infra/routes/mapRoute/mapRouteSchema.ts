@@ -1,3 +1,5 @@
+import { idSchema } from "@/application/types/id";
+
 const bodyAddMapRouteJsonSchema = {
   type: "object",
   required: ["name", "source_id", "destination_id"],
@@ -17,7 +19,7 @@ const headersJsonSchema = {
 const addMapRouteResponse = {
   type: "object",
   properties: {
-    _id: { type: "string", maxLength: 24, minLength: 24 },
+    _id: idSchema,
     name: { type: "string" },
     source: {
       type: "object",
@@ -65,14 +67,14 @@ export const addMapRoutePostSchema = {
 const queryStringJsonLoadMapRouteSchema = {
   type: "object",
   properties: {
-    _id: { type: "string", maxLength: 24, minLength: 24 },
+    _id: idSchema,
   },
   required: ["_id"],
 };
 const loadMapRouteResponse = {
   type: "object",
   properties: {
-    _id: { type: "string", maxLength: 24, minLength: 24 },
+    _id: idSchema,
     name: { type: "string" },
     active: { type: "boolean" },
     source: {
@@ -149,7 +151,7 @@ const deleteMapRouteResponse = { type: "boolean" };
 const queryStringJsonDeleteMapRouteSchema = {
   type: "object",
   properties: {
-    _id: { type: "string", maxLength: 24, minLength: 24 },
+    _id: idSchema,
   },
   required: ["_id"],
 };
@@ -165,14 +167,14 @@ export const deleteMapRouteSchema = {
 const queryStringJsonUpdateMapRouteSchema = {
   type: "object",
   properties: {
-    _id: { type: "string", maxLength: 24, minLength: 24 },
+    _id: idSchema,
   },
   required: ["_id"],
 };
 const updateMapRouteResponse = {
   type: "object",
   properties: {
-    _id: { type: "string", maxLength: 24, minLength: 24 },
+    _id: idSchema,
     name: { type: "string" },
     source: {
       type: "object",
@@ -246,7 +248,7 @@ const loadMapRouteByPageResponse = {
       items: {
         type: "object",
         properties: {
-          _id: { type: "string", maxLength: 24, minLength: 24 },
+          _id: idSchema,
           name: { type: "string" },
           active: { type: "boolean" },
           source: {

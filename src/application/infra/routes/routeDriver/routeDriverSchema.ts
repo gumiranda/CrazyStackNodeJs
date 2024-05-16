@@ -1,9 +1,11 @@
+import { idSchema } from "@/application/types/id";
+
 const bodyAddRouteDriverJsonSchema = {
   type: "object",
   required: ["name", "status", "routeId", "points"],
   properties: {
     name: { type: "string" },
-    routeId: { type: "string", maxLength: 24, minLength: 24 },
+    routeId: idSchema,
     status: { type: "string" },
     points: { type: "array" },
   },
@@ -18,9 +20,9 @@ const headersJsonSchema = {
 const addRouteDriverResponse = {
   type: "object",
   properties: {
-    _id: { type: "string", maxLength: 24, minLength: 24 },
+    _id: idSchema,
     name: { type: "string" },
-    routeId: { type: "string", maxLength: 24, minLength: 24 },
+    routeId: idSchema,
     status: { type: "string" },
     points: { type: "array" },
     active: { type: "boolean" },
@@ -39,16 +41,16 @@ export const addRouteDriverPostSchema = {
 const queryStringJsonLoadRouteDriverSchema = {
   type: "object",
   properties: {
-    _id: { type: "string", maxLength: 24, minLength: 24 },
+    _id: idSchema,
   },
   required: ["_id"],
 };
 const loadRouteDriverResponse = {
   type: "object",
   properties: {
-    _id: { type: "string", maxLength: 24, minLength: 24 },
+    _id: idSchema,
     name: { type: "string" },
-    routeId: { type: "string", maxLength: 24, minLength: 24 },
+    routeId: idSchema,
     status: { type: "string" },
     points: { type: "array" },
     active: { type: "boolean" },
@@ -69,7 +71,7 @@ const deleteRouteDriverResponse = { type: "boolean" };
 const queryStringJsonDeleteRouteDriverSchema = {
   type: "object",
   properties: {
-    _id: { type: "string", maxLength: 24, minLength: 24 },
+    _id: idSchema,
   },
   required: ["_id"],
 };
@@ -126,10 +128,10 @@ const loadRouteDriverByPageResponse = {
       items: {
         type: "object",
         properties: {
-          _id: { type: "string", maxLength: 24, minLength: 24 },
+          _id: idSchema,
           name: { type: "string" },
           status: { type: "string" },
-          routeId: { type: "string", maxLength: 24, minLength: 24 },
+          routeId: idSchema,
           active: { type: "boolean" },
           createdById: { type: "string" },
           createdAt: { type: "string" },

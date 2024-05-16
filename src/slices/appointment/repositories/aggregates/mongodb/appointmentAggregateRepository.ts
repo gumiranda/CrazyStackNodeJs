@@ -1,12 +1,12 @@
-import { LoadAvailableTimesRepository, LoadInvoiceRepository } from "../contracts";
-import {
-  AvailableTimesModelRepository,
-  QueryAvailableTimesRepository,
-} from "../../entities";
 import { QueryBuilder } from "@/application/helpers";
 import { ObjectId } from "mongodb";
 import { mapQueryParamsToQueryMongo, MongoRepository } from "@/application/infra";
 import { Query } from "@/application/types";
+import { LoadAvailableTimesRepository, LoadInvoiceRepository } from "../../contracts";
+import {
+  AvailableTimesModelRepository,
+  QueryAvailableTimesRepository,
+} from "@/slices/appointment/entities";
 
 export class AppointmentAggregateRepository
   implements LoadAvailableTimesRepository, LoadInvoiceRepository

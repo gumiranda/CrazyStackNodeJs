@@ -1,6 +1,4 @@
 import {
-  fakeAppointmentEntity,
-  fakeAppointmentPaginated,
   fakeAvailableTimesEntity,
   fakeQueryAvailableTimesRepository,
 } from "@/slices/appointment/entities/AppointmentEntity.spec";

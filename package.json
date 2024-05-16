@@ -25,6 +25,7 @@
     "@types/jest": "^29.5.4",
     "@types/jsonwebtoken": "^9.0.2",
     "@types/module-alias": "^2.0.2",
+    "@types/pg": "^8.11.6",
     "@types/uuid": "^9.0.8",
     "@types/ws": "^8.5.5",
     "@typescript-eslint/eslint-plugin": "^6.7.0",
@@ -70,6 +71,8 @@
     "kafkajs": "^2.2.4",
     "module-alias": "^2.2.3",
     "mongodb": "^6.1.0",
+    "pg": "^8.11.5",
+    "postgres": "^3.4.4",
     "stripe": "^14.22.0",
     "uuid": "^9.0.1"
   }

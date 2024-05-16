@@ -10,6 +10,7 @@ import { ServiceRepository } from "@/slices/service/repositories";
 import { UserRepository } from "@/slices/user/repositories";
 import { IUpdateRequestById } from "./contracts";
 import { UpdateRequestById } from "./UpdateRequestById";
+import { PostgresRepository } from "@/application/infra/database/postgres/repository/pg-repository";
 
 export const makeUpdateRequestByIdFactory = (): IUpdateRequestById => {
   return new UpdateRequestById(
@@ -17,7 +18,7 @@ export const makeUpdateRequestByIdFactory = (): IUpdateRequestById => {
     new OrderRepository(new MongoRepository("order")),
     new AppointmentRepository(new MongoRepository("appointment")),
     new ServiceRepository(new MongoRepository("service")),
-    new UserRepository(new MongoRepository("user")),
+    new UserRepository(new PostgresRepository("user")),
     new RideRepository(new MongoRepository("ride")),
     new RecurrenceRepository(new MongoRepository("recurrence")),
     new FidelityRepository(new MongoRepository("fidelity")),

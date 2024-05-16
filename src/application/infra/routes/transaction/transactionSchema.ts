@@ -1,3 +1,4 @@
+import { idSchema } from "@/application/types/id";
 import { webHookBody } from "../webhooks/paymentSchema";
 
 const bodyAddTransactionJsonSchema = {
@@ -17,7 +18,7 @@ const headersJsonSchema = {
 const addTransactionResponse = {
   type: "object",
   properties: {
-    _id: { type: "string", maxLength: 24, minLength: 24 },
+    _id: idSchema,
     name: { type: "string" },
     active: { type: "boolean" },
     createdById: { type: "string" },
@@ -35,7 +36,7 @@ export const addTransactionPostSchema = {
 const queryStringJsonLoadTransactionSchema = {
   type: "object",
   properties: {
-    _id: { type: "string", maxLength: 24, minLength: 24 },
+    _id: idSchema,
   },
   required: ["_id"],
 };
@@ -52,7 +53,7 @@ const deleteTransactionResponse = { type: "boolean" };
 const queryStringJsonDeleteTransactionSchema = {
   type: "object",
   properties: {
-    _id: { type: "string", maxLength: 24, minLength: 24 },
+    _id: idSchema,
   },
   required: ["_id"],
 };
@@ -68,14 +69,14 @@ export const deleteTransactionSchema = {
 const queryStringJsonUpdateTransactionSchema = {
   type: "object",
   properties: {
-    _id: { type: "string", maxLength: 24, minLength: 24 },
+    _id: idSchema,
   },
   required: ["_id"],
 };
 const updateTransactionResponse = {
   type: "object",
   properties: {
-    _id: { type: "string", maxLength: 24, minLength: 24 },
+    _id: idSchema,
     name: { type: "string" },
     createdById: { type: "string" },
   },

@@ -1,3 +1,5 @@
+import { idSchema } from "@/application/types/id";
+
 const bodyAddClientJsonSchema = {
   type: "object",
   required: ["name"],
@@ -18,7 +20,7 @@ const headersJsonSchema = {
 const addClientResponse = {
   type: "object",
   properties: {
-    _id: { type: "string", maxLength: 24, minLength: 24 },
+    _id: idSchema,
     name: { type: "string" },
     phone: { type: "string" },
     active: { type: "boolean" },
@@ -38,14 +40,14 @@ export const addClientPostSchema = {
 const queryStringJsonLoadClientSchema = {
   type: "object",
   properties: {
-    _id: { type: "string", maxLength: 24, minLength: 24 },
+    _id: idSchema,
   },
   required: ["_id"],
 };
 const loadClientResponse = {
   type: "object",
   properties: {
-    _id: { type: "string", maxLength: 24, minLength: 24 },
+    _id: idSchema,
     name: { type: "string" },
     phone: { type: "string" },
     active: { type: "boolean" },
@@ -67,7 +69,7 @@ const deleteClientResponse = { type: "boolean" };
 const queryStringJsonDeleteClientSchema = {
   type: "object",
   properties: {
-    _id: { type: "string", maxLength: 24, minLength: 24 },
+    _id: idSchema,
   },
   required: ["_id"],
 };
@@ -83,14 +85,14 @@ export const deleteClientSchema = {
 const queryStringJsonUpdateClientSchema = {
   type: "object",
   properties: {
-    _id: { type: "string", maxLength: 24, minLength: 24 },
+    _id: idSchema,
   },
   required: ["_id"],
 };
 const updateClientResponse = {
   type: "object",
   properties: {
-    _id: { type: "string", maxLength: 24, minLength: 24 },
+    _id: idSchema,
     name: { type: "string" },
     phone: { type: "string" },
     createdById: { type: "string" },
@@ -132,7 +134,7 @@ const loadClientByPageResponse = {
       items: {
         type: "object",
         properties: {
-          _id: { type: "string", maxLength: 24, minLength: 24 },
+          _id: idSchema,
           name: { type: "string" },
           phone: { type: "string" },
           active: { type: "boolean" },

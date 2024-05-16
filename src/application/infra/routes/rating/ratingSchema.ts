@@ -1,3 +1,5 @@
+import { idSchema } from "@/application/types/id";
+
 const bodyAddRatingJsonSchema = {
   type: "object",
   required: ["ratingType", "ratings"],
@@ -23,7 +25,7 @@ const headersJsonSchema = {
 const addRatingResponse = {
   type: "object",
   properties: {
-    _id: { type: "string", maxLength: 24, minLength: 24 },
+    _id: idSchema,
     ratings: {
       type: "array",
       maxItems: 10,
@@ -49,14 +51,14 @@ export const addRatingPostSchema = {
 const queryStringJsonLoadRatingSchema = {
   type: "object",
   properties: {
-    _id: { type: "string", maxLength: 24, minLength: 24 },
+    _id: idSchema,
   },
   required: ["_id"],
 };
 const loadRatingResponse = {
   type: "object",
   properties: {
-    _id: { type: "string", maxLength: 24, minLength: 24 },
+    _id: idSchema,
     ratings: {
       type: "array",
       maxItems: 10,
@@ -84,7 +86,7 @@ const deleteRatingResponse = { type: "boolean" };
 const queryStringJsonDeleteRatingSchema = {
   type: "object",
   properties: {
-    _id: { type: "string", maxLength: 24, minLength: 24 },
+    _id: idSchema,
   },
   required: ["_id"],
 };
@@ -100,14 +102,14 @@ export const deleteRatingSchema = {
 const queryStringJsonUpdateRatingSchema = {
   type: "object",
   properties: {
-    _id: { type: "string", maxLength: 24, minLength: 24 },
+    _id: idSchema,
   },
   required: ["_id"],
 };
 const updateRatingResponse = {
   type: "object",
   properties: {
-    _id: { type: "string", maxLength: 24, minLength: 24 },
+    _id: idSchema,
     ratings: {
       type: "array",
       maxItems: 10,
@@ -162,7 +164,7 @@ const loadRatingByPageResponse = {
       items: {
         type: "object",
         properties: {
-          _id: { type: "string", maxLength: 24, minLength: 24 },
+          _id: idSchema,
           ratings: {
             type: "array",
             maxItems: 10,

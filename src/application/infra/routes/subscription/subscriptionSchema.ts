@@ -1,3 +1,5 @@
+import { idSchema } from "@/application/types/id";
+
 const pagarmeSubscription = {
   type: "object",
   properties: {
@@ -84,7 +86,7 @@ const headersJsonSchema = {
 const addSubscriptionResponse = {
   type: "object",
   properties: {
-    _id: { type: "string", maxLength: 24, minLength: 24 },
+    _id: idSchema,
     name: { type: "string" },
     comment: { type: "string" },
     globalID: { type: "string" },
@@ -116,7 +118,7 @@ const queryStringJsonLoadSubscriptionSchema = {
 const loadSubscriptionResponse = {
   type: "object",
   properties: {
-    _id: { type: "string", maxLength: 24, minLength: 24 },
+    _id: idSchema,
     name: { type: "string" },
     comment: { type: "string" },
     globalID: { type: "string" },
@@ -167,7 +169,7 @@ const queryStringJsonUpdateSubscriptionSchema = {
 const updateSubscriptionResponse = {
   type: "object",
   properties: {
-    _id: { type: "string", maxLength: 24, minLength: 24 },
+    _id: idSchema,
     name: { type: "string" },
     comment: { type: "string" },
     globalID: { type: "string" },
@@ -218,7 +220,7 @@ const loadSubscriptionByPageResponse = {
       items: {
         type: "object",
         properties: {
-          _id: { type: "string", maxLength: 24, minLength: 24 },
+          _id: idSchema,
           name: { type: "string" },
           comment: { type: "string" },
           globalID: { type: "string" },
