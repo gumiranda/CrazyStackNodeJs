@@ -3,7 +3,7 @@ import { loadAvailableTimes, LoadAvailableTimes } from "@/slices/appointment/use
 import { OwnerRepository } from "@/slices/owner/repositories";
 import { ServiceRepository } from "@/slices/service/repositories";
 import { UserRepository } from "@/slices/user/repositories";
-import { AppointmentAggregateRepository } from "../../repositories/aggregates/appointmentAggregateRepository";
+import { AppointmentAggregateRepository } from "../../repositories/aggregates/mongodb/appointmentAggregateRepository";
 export const makeLoadAvailableTimesFactory = (): LoadAvailableTimes => {
   return loadAvailableTimes(
     new AppointmentAggregateRepository(new MongoRepository("appointment")),
