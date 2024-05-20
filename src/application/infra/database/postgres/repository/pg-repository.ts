@@ -13,7 +13,9 @@ export class PostgresRepository extends Repository {
   async insertOne(data: any) {
     const client = await connect();
     try {
-      const columns = Object.keys(data).map(key => `"${key}"`).join(", ");
+      const columns = Object.keys(data)
+        .map((key) => `"${key}"`)
+        .join(", ");
       const values = Object.values(data);
       const placeholders = values.map((_, index) => `$${index + 1}`).join(", ");
 
@@ -97,7 +99,7 @@ export class PostgresRepository extends Repository {
       if (Object.keys(projection).length > 0) {
         columns = Object.keys(projection)
           .filter((key) => projection[key])
-          .map(key => `"${key}"`)
+          .map((key) => `"${key}"`)
           .join(", ");
       }
 
@@ -128,8 +130,8 @@ export class PostgresRepository extends Repository {
       const offset = page * limit;
 
       // Construct query
-      const queryText = `SELECT ${columns} FROM "${this.tableName}" ${whereClause} ORDER BY ${orderBy} LIMIT $1 OFFSET $2`;
-      const queryValues = [limit, offset].concat(filterValues);
+      const queryText = `SELECT ${columns} FROM "${this.tableName}" ${whereClause} ORDER BY ${orderBy} LIMIT $${filterValues.length + 1} OFFSET $${filterValues.length + 2}`;
+      const queryValues = filterValues.concat([limit, offset]);
       const result = await client.query(queryText, queryValues);
       return result.rows;
     } finally {
@@ -186,7 +188,9 @@ export class PostgresRepository extends Repository {
       } else {
         // Insert case: insert new row with a new array
         data[keyToPush] = valuesToPush;
-        const insertColumns = Object.keys(data).map(key => `"${key}"`).join(", ");
+        const insertColumns = Object.keys(data)
+          .map((key) => `"${key}"`)
+          .join(", ");
         const insertValues = Object.values(data);
         const insertPlaceholders = insertValues.map((_, idx) => `$${idx + 1}`).join(", ");
 
