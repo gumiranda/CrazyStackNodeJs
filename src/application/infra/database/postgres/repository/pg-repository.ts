@@ -13,11 +13,11 @@ export class PostgresRepository extends Repository {
   async insertOne(data: any) {
     const client = await connect();
     try {
-      const columns = Object.keys(data).join(", ");
+      const columns = Object.keys(data).map(key => `"${key}"`).join(", ");
       const values = Object.values(data);
       const placeholders = values.map((_, index) => `$${index + 1}`).join(", ");
 
-      const query = `INSERT INTO ${this.tableName} (${columns}) VALUES (${placeholders}) RETURNING *`;
+      const query = `INSERT INTO "${this.tableName}" (${columns}) VALUES (${placeholders}) RETURNING *`;
       const result = await client.query(query, values);
       return result.rows[0];
     } finally {
@@ -34,9 +34,9 @@ export class PostgresRepository extends Repository {
     const client = await connect();
     try {
       const updates = Object.keys(data)
-        .map((key, index) => `${key} = $${index + 2}`)
+        .map((key, index) => `"${key}" = $${index + 2}`)
         .join(", ");
-      const query = `UPDATE ${this.tableName} SET ${updates} WHERE id = $1 RETURNING *`;
+      const query = `UPDATE "${this.tableName}" SET ${updates} WHERE "_id" = $1 RETURNING *`;
       const values = [id, ...Object.values(data)];
       const result = await client.query(query, values);
       return result.rowCount ? result.rows[0] : null;
@@ -48,7 +48,7 @@ export class PostgresRepository extends Repository {
   async deleteOne(id: any) {
     const client = await connect();
     try {
-      const query = `DELETE FROM ${this.tableName} WHERE id = $1`;
+      const query = `DELETE FROM "${this.tableName}" WHERE "_id" = $1`;
       const result = await client.query(query, [id]);
       return result.rowCount === 1;
     } finally {
@@ -61,7 +61,7 @@ export class PostgresRepository extends Repository {
     try {
       const { whereClause, values } = this.buildWhereClause(query);
 
-      const queryText = `SELECT * FROM ${this.tableName} WHERE ${whereClause} LIMIT 1`;
+      const queryText = `SELECT * FROM "${this.tableName}" WHERE ${whereClause} LIMIT 1`;
       const result = await client.query(queryText, values);
 
       return result.rows.length ? result.rows[0] : null;
@@ -74,20 +74,21 @@ export class PostgresRepository extends Repository {
   buildWhereClause(query: any) {
     const keys = Object.keys(query);
     const values = keys.map((key) => query[key]);
-    const whereClause = keys.map((key, index) => `${key} = $${index + 1}`).join(" AND ");
+    const whereClause = keys.map((key, index) => `"${key}" = $${index + 1}`).join(" AND ");
     return { whereClause, values };
   }
 
   async getAll() {
     const client = await connect();
     try {
-      const query = `SELECT * FROM ${this.tableName}`;
+      const query = `SELECT * FROM "${this.tableName}"`;
       const result = await client.query(query);
       return result.rows;
     } finally {
       client.release();
     }
   }
+
   async getPaginate(page = 0, fields: any, sort: any, limit = 10, projection: any) {
     const client = await connect();
     try {
@@ -96,6 +97,7 @@ export class PostgresRepository extends Repository {
       if (Object.keys(projection).length > 0) {
         columns = Object.keys(projection)
           .filter((key) => projection[key])
+          .map(key => `"${key}"`)
           .join(", ");
       }
 
@@ -134,6 +136,7 @@ export class PostgresRepository extends Repository {
       client.release();
     }
   }
+
   async aggregate(query: any) {
     const client = await connect();
     try {
@@ -183,11 +186,11 @@ export class PostgresRepository extends Repository {
       } else {
         // Insert case: insert new row with a new array
         data[keyToPush] = valuesToPush;
-        const insertColumns = Object.keys(data).join('", "');
+        const insertColumns = Object.keys(data).map(key => `"${key}"`).join(", ");
         const insertValues = Object.values(data);
         const insertPlaceholders = insertValues.map((_, idx) => `$${idx + 1}`).join(", ");
 
-        const insertQuery = `INSERT INTO "${this.tableName}" ("${insertColumns}") VALUES (${insertPlaceholders})`;
+        const insertQuery = `INSERT INTO "${this.tableName}" (${insertColumns}) VALUES (${insertPlaceholders})`;
         await client.query(insertQuery, insertValues);
       }
 
@@ -236,6 +239,7 @@ export class PostgresRepository extends Repository {
       const values = [...Object.values(data), ...Object.values(query)];
 
       const queryText = `UPDATE "${this.tableName}" SET ${setClause} WHERE ${whereClause}`;
+
       const result = await client.query(queryText, values);
       return result.rowCount;
     } finally {
