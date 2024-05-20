@@ -4,6 +4,6 @@ import { UserRepository } from "@/slices/user/repositories";
 import { updateUser, UpdateUser } from "@/slices/user/useCases";
 
 export const makeUpdateUserFactory = (): UpdateUser => {
-  const repository = new UserRepository(new PostgresRepository("user"));
+  const repository = new UserRepository(new PostgresRepository("users"));
   return updateUser(repository);
 };

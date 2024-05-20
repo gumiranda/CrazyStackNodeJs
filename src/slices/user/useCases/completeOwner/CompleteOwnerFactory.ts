@@ -10,7 +10,7 @@ import { makeAddSubscriptionFactory } from "@/slices/payment/subscription/useCas
 import { PostgresRepository } from "@/application/infra/database/postgres/repository/pg-repository";
 
 export const makeCompleteOwnerFactory = (): CompleteOwner => {
-  const repository = new UserRepository(new PostgresRepository("user"));
+  const repository = new UserRepository(new PostgresRepository("users"));
   return completeOwner(
     repository,
     makeAddCategoryFactory(),

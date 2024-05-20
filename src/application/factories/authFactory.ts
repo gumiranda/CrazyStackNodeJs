@@ -7,7 +7,7 @@ export const makeDbAuthentication = (): Authentication => {
   const bcryptAdapter = new BcryptAdapter(salt);
   const jwtAdapter = new JwtAdapter(env.jwtSecret, "60d");
   const jwtRefreshTokenAdapter = new JwtAdapter(env.jwtRefreshSecret, "90d");
-  const userMongoRepository = new PostgresRepository("user");
+  const userMongoRepository = new PostgresRepository("users");
   const userRepository = new UserRepository(userMongoRepository);
   return new DbAuthentication(
     userRepository,

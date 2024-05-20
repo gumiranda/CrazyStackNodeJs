@@ -6,6 +6,6 @@ import { addUser, AddUser } from "@/slices/user/useCases";
 export const makeAddUserFactory = (): AddUser => {
   const salt = 12;
   const bcryptAdapter = new BcryptAdapter(salt);
-  const repository = new UserRepository(new PostgresRepository("user"));
+  const repository = new UserRepository(new PostgresRepository("users"));
   return addUser(repository, bcryptAdapter);
 };

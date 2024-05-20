@@ -9,7 +9,7 @@ export const makeLoadAvailableTimesFactory = (): LoadAvailableTimes => {
   return loadAvailableTimes(
     new AppointmentAggregateRepository(new MongoRepository("appointment")),
     new ServiceRepository(new MongoRepository("service")),
-    new UserRepository(new PostgresRepository("user")),
+    new UserRepository(new PostgresRepository("users")),
     new OwnerRepository(new MongoRepository("owner"))
   );
 };

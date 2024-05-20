@@ -37,17 +37,11 @@ export class AuthMiddleware implements Middleware {
             return unauthorized();
           }
           const { _id } = decoded;
-          const query = {
-            fields: {
-              _id: new ObjectId(_id),
-              role: { $in: this.roles },
-            },
-            options: { projection: { password: 0 } },
-          };
-          const user = await this.loadUser(query);
 
-          if (user && user?.payDay) {
-            const daysToNextPayment = calculateDaysToNextPayment(user?.payDay);
+          const user: any = await this.loadUser(getQuery({ roles: this.roles, _id }));
+          const payday = user?.payDay || user?.payday;
+          if (user && payday) {
+            const daysToNextPayment = calculateDaysToNextPayment(payday);
             if (-30 < daysToNextPayment || user?.role !== "owner") {
               return ok({ userId: user?._id, userLogged: user, daysToNextPayment });
             }
@@ -60,3 +54,23 @@ export class AuthMiddleware implements Middleware {
     }
   }
 }
+const getQuery = ({ roles, _id }: any) => {
+  try {
+    const query = {
+      fields: {
+        _id: new ObjectId(_id),
+        role: { $in: roles },
+      },
+      options: { projection: { password: 0 } },
+    };
+    return query;
+  } catch (error) {
+    return {
+      fields: {
+        _id,
+        // role: { $in: roles },
+      },
+      options: { projection: { password: 0 } },
+    };
+  }
+};
