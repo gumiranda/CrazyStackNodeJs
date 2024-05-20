@@ -38,6 +38,8 @@ const addUserResponse = {
     active: { type: "boolean" },
     createdById: { type: "string" },
     createdAt: { type: "string" },
+    createdbyid: { type: "string" }, // added lowercase version
+    createdat: { type: "string" }, // added lowercase version
   },
 };
 export const addUserPostSchema = {
@@ -71,6 +73,12 @@ const loadUserResponse = {
     createdById: { type: "string" },
     payDay: { type: "string" },
     createdAt: { type: "string" },
+    serviceids: { type: "array", nullable: true, items: idSchema }, // added lowercase version
+    ownerid: idSchema, // added lowercase version
+    myownerid: idSchema, // added lowercase version
+    createdbyid: { type: "string" }, // added lowercase version
+    payday: { type: "string" }, // added lowercase version
+    createdat: { type: "string" }, // added lowercase version
   },
 };
 export const loadUserGetSchema = {
@@ -117,6 +125,8 @@ const updateUserResponse = {
       items: idSchema,
     },
     createdById: { type: "string" },
+    serviceids: { type: "array", nullable: true, items: idSchema }, // added lowercase version
+    createdbyid: { type: "string" }, // added lowercase version
   },
 };
 const updateUserBody = {
@@ -167,6 +177,9 @@ const loadUserByPageResponse = {
           active: { type: "boolean" },
           createdById: { type: "string" },
           createdAt: { type: "string" },
+          serviceids: { type: "array", nullable: true, items: idSchema }, // added lowercase version
+          createdbyid: { type: "string" }, // added lowercase version
+          createdat: { type: "string" }, // added lowercase version
         },
       },
     },
@@ -204,6 +217,8 @@ const loadUserGeoNearResponse = {
             items: idSchema,
           },
           createdAt: { type: "string" },
+          serviceids: { type: "array", nullable: true, items: idSchema }, // added lowercase version
+          createdat: { type: "string" }, // added lowercase version
         },
       },
     },
