@@ -9,7 +9,7 @@ import { AppointmentAggregateRepository } from "../../repositories/aggregates/mo
 export const makeLoadAvailableTimesFactory = (): LoadAvailableTimes => {
   return loadAvailableTimes(
     new AppointmentAggregateRepository(new MongoRepository("appointment")),
-    new ServiceRepository(new MongoRepository("service")),
+    new ServiceRepository(makeDatabaseInstance(whiteLabel.database, "service")),
     new UserRepository(makeDatabaseInstance(whiteLabel.database, "users")),
     new OwnerRepository(new MongoRepository("owner"))
   );

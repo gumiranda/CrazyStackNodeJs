@@ -17,7 +17,7 @@ export const makeUpdateRequestByIdFactory = (): IUpdateRequestById => {
     new RequestRepository(new MongoRepository("request")),
     new OrderRepository(new MongoRepository("order")),
     new AppointmentRepository(new MongoRepository("appointment")),
-    new ServiceRepository(new MongoRepository("service")),
+    new ServiceRepository(makeDatabaseInstance(whiteLabel.database, "service")),
     new UserRepository(makeDatabaseInstance(whiteLabel.database, "users")),
     new RideRepository(new MongoRepository("ride")),
     new RecurrenceRepository(new MongoRepository("recurrence")),
