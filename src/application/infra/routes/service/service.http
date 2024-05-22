@@ -2,7 +2,7 @@
 @apiurl = http://127.0.0.1:3333/api
 @token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI5YTBjYmRlMi00YmZiLTQxZGUtYjE1My1lNzA1ZmNiNjgyMGQiLCJpYXQiOjE3MTY0MDg1MjUsImV4cCI6MTcyMTU5MjUyNX0.O2cdRJdOr0XoqUb_5RI1Pb1WqQrSgTND67RfLcuOxJM
 @entity=service
-@entityId=90730466-26c6-4427-a65c-8409ee5bd067
+@entityId=7ef8fbd3-cf06-45e4-83c8-e849b61be908
 
 ### POST add category
 POST {{apiurl}}/category/add HTTP/1.1
