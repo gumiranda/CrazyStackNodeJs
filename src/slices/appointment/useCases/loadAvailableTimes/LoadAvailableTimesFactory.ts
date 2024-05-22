@@ -3,13 +3,14 @@ import { loadAvailableTimes, LoadAvailableTimes } from "@/slices/appointment/use
 import { OwnerRepository } from "@/slices/owner/repositories";
 import { ServiceRepository } from "@/slices/service/repositories";
 import { UserRepository } from "@/slices/user/repositories";
-import { PostgresRepository } from "@/application/infra/database/postgres/repository/pg-repository";
+import { whiteLabel } from "@/application/infra/config/whiteLabel";
+import { makeDatabaseInstance } from "@/application/infra/database/DatabaseFactory";
 import { AppointmentAggregateRepository } from "../../repositories/aggregates/mongodb/appointmentAggregateRepository";
 export const makeLoadAvailableTimesFactory = (): LoadAvailableTimes => {
   return loadAvailableTimes(
     new AppointmentAggregateRepository(new MongoRepository("appointment")),
     new ServiceRepository(new MongoRepository("service")),
-    new UserRepository(new PostgresRepository("users")),
+    new UserRepository(makeDatabaseInstance(whiteLabel.database, "users")),
     new OwnerRepository(new MongoRepository("owner"))
   );
 };

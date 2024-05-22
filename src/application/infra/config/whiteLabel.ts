@@ -1,4 +1,5 @@
 export const whiteLabel = {
+  database: "postgres",
   valueMonth: "2990",
   paymentDaysDue: 30,
   gatewayPix: "woovi",
