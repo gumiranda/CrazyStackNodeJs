@@ -2,7 +2,7 @@
 @apiurl = http://127.0.0.1:3333/api
 @token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI5YTBjYmRlMi00YmZiLTQxZGUtYjE1My1lNzA1ZmNiNjgyMGQiLCJpYXQiOjE3MTY0MDg1MjUsImV4cCI6MTcyMTU5MjUyNX0.O2cdRJdOr0XoqUb_5RI1Pb1WqQrSgTND67RfLcuOxJM
 @userid=9a0cbde2-4bfb-41de-b153-e705fcb6820d
-
+@userupdate=7215b7bf-1f31-4fdc-b8ed-24574dcce4dd
 ### POST signup
 POST {{apiurl}}/auth/signup HTTP/1.1
 Content-Type: application/json
@@ -44,6 +44,22 @@ Authorization: Bearer {{token}}
 	"password": "123456",
 	"passwordConfirmation": "123456"
 }
+
+### PATCH update user
+PATCH {{apiurl}}/user/update?_id={{userupdate}}	 HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "name": "teste 123",
+  "serviceIds":[],
+	"password": "12345672"
+}
+
+### DELETE delete user
+DELETE {{apiurl}}/user/delete?_id={{userupdate}}	 HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{token}}
 
 
 ### GET loadUserById

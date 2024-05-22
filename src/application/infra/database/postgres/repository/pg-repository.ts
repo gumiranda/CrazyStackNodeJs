@@ -47,15 +47,8 @@ export class PostgresRepository extends Repository {
     }
   }
 
-  async deleteOne(id: any) {
-    const client = await connect();
-    try {
-      const query = `DELETE FROM "${this.tableName}" WHERE "_id" = $1`;
-      const result = await client.query(query, [id]);
-      return result.rowCount === 1;
-    } finally {
-      client.release();
-    }
+  async deleteOne(fields: any) {
+    return this.deleteMany(fields);
   }
 
   async getOne(query: any) {
@@ -127,7 +120,7 @@ export class PostgresRepository extends Repository {
         .join(", ");
 
       // Calculate offset
-      const offset = page * limit;
+      const offset = (page - 1) * limit;
 
       // Construct query
       const queryText = `SELECT ${columns} FROM "${this.tableName}" ${whereClause} ORDER BY ${orderBy} LIMIT $${filterValues.length + 1} OFFSET $${filterValues.length + 2}`;
