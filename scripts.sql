@@ -138,7 +138,7 @@ CREATE TABLE owner (
 );
 
 CREATE TABLE client (
-    "_id" UUID PRIMARY KEY,
+    "_id" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     "createdById" UUID NOT NULL,
     "name" VARCHAR(255) NOT NULL,
     "active" BOOLEAN DEFAULT TRUE,

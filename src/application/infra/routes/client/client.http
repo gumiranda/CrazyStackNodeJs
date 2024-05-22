@@ -16,7 +16,7 @@ Authorization: Bearer {{token}}
 
 {
   "name": "teste a",
-  "myOwnerId":"52aa9bca-6c51-4080-aee4-0ef17e064fe0",
+  "myOwnerId":"63c35475-15c1-4db1-82df-1615ef6eaf50",
   "ownerId":"9a0cbde2-4bfb-41de-b153-e705fcb6820d",
   "userId":"9a0cbde2-4bfb-41de-b153-e705fcb6820d"
 }
