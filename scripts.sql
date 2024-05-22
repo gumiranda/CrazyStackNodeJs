@@ -153,7 +153,7 @@ CREATE TABLE client (
     "myOwnerId" UUID,
     FOREIGN KEY ("createdById") REFERENCES users("_id"),
     FOREIGN KEY ("userId") REFERENCES users("_id"),
-    FOREIGN KEY ("ownerId") REFERENCES owner("_id"),
+    FOREIGN KEY ("ownerId") REFERENCES users("_id"),
     FOREIGN KEY ("myOwnerId") REFERENCES owner("_id")
 );
 
