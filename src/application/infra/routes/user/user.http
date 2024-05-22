@@ -72,3 +72,8 @@ GET {{apiurl}}/user/loadByPage?page=1 HTTP/1.1
 Content-Type: application/json
 Authorization: Bearer {{token}}
 
+
+### GET loadByGeoNear
+GET {{apiurl}}/user/loadByGeoNear?page=1 HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{token}}
