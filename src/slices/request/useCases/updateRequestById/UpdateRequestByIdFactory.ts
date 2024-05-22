@@ -22,6 +22,6 @@ export const makeUpdateRequestByIdFactory = (): IUpdateRequestById => {
     new RideRepository(new MongoRepository("ride")),
     new RecurrenceRepository(new MongoRepository("recurrence")),
     new FidelityRepository(new MongoRepository("fidelity")),
-    new ClientRepository(new MongoRepository("client"))
+    new ClientRepository(makeDatabaseInstance(whiteLabel.database, "client"))
   );
 };
