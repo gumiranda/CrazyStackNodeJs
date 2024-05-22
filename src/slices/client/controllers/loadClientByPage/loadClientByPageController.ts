@@ -21,7 +21,12 @@ export class LoadClientByPageController extends Controller {
     if (errors?.length > 0) {
       return badRequest(errors);
     }
-    const { page, sortBy, typeSort = "asc", ...rest } = httpRequest?.query || {};
+    const {
+      page,
+      sortBy = "createdAt",
+      typeSort = "asc",
+      ...rest
+    } = httpRequest?.query || {};
     const fields =
       httpRequest?.userLogged?.role === "admin"
         ? rest

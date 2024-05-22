@@ -1,0 +1,67 @@
+### Variables
+@apiurl = http://127.0.0.1:3333/api
+@token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI5YTBjYmRlMi00YmZiLTQxZGUtYjE1My1lNzA1ZmNiNjgyMGQiLCJpYXQiOjE3MTY0MDg1MjUsImV4cCI6MTcyMTU5MjUyNX0.O2cdRJdOr0XoqUb_5RI1Pb1WqQrSgTND67RfLcuOxJM
+@userid=9a0cbde2-4bfb-41de-b153-e705fcb6820d
+@entity=category
+@entityId=7215b7bf-1f31-4fdc-b8ed-24574dcce4dd
+### POST signup
+POST {{apiurl}}/auth/signup HTTP/1.1
+Content-Type: application/json
+
+{
+	"email": "testede4@gmail.com",
+	"password": "123456",
+	"passwordConfirmation": "123456",
+	"name": "teste 5",
+	"phone": "34998350144",
+	"role": "owner",
+  "cpf":"403.815.550-69",
+	"coord": {
+		"lat": 0,
+		"lng": 0
+	}
+}
+
+### POST login
+POST {{apiurl}}/auth/login HTTP/1.1
+Content-Type: application/json
+
+{
+	"email": "testede4@gmail.com",
+	"password": "123456",
+	"passwordConfirmation": "123456"
+}
+
+### POST add entity
+POST {{apiurl}}/{{entity}}/add HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "name": "teste 5"
+}
+
+### PATCH update entity
+PATCH {{apiurl}}/{{entity}}/update?_id={{entityId}}	 HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "name": "teste 123"
+}
+
+### DELETE delete entity
+DELETE {{apiurl}}/{{entity}}/delete?_id={{entityId}}	 HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+
+### GET loadEntityById entity
+GET {{apiurl}}/{{entity}}/load?_id={{userid}} HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+### GET loadEntityByPage entity
+GET {{apiurl}}/{{entity}}/loadByPage?page=1 HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{token}}

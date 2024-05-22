@@ -1,0 +1,30 @@
+### Variables
+@apiurl = http://127.0.0.1:3333/api
+
+### POST signup
+POST {{apiurl}}/auth/signup HTTP/1.1
+Content-Type: application/json
+
+{
+	"email": "testede4@gmail.com",
+	"password": "123456",
+	"passwordConfirmation": "123456",
+	"name": "teste 5",
+	"phone": "34998350144",
+	"role": "owner",
+  "cpf":"403.815.550-69",
+	"coord": {
+		"lat": 0,
+		"lng": 0
+	}
+}
+
+### POST login
+POST {{apiurl}}/auth/login HTTP/1.1
+Content-Type: application/json
+
+{
+	"email": "testede4@gmail.com",
+	"password": "123456",
+	"passwordConfirmation": "123456"
+}
