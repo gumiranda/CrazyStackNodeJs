@@ -43,6 +43,19 @@ CREATE TABLE users (
     "globalID" UUID
 );
 
+
+CREATE TABLE account (
+    "_id" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    "createdById" UUID NOT NULL,
+    "name" VARCHAR(255) NOT NULL,
+    "active" BOOLEAN DEFAULT TRUE,
+    "createdAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    "refreshToken" VARCHAR(255) NOT NULL,
+    "expiresAt" TIMESTAMP,
+    CONSTRAINT "fk_createdById" FOREIGN KEY ("createdById") REFERENCES users("_id")
+);
+
 CREATE TABLE category (
     "_id" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     "createdById" UUID NOT NULL,
@@ -222,17 +235,6 @@ CREATE TABLE appointment (
     CONSTRAINT "fk_cancelledBy" FOREIGN KEY ("cancelledBy") REFERENCES users("_id")
 );
 
-CREATE TABLE account (
-    "_id" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    "createdById" UUID NOT NULL,
-    "name" VARCHAR(255) NOT NULL,
-    "active" BOOLEAN DEFAULT TRUE,
-    "createdAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    "refreshToken" VARCHAR(255) NOT NULL,
-    "expiresAt" TIMESTAMP,
-    CONSTRAINT "fk_createdById" FOREIGN KEY ("createdById") REFERENCES users("_id")
-);
 
 CREATE TABLE rating (
     "_id" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
