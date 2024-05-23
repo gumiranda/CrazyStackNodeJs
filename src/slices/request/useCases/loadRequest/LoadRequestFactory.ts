@@ -5,7 +5,7 @@ import { loadRequest, LoadRequest } from "@/slices/request/useCases";
 
 export const makeLoadRequestFactory = (): LoadRequest => {
   const repository = new RequestRepository(
-    makeDatabaseInstance(whiteLabel.database, "owner")
+    makeDatabaseInstance(whiteLabel.database, "request")
   );
   return loadRequest(repository);
 };

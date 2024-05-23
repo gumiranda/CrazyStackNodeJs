@@ -5,7 +5,7 @@ import { deleteRequest, DeleteRequest } from "@/slices/request/useCases";
 
 export const makeDeleteRequestFactory = (): DeleteRequest => {
   const repository = new RequestRepository(
-    makeDatabaseInstance(whiteLabel.database, "owner")
+    makeDatabaseInstance(whiteLabel.database, "request")
   );
   return deleteRequest(repository);
 };

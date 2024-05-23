@@ -5,7 +5,7 @@ import { addRequest, AddRequest } from "@/slices/request/useCases";
 
 export const makeAddRequestFactory = (): AddRequest => {
   const repository = new RequestRepository(
-    makeDatabaseInstance(whiteLabel.database, "owner")
+    makeDatabaseInstance(whiteLabel.database, "request")
   );
   return addRequest(repository);
 };

@@ -5,7 +5,7 @@ import { updateRequest, UpdateRequest } from "@/slices/request/useCases";
 
 export const makeUpdateRequestFactory = (): UpdateRequest => {
   const repository = new RequestRepository(
-    makeDatabaseInstance(whiteLabel.database, "owner")
+    makeDatabaseInstance(whiteLabel.database, "request")
   );
   return updateRequest(repository);
 };

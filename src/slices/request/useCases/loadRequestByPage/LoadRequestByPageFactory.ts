@@ -5,7 +5,7 @@ import { loadRequestByPage, LoadRequestByPage } from "@/slices/request/useCases"
 
 export const makeLoadRequestByPageFactory = (): LoadRequestByPage => {
   const repository = new RequestRepository(
-    makeDatabaseInstance(whiteLabel.database, "owner")
+    makeDatabaseInstance(whiteLabel.database, "request")
   );
   return loadRequestByPage(repository);
 };
