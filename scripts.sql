@@ -171,7 +171,7 @@ CREATE TABLE request (
     "clientUserId" UUID,
     "professionalId" UUID NOT NULL,
     "status" INT NOT NULL,
-    "createdForId" UUID NOT NULL,
+    "createdForId" UUID,
     "updatedById" UUID,
     "updatedByRole" VARCHAR(255),
     "read" BOOLEAN NOT NULL,
