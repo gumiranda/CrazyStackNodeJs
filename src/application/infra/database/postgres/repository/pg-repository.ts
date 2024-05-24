@@ -135,7 +135,8 @@ export class PostgresRepository extends Repository {
   async aggregate(query: any) {
     const client = await connect();
     try {
-      const result = await client.query(query.text, query.values);
+      const queryText = `SELECT * FROM "${this.tableName}" ${query.text} ORDER BY createdAt DESC`;
+      const result = await client.query(queryText, query.values);
       return result.rows;
     } finally {
       client.release();

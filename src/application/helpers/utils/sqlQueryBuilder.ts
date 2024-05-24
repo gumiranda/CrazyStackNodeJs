@@ -1,6 +1,10 @@
 export class SQLQueryBuilder {
   steps: any = [];
   values: any = [];
+  tableName: string;
+  constructor(tableName: string) {
+    this.tableName = tableName;
+  }
 
   match(condition: any) {
     this.steps.push(`WHERE ${condition}`);
@@ -9,19 +13,19 @@ export class SQLQueryBuilder {
 
   sort(sortObj: any) {
     const orderBy = Object.keys(sortObj)
-      .map((key) => `${key} ${sortObj[key] === -1 ? "DESC" : "ASC"}`)
+      .map((key) => `'${key}' ${sortObj[key] === -1 ? "DESC" : "ASC"}`)
       .join(", ");
     this.steps.push(`ORDER BY ${orderBy}`);
     return this;
   }
 
-  join({ table, on, alias }: any) {
-    this.steps.push(`JOIN ${table} AS ${alias} ON ${on}`);
+  join({ table, on }: any) {
+    this.steps.push(`JOIN ${table} ON ${on}`);
     return this;
   }
 
   project(fields: any) {
-    this.steps.push(`SELECT ${fields}`);
+    this.steps.push(`SELECT ${fields} FROM "${this.tableName}"`);
     return this;
   }
 

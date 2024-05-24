@@ -1,17 +1,80 @@
 ### Variables
 @apiurl = http://127.0.0.1:3333/api
 @token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI5YTBjYmRlMi00YmZiLTQxZGUtYjE1My1lNzA1ZmNiNjgyMGQiLCJpYXQiOjE3MTY0MDg1MjUsImV4cCI6MTcyMTU5MjUyNX0.O2cdRJdOr0XoqUb_5RI1Pb1WqQrSgTND67RfLcuOxJM
-@entity=request
+@entity=appointment
 @entityId=06897db1-efd6-49ef-98eb-9ad970c7ebf4
 @clientId=52aa9bca-6c51-4080-aee4-0ef17e064fe0
+@requestId=06897db1-efd6-49ef-98eb-9ad970c7ebf4
 @clientUserId=9a0cbde2-4bfb-41de-b153-e705fcb6820d
 
 @categoryId=16c9be5d-15c4-4737-a8a4-20e25987e3a0
 
 @serviceId=153cbc8f-2a80-464d-8c07-6c2a3fceb545
 
+@professionalId=f10f3f9a-493a-4cc2-93bb-851eb4fa5e54
 
-### POST add entity ownerid table user
+@myOwnerId=63c35475-15c1-4db1-82df-1615ef6eaf50
+
+
+### GET loadAvailableTimes
+GET {{apiurl}}/{{entity}}/loadAvailableTimes?serviceId={{serviceId}}&professionalId={{professionalId}}&date=2043-02-23T03:00:00.000Z&ownerId={{myOwnerId}} HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+### POST add request
+POST {{apiurl}}/request/add HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "message": "teste a",
+  "clientId":"c3c87bb0-4cab-439b-8ceb-3d52456ee12c",
+  "serviceId":"153cbc8f-2a80-464d-8c07-6c2a3fceb545",
+  "professionalId":"f10f3f9a-493a-4cc2-93bb-851eb4fa5e54",
+  "endDate": "2043-02-23T17:15:00.000Z",
+  "initDate": "2043-02-23T17:00:00.000Z",
+  "haveDelivery": false,
+  "status": 0,
+  "duration":15,
+  "haveRecurrence": false,
+  "haveFidelity": false,
+  "haveRide": false,
+  "serviceName": "string",
+  "professionalName": "string",
+  "clientName": "string",
+  "ownerName": "string",
+  "ownerId":"9a0cbde2-4bfb-41de-b153-e705fcb6820d",
+  "createdForId":"9a0cbde2-4bfb-41de-b153-e705fcb6820d",
+  "clientUserId":"9a0cbde2-4bfb-41de-b153-e705fcb6820d"
+}
+
+### PATCH update request
+PATCH {{apiurl}}/request/update?_id={{entityId}}	 HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "message": "teste a",
+  "clientId":"c3c87bb0-4cab-439b-8ceb-3d52456ee12c",
+  "serviceId":"153cbc8f-2a80-464d-8c07-6c2a3fceb545",
+  "professionalId":"f10f3f9a-493a-4cc2-93bb-851eb4fa5e54",
+  "endDate": "2043-02-23T17:30:00.000Z",
+  "initDate": "2043-02-23T17:15:00.000Z",
+  "haveDelivery": false,
+  "status": 1,
+  "duration":15,
+  "haveRecurrence": false,
+  "haveFidelity": false,
+  "haveRide": false,
+  "serviceName": "string",
+  "professionalName": "string",
+  "clientName": "string",
+  "ownerName": "string",
+  "ownerId":"9a0cbde2-4bfb-41de-b153-e705fcb6820d",
+  "createdForId":"9a0cbde2-4bfb-41de-b153-e705fcb6820d",
+  "clientUserId":"9a0cbde2-4bfb-41de-b153-e705fcb6820d"
+}
+### POST add appointment
 POST {{apiurl}}/{{entity}}/add HTTP/1.1
 Content-Type: application/json
 Authorization: Bearer {{token}}
@@ -34,6 +97,7 @@ Authorization: Bearer {{token}}
   "clientName": "string",
   "ownerName": "string",
   "ownerId":"9a0cbde2-4bfb-41de-b153-e705fcb6820d",
+  "requestId":"06897db1-efd6-49ef-98eb-9ad970c7ebf4",
   "createdForId":"9a0cbde2-4bfb-41de-b153-e705fcb6820d",
   "clientUserId":"9a0cbde2-4bfb-41de-b153-e705fcb6820d"
 }
@@ -75,6 +139,8 @@ Authorization: Bearer {{token}}
 GET {{apiurl}}/{{entity}}/load?_id={{entityId}} HTTP/1.1
 Content-Type: application/json
 Authorization: Bearer {{token}}
+
+
 
 ### GET loadEntityByPage entity
 GET {{apiurl}}/{{entity}}/loadByPage?page=1 HTTP/1.1

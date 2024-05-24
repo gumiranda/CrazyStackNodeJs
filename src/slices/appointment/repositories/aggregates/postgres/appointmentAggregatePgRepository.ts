@@ -1,3 +1,4 @@
+/* eslint-disable quotes */
 import { Query } from "@/application/types";
 import { LoadAvailableTimesRepository, LoadInvoiceRepository } from "../../contracts";
 import {
@@ -41,22 +42,25 @@ export class AppointmentAggregatePgRepository
       return null;
     }
 
-    const builder = new SQLQueryBuilder();
+    const builder = new SQLQueryBuilder("appointment");
     const queryBuilded = builder
-      .match(
-        "professionalId = $1 AND initDate <= $2 AND initDate >= $3 AND endDate <= $4 AND endDate >= $5 AND cancelled = false AND active = true"
+      .project(
+        "'initDate' as dateinit, 'endDate', 'professionalId', 'cancelled', 'active', 'serviceId', 'createdAt', 'updatedAt'"
       )
+      .match(
+        "'professionalId' = $1 AND 'initDate' <= $2 AND 'initDate' >= $3 AND 'endDate' <= $4 AND 'endDate' >= $5 AND cancelled = false AND active = true"
+      )
+      .join({
+        table: "users",
+        on: '"appointment"."professionalId" = "users"._id',
+      })
       .addValue(query.professionalId)
       .addValue(query.endDay)
       .addValue(query.initDay)
       .addValue(query.endDay)
       .addValue(query.initDay)
-      .sort({ initDate: 1 })
-      .join({
-        table: "user",
-        alias: "professionalDetails",
-        on: "professionalId = user._id",
-      })
+      .sort({ dateinit: 1 })
+
       .project("initDate, endDate, professionalDetails.ownerId")
       .join({
         table: "owner",
