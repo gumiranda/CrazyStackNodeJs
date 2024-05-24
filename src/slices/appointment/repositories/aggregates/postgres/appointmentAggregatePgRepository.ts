@@ -7,6 +7,7 @@ import {
 } from "@/slices/appointment/entities";
 import { SQLQueryBuilder } from "@/application/helpers/utils/sqlQueryBuilder";
 import { PostgresRepository } from "@/application/infra/database/postgres/repository/pg-repository";
+import { subHours } from "@/application/helpers";
 
 export class AppointmentAggregatePgRepository
   implements LoadAvailableTimesRepository, LoadInvoiceRepository
@@ -63,12 +64,22 @@ export class AppointmentAggregatePgRepository
       .addValue(query.initDay)
       .sort({ initDate: 1 })
       .build();
-    const appointments: any = await this.repository.aggregate(queryBuilded);
-
-    if (appointments?.[0]?._id) {
-      return { _id: appointments[0], data: appointments };
+    const result = await this.repository.aggregate(queryBuilded);
+    if (result?.[0]?._id) {
+      const appointments = result?.map?.((item: any) => ({
+        ...item,
+        initDate: handleTimezone(item.initDate),
+        endDate: handleTimezone(item.endDate),
+      }));
+      return { _id: appointments?.[0], data: appointments };
     }
 
     return null;
   }
 }
+const handleTimezone = (date: any) => {
+  if (process.env.NODE_ENV !== "production") {
+    return subHours(date, 3).toISOString();
+  }
+  return date.toISOString();
+};
