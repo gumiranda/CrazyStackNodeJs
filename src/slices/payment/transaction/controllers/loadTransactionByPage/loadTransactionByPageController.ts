@@ -22,7 +22,7 @@ export class LoadTransactionByPageController extends Controller {
       return badRequest(errors);
     }
 
-    const { page, sortBy, typeSort = "asc" } = httpRequest?.query || {};
+    const { page, sortBy = "createdAt", typeSort = "asc" } = httpRequest?.query || {};
     const sort = { [sortBy]: typeSort === "asc" ? 1 : -1 };
     const options = { sort, page };
     const transactionLoaded = await this.loadTransactionByPage({

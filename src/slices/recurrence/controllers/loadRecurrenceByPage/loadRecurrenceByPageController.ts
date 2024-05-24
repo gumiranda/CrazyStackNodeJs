@@ -21,7 +21,12 @@ export class LoadRecurrenceByPageController extends Controller {
     if (errors?.length > 0) {
       return badRequest(errors);
     }
-    const { page, sortBy, typeSort = "asc", ...rest } = httpRequest?.query || {};
+    const {
+      page,
+      sortBy = "createdAt",
+      typeSort = "asc",
+      ...rest
+    } = httpRequest?.query || {};
     const fields = rest;
     const sort = { [sortBy]: typeSort === "asc" ? 1 : -1 };
     const options = { sort, page };
