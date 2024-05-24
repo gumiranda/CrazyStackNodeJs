@@ -78,7 +78,7 @@ export class AppointmentAggregatePgRepository
   }
 }
 const handleTimezone = (date: any) => {
-  if (process.env.NODE_ENV !== "production") {
+  if (process.env.FUSORARIOBR === "production") {
     return subHours(date, 3).toISOString();
   }
   return date.toISOString();
