@@ -2,11 +2,21 @@
 @apiurl = http://127.0.0.1:3333/api
 @token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI3MmI1OWNiYS1mOTk3LTRkMGItODcxYy0zNmZhZGZkNzkwZTIiLCJpYXQiOjE3MTY1NzM2NjQsImV4cCI6MTcyMTc1NzY2NH0.pBAY6QhssN_KUd0qFFKh8h-GbHpS0ZJZ2vUCUokJt60
 @entity=request
-@entityId=06897db1-efd6-49ef-98eb-9ad970c7ebf4
+@entityId=
 @clientId=13334f2d-e4b1-4dab-ba82-f03d72b58600
 @clientUserId=72b59cba-f997-4d0b-871c-36fadfd790e2
 
 @serviceId=4cbf792d-b92a-464c-8271-1cc5320b1235
+
+@professionalId=f0bcc675-728e-4705-8ad2-50828dd0dc7f
+
+@myOwnerId=72b59cba-f997-4d0b-871c-36fadfd790e2
+
+@ownerId=9b444370-6851-47bc-8235-952f8dfc19bc
+### GET loadAvailableTimes
+GET {{apiurl}}/appointment/loadAvailableTimes?serviceId={{serviceId}}&professionalId={{professionalId}}&date=2043-02-23T03:00:00.000Z&ownerId={{myOwnerId}} HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{token}}
 
 
 ### POST add entity ownerid table user
@@ -15,12 +25,12 @@ Content-Type: application/json
 Authorization: Bearer {{token}}
 
 {
-  "message": "teste a",
+  "message": "teste",
   "clientId":"",
   "serviceId":"",
   "professionalId":"",
-  "endDate": "2043-02-23T17:15:00.000Z",
-  "initDate": "2043-02-23T17:00:00.000Z",
+  "endDate": "2043-02-23T14:15:00.000Z",
+  "initDate": "2043-02-23T14:00:00.000Z",
   "haveDelivery": false,
   "status": 0,
   "duration":15,
