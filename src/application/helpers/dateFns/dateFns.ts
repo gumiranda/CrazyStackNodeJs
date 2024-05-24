@@ -25,6 +25,7 @@ import {
   isBefore as isBeforeDateFns,
   differenceInDays as differenceInDaysDateFns,
   subDays as subDaysDateFns,
+  subHours as subHoursDateFns,
 } from "date-fns";
 
 type Options = {
@@ -207,4 +208,7 @@ export const isBefore = (date: number | Date, date2: number | Date): boolean => 
 export const trataTimezone = (date: number | Date): Date => {
   const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
   return utcToZonedTimeDateFns(date, timezone);
+};
+export const subHours = (date: number | Date, hours: number): Date => {
+  return subHoursDateFns(date, hours);
 };
