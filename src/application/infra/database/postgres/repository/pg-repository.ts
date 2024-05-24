@@ -212,9 +212,9 @@ export class PostgresRepository extends Repository {
         .join(" AND ");
       const values = [...Object.values(data), ...Object.values(query)];
 
-      const queryText = `UPDATE "${this.tableName}" SET ${setClause} WHERE ${whereClause}`;
+      const queryText = `UPDATE "${this.tableName}" SET ${setClause} WHERE ${whereClause} RETURNING *`;
       const result = await client.query(queryText, values);
-      return result.rowCount;
+      return result.rows[0]; // Retorna o registro atualizado
     } finally {
       client.release();
     }
