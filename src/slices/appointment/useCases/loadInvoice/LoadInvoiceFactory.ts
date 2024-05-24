@@ -1,10 +1,10 @@
-import { MongoRepository } from "@/application/infra";
 import { loadInvoice, LoadInvoice } from "@/slices/appointment/useCases";
-import { AppointmentAggregateRepository } from "../../repositories/aggregates/mongodb/appointmentAggregateRepository";
+import { AppointmentAggregatePgRepository } from "../../repositories/aggregates/postgres/appointmentAggregatePgRepository";
+import { PostgresRepository } from "@/application/infra/database/postgres/repository/pg-repository";
 
 export const makeLoadInvoiceFactory = (): LoadInvoice => {
-  const repository = new AppointmentAggregateRepository(
-    new MongoRepository("appointment")
+  const repository = new AppointmentAggregatePgRepository(
+    new PostgresRepository("appointment")
   );
   return loadInvoice(repository);
 };
