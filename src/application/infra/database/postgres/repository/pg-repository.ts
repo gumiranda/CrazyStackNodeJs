@@ -135,7 +135,7 @@ export class PostgresRepository extends Repository {
   async aggregate(query: any) {
     const client = await connect();
     try {
-      const result = await client.query(query.text, query.values);
+      const result = await client.query(query.text.replace(/\\/g, ""), query.values);
       return result.rows;
     } finally {
       client.release();

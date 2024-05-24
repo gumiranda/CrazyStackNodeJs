@@ -18,7 +18,7 @@ export class AppointmentAggregatePgRepository
     }
 
     // Construindo a consulta SQL
-    const sqlQueryBuilder = new SQLQueryBuilder();
+    const sqlQueryBuilder = new SQLQueryBuilder("appointment");
     const queryBuilded = sqlQueryBuilder
       .match("initDate >= $1 AND endDate <= $2 AND cancelled = false AND active = true")
       .addValue(query.fields.initDate)
@@ -56,7 +56,7 @@ export class AppointmentAggregatePgRepository
         on: '"users"."ownerId" = "owner"._id',
       })
       .match(
-        `'professionalId' = $1 AND 'initDate' <= $2 AND 'initDate' >= $3 AND 'endDate' <= $4 AND 'endDate' >= $5 AND "appointments".cancelled = false AND "appointments".active = true`
+        `"professionalId" = $1 AND "initDate" <= $2 AND "initDate" >= $3 AND "endDate" <= $4 AND "endDate" >= $5 AND "appointment".cancelled = false AND "appointment".active = true`
       )
       .addValue(query.professionalId)
       .addValue(query.endDay)
