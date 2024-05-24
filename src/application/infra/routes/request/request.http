@@ -12,6 +12,8 @@
 
 @myOwnerId=72b59cba-f997-4d0b-871c-36fadfd790e2
 
+@createdForId=72b59cba-f997-4d0b-871c-36fadfd790e2
+
 @ownerId=9b444370-6851-47bc-8235-952f8dfc19bc
 ### GET loadAvailableTimes
 GET {{apiurl}}/appointment/loadAvailableTimes?serviceId={{serviceId}}&professionalId={{professionalId}}&date=2043-02-23T03:00:00.000Z&ownerId={{myOwnerId}} HTTP/1.1
@@ -19,7 +21,7 @@ Content-Type: application/json
 Authorization: Bearer {{token}}
 
 
-### POST add entity ownerid table user
+### POST add entity
 POST {{apiurl}}/{{entity}}/add HTTP/1.1
 Content-Type: application/json
 Authorization: Bearer {{token}}
