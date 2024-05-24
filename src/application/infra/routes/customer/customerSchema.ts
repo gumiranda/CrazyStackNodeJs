@@ -1,3 +1,5 @@
+import { idSchema } from "@/application/types/id";
+
 const pagarmeCustomer = {
   type: "object",
   properties: {
@@ -53,7 +55,7 @@ const headersJsonSchema = {
 const addCustomerResponse = {
   type: "object",
   properties: {
-    _id: { type: "string", maxLength: 24, minLength: 24 },
+    _id: idSchema,
     name: { type: "string" },
     active: { type: "boolean" },
     createdById: { type: "string" },
@@ -85,7 +87,7 @@ const queryStringJsonLoadCustomerSchema = {
 const loadCustomerResponse = {
   type: "object",
   properties: {
-    _id: { type: "string", maxLength: 24, minLength: 24 },
+    _id: idSchema,
     name: { type: "string" },
     active: { type: "boolean" },
     createdById: { type: "string" },
@@ -132,7 +134,7 @@ const queryStringJsonUpdateCustomerSchema = {
 const updateCustomerResponse = {
   type: "object",
   properties: {
-    _id: { type: "string", maxLength: 24, minLength: 24 },
+    _id: idSchema,
     name: { type: "string" },
     createdById: { type: "string" },
     email: { type: "string" },
@@ -177,7 +179,7 @@ const loadCustomerByPageResponse = {
       items: {
         type: "object",
         properties: {
-          _id: { type: "string", maxLength: 24, minLength: 24 },
+          _id: idSchema,
           name: { type: "string" },
           active: { type: "boolean" },
           createdById: { type: "string" },

@@ -1,3 +1,5 @@
+import { idSchema } from "@/application/types/id";
+
 const bodyAddCategoryJsonSchema = {
   type: "object",
   required: ["name"],
@@ -16,7 +18,7 @@ const headersJsonSchema = {
 const addCategoryResponse = {
   type: "object",
   properties: {
-    _id: { type: "string", maxLength: 24, minLength: 24 },
+    _id: idSchema,
     name: { type: "string" },
     active: { type: "boolean" },
     createdById: { type: "string" },
@@ -34,14 +36,14 @@ export const addCategoryPostSchema = {
 const queryStringJsonLoadCategorySchema = {
   type: "object",
   properties: {
-    _id: { type: "string", maxLength: 24, minLength: 24 },
+    _id: idSchema,
   },
   required: ["_id"],
 };
 const loadCategoryResponse = {
   type: "object",
   properties: {
-    _id: { type: "string", maxLength: 24, minLength: 24 },
+    _id: idSchema,
     name: { type: "string" },
     active: { type: "boolean" },
     createdById: { type: "string" },
@@ -61,7 +63,7 @@ const deleteCategoryResponse = { type: "boolean" };
 const queryStringJsonDeleteCategorySchema = {
   type: "object",
   properties: {
-    _id: { type: "string", maxLength: 24, minLength: 24 },
+    _id: idSchema,
   },
   required: ["_id"],
 };
@@ -77,14 +79,14 @@ export const deleteCategorySchema = {
 const queryStringJsonUpdateCategorySchema = {
   type: "object",
   properties: {
-    _id: { type: "string", maxLength: 24, minLength: 24 },
+    _id: idSchema,
   },
   required: ["_id"],
 };
 const updateCategoryResponse = {
   type: "object",
   properties: {
-    _id: { type: "string", maxLength: 24, minLength: 24 },
+    _id: idSchema,
     name: { type: "string" },
     active: { type: "boolean" },
     createdById: { type: "string" },
@@ -125,7 +127,7 @@ const loadCategoryByPageResponse = {
       items: {
         type: "object",
         properties: {
-          _id: { type: "string", maxLength: 24, minLength: 24 },
+          _id: idSchema,
           name: { type: "string" },
           active: { type: "boolean" },
           createdById: { type: "string" },

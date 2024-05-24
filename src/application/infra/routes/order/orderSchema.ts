@@ -1,3 +1,5 @@
+import { idSchema } from "@/application/types/id";
+
 const bodyAddOrderJsonSchema = {
   type: "object",
   required: ["name"],
@@ -15,7 +17,7 @@ const headersJsonSchema = {
 const addOrderResponse = {
   type: "object",
   properties: {
-    _id: { type: "string", maxLength: 24, minLength: 24 },
+    _id: idSchema,
     name: { type: "string" },
     active: { type: "boolean" },
     createdById: { type: "string" },
@@ -33,14 +35,14 @@ export const addOrderPostSchema = {
 const queryStringJsonLoadOrderSchema = {
   type: "object",
   properties: {
-    _id: { type: "string", maxLength: 24, minLength: 24 },
+    _id: idSchema,
   },
   required: ["_id"],
 };
 const loadOrderResponse = {
   type: "object",
   properties: {
-    _id: { type: "string", maxLength: 24, minLength: 24 },
+    _id: idSchema,
     name: { type: "string" },
     active: { type: "boolean" },
     createdById: { type: "string" },
@@ -60,7 +62,7 @@ const deleteOrderResponse = { type: "boolean" };
 const queryStringJsonDeleteOrderSchema = {
   type: "object",
   properties: {
-    _id: { type: "string", maxLength: 24, minLength: 24 },
+    _id: idSchema,
   },
   required: ["_id"],
 };
@@ -76,14 +78,14 @@ export const deleteOrderSchema = {
 const queryStringJsonUpdateOrderSchema = {
   type: "object",
   properties: {
-    _id: { type: "string", maxLength: 24, minLength: 24 },
+    _id: idSchema,
   },
   required: ["_id"],
 };
 const updateOrderResponse = {
   type: "object",
   properties: {
-    _id: { type: "string", maxLength: 24, minLength: 24 },
+    _id: idSchema,
     name: { type: "string" },
     createdById: { type: "string" },
   },
@@ -122,7 +124,7 @@ const loadOrderByPageResponse = {
       items: {
         type: "object",
         properties: {
-          _id: { type: "string", maxLength: 24, minLength: 24 },
+          _id: idSchema,
           name: { type: "string" },
           active: { type: "boolean" },
           createdById: { type: "string" },

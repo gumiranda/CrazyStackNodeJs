@@ -1,3 +1,5 @@
+import { idSchema } from "@/application/types/id";
+
 const bodyAddServiceJsonSchema = {
   type: "object",
   required: ["name"],
@@ -9,7 +11,7 @@ const bodyAddServiceJsonSchema = {
     comission: { type: "number" },
     havePromotionalPrice: { type: "boolean" },
     hasFidelityGenerator: { type: "boolean" },
-    categoryId: { type: "string", maxLength: 24, minLength: 24 },
+    categoryId: idSchema,
     duration: { type: "integer", minimum: 15, maximum: 200 },
     productsQuantityNeeded: { type: "integer", minimum: 0, maximum: 200 },
     canPayWithFidelityPoints: { type: "boolean" },
@@ -26,7 +28,7 @@ const headersJsonSchema = {
 const addServiceResponse = {
   type: "object",
   properties: {
-    _id: { type: "string", maxLength: 24, minLength: 24 },
+    _id: idSchema,
     name: { type: "string" },
     description: { type: "string" },
     price: { type: "number" },
@@ -34,7 +36,7 @@ const addServiceResponse = {
     comission: { type: "number" },
     havePromotionalPrice: { type: "boolean" },
     hasFidelityGenerator: { type: "boolean" },
-    categoryId: { type: "string", maxLength: 24, minLength: 24 },
+    categoryId: idSchema,
     duration: { type: "integer", minimum: 15, maximum: 200 },
     productsQuantityNeeded: { type: "integer", minimum: 0, maximum: 200 },
     canPayWithFidelityPoints: { type: "boolean" },
@@ -55,14 +57,14 @@ export const addServicePostSchema = {
 const queryStringJsonLoadServiceSchema = {
   type: "object",
   properties: {
-    _id: { type: "string", maxLength: 24, minLength: 24 },
+    _id: idSchema,
   },
   required: ["_id"],
 };
 const loadServiceResponse = {
   type: "object",
   properties: {
-    _id: { type: "string", maxLength: 24, minLength: 24 },
+    _id: idSchema,
     name: { type: "string" },
     description: { type: "string" },
     price: { type: "number" },
@@ -70,7 +72,7 @@ const loadServiceResponse = {
     comission: { type: "number" },
     havePromotionalPrice: { type: "boolean" },
     hasFidelityGenerator: { type: "boolean" },
-    categoryId: { type: "string", maxLength: 24, minLength: 24 },
+    categoryId: idSchema,
     duration: { type: "integer", minimum: 15, maximum: 200 },
     productsQuantityNeeded: { type: "integer", minimum: 0, maximum: 200 },
     canPayWithFidelityPoints: { type: "boolean" },
@@ -93,7 +95,7 @@ const deleteServiceResponse = { type: "boolean" };
 const queryStringJsonDeleteServiceSchema = {
   type: "object",
   properties: {
-    _id: { type: "string", maxLength: 24, minLength: 24 },
+    _id: idSchema,
   },
   required: ["_id"],
 };
@@ -109,14 +111,14 @@ export const deleteServiceSchema = {
 const queryStringJsonUpdateServiceSchema = {
   type: "object",
   properties: {
-    _id: { type: "string", maxLength: 24, minLength: 24 },
+    _id: idSchema,
   },
   required: ["_id"],
 };
 const updateServiceResponse = {
   type: "object",
   properties: {
-    _id: { type: "string", maxLength: 24, minLength: 24 },
+    _id: idSchema,
     name: { type: "string" },
     description: { type: "string" },
     price: { type: "number" },
@@ -124,7 +126,7 @@ const updateServiceResponse = {
     comission: { type: "number" },
     havePromotionalPrice: { type: "boolean" },
     hasFidelityGenerator: { type: "boolean" },
-    categoryId: { type: "string", maxLength: 24, minLength: 24 },
+    categoryId: idSchema,
     duration: { type: "integer", minimum: 15, maximum: 200 },
     productsQuantityNeeded: { type: "integer", minimum: 0, maximum: 200 },
     canPayWithFidelityPoints: { type: "boolean" },
@@ -142,7 +144,7 @@ const updateServiceBody = {
     comission: { type: "number" },
     havePromotionalPrice: { type: "boolean" },
     hasFidelityGenerator: { type: "boolean" },
-    categoryId: { type: "string", maxLength: 24, minLength: 24 },
+    categoryId: idSchema,
     duration: { type: "integer", minimum: 15, maximum: 200 },
     productsQuantityNeeded: { type: "integer", minimum: 0, maximum: 200 },
     canPayWithFidelityPoints: { type: "boolean" },
@@ -177,7 +179,7 @@ const loadServiceByPageResponse = {
       items: {
         type: "object",
         properties: {
-          _id: { type: "string", maxLength: 24, minLength: 24 },
+          _id: idSchema,
           name: { type: "string" },
           description: { type: "string" },
           price: { type: "number" },
@@ -185,7 +187,7 @@ const loadServiceByPageResponse = {
           comission: { type: "number" },
           havePromotionalPrice: { type: "boolean" },
           hasFidelityGenerator: { type: "boolean" },
-          categoryId: { type: "string", maxLength: 24, minLength: 24 },
+          categoryId: idSchema,
           duration: { type: "integer", minimum: 15, maximum: 200 },
           productsQuantityNeeded: { type: "integer", minimum: 0, maximum: 200 },
           canPayWithFidelityPoints: { type: "boolean" },

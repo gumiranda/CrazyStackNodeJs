@@ -1,3 +1,5 @@
+import { idSchema } from "@/application/types/id";
+
 const bodyAddFidelityJsonSchema = {
   type: "object",
   required: ["name"],
@@ -15,7 +17,7 @@ const headersJsonSchema = {
 const addFidelityResponse = {
   type: "object",
   properties: {
-    _id: { type: "string", maxLength: 24, minLength: 24 },
+    _id: idSchema,
     name: { type: "string" },
     active: { type: "boolean" },
     createdById: { type: "string" },
@@ -33,14 +35,14 @@ export const addFidelityPostSchema = {
 const queryStringJsonLoadFidelitySchema = {
   type: "object",
   properties: {
-    _id: { type: "string", maxLength: 24, minLength: 24 },
+    _id: idSchema,
   },
   required: ["_id"],
 };
 const loadFidelityResponse = {
   type: "object",
   properties: {
-    _id: { type: "string", maxLength: 24, minLength: 24 },
+    _id: idSchema,
     name: { type: "string" },
     active: { type: "boolean" },
     createdById: { type: "string" },
@@ -60,7 +62,7 @@ const deleteFidelityResponse = { type: "boolean" };
 const queryStringJsonDeleteFidelitySchema = {
   type: "object",
   properties: {
-    _id: { type: "string", maxLength: 24, minLength: 24 },
+    _id: idSchema,
   },
   required: ["_id"],
 };
@@ -76,14 +78,14 @@ export const deleteFidelitySchema = {
 const queryStringJsonUpdateFidelitySchema = {
   type: "object",
   properties: {
-    _id: { type: "string", maxLength: 24, minLength: 24 },
+    _id: idSchema,
   },
   required: ["_id"],
 };
 const updateFidelityResponse = {
   type: "object",
   properties: {
-    _id: { type: "string", maxLength: 24, minLength: 24 },
+    _id: idSchema,
     name: { type: "string" },
     createdById: { type: "string" },
   },
@@ -122,7 +124,7 @@ const loadFidelityByPageResponse = {
       items: {
         type: "object",
         properties: {
-          _id: { type: "string", maxLength: 24, minLength: 24 },
+          _id: idSchema,
           name: { type: "string" },
           active: { type: "boolean" },
           createdById: { type: "string" },

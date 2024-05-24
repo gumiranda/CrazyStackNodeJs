@@ -1,3 +1,5 @@
+import { idSchema } from "@/application/types/id";
+
 const PAGARME_ORDER = {
   type: "object",
   properties: {
@@ -81,7 +83,7 @@ const headersJsonSchema = {
 const addChargeResponse = {
   type: "object",
   properties: {
-    _id: { type: "string", maxLength: 24, minLength: 24 },
+    _id: idSchema,
     name: { type: "string" },
     active: { type: "boolean" },
     createdById: { type: "string" },
@@ -119,7 +121,7 @@ const queryStringJsonLoadChargeSchema = {
 const loadChargeResponse = {
   type: "object",
   properties: {
-    _id: { type: "string", maxLength: 24, minLength: 24 },
+    _id: idSchema,
     status: { type: "string" },
     customer: { type: "object" },
     value: { type: "number" },
@@ -174,7 +176,7 @@ const queryStringJsonUpdateChargeSchema = {
 const updateChargeResponse = {
   type: "object",
   properties: {
-    _id: { type: "string", maxLength: 24, minLength: 24 },
+    _id: idSchema,
     status: { type: "string" },
     customer: { type: "object" },
     value: { type: "number" },
@@ -237,7 +239,7 @@ const loadChargeByPageResponse = {
       items: {
         type: "object",
         properties: {
-          _id: { type: "string", maxLength: 24, minLength: 24 },
+          _id: idSchema,
           status: { type: "string" },
           customer: { type: "object" },
           value: { type: "number" },
