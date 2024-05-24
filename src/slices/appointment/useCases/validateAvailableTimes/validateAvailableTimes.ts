@@ -1,12 +1,13 @@
 import { intervalsOverlapping } from "@/application/helpers/dateFns";
 import { QueryVerifyAvailableTimes } from "@/slices/appointment/entities/AppointmentEntity";
 import { LoadAvailableTimes } from "@/slices/appointment/useCases/loadAvailableTimes";
+import { startOfDay } from "@/application/helpers/dateFns/dateFns";
 export type ValidateAvailableTimes = (
   query: QueryVerifyAvailableTimes
 ) => Promise<any | null>;
 export const validateAvailableTimes =
   (loadAvailableTimes: LoadAvailableTimes) => async (query: QueryVerifyAvailableTimes) => {
-    const { initDate = null, endDate = null } = query || {};
+    const { initDate = null, endDate = null, date = null } = query || {};
     if (
       !initDate ||
       !endDate ||
@@ -14,6 +15,9 @@ export const validateAvailableTimes =
       new Date(endDate).getTime() <= new Date(initDate).getTime()
     ) {
       return false;
+    }
+    if (!date) {
+      query.date = startOfDay(new Date(initDate)).toISOString();
     }
     const { timeAvailable = null, timeAvailableProfessional = null } =
       (await loadAvailableTimes(query)) || {};

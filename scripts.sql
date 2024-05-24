@@ -40,7 +40,9 @@ CREATE TABLE users (
     "updatedAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     "serviceIds" VARCHAR(255)[],
     "serviceOptions" JSONB[],
-    "globalID" UUID
+    "globalID" UUID,
+    FOREIGN KEY ("createdById") REFERENCES users("_id"),
+    FOREIGN KEY ("myOwnerId") REFERENCES users("_id")
 );
 
 
@@ -137,6 +139,8 @@ CREATE TABLE owner (
     FOREIGN KEY ("createdById") REFERENCES users("_id")
 );
 
+ALTER TABLE users ADD CONSTRAINT fk_ownerId FOREIGN KEY ("ownerId") REFERENCES owner("_id");
+
 CREATE TABLE client (
     "_id" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     "createdById" UUID NOT NULL,
@@ -153,8 +157,8 @@ CREATE TABLE client (
     "myOwnerId" UUID,
     FOREIGN KEY ("createdById") REFERENCES users("_id"),
     FOREIGN KEY ("userId") REFERENCES users("_id"),
-    FOREIGN KEY ("ownerId") REFERENCES users("_id"),
-    FOREIGN KEY ("myOwnerId") REFERENCES owner("_id")
+    FOREIGN KEY ("ownerId") REFERENCES owner("_id"),
+    FOREIGN KEY ("myOwnerId") REFERENCES users("_id")
 );
 
 CREATE TABLE request (
@@ -194,7 +198,7 @@ CREATE TABLE request (
     "recurrence" JSONB,
     "order" JSONB,
     CONSTRAINT "fk_serviceId" FOREIGN KEY ("serviceId") REFERENCES service("_id"),
-    CONSTRAINT "fk_ownerId" FOREIGN KEY ("ownerId") REFERENCES users("_id"),
+    CONSTRAINT "fk_ownerId" FOREIGN KEY ("ownerId") REFERENCES owner("_id"),
     CONSTRAINT "fk_clientId" FOREIGN KEY ("clientId") REFERENCES client("_id"),
     CONSTRAINT "fk_clientUserId" FOREIGN KEY ("clientUserId") REFERENCES users("_id"),
     CONSTRAINT "fk_professionalId" FOREIGN KEY ("professionalId") REFERENCES users("_id"),
@@ -231,7 +235,7 @@ CREATE TABLE appointment (
     "clientName" VARCHAR(255),
     "ownerName" VARCHAR(255),
     CONSTRAINT "fk_requestId" FOREIGN KEY ("requestId") REFERENCES request("_id"),
-    CONSTRAINT "fk_ownerId" FOREIGN KEY ("ownerId") REFERENCES users("_id"),
+    CONSTRAINT "fk_ownerId" FOREIGN KEY ("ownerId") REFERENCES owner("_id"),
     CONSTRAINT "fk_clientId" FOREIGN KEY ("clientId") REFERENCES client("_id"),
     CONSTRAINT "fk_professionalId" FOREIGN KEY ("professionalId") REFERENCES users("_id"),
     CONSTRAINT "fk_serviceId" FOREIGN KEY ("serviceId") REFERENCES service("_id"),
