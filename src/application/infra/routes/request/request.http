@@ -1,14 +1,12 @@
 ### Variables
 @apiurl = http://127.0.0.1:3333/api
-@token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI5YTBjYmRlMi00YmZiLTQxZGUtYjE1My1lNzA1ZmNiNjgyMGQiLCJpYXQiOjE3MTY0MDg1MjUsImV4cCI6MTcyMTU5MjUyNX0.O2cdRJdOr0XoqUb_5RI1Pb1WqQrSgTND67RfLcuOxJM
+@token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI3MmI1OWNiYS1mOTk3LTRkMGItODcxYy0zNmZhZGZkNzkwZTIiLCJpYXQiOjE3MTY1NzM2NjQsImV4cCI6MTcyMTc1NzY2NH0.pBAY6QhssN_KUd0qFFKh8h-GbHpS0ZJZ2vUCUokJt60
 @entity=request
 @entityId=06897db1-efd6-49ef-98eb-9ad970c7ebf4
-@clientId=52aa9bca-6c51-4080-aee4-0ef17e064fe0
-@clientUserId=9a0cbde2-4bfb-41de-b153-e705fcb6820d
+@clientId=13334f2d-e4b1-4dab-ba82-f03d72b58600
+@clientUserId=72b59cba-f997-4d0b-871c-36fadfd790e2
 
-@categoryId=16c9be5d-15c4-4737-a8a4-20e25987e3a0
-
-@serviceId=153cbc8f-2a80-464d-8c07-6c2a3fceb545
+@serviceId=4cbf792d-b92a-464c-8271-1cc5320b1235
 
 
 ### POST add entity ownerid table user
@@ -18,9 +16,9 @@ Authorization: Bearer {{token}}
 
 {
   "message": "teste a",
-  "clientId":"c3c87bb0-4cab-439b-8ceb-3d52456ee12c",
-  "serviceId":"153cbc8f-2a80-464d-8c07-6c2a3fceb545",
-  "professionalId":"f10f3f9a-493a-4cc2-93bb-851eb4fa5e54",
+  "clientId":"",
+  "serviceId":"",
+  "professionalId":"",
   "endDate": "2043-02-23T17:15:00.000Z",
   "initDate": "2043-02-23T17:00:00.000Z",
   "haveDelivery": false,
@@ -33,9 +31,9 @@ Authorization: Bearer {{token}}
   "professionalName": "string",
   "clientName": "string",
   "ownerName": "string",
-  "ownerId":"9a0cbde2-4bfb-41de-b153-e705fcb6820d",
-  "createdForId":"9a0cbde2-4bfb-41de-b153-e705fcb6820d",
-  "clientUserId":"9a0cbde2-4bfb-41de-b153-e705fcb6820d"
+  "ownerId":"",
+  "createdForId":"",
+  "clientUserId":""
 }
 
 ### PATCH update entity
@@ -45,9 +43,9 @@ Authorization: Bearer {{token}}
 
 {
   "message": "teste a",
-  "clientId":"c3c87bb0-4cab-439b-8ceb-3d52456ee12c",
-  "serviceId":"153cbc8f-2a80-464d-8c07-6c2a3fceb545",
-  "professionalId":"f10f3f9a-493a-4cc2-93bb-851eb4fa5e54",
+  "clientId":"",
+  "serviceId":"",
+  "professionalId":"",
   "endDate": "2043-02-23T17:30:00.000Z",
   "initDate": "2043-02-23T17:15:00.000Z",
   "haveDelivery": false,
@@ -60,9 +58,9 @@ Authorization: Bearer {{token}}
   "professionalName": "string",
   "clientName": "string",
   "ownerName": "string",
-  "ownerId":"9a0cbde2-4bfb-41de-b153-e705fcb6820d",
-  "createdForId":"9a0cbde2-4bfb-41de-b153-e705fcb6820d",
-  "clientUserId":"9a0cbde2-4bfb-41de-b153-e705fcb6820d"
+  "ownerId":"",
+  "createdForId":"",
+  "clientUserId":""
 }
 
 ### DELETE delete entity
@@ -80,30 +78,3 @@ Authorization: Bearer {{token}}
 GET {{apiurl}}/{{entity}}/loadByPage?page=1 HTTP/1.1
 Content-Type: application/json
 Authorization: Bearer {{token}}
-### POST signup
-POST {{apiurl}}/auth/signup HTTP/1.1
-Content-Type: application/json
-
-{
-	"email": "testede4@gmail.com",
-	"password": "123456",
-	"passwordConfirmation": "123456",
-	"name": "teste 5",
-	"phone": "34998350144",
-	"role": "owner",
-  "cpf":"403.815.550-69",
-	"coord": {
-		"lat": 0,
-		"lng": 0
-	}
-}
-
-### POST login
-POST {{apiurl}}/auth/login HTTP/1.1
-Content-Type: application/json
-
-{
-	"email": "testede4@gmail.com",
-	"password": "123456",
-	"passwordConfirmation": "123456"
-}

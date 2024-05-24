@@ -1,8 +1,8 @@
 ### Variables
 @apiurl = http://127.0.0.1:3333/api
-@token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI5YTBjYmRlMi00YmZiLTQxZGUtYjE1My1lNzA1ZmNiNjgyMGQiLCJpYXQiOjE3MTY0MDg1MjUsImV4cCI6MTcyMTU5MjUyNX0.O2cdRJdOr0XoqUb_5RI1Pb1WqQrSgTND67RfLcuOxJM
+@token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI3MmI1OWNiYS1mOTk3LTRkMGItODcxYy0zNmZhZGZkNzkwZTIiLCJpYXQiOjE3MTY1NzM2NjQsImV4cCI6MTcyMTc1NzY2NH0.pBAY6QhssN_KUd0qFFKh8h-GbHpS0ZJZ2vUCUokJt60
 @entity=category
-@entityId=90730466-26c6-4427-a65c-8409ee5bd067
+@entityId=bb1a808f-fcd6-4ce6-8a0f-c2f6f10e5f6d
 
 
 ### POST add entity
@@ -11,7 +11,7 @@ Content-Type: application/json
 Authorization: Bearer {{token}}
 
 {
-  "name": "teste a"
+  "name": "Barbearia"
 }
 
 ### PATCH update entity
@@ -20,7 +20,7 @@ Content-Type: application/json
 Authorization: Bearer {{token}}
 
 {
-  "name": "teste 123s"
+  "name": "Barbershop"
 }
 
 ### DELETE delete entity
@@ -39,31 +39,3 @@ GET {{apiurl}}/{{entity}}/loadByPage?page=1 HTTP/1.1
 Content-Type: application/json
 Authorization: Bearer {{token}}
 
-
-### POST signup
-POST {{apiurl}}/auth/signup HTTP/1.1
-Content-Type: application/json
-
-{
-	"email": "testede4@gmail.com",
-	"password": "123456",
-	"passwordConfirmation": "123456",
-	"name": "teste 5",
-	"phone": "34998350144",
-	"role": "owner",
-  "cpf":"403.815.550-69",
-	"coord": {
-		"lat": 0,
-		"lng": 0
-	}
-}
-
-### POST login
-POST {{apiurl}}/auth/login HTTP/1.1
-Content-Type: application/json
-
-{
-	"email": "testede4@gmail.com",
-	"password": "123456",
-	"passwordConfirmation": "123456"
-}

@@ -1,60 +1,29 @@
 ### Variables
 @apiurl = http://127.0.0.1:3333/api
-@token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI5YTBjYmRlMi00YmZiLTQxZGUtYjE1My1lNzA1ZmNiNjgyMGQiLCJpYXQiOjE3MTY0MDg1MjUsImV4cCI6MTcyMTU5MjUyNX0.O2cdRJdOr0XoqUb_5RI1Pb1WqQrSgTND67RfLcuOxJM
+@token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI3MmI1OWNiYS1mOTk3LTRkMGItODcxYy0zNmZhZGZkNzkwZTIiLCJpYXQiOjE3MTY1NzM2NjQsImV4cCI6MTcyMTc1NzY2NH0.pBAY6QhssN_KUd0qFFKh8h-GbHpS0ZJZ2vUCUokJt60
 @entity=owner
-@entityId=63c35475-15c1-4db1-82df-1615ef6eaf50
-
-@categoryId=16c9be5d-15c4-4737-a8a4-20e25987e3a0
-
-@serviceId=153cbc8f-2a80-464d-8c07-6c2a3fceb545
+@entityId=9b444370-6851-47bc-8235-952f8dfc19bc
 
 
-### POST add category
-POST {{apiurl}}/category/add HTTP/1.1
-Content-Type: application/json
-Authorization: Bearer {{token}}
 
-{
-  "name": "teste a"
-}
-### POST add service
-POST {{apiurl}}/service/add HTTP/1.1
-Content-Type: application/json
-Authorization: Bearer {{token}}
-
-{
-  "name": "teste a",
-  "description": "teste a",
-  "price": 10,
-  "finalPrice": 10,
-  "comission": 10,
-  "havePromotionalPrice":false,
-  "categoryId": "71890417-3c06-4e55-8f5b-abdb915a6035",
-  "hasFidelityGenerator":false,
-  "promotionalPrice": 10,
-  "productsQuantityNeeded": 10,
-  "canPayWithFidelityPoints":false,
-  "appointmentsTotal": 0,
-  "duration": 15
-}
 ### POST add entity
 POST {{apiurl}}/{{entity}}/add HTTP/1.1
 Content-Type: application/json
 Authorization: Bearer {{token}}
 
 {
-  "name": "teste a",
-  "description": "test",
+  "name": "Owner do devdoido",
+  "description": "Owner do devdoido",
   "haveDelivery": false,
   "minimumTimeForReSchedule": 40,
   "days1": {
   "monday1": true,
-  "sunday1": false,
-  "thursday1": false,
-  "wednesday1": false,
-  "tuesday1": false,
-  "friday1": false,
-  "saturday1": false
+  "sunday1": true,
+  "thursday1": true,
+  "wednesday1": true,
+  "tuesday1": true,
+  "friday1": true,
+  "saturday1": true
   },
   "hourStart1": "8:00",
   "hourEnd1": "18:00"
@@ -84,30 +53,3 @@ Authorization: Bearer {{token}}
 GET {{apiurl}}/{{entity}}/loadByPage?page=1 HTTP/1.1
 Content-Type: application/json
 Authorization: Bearer {{token}}
-### POST signup
-POST {{apiurl}}/auth/signup HTTP/1.1
-Content-Type: application/json
-
-{
-	"email": "testede4@gmail.com",
-	"password": "123456",
-	"passwordConfirmation": "123456",
-	"name": "teste 5",
-	"phone": "34998350144",
-	"role": "owner",
-  "cpf":"403.815.550-69",
-	"coord": {
-		"lat": 0,
-		"lng": 0
-	}
-}
-
-### POST login
-POST {{apiurl}}/auth/login HTTP/1.1
-Content-Type: application/json
-
-{
-	"email": "testede4@gmail.com",
-	"password": "123456",
-	"passwordConfirmation": "123456"
-}

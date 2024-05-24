@@ -3,6 +3,12 @@
 @token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI3MmI1OWNiYS1mOTk3LTRkMGItODcxYy0zNmZhZGZkNzkwZTIiLCJpYXQiOjE3MTY1NzM2NjQsImV4cCI6MTcyMTc1NzY2NH0.pBAY6QhssN_KUd0qFFKh8h-GbHpS0ZJZ2vUCUokJt60
 @entityId=72b59cba-f997-4d0b-871c-36fadfd790e2
 
+@myOwnerId=72b59cba-f997-4d0b-871c-36fadfd790e2
+
+@ownerId=9b444370-6851-47bc-8235-952f8dfc19bc
+
+@professionalId=f0bcc675-728e-4705-8ad2-50828dd0dc7f
+
 ### POST signup
 POST {{apiurl}}/auth/signup HTTP/1.1
 Content-Type: application/json
@@ -53,12 +59,12 @@ Content-Type: application/json
 Authorization: Bearer {{token}}
 
 {
-	"email": "profissional@gmail.com",
-  "name": "Profissional teste",
+	"email": "profissionaldevdoido@gmail.com",
+  "name": "Profissional devdoido",
   "role":"professional",
-  "myOwnerId":"63c35475-15c1-4db1-82df-1615ef6eaf50",
-  "ownerId":"9a0cbde2-4bfb-41de-b153-e705fcb6820d",
-  "serviceIds":["153cbc8f-2a80-464d-8c07-6c2a3fceb545"],
+  "myOwnerId":"72b59cba-f997-4d0b-871c-36fadfd790e2",
+  "ownerId":"9b444370-6851-47bc-8235-952f8dfc19bc",
+  "serviceIds":["4cbf792d-b92a-464c-8271-1cc5320b1235"],
 	"password": "123456",
 	"passwordConfirmation": "123456"
 }
