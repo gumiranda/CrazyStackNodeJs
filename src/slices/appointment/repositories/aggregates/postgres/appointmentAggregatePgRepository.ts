@@ -44,9 +44,7 @@ export class AppointmentAggregatePgRepository
 
     const builder = new SQLQueryBuilder("appointment");
     const queryBuilded = builder
-      .project(
-        "'initDate' as dateinit, 'endDate', 'professionalId', 'cancelled', 'active', 'serviceId', 'createdAt', 'updatedAt'"
-      )
+      .project("*")
       .join({
         table: "users",
         on: '"appointment"."professionalId" = "users"._id',
@@ -63,17 +61,12 @@ export class AppointmentAggregatePgRepository
       .addValue(query.initDay)
       .addValue(query.endDay)
       .addValue(query.initDay)
-      .sort({ dateinit: 1 })
+      .sort({ initDate: 1 })
       .build();
     const appointments: any = await this.repository.aggregate(queryBuilded);
 
-    if (
-      appointments &&
-      appointments.length > 0 &&
-      appointments[0]?._id &&
-      appointments[0]?.data
-    ) {
-      return { _id: appointments[0]._id, data: appointments[0].data };
+    if (appointments?.[0]?._id) {
+      return { _id: appointments[0], data: appointments };
     }
 
     return null;

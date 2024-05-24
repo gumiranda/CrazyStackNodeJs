@@ -13,7 +13,7 @@ export class SQLQueryBuilder {
 
   sort(sortObj: any) {
     const orderBy = Object.keys(sortObj)
-      .map((key) => `${key} ${sortObj[key] === -1 ? "DESC" : "ASC"}`)
+      .map((key) => `"${key}" ${sortObj[key] === -1 ? "DESC" : "ASC"}`)
       .join(", ");
     this.steps.push(`ORDER BY ${orderBy}`);
     return this;
