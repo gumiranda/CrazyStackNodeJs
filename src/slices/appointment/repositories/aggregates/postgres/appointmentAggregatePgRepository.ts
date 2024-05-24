@@ -47,31 +47,23 @@ export class AppointmentAggregatePgRepository
       .project(
         "'initDate' as dateinit, 'endDate', 'professionalId', 'cancelled', 'active', 'serviceId', 'createdAt', 'updatedAt'"
       )
-      .match(
-        "'professionalId' = $1 AND 'initDate' <= $2 AND 'initDate' >= $3 AND 'endDate' <= $4 AND 'endDate' >= $5 AND cancelled = false AND active = true"
-      )
       .join({
         table: "users",
         on: '"appointment"."professionalId" = "users"._id',
       })
+      .join({
+        table: "owner",
+        on: '"users"."ownerId" = "owner"._id',
+      })
+      .match(
+        `'professionalId' = $1 AND 'initDate' <= $2 AND 'initDate' >= $3 AND 'endDate' <= $4 AND 'endDate' >= $5 AND "appointments".cancelled = false AND "appointments".active = true`
+      )
       .addValue(query.professionalId)
       .addValue(query.endDay)
       .addValue(query.initDay)
       .addValue(query.endDay)
       .addValue(query.initDay)
       .sort({ dateinit: 1 })
-
-      .project("initDate, endDate, professionalDetails.ownerId")
-      .join({
-        table: "owner",
-        alias: "owner",
-        on: "professionalDetails.ownerId = owner._id",
-      })
-      .project(
-        "initDate, endDate, owner.days1, owner.hourStart1, owner.hourEnd1, owner.hourLunchEnd1, owner.hourLunchStart1, owner.days2, owner.hourStart2, owner.hourEnd2, owner.hourLunchEnd2, owner.hourLunchStart2, owner.days3, owner.hourStart3, owner.hourEnd3, owner.hourLunchEnd3, owner.hourLunchStart3"
-      )
-      .group({ _id: "owner", data: "ARRAY_AGG(*)" })
-      .project("_id, data.initDate, data.endDate")
       .build();
     const appointments: any = await this.repository.aggregate(queryBuilded);
 
