@@ -44,3 +44,100 @@ CREATE TABLE users (
     FOREIGN KEY ("createdById") REFERENCES users("_id"),
     FOREIGN KEY ("myOwnerId") REFERENCES users("_id")
 );
+
+CREATE TABLE account (
+    "_id" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    "createdById" UUID NOT NULL,
+    "name" VARCHAR(255) NOT NULL,
+    "active" BOOLEAN DEFAULT TRUE,
+    "createdAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    "refreshToken" VARCHAR(255) NOT NULL,
+    "expiresAt" TIMESTAMP,
+   CONSTRAINT "fk_createdById" FOREIGN KEY ("createdById") REFERENCES users("_id")
+);
+
+CREATE TABLE category (
+    "_id" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    "createdById" UUID NOT NULL,
+    "name" VARCHAR(255) NOT NULL,
+    "description" TEXT,
+    "image" VARCHAR(255),
+    "active" BOOLEAN DEFAULT TRUE,
+    "createdAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT "fk_createdById_category" FOREIGN KEY ("createdById") REFERENCES users("_id")
+);
+
+CREATE TABLE service (
+    "_id" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    "createdById" UUID NOT NULL,
+    "name" VARCHAR(255) NOT NULL,
+    "description" TEXT,
+    "price" NUMERIC NOT NULL,
+    "duration" INT NOT NULL,
+    "comission" NUMERIC NOT NULL,
+    "categoryId" UUID NOT NULL,
+    "productsQuantityNeeded" INT,
+    "productId" UUID,
+    "promotionalPrice" NUMERIC,
+    "finalPrice" NUMERIC,
+    "havePromotionalPrice" BOOLEAN,
+    "hasFidelityGenerator" BOOLEAN,
+    "generateHowManyPoints" INT,
+    "appointmentsTotal" INT DEFAULT 0,
+    "canPayWithFidelityPoints" BOOLEAN,
+    "howManyPointsIsNeededToRescue" INT,
+    "active" BOOLEAN DEFAULT TRUE,
+    "createdAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT "fk_createdById_service" FOREIGN KEY ("createdById") REFERENCES users("_id"),
+    CONSTRAINT "fk_categoryId" FOREIGN KEY ("categoryId") REFERENCES category("_id")
+);
+
+CREATE TABLE owner (
+    "_id" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    "createdById" UUID NOT NULL,
+    "name" VARCHAR(255) NOT NULL,
+    "description" TEXT,
+    "price" NUMERIC NOT NULL,
+    "quantity" INT NOT NULL,
+    "active" BOOLEAN DEFAULT TRUE,
+    "appointmentsTotal" INT DEFAULT 0,
+    "ratingsTotal" INT DEFAULT 0,
+    "haveDelivery" BOOLEAN,
+    "typeTax" VARCHAR(50) CHECK ("typeTax" IN ('fixed', 'bytime')),
+    "costByTimeDriving" NUMERIC,
+    "fidelityTaxPoints" NUMERIC,
+    "fixedTax" NUMERIC,
+    "minimumTimeForReSchedule" INT,
+    "days1" JSONB,
+    "days2" JSONB,
+    "hourStart1" VARCHAR(10),
+    "hourStart2" VARCHAR(10),
+    "hourEnd1" VARCHAR(10),
+    "hourEnd2" VARCHAR(10),
+    "hourLunchStart1" VARCHAR(10),
+    "hourLunchEnd1" VARCHAR(10),
+    "hourLunchStart2" VARCHAR(10),
+    "hourLunchEnd2" VARCHAR(10),
+    "days3" JSONB,
+    "days4" JSONB,
+    "hourStart3" VARCHAR(10),
+    "hourStart4" VARCHAR(10),
+    "hourEnd3" VARCHAR(10),
+    "hourEnd4" VARCHAR(10),
+    "hourLunchStart3" VARCHAR(10),
+    "hourLunchEnd3" VARCHAR(10),
+    "hourLunchStart4" VARCHAR(10),
+    "hourLunchEnd4" VARCHAR(10),
+    "createdAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT "check_minimumTimeForReSchedule" CHECK ("minimumTimeForReSchedule" >= 0),
+    CONSTRAINT "check_costByTimeDriving" CHECK ("costByTimeDriving" >= 0),
+    CONSTRAINT "check_fidelityTaxPoints" CHECK ("fidelityTaxPoints" >= 0),
+    CONSTRAINT "check_fixedTax" CHECK ("fixedTax" >= 0),
+    CONSTRAINT "fk_createdById_owner" FOREIGN KEY ("createdById") REFERENCES users("_id")
+);
+
+ALTER TABLE users ADD CONSTRAINT fk_ownerId FOREIGN KEY ("ownerId") REFERENCES owner("_id");
