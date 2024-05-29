@@ -28,11 +28,11 @@ describe("Mongo Repository tests", () => {
     await MongoHelper.disconnect();
   });
   beforeEach(async () => {
-    userCollection = await MongoHelper.getCollection("user");
+    userCollection = await MongoHelper.getCollection("users");
     await userCollection.deleteMany({});
   });
   const makeSut = (): Repository => {
-    return new MongoRepository("user");
+    return new MongoRepository("users");
   };
   test("Should delete user with success", async () => {
     const sut = makeSut();

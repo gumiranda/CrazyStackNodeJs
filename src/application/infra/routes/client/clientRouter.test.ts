@@ -3,6 +3,7 @@ import { Collection, ObjectId } from "mongodb";
 import { MongoHelper, env } from "@/application/infra";
 import { sign } from "jsonwebtoken";
 import { userBody } from "@/application/helpers/mocks/userBody";
+import { addDays } from "date-fns";
 jest.setTimeout(500000);
 
 let userCollection: Collection;
@@ -12,7 +13,12 @@ const clientBody = {
   name: "test",
 };
 const makeAccessToken = async (role: string, password: string): Promise<any> => {
-  const result = await userCollection.insertOne({ ...userBody, password, role });
+  const result = await userCollection.insertOne({
+    ...userBody,
+    password,
+    payDay: addDays(new Date(), 30),
+    role,
+  });
   const _id = result?.insertedId;
   return { _id, token: sign({ _id }, env.jwtSecret) };
 };
@@ -29,7 +35,7 @@ describe("Route api/client", () => {
     fastify = null;
   });
   beforeEach(async () => {
-    userCollection = await MongoHelper.getCollection("user");
+    userCollection = await MongoHelper.getCollection("users");
     clientCollection = await MongoHelper.getCollection("client");
     await userCollection.deleteMany({});
     await clientCollection.deleteMany({});

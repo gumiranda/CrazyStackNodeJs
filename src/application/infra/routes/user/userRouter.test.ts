@@ -47,7 +47,7 @@ describe("Route api/user", () => {
     fastify = null;
   });
   beforeEach(async () => {
-    userCollection = await MongoHelper.getCollection("user");
+    userCollection = await MongoHelper.getCollection("users");
     await userCollection.createIndex({ coord: "2dsphere" });
     await userCollection.deleteMany({});
   });

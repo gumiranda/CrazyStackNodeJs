@@ -20,7 +20,7 @@ describe("Route api/auth", () => {
     fastify = null;
   });
   beforeEach(async () => {
-    userCollection = await MongoHelper.getCollection("user");
+    userCollection = await MongoHelper.getCollection("users");
     await userCollection.deleteMany({});
   });
   describe("POST /api/auth/signup", () => {

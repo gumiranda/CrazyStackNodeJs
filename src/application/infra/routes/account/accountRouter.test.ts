@@ -19,7 +19,7 @@ describe("Route api/account", () => {
     fastify = null;
   });
   beforeEach(async () => {
-    userCollection = await MongoHelper.getCollection("user");
+    userCollection = await MongoHelper.getCollection("users");
     await userCollection.deleteMany({});
   });
   describe("GET /api/account/refresh", () => {
