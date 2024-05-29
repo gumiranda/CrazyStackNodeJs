@@ -13,6 +13,7 @@ import { LoadUser } from "@/slices/user/useCases";
 import { AccessDeniedError } from "@/application/errors";
 import { env } from "@/application/infra/config";
 import { ObjectId } from "mongodb";
+import { whiteLabel } from "@/application/infra/config/whiteLabel";
 
 export class AuthMiddleware implements Middleware {
   constructor(
@@ -37,17 +38,11 @@ export class AuthMiddleware implements Middleware {
             return unauthorized();
           }
           const { _id } = decoded;
-          const query = {
-            fields: {
-              _id: new ObjectId(_id),
-              role: { $in: this.roles },
-            },
-            options: { projection: { password: 0 } },
-          };
-          const user = await this.loadUser(query);
+          const user: any = await this.loadUser(getQuery({ roles: this.roles, _id }));
+          const payday = user?.payDay || user?.payday;
 
-          if (user && user?.payDay) {
-            const daysToNextPayment = calculateDaysToNextPayment(user?.payDay);
+          if (user && payday) {
+            const daysToNextPayment = calculateDaysToNextPayment(payday);
             if (-30 < daysToNextPayment || user?.role !== "owner") {
               return ok({ userId: user?._id, userLogged: user, daysToNextPayment });
             }
@@ -60,3 +55,21 @@ export class AuthMiddleware implements Middleware {
     }
   }
 }
+const getQuery = ({ roles, _id }: any) => {
+  if (whiteLabel.database === "postgres") {
+    return {
+      fields: {
+        _id,
+      },
+      options: { projection: { password: 0 } },
+    };
+  }
+  const query = {
+    fields: {
+      _id: new ObjectId(_id),
+      role: { $in: roles },
+    },
+    options: { projection: { password: 0 } },
+  };
+  return query;
+};
