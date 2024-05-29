@@ -6,8 +6,8 @@ export const makeDbAuthentication = (): Authentication => {
   const bcryptAdapter = new BcryptAdapter(salt);
   const jwtAdapter = new JwtAdapter(env.jwtSecret, "60d");
   const jwtRefreshTokenAdapter = new JwtAdapter(env.jwtRefreshSecret, "90d");
-  const userMongoRepository = makeDatabaseInstance("mongodb", "users");
-  const userRepository = new UserRepository(userMongoRepository);
+  const userDatabaseRepository = makeDatabaseInstance("mongodb", "users");
+  const userRepository = new UserRepository(userDatabaseRepository);
   return new DbAuthentication(
     userRepository,
     bcryptAdapter,
