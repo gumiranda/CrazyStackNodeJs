@@ -1,0 +1,32 @@
+@apiurl=http://localhost:3333/api
+
+
+### POST signup
+POST {{apiurl}}/auth/signup HTTP/1.1
+Content-Type: application/json
+
+
+{
+  "email": "johndoe@gmail.com",
+  "password": "123456",
+  "passwordConfirmation": "123456",
+  "name": "John Doe",
+  "cpf": "12345678900",
+  "phone": "12345678900",
+  "role": "owner",
+  "coord": {
+    "lat": 0,
+    "long": 0
+  }
+}
+
+### POST LOGIN
+POST {{apiurl}}/auth/login HTTP/1.1
+Content-Type: application/json
+
+
+{
+  "email": "johndoe@gmail.com",
+  "password": "123456",
+  "passwordConfirmation": "123456"
+}
