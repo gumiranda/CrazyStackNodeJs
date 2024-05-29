@@ -1,4 +1,4 @@
-import { MongoRepository } from "@/application/infra";
+import { MongoRepository, makeDatabaseInstance } from "@/application/infra";
 import { loadAvailableTimes, LoadAvailableTimes } from "@/slices/appointment/useCases";
 import { OwnerRepository } from "@/slices/owner/repositories";
 import { ServiceRepository } from "@/slices/service/repositories";
@@ -8,7 +8,7 @@ export const makeLoadAvailableTimesFactory = (): LoadAvailableTimes => {
   return loadAvailableTimes(
     new AppointmentAggregateRepository(new MongoRepository("appointment")),
     new ServiceRepository(new MongoRepository("service")),
-    new UserRepository(new MongoRepository("user")),
+    new UserRepository(makeDatabaseInstance("mongodb", "users")),
     new OwnerRepository(new MongoRepository("owner"))
   );
 };

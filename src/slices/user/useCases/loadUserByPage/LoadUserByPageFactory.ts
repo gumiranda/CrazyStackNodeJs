@@ -1,8 +1,8 @@
-import { MongoRepository } from "@/application/infra";
+import { makeDatabaseInstance } from "@/application/infra";
 import { UserRepository } from "@/slices/user/repositories";
 import { loadUserByPage, LoadUserByPage } from "@/slices/user/useCases";
 
 export const makeLoadUserByPageFactory = (): LoadUserByPage => {
-  const repository = new UserRepository(new MongoRepository("user"));
+  const repository = new UserRepository(makeDatabaseInstance("mongodb", "users"));
   return loadUserByPage(repository);
 };

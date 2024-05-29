@@ -1,4 +1,4 @@
-import { MongoRepository } from "@/application/infra";
+import { MongoRepository, makeDatabaseInstance } from "@/application/infra";
 import { AppointmentRepository } from "@/slices/appointment/repositories";
 import { ClientRepository } from "@/slices/client/repositories";
 import { FidelityRepository } from "@/slices/fidelity/repositories";
@@ -17,7 +17,7 @@ export const makeUpdateRequestByIdFactory = (): IUpdateRequestById => {
     new OrderRepository(new MongoRepository("order")),
     new AppointmentRepository(new MongoRepository("appointment")),
     new ServiceRepository(new MongoRepository("service")),
-    new UserRepository(new MongoRepository("user")),
+    new UserRepository(makeDatabaseInstance("mongodb", "users")),
     new RideRepository(new MongoRepository("ride")),
     new RecurrenceRepository(new MongoRepository("recurrence")),
     new FidelityRepository(new MongoRepository("fidelity")),

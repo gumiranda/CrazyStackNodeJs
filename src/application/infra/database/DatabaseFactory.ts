@@ -2,10 +2,10 @@ import { Repository } from "../contracts";
 import { MongoRepository } from "./mongodb";
 import { PostgresRepository } from "./postgres";
 
-export const makeDatabaseInstance = async (
+export const makeDatabaseInstance = (
   database: Database,
   collectionOrTable: string
-): Promise<Repository> => {
+): Repository => {
   return new databases[database](collectionOrTable);
 };
 
