@@ -10,6 +10,7 @@ import { ServiceRepository } from "@/slices/service/repositories";
 import { UserRepository } from "@/slices/user/repositories";
 import { IUpdateRequestById } from "./contracts";
 import { UpdateRequestById } from "./UpdateRequestById";
+import { whiteLabel } from "@/application/infra/config/whiteLabel";
 
 export const makeUpdateRequestByIdFactory = (): IUpdateRequestById => {
   return new UpdateRequestById(
@@ -17,7 +18,7 @@ export const makeUpdateRequestByIdFactory = (): IUpdateRequestById => {
     new OrderRepository(makeDatabaseInstance("mongodb", "order")),
     new AppointmentRepository(makeDatabaseInstance("mongodb", "appointment")),
     new ServiceRepository(makeDatabaseInstance("mongodb", "service")),
-    new UserRepository(makeDatabaseInstance("mongodb", "users")),
+    new UserRepository(makeDatabaseInstance(whiteLabel.database, "users")),
     new RideRepository(makeDatabaseInstance("mongodb", "ride")),
     new RecurrenceRepository(makeDatabaseInstance("mongodb", "recurrence")),
     new FidelityRepository(makeDatabaseInstance("mongodb", "fidelity")),
