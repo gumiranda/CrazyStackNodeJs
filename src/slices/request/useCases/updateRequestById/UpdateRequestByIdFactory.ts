@@ -1,4 +1,4 @@
-import { MongoRepository, makeDatabaseInstance } from "@/application/infra";
+import { makeDatabaseInstance } from "@/application/infra";
 import { AppointmentRepository } from "@/slices/appointment/repositories";
 import { ClientRepository } from "@/slices/client/repositories";
 import { FidelityRepository } from "@/slices/fidelity/repositories";
@@ -13,14 +13,14 @@ import { UpdateRequestById } from "./UpdateRequestById";
 
 export const makeUpdateRequestByIdFactory = (): IUpdateRequestById => {
   return new UpdateRequestById(
-    new RequestRepository(new MongoRepository("request")),
-    new OrderRepository(new MongoRepository("order")),
-    new AppointmentRepository(new MongoRepository("appointment")),
-    new ServiceRepository(new MongoRepository("service")),
+    new RequestRepository(makeDatabaseInstance("mongodb", "request")),
+    new OrderRepository(makeDatabaseInstance("mongodb", "order")),
+    new AppointmentRepository(makeDatabaseInstance("mongodb", "appointment")),
+    new ServiceRepository(makeDatabaseInstance("mongodb", "service")),
     new UserRepository(makeDatabaseInstance("mongodb", "users")),
-    new RideRepository(new MongoRepository("ride")),
-    new RecurrenceRepository(new MongoRepository("recurrence")),
-    new FidelityRepository(new MongoRepository("fidelity")),
-    new ClientRepository(new MongoRepository("client"))
+    new RideRepository(makeDatabaseInstance("mongodb", "ride")),
+    new RecurrenceRepository(makeDatabaseInstance("mongodb", "recurrence")),
+    new FidelityRepository(makeDatabaseInstance("mongodb", "fidelity")),
+    new ClientRepository(makeDatabaseInstance("mongodb", "client"))
   );
 };

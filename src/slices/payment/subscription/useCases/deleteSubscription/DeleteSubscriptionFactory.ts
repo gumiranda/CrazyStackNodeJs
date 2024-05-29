@@ -1,4 +1,4 @@
-import { MongoRepository } from "@/application/infra";
+import { makeDatabaseInstance } from "@/application/infra";
 import { SubscriptionRepository } from "@/slices/payment/subscription/repositories";
 import {
   deleteSubscription,
@@ -6,6 +6,8 @@ import {
 } from "@/slices/payment/subscription/useCases";
 
 export const makeDeleteSubscriptionFactory = (): DeleteSubscription => {
-  const repository = new SubscriptionRepository(new MongoRepository("subscription"));
+  const repository = new SubscriptionRepository(
+    makeDatabaseInstance("mongodb", "subscription")
+  );
   return deleteSubscription(repository);
 };

@@ -1,4 +1,4 @@
-import { MongoRepository } from "@/application/infra";
+import { makeDatabaseInstance } from "@/application/infra";
 import { AppointmentRepository } from "@/slices/appointment/repositories";
 import {
   loadAppointmentByPage,
@@ -6,6 +6,8 @@ import {
 } from "@/slices/appointment/useCases";
 
 export const makeLoadAppointmentByPageFactory = (): LoadAppointmentByPage => {
-  const repository = new AppointmentRepository(new MongoRepository("appointment"));
+  const repository = new AppointmentRepository(
+    makeDatabaseInstance("mongodb", "appointment")
+  );
   return loadAppointmentByPage(repository);
 };

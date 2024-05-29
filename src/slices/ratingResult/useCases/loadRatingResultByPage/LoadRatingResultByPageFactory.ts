@@ -1,4 +1,4 @@
-import { MongoRepository } from "@/application/infra";
+import { makeDatabaseInstance } from "@/application/infra";
 import { RatingResultRepository } from "@/slices/ratingResult/repositories";
 import {
   loadRatingResultByPage,
@@ -6,6 +6,8 @@ import {
 } from "@/slices/ratingResult/useCases";
 
 export const makeLoadRatingResultByPageFactory = (): LoadRatingResultByPage => {
-  const repository = new RatingResultRepository(new MongoRepository("ratingResult"));
+  const repository = new RatingResultRepository(
+    makeDatabaseInstance("mongodb", "ratingResult")
+  );
   return loadRatingResultByPage(repository);
 };
