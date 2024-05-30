@@ -94,15 +94,13 @@ CREATE TABLE service (
     CONSTRAINT "fk_createdById_service" FOREIGN KEY ("createdById") REFERENCES users("_id"),
     CONSTRAINT "fk_categoryId" FOREIGN KEY ("categoryId") REFERENCES category("_id")
 );
-
 CREATE TABLE owner (
     "_id" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     "createdById" UUID NOT NULL,
     "name" VARCHAR(255) NOT NULL,
-    "description" TEXT,
-    "price" NUMERIC NOT NULL,
-    "quantity" INT NOT NULL,
     "active" BOOLEAN DEFAULT TRUE,
+    "createdAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     "appointmentsTotal" INT DEFAULT 0,
     "ratingsTotal" INT DEFAULT 0,
     "haveDelivery" BOOLEAN,
@@ -111,6 +109,7 @@ CREATE TABLE owner (
     "fidelityTaxPoints" NUMERIC,
     "fixedTax" NUMERIC,
     "minimumTimeForReSchedule" INT,
+    "description" TEXT,
     "days1" JSONB,
     "days2" JSONB,
     "hourStart1" VARCHAR(10),
@@ -131,15 +130,12 @@ CREATE TABLE owner (
     "hourLunchEnd3" VARCHAR(10),
     "hourLunchStart4" VARCHAR(10),
     "hourLunchEnd4" VARCHAR(10),
-    "createdAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT "check_minimumTimeForReSchedule" CHECK ("minimumTimeForReSchedule" >= 0),
     CONSTRAINT "check_costByTimeDriving" CHECK ("costByTimeDriving" >= 0),
     CONSTRAINT "check_fidelityTaxPoints" CHECK ("fidelityTaxPoints" >= 0),
     CONSTRAINT "check_fixedTax" CHECK ("fixedTax" >= 0),
     CONSTRAINT "fk_createdById_owner" FOREIGN KEY ("createdById") REFERENCES users("_id")
 );
-
 ALTER TABLE users ADD CONSTRAINT fk_ownerId FOREIGN KEY ("ownerId") REFERENCES owner("_id");
 
 CREATE TABLE client (
