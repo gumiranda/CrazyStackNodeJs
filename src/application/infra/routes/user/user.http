@@ -1,8 +1,8 @@
 @apiurl = http://127.0.0.1:3333/api
 
-@token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NjU4OTg2MDg1NTJmMzM5NDNmM2ZmZGQiLCJpYXQiOjE3MTcwODIyMDksImV4cCI6MTcyMjI2NjIwOX0.UJ3eZpDXAIABNr3fd9WtRf7XXD_USnglYysJrV3aY7E
+@token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiJkNDljYmMwZS1mODg2LTRiOWEtYjg2Yi05MWMwZDYzMmNlN2EiLCJpYXQiOjE3MTcwODI2NjIsImV4cCI6MTcyMjI2NjY2Mn0.cCpe_-0_4RAtK7QNnNcTzXx_SPSZNWAc6mNvxXmZyzQ
 
-@entityId=665898608552f33943f3ffdd
+@entityId=d49cbc0e-f886-4b9a-b86b-91c0d632ce7a
 
 @entityType=user
 
@@ -16,6 +16,31 @@ Authorization: Bearer {{token}}
 GET {{apiurl}}/{{entityType}}/loadByPage?page=1 HTTP/1.1
 Content-Type: application/json
 Authorization: Bearer {{token}}
+
+### PATCH update
+PATCH {{apiurl}}/{{entityType}}/update?_id={{entityId}} HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "name": "John Doe2",
+  "active":false,
+  "createdById": null
+}
+
+### DELETE delete user
+DELETE {{apiurl}}/{{entityType}}/delete?_id={{entityId}}	 HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+
+
+
+
+
+
+
+
 
 ### POST signup
 POST {{apiurl}}/auth/signup HTTP/1.1

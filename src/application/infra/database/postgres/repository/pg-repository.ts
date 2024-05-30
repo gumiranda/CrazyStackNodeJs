@@ -164,15 +164,11 @@ export class PostgresRepository extends Repository {
       client.release();
     }
   }
-  async getPaginate(
-    page: number,
-    fields: any,
-    sort: any,
-    limit: number,
-    projection: any
-  ): Promise<any> {
+
+  async getPaginate(page = 0, fields: any, sort: any, limit = 10, projection: any) {
     const client = await connect();
     try {
+      // Handle projection
       let columns = "*";
       if (Object.keys(projection).length > 0) {
         columns = Object.keys(projection)
@@ -180,13 +176,15 @@ export class PostgresRepository extends Repository {
           .map((key) => `"${key}"`)
           .join(", ");
       }
+
+      // Handle filtering (basic example, needs to be adjusted per use case)
       let whereClause = "";
-      const filterConditions: any = [];
-      const filterValues: any = [];
-      Object.keys(fields).forEach((key, idx) => {
+      const filterConditions: string[] = [];
+      const filterValues: any[] = [];
+      Object.keys(fields).forEach((key) => {
         const value = fields[key];
         if (typeof value === "string" || typeof value === "number") {
-          filterConditions.push(`"${key}" = $${idx + 1}`);
+          filterConditions.push(`"${key}" = $${filterValues.length + 1}`);
           filterValues.push(value);
         } else {
           filterConditions.push(`"${key}" LIKE '%' || $${filterValues.length + 1} || '%'`);
@@ -196,11 +194,17 @@ export class PostgresRepository extends Repository {
       if (filterConditions.length > 0) {
         whereClause = `WHERE ${filterConditions.join(" AND ")}`;
       }
+
+      // Handle sorting
       const orderBy = Object.keys(sort)
         .map((key) => `"${key}" ${sort[key] === -1 ? "DESC" : "ASC"}`)
         .join(", ");
+
+      // Calculate offset
       const offset = (page - 1) * limit;
-      const queryText = `SELECT ${columns} FROM "${this.tableName}" ${whereClause} ORDER BY ${orderBy} LIMIT ${filterValues.length + 1} OFFSET ${filterValues.length + 2}`;
+
+      // Construct query
+      const queryText = `SELECT ${columns} FROM "${this.tableName}" ${whereClause} ORDER BY ${orderBy} LIMIT $${filterValues.length + 1} OFFSET $${filterValues.length + 2}`;
       const queryValues = filterValues.concat([limit, offset]);
       const result = await client.query(queryText, queryValues);
       return result.rows;
@@ -208,6 +212,7 @@ export class PostgresRepository extends Repository {
       client.release();
     }
   }
+
   async getCount(query = {}) {
     const client = await connect();
     try {

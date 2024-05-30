@@ -1,7 +1,7 @@
 import { Database } from "../database";
 
 export const whiteLabel = {
-  database: "mongodb" as Database,
+  database: "postgres" as Database,
   valueMonth: "2990",
   paymentDaysDue: 30,
   gatewayPix: "woovi",
