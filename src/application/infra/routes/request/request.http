@@ -20,6 +20,13 @@
 
 @entityType=request
 
+### GET loadAvailableTimes
+GET {{apiurl}}/appointment/loadAvailableTimes?serviceId={{serviceId}}&professionalId={{professionalId}}&date=2043-02-23T03:00:00.000Z&ownerId={{ownerId}} HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+
+
 ### GET loadById
 GET {{apiurl}}/{{entityType}}/load?_id={{entityId}} HTTP/1.1
 Content-Type: application/json

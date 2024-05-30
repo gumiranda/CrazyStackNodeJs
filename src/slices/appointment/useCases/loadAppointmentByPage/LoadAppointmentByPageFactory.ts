@@ -4,10 +4,11 @@ import {
   loadAppointmentByPage,
   LoadAppointmentByPage,
 } from "@/slices/appointment/useCases";
+import { whiteLabel } from "@/application/infra/config/whiteLabel";
 
 export const makeLoadAppointmentByPageFactory = (): LoadAppointmentByPage => {
   const repository = new AppointmentRepository(
-    makeDatabaseInstance("mongodb", "appointment")
+    makeDatabaseInstance(whiteLabel.database, "appointment")
   );
   return loadAppointmentByPage(repository);
 };
