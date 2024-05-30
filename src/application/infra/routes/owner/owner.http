@@ -2,9 +2,8 @@
 
 @token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiJkNDljYmMwZS1mODg2LTRiOWEtYjg2Yi05MWMwZDYzMmNlN2EiLCJpYXQiOjE3MTcwODI2NjIsImV4cCI6MTcyMjI2NjY2Mn0.cCpe_-0_4RAtK7QNnNcTzXx_SPSZNWAc6mNvxXmZyzQ
 
-@categoryId=b7ea8b04-d687-4a37-bb12-4361e3411ba2
 
-@entityId=79fe5bd5-841d-48ff-92a8-af79c2a1c7da
+@entityId=df1d757f-7d27-4956-8cdf-9a1c904e9dff
 
 @entityType=owner
 
@@ -48,7 +47,7 @@ Content-Type: application/json
 Authorization: Bearer {{token}}
 
 {
-  "name": "service top"
+  "name": "owner top"
 }
 
 ### DELETE delete

@@ -6,6 +6,10 @@
 
 @myOwnerId=d49cbc0e-f886-4b9a-b86b-91c0d632ce7a
 
+@ownerId=df1d757f-7d27-4956-8cdf-9a1c904e9dff
+
+@professionalId=a487e135-9a20-456b-a310-6d23a5304a79
+
 @entityType=user
 ### GET loadUserById
 GET {{apiurl}}/{{entityType}}/load?_id={{entityId}} HTTP/1.1
@@ -45,8 +49,10 @@ Authorization: Bearer {{token}}
   "passwordConfirmation": "123456",
   "cpf": "12345678900",
   "role": "professional",
-  "serviceIds": [],
-  "email":"email@teste.com"
+  "myOwnerId":"d49cbc0e-f886-4b9a-b86b-91c0d632ce7a",
+  "ownerId":"df1d757f-7d27-4956-8cdf-9a1c904e9dff",
+  "serviceIds": ["79fe5bd5-841d-48ff-92a8-af79c2a1c7da"],
+  "email":"email3@teste.com"
 }
 
 
