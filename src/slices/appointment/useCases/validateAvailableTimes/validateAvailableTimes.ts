@@ -16,13 +16,13 @@ export const validateAvailableTimes =
     ) {
       return false;
     }
+    if (!date) {
+      query.date = startOfDay(new Date(initDate)).toISOString();
+    }
     const { timeAvailable = null, timeAvailableProfessional = null } =
       (await loadAvailableTimes(query)) || {};
     if (!timeAvailable && !timeAvailableProfessional) {
       return false;
-    }
-    if (!date) {
-      query.date = startOfDay(new Date(initDate)).toISOString();
     }
     const result = timeAvailable?.find(({ time }: any) => {
       return new Date(time).getTime() === new Date(initDate).getTime();
