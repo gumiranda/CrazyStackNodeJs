@@ -14,7 +14,7 @@ import { whiteLabel } from "@/application/infra/config/whiteLabel";
 
 export const makeUpdateRequestByIdFactory = (): IUpdateRequestById => {
   return new UpdateRequestById(
-    new RequestRepository(makeDatabaseInstance("mongodb", "request")),
+    new RequestRepository(makeDatabaseInstance(whiteLabel.database, "request")),
     new OrderRepository(makeDatabaseInstance("mongodb", "order")),
     new AppointmentRepository(makeDatabaseInstance("mongodb", "appointment")),
     new ServiceRepository(makeDatabaseInstance(whiteLabel.database, "service")),
