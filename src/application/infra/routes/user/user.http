@@ -1,14 +1,14 @@
 @apiurl = http://127.0.0.1:3333/api
 
-@token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiJkNDljYmMwZS1mODg2LTRiOWEtYjg2Yi05MWMwZDYzMmNlN2EiLCJpYXQiOjE3MTcwODI2NjIsImV4cCI6MTcyMjI2NjY2Mn0.cCpe_-0_4RAtK7QNnNcTzXx_SPSZNWAc6mNvxXmZyzQ
+@token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1NGI3YThhNC00YTc5LTQ1N2UtYjhmMC0yMGRhZDE5ZmUwNDgiLCJpYXQiOjE3MTcwOTMwNjksImV4cCI6MTcyMjI3NzA2OX0.Srew-XIMXprKxG5DKCjN_YmktSes6hDrhx6J1Quq7Lo
 
-@entityId=d49cbc0e-f886-4b9a-b86b-91c0d632ce7a
+@entityId=54b7a8a4-4a79-457e-b8f0-20dad19fe048
 
-@myOwnerId=d49cbc0e-f886-4b9a-b86b-91c0d632ce7a
+@myOwnerId=54b7a8a4-4a79-457e-b8f0-20dad19fe048
 
-@ownerId=df1d757f-7d27-4956-8cdf-9a1c904e9dff
+@ownerId=a207030f-3cd7-4844-a64d-057e39b8b672
 
-@professionalId=a487e135-9a20-456b-a310-6d23a5304a79
+@professionalId=cea9468a-1fdb-4296-956c-ba3c43453ab8
 
 @entityType=user
 ### GET loadUserById
@@ -30,6 +30,7 @@ Authorization: Bearer {{token}}
 {
   "name": "John Doe3",
   "active":false,
+  "password":"",
   "createdById": null
 }
 
@@ -49,10 +50,10 @@ Authorization: Bearer {{token}}
   "passwordConfirmation": "123456",
   "cpf": "12345678900",
   "role": "professional",
-  "myOwnerId":"d49cbc0e-f886-4b9a-b86b-91c0d632ce7a",
-  "ownerId":"df1d757f-7d27-4956-8cdf-9a1c904e9dff",
+  "myOwnerId":"54b7a8a4-4a79-457e-b8f0-20dad19fe048",
+  "ownerId":"a207030f-3cd7-4844-a64d-057e39b8b672",
   "serviceIds": ["79fe5bd5-841d-48ff-92a8-af79c2a1c7da"],
-  "email":"email3@teste.com"
+  "email":"email343@teste.com"
 }
 
 
@@ -62,11 +63,11 @@ Content-Type: application/json
 
 
 {
-  "email": "johndoe@gmail.com",
+  "email": "gustavao@gmail.com",
   "password": "123456",
   "passwordConfirmation": "123456",
   "name": "John Doe",
-  "cpf": "12345678900",
+  "cpf": "12345678903",
   "phone": "12345678900",
   "role": "owner",
   "coord": {

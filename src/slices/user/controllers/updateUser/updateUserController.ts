@@ -27,6 +27,7 @@ export class UpdateUserController extends Controller {
       return badRequest(errorsQuery);
     }
     delete httpRequest?.body?.payDay;
+    delete httpRequest?.body?.password;
 
     const query =
       httpRequest?.userLogged?.role === "admin"

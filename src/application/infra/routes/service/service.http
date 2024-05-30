@@ -1,10 +1,11 @@
 @apiurl = http://127.0.0.1:3333/api
 
-@token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiJkNDljYmMwZS1mODg2LTRiOWEtYjg2Yi05MWMwZDYzMmNlN2EiLCJpYXQiOjE3MTcwODI2NjIsImV4cCI6MTcyMjI2NjY2Mn0.cCpe_-0_4RAtK7QNnNcTzXx_SPSZNWAc6mNvxXmZyzQ
 
-@categoryId=b7ea8b04-d687-4a37-bb12-4361e3411ba2
+@token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1NGI3YThhNC00YTc5LTQ1N2UtYjhmMC0yMGRhZDE5ZmUwNDgiLCJpYXQiOjE3MTcwOTMwNjksImV4cCI6MTcyMjI3NzA2OX0.Srew-XIMXprKxG5DKCjN_YmktSes6hDrhx6J1Quq7Lo
 
-@entityId=79fe5bd5-841d-48ff-92a8-af79c2a1c7da
+@categoryId=1e498528-c1ad-4abe-b461-f7526b89c6de
+
+@entityId=9f8bafca-84a2-4520-8682-7a2edeba1267
 
 @entityType=service
 
