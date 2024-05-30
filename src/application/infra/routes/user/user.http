@@ -1,0 +1,48 @@
+@apiurl = http://127.0.0.1:3333/api
+
+@token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NjU4OTg2MDg1NTJmMzM5NDNmM2ZmZGQiLCJpYXQiOjE3MTcwODIyMDksImV4cCI6MTcyMjI2NjIwOX0.UJ3eZpDXAIABNr3fd9WtRf7XXD_USnglYysJrV3aY7E
+
+@entityId=665898608552f33943f3ffdd
+
+@entityType=user
+
+### GET loadUserById
+GET {{apiurl}}/{{entityType}}/load?_id={{entityId}} HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+
+### GET loadUserByPage
+GET {{apiurl}}/{{entityType}}/loadByPage?page=1 HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+### POST signup
+POST {{apiurl}}/auth/signup HTTP/1.1
+Content-Type: application/json
+
+
+{
+  "email": "johndoe@gmail.com",
+  "password": "123456",
+  "passwordConfirmation": "123456",
+  "name": "John Doe",
+  "cpf": "12345678900",
+  "phone": "12345678900",
+  "role": "owner",
+  "coord": {
+    "lat": 0,
+    "long": 0
+  }
+}
+
+### POST LOGIN
+POST {{apiurl}}/auth/login HTTP/1.1
+Content-Type: application/json
+
+
+{
+  "email": "johndoe@gmail.com",
+  "password": "123456",
+  "passwordConfirmation": "123456"
+}
