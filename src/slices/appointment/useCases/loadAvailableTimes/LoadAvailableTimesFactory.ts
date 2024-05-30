@@ -9,7 +9,7 @@ import { whiteLabel } from "@/application/infra/config/whiteLabel";
 export const makeLoadAvailableTimesFactory = (): LoadAvailableTimes => {
   return loadAvailableTimes(
     new AppointmentAggregateRepository(new MongoRepository("appointment")),
-    new ServiceRepository(makeDatabaseInstance("mongodb", "service")),
+    new ServiceRepository(makeDatabaseInstance(whiteLabel.database, "service")),
     new UserRepository(makeDatabaseInstance(whiteLabel.database, "users")),
     new OwnerRepository(makeDatabaseInstance("mongodb", "owner"))
   );
