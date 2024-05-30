@@ -4,8 +4,9 @@
 
 @entityId=d49cbc0e-f886-4b9a-b86b-91c0d632ce7a
 
-@entityType=user
+@myOwnerId=d49cbc0e-f886-4b9a-b86b-91c0d632ce7a
 
+@entityType=user
 ### GET loadUserById
 GET {{apiurl}}/{{entityType}}/load?_id={{entityId}} HTTP/1.1
 Content-Type: application/json
@@ -23,7 +24,7 @@ Content-Type: application/json
 Authorization: Bearer {{token}}
 
 {
-  "name": "John Doe2",
+  "name": "John Doe3",
   "active":false,
   "createdById": null
 }
@@ -33,13 +34,20 @@ DELETE {{apiurl}}/{{entityType}}/delete?_id={{entityId}}	 HTTP/1.1
 Content-Type: application/json
 Authorization: Bearer {{token}}
 
+### POST add
+POST {{apiurl}}/{{entityType}}/add  HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{token}}
 
-
-
-
-
-
-
+{
+  "name": "John Doe2",
+  "password": "123456",
+  "passwordConfirmation": "123456",
+  "cpf": "12345678900",
+  "role": "professional",
+  "serviceIds": [],
+  "email":"email@teste.com"
+}
 
 
 ### POST signup
