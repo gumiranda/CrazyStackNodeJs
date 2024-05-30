@@ -173,7 +173,7 @@ CREATE TABLE request (
     "professionalId" UUID NOT NULL,
     "status" INT NOT NULL ,
     "createdForId" UUID NOT NULL,
-    "updatedById" UUID NOT NULL,
+    "updatedById" UUID,
     "updatedByRole" VARCHAR(45),
     "read" BOOLEAN DEFAULT FALSE,
     "push" BOOLEAN DEFAULT FALSE,
