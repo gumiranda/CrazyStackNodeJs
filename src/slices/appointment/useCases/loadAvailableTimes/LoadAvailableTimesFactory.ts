@@ -11,6 +11,6 @@ export const makeLoadAvailableTimesFactory = (): LoadAvailableTimes => {
     new AppointmentAggregateRepository(new MongoRepository("appointment")),
     new ServiceRepository(makeDatabaseInstance(whiteLabel.database, "service")),
     new UserRepository(makeDatabaseInstance(whiteLabel.database, "users")),
-    new OwnerRepository(makeDatabaseInstance("mongodb", "owner"))
+    new OwnerRepository(makeDatabaseInstance(whiteLabel.database, "owner"))
   );
 };

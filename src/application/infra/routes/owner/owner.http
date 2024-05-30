@@ -6,7 +6,7 @@
 
 @entityId=79fe5bd5-841d-48ff-92a8-af79c2a1c7da
 
-@entityType=service
+@entityType=owner
 
 ### POST add
 POST {{apiurl}}/{{entityType}}/add  HTTP/1.1
@@ -14,28 +14,30 @@ Content-Type: application/json
 Authorization: Bearer {{token}}
 
 {
-  "name": "Corte de cabelo",
-  "description": "Este serviço é um corte de cabelo",
-  "price": 100,
-  "finalPrice": 1000,
-  "comission": 99,
-  "havePromotionalPrice":false,
-  "categoryId": "b7ea8b04-d687-4a37-bb12-4361e3411ba2",
-  "hasFidelityGenerator":false,
-  "promotionalPrice": 10,
-  "productsQuantityNeeded": 10,
-  "canPayWithFidelityPoints":false,
-  "appointmentsTotal": 0,
-  "duration": 15
+  "name": "Owner do devdoido",
+  "description": "Owner do devdoido",
+  "haveDelivery": false,
+  "minimumTimeForReSchedule": 40,
+  "days1": {
+  "monday1": true,
+  "sunday1": true,
+  "thursday1": true,
+  "wednesday1": true,
+  "tuesday1": true,
+  "friday1": true,
+  "saturday1": true
+  },
+  "hourStart1": "8:00",
+  "hourEnd1": "18:00"
 }
 
-### GET loadById
+### GET loadUserById
 GET {{apiurl}}/{{entityType}}/load?_id={{entityId}} HTTP/1.1
 Content-Type: application/json
 Authorization: Bearer {{token}}
 
 
-### GET loadByPage
+### GET loadUserByPage
 GET {{apiurl}}/{{entityType}}/loadByPage?page=1 HTTP/1.1
 Content-Type: application/json
 Authorization: Bearer {{token}}
