@@ -1,7 +1,8 @@
 @apiurl = http://127.0.0.1:3333/api
 
 @token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1NGI3YThhNC00YTc5LTQ1N2UtYjhmMC0yMGRhZDE5ZmUwNDgiLCJpYXQiOjE3MTcwOTQ3MTEsImV4cCI6MTcyMjI3ODcxMX0.6jmPXDkjUF3ADvwYJ19c_A2oBVD9UF8rRKPYOKPNTSQ
-@entityId=1e498528-c1ad-4abe-b461-f7526b89c6de
+
+@entityId=ebea9f06-20a8-42b4-954f-65740b291069
 
 @entityType=product
 
@@ -11,8 +12,13 @@ Content-Type: application/json
 Authorization: Bearer {{token}}
 
 {
-  "name": "Categoria legal"
+  "name": "Sample Product",
+  "active": true,
+  "createdAt": "2024-05-31T14:53:00Z",
+  "updatedAt": "2024-05-31T14:53:00Z",
+  "quantity": 100
 }
+
 
 ### GET loadById
 GET {{apiurl}}/{{entityType}}/load?_id={{entityId}} HTTP/1.1

@@ -434,3 +434,30 @@ CREATE TABLE transaction (
     "account" JSONB,
     CONSTRAINT "fk_createdById_transaction" FOREIGN KEY ("createdById") REFERENCES users("_id")
 );
+CREATE TABLE product (
+    "_id" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    "createdById" UUID NOT NULL,
+    "name" VARCHAR(255) NOT NULL,
+    "active" BOOLEAN DEFAULT TRUE,
+    "createdAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    "quantity" INT NOT NULL,
+    CONSTRAINT "fk_createdById_product" FOREIGN KEY ("createdById") REFERENCES users("_id")
+);
+CREATE TABLE "mapRoute" (
+    "_id" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    "createdById" UUID NOT NULL,
+    "name" VARCHAR(255) NOT NULL,
+    "active" BOOLEAN DEFAULT TRUE,
+    "createdAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    "source" JSONB NOT NULL,
+    "source_id" VARCHAR(255),
+    "destination_id" VARCHAR(255),
+    "destination" JSONB NOT NULL,
+    "distance" NUMERIC NOT NULL,
+    "duration" NUMERIC NOT NULL,
+    "directions" TEXT NOT NULL,
+    "routeDriver" JSONB  ,
+    CONSTRAINT "fk_createdById_maproute" FOREIGN KEY ("createdById") REFERENCES users("_id")
+);
