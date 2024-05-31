@@ -35,7 +35,7 @@ export const webHookBody = {
         paymentLinkID: { type: "string" },
         transactionID: { type: "string" },
         status: { type: "string" },
-        additionalInfo: { type: "array" },
+        additionalInfo: {},
         discount: { type: "number" },
         valueWithDiscount: { type: "number" },
         expiresDate: { type: "string", format: "date-time" },

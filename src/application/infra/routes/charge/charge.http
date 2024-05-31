@@ -1,0 +1,71 @@
+@apiurl = http://127.0.0.1:3333/api
+
+@token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1NGI3YThhNC00YTc5LTQ1N2UtYjhmMC0yMGRhZDE5ZmUwNDgiLCJpYXQiOjE3MTcwOTQ3MTEsImV4cCI6MTcyMjI3ODcxMX0.6jmPXDkjUF3ADvwYJ19c_A2oBVD9UF8rRKPYOKPNTSQ
+@entityId=1e498528-c1ad-4abe-b461-f7526b89c6de
+
+@entityType=charge
+
+@correlationID=f0f3b960-999c-4012-92cd-3bcc16c2a02f
+
+### POST add
+POST {{apiurl}}/{{entityType}}/add  HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "name": "Service Charge",
+  "active": true,
+  "createdAt": "2024-05-30T10:30:00Z",
+  "updatedAt": "2024-05-30T10:30:00Z",
+  "status": "pending",
+  "customer": {
+    "name": "John Doe",
+    "email": "john.doe@example.com",
+    "phone": "1234567890",
+    "taxID": {
+      "taxID": "123.456.789-00",
+      "type": "CPF"
+    },
+    "address": {
+      "zipcode": "12345-678",
+      "street": "123 Main St",
+      "number": "123",
+      "neighborhood": "Downtown",
+      "city": "Metropolis",
+      "state": "NY",
+      "complement": "Apt 456",
+      "country": "USA"
+    }
+  },
+  "value": 150075,
+  "comment": "Payment for monthly subscription",
+  "correlationID": "f0f3b960-999c-4012-92cd-3bcc16c2a02f",
+  "expiresIn": 3600
+}
+
+
+### GET loadById
+GET {{apiurl}}/{{entityType}}/load?correlationID={{correlationID}} HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+
+### GET loadByPage
+GET {{apiurl}}/{{entityType}}/loadByPage?page=1 HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+### PATCH update
+PATCH {{apiurl}}/{{entityType}}/update?correlationID={{correlationID}} HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "name": "categoria top"
+}
+
+### DELETE delete
+DELETE {{apiurl}}/{{entityType}}/delete?correlationID={{correlationID}}	 HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{token}}
+

@@ -1,0 +1,67 @@
+@apiurl = http://127.0.0.1:3333/api
+
+@token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1NGI3YThhNC00YTc5LTQ1N2UtYjhmMC0yMGRhZDE5ZmUwNDgiLCJpYXQiOjE3MTcwOTQ3MTEsImV4cCI6MTcyMjI3ODcxMX0.6jmPXDkjUF3ADvwYJ19c_A2oBVD9UF8rRKPYOKPNTSQ
+@entityId=94c7c2db-e065-4940-a014-a4bb7666dc7a
+
+@entityType=ride
+
+### POST add
+POST {{apiurl}}/{{entityType}}/add  HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "name": "Ride to Downtown",
+  "active": true,
+  "createdAt": "2024-05-30T10:00:00Z",
+  "updatedAt": "2024-05-30T10:00:00Z",
+  "driverUserType": "professional",
+  "requestId": "f7323d26-9e8d-4a1b-9d3c-a6133b2dda3a",
+  "origin": {
+    "latitude": -23.55052,
+    "longitude": -46.633308,
+    "address": "123 Main St, Sao Paulo, SP"
+  },
+  "destiny": {
+    "latitude": -23.559616,
+    "longitude": -46.658123,
+    "address": "456 Elm St, Sao Paulo, SP"
+  },
+  "status": 1,
+  "distance": 5.0,
+  "distanceTime": 15,
+  "maxCostEstimated": 25.0,
+  "minCostEstimated": 20.0,
+  "finalCost": 22.0,
+  "costDefinedByOwner": 22.0,
+  "initDate": "2024-05-30T10:15:00Z",
+  "endDateEstimated": "2024-05-30T10:30:00Z",
+  "endDate": "2024-05-30T10:28:00Z"
+}
+
+
+### GET loadById
+GET {{apiurl}}/{{entityType}}/load?_id={{entityId}} HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+
+### GET loadByPage
+GET {{apiurl}}/{{entityType}}/loadByPage?page=1 HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+### PATCH update
+PATCH {{apiurl}}/{{entityType}}/update?_id={{entityId}} HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "name": "categoria top"
+}
+
+### DELETE delete
+DELETE {{apiurl}}/{{entityType}}/delete?_id={{entityId}}	 HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{token}}
+

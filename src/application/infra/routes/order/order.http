@@ -1,0 +1,41 @@
+@apiurl = http://127.0.0.1:3333/api
+
+@token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1NGI3YThhNC00YTc5LTQ1N2UtYjhmMC0yMGRhZDE5ZmUwNDgiLCJpYXQiOjE3MTcwOTQ3MTEsImV4cCI6MTcyMjI3ODcxMX0.6jmPXDkjUF3ADvwYJ19c_A2oBVD9UF8rRKPYOKPNTSQ
+@entityId=1e498528-c1ad-4abe-b461-f7526b89c6de
+
+@entityType=order
+
+### POST add
+POST {{apiurl}}/{{entityType}}/add  HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "name": "Categoria legal"
+}
+
+### GET loadById
+GET {{apiurl}}/{{entityType}}/load?_id={{entityId}} HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+
+### GET loadByPage
+GET {{apiurl}}/{{entityType}}/loadByPage?page=1 HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+### PATCH update
+PATCH {{apiurl}}/{{entityType}}/update?_id={{entityId}} HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "name": "categoria top"
+}
+
+### DELETE delete
+DELETE {{apiurl}}/{{entityType}}/delete?_id={{entityId}}	 HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{token}}
+

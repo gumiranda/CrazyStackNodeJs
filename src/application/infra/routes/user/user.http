@@ -62,11 +62,11 @@ Content-Type: application/json
 
 
 {
-  "email": "gustavao@gmail.com",
+  "email": "teste4@gmail.com",
   "password": "123456",
   "passwordConfirmation": "123456",
   "name": "John Doe",
-  "cpf": "12345678903",
+  "cpf": "00800551095",
   "phone": "12345678900",
   "role": "owner",
   "coord": {

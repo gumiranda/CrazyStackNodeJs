@@ -1,0 +1,50 @@
+@apiurl = http://127.0.0.1:3333/api
+
+@token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1NGI3YThhNC00YTc5LTQ1N2UtYjhmMC0yMGRhZDE5ZmUwNDgiLCJpYXQiOjE3MTcwOTQ3MTEsImV4cCI6MTcyMjI3ODcxMX0.6jmPXDkjUF3ADvwYJ19c_A2oBVD9UF8rRKPYOKPNTSQ
+@entityId=2754e542-295c-4044-9089-76cff416ea9f
+
+@entityType=customer
+
+@correlationID=40bcbd5e-8330-42d8-a745-43c77ef23ec8
+
+### POST add
+POST {{apiurl}}/{{entityType}}/add  HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+    "cpf": "46869302006",
+    "name": "Das sss aaaa",
+    "phone": "33333333333",
+    "email": "teste9s@gmail.com",
+    "correlationID": "2365078e-e0b3-e49c-49fb-c2199b210801",
+    "taxID": "46869302006",
+  "source_id":"dsdds","destination_id":"dsdds",
+    "active": true
+}
+
+### GET loadById
+GET {{apiurl}}/{{entityType}}/load?correlationID={{correlationID}} HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+
+### GET loadByPage
+GET {{apiurl}}/{{entityType}}/loadByPage?page=1 HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+### PATCH update
+PATCH {{apiurl}}/{{entityType}}/update?correlationID={{correlationID}} HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "name": "categoria top"
+}
+
+### DELETE delete
+DELETE {{apiurl}}/{{entityType}}/delete?_id={{entityId}}	 HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{token}}
+

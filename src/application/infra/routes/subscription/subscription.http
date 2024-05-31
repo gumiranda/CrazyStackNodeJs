@@ -1,0 +1,113 @@
+@apiurl = http://127.0.0.1:3333/api
+
+@token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1NGI3YThhNC00YTc5LTQ1N2UtYjhmMC0yMGRhZDE5ZmUwNDgiLCJpYXQiOjE3MTcwOTQ3MTEsImV4cCI6MTcyMjI3ODcxMX0.6jmPXDkjUF3ADvwYJ19c_A2oBVD9UF8rRKPYOKPNTSQ
+@entityId=46cd6545-0c03-408e-98ce-0f52135ebcdb
+
+@entityType=subscription
+
+@correlationID=0aa0f536-86f4-4120-917b-2f2a0ca9bb56
+
+@globalID=GF5bWVudFN1YnNjcmlwdGlvbjo2NjVhMmJkZTBkY2MyOGE0ZjM5OTcwYjM=
+
+### POST add
+POST {{apiurl}}/{{entityType}}/add  HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "correlationID": "{% uuid 'v4' %}",
+  "cpf": "04891552000",
+  "name": "teste",
+  "comment": "comentario",
+  "dayGenerateCharge": "28",
+  "value": "1000",
+  "customer": {
+    "email": "teste@teste.com",
+    "phone": "34994329466",
+    "taxID": "56129370083",
+    "name": "cliente teste",
+    "pagarmeCustomer": {
+      "name": "teste do cidadao",
+      "email": "teste@teste.com",
+      "code": "{% uuid 'v4' %}",
+      "document": "04891552000",
+      "document_type": "CPF",
+      "gender": "male",
+      "address": {
+        "country": "BR",
+        "state": "MG",
+        "city": "Uberlandia",
+        "line_1": "Av. Joao naves de avila",
+        "line_2": "numero 99 ap 100",
+        "zip_code": "38408200"
+      },
+      "phones": {
+        "home_phone": {
+          "country_code": "55",
+          "number": "000000000",
+          "area_code": "21"
+        },
+        "mobile_phone": {
+          "country_code": "55",
+          "number": "000000000",
+          "area_code": "21"
+        }
+      },
+      "birthdate": "1996-02-23T00:00:00Z",
+      "type": "individual"
+    }
+  },
+  "pagarmeSubscription": {
+    "currency": "BRL",
+    "start_at": "2024-04-02T00:00:00Z",
+    "interval": "month",
+    "minimum_price": "1000",
+    "billing_type": "prepaid",
+    "installments": "1",
+    "description": "parcela app belezix",
+    "card": {
+      "number": "5508186103914506",
+      "holder_name": "ddfdfdffd",
+      "holder_document": "04450690826",
+      "exp_month": "8",
+      "exp_year": "24",
+      "cvv": "990",
+      "billing_address_id": "addr_ZPx50baHOH7ABp1G",
+      "brand": "mastercard"
+    },
+    "quantity": "1",
+    "pricing_scheme": {
+      "scheme_type": "unit",
+      "price": "1000"
+    },
+    "statement_descriptor": "aplicativobelezix",
+    "customer_id": "cus_o0wLeLxHRH2eAZkR",
+    "payment_method": "credit_card"
+  }
+}
+
+### GET loadById
+GET {{apiurl}}/{{entityType}}/load?correlationID={{correlationID}} HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+
+### GET loadByPage
+GET {{apiurl}}/{{entityType}}/loadByPage?page=1 HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+### PATCH update
+PATCH {{apiurl}}/{{entityType}}/update?globalID={{globalID}}&_id=${{entityId}} HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "name": "categoria top"
+}
+
+### DELETE delete
+DELETE {{apiurl}}/{{entityType}}/delete?_id={{entityId}}	 HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
