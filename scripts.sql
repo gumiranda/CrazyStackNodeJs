@@ -461,3 +461,16 @@ CREATE TABLE "mapRoute" (
     "routeDriver" JSONB  ,
     CONSTRAINT "fk_createdById_maproute" FOREIGN KEY ("createdById") REFERENCES users("_id")
 );
+CREATE TABLE "routeDriver" (
+    "_id" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    "createdById" UUID NOT NULL,
+    "name" VARCHAR(255) NOT NULL,
+    "routeId" UUID NOT NULL,
+    "points" JSONB NOT NULL,
+    "status" VARCHAR(50) NOT NULL, -- FINALIZADO, INICIADO, ETC
+    "active" BOOLEAN DEFAULT TRUE,
+    "createdAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT "fk_createdById_routeDriver" FOREIGN KEY ("createdById") REFERENCES users("_id"),
+    CONSTRAINT "fk_routeId_routeDriver" FOREIGN KEY ("routeId") REFERENCES "mapRoute"("_id")
+);

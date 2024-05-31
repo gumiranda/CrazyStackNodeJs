@@ -1,7 +1,9 @@
 @apiurl = http://127.0.0.1:3333/api
 
 @token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1NGI3YThhNC00YTc5LTQ1N2UtYjhmMC0yMGRhZDE5ZmUwNDgiLCJpYXQiOjE3MTcwOTQ3MTEsImV4cCI6MTcyMjI3ODcxMX0.6jmPXDkjUF3ADvwYJ19c_A2oBVD9UF8rRKPYOKPNTSQ
-@entityId=1e498528-c1ad-4abe-b461-f7526b89c6de
+@entityId=c9ed5425-5d91-4725-877b-578ef7abb84c
+
+@routeId=0184be9b-5a03-4740-9080-b7be7c5f4265
 
 @entityType=routeDriver
 
@@ -11,8 +13,16 @@ Content-Type: application/json
 Authorization: Bearer {{token}}
 
 {
-  "name": "Categoria legal"
+  "name": "Route Driver 1",
+  "routeId": "0184be9b-5a03-4740-9080-b7be7c5f4265",
+  "points": [
+  ],
+  "status": "INICIADO",
+  "active": true,
+  "createdAt": "2024-05-31T14:53:00Z",
+  "updatedAt": "2024-05-31T14:53:00Z"
 }
+
 
 ### GET loadById
 GET {{apiurl}}/{{entityType}}/load?_id={{entityId}} HTTP/1.1
@@ -26,12 +36,12 @@ Content-Type: application/json
 Authorization: Bearer {{token}}
 
 ### PATCH update
-PATCH {{apiurl}}/{{entityType}}/update?_id={{entityId}} HTTP/1.1
+PATCH {{apiurl}}/{{entityType}}/update?_id={{entityId}}&routeId={{routeId}}&lat=33&lng=33 HTTP/1.1
 Content-Type: application/json
 Authorization: Bearer {{token}}
 
 {
-  "name": "categoria top"
+  "status": "FINALIZADO"
 }
 
 ### DELETE delete

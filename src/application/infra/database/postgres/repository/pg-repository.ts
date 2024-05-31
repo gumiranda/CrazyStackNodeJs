@@ -65,11 +65,14 @@ export class PostgresRepository extends Repository {
   }
   async upsertAndPush(query: any, data: any, pushData: any): Promise<any> {
     const client = await connect();
+    let result;
     try {
       // Assuming pushData is an object where keys are columns and values are arrays to append
-      // This example assumes there's a single key-value pair in pushData
       const keyToPush = Object.keys(pushData)[0];
       const valuesToPush = pushData[keyToPush];
+
+      // Convert pushData to JSON string
+      const valuesToPushJson = JSON.stringify(valuesToPush);
 
       // Start transaction
       await client.query("BEGIN");
@@ -79,24 +82,33 @@ export class PostgresRepository extends Repository {
 
       if (Number(selectResult?.rowCount ?? 0) > 0) {
         // Update case: append to the existing array
-        const updatedArray = selectResult.rows[0][keyToPush].concat(valuesToPush);
-        const updateQuery = `UPDATE "${this.tableName}" SET "${keyToPush}" = $1 WHERE "${Object.keys(query)[0]}" = $2`;
-        await client.query(updateQuery, [updatedArray, query[Object.keys(query)[0]]]);
+        let updatedArray = [];
+        if (Array.isArray(selectResult.rows[0][keyToPush])) {
+          updatedArray = selectResult.rows[0][keyToPush].concat(valuesToPushJson);
+        } else {
+          updatedArray = [valuesToPushJson];
+        }
+
+        const updateQuery = `UPDATE "${this.tableName}" SET "${keyToPush}" = $1 WHERE "${Object.keys(query)[0]}" = $2 RETURNING *`;
+        result = await client.query(updateQuery, [
+          JSON.stringify(updatedArray),
+          query[Object.keys(query)[0]],
+        ]);
       } else {
         // Insert case: insert new row with a new array
-        data[keyToPush] = valuesToPush;
+        data[keyToPush] = [valuesToPushJson]; // Ensure it's an array
         const insertColumns = Object.keys(data)
           .map((key) => `"${key}"`)
           .join(", ");
         const insertValues = Object.values(data);
         const insertPlaceholders = insertValues.map((_, idx) => `$${idx + 1}`).join(", ");
 
-        const insertQuery = `INSERT INTO "${this.tableName}" (${insertColumns}) VALUES (${insertPlaceholders})`;
-        await client.query(insertQuery, insertValues);
+        const insertQuery = `INSERT INTO "${this.tableName}" (${insertColumns}) VALUES (${insertPlaceholders}) RETURNING *`;
+        result = await client.query(insertQuery, insertValues);
       }
 
       await client.query("COMMIT");
-      return true;
+      return result.rows[0];
     } catch (err) {
       await client.query("ROLLBACK");
       throw err;

@@ -7,7 +7,7 @@ const bodyAddRouteDriverJsonSchema = {
     name: { type: "string" },
     routeId: idSchema,
     status: { type: "string" },
-    points: { type: "array" },
+    points: {},
   },
 };
 const headersJsonSchema = {
@@ -24,7 +24,7 @@ const addRouteDriverResponse = {
     name: { type: "string" },
     routeId: idSchema,
     status: { type: "string" },
-    points: { type: "array" },
+    points: {},
     active: { type: "boolean" },
     createdById: { type: "string" },
     createdAt: { type: "string" },
@@ -52,7 +52,7 @@ const loadRouteDriverResponse = {
     name: { type: "string" },
     routeId: idSchema,
     status: { type: "string" },
-    points: { type: "array" },
+    points: {},
     active: { type: "boolean" },
     createdById: { type: "string" },
     createdAt: { type: "string" },
