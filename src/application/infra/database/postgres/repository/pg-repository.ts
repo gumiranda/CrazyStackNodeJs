@@ -77,35 +77,29 @@ export class PostgresRepository extends Repository {
       // Start transaction
       await client.query("BEGIN");
 
-      const selectQuery = `SELECT "${keyToPush}" FROM "${this.tableName}" WHERE "${Object.keys(query)[0]}" = $1`;
-      const selectResult = await client.query(selectQuery, [query[Object.keys(query)[0]]]);
+      const selectQuery = `SELECT "${keyToPush}" FROM "${this.tableName}" WHERE "${Object.keys(query)[0]}" = $1 AND "${Object.keys(query)[1]}" = $2`;
+      const selectResult = await client.query(selectQuery, [
+        query[Object.keys(query)[0]],
+        query[Object.keys(query)[1]],
+      ]);
 
-      if (Number(selectResult?.rowCount ?? 0) > 0) {
-        // Update case: append to the existing array
-        let updatedArray = [];
-        if (Array.isArray(selectResult.rows[0][keyToPush])) {
-          updatedArray = selectResult.rows[0][keyToPush].concat(valuesToPushJson);
-        } else {
-          updatedArray = [valuesToPushJson];
-        }
-
-        const updateQuery = `UPDATE "${this.tableName}" SET "${keyToPush}" = $1 WHERE "${Object.keys(query)[0]}" = $2 RETURNING *`;
-        result = await client.query(updateQuery, [
-          JSON.stringify(updatedArray),
-          query[Object.keys(query)[0]],
-        ]);
+      // Update case: append to the existing array
+      let updatedArray = [];
+      if (Array.isArray(selectResult?.rows?.[0]?.[keyToPush])) {
+        updatedArray = selectResult.rows[0][keyToPush].concat(valuesToPushJson);
       } else {
-        // Insert case: insert new row with a new array
-        data[keyToPush] = [valuesToPushJson]; // Ensure it's an array
-        const insertColumns = Object.keys(data)
-          .map((key) => `"${key}"`)
-          .join(", ");
-        const insertValues = Object.values(data);
-        const insertPlaceholders = insertValues.map((_, idx) => `$${idx + 1}`).join(", ");
-
-        const insertQuery = `INSERT INTO "${this.tableName}" (${insertColumns}) VALUES (${insertPlaceholders}) RETURNING *`;
-        result = await client.query(insertQuery, insertValues);
+        updatedArray = [valuesToPushJson];
       }
+      const chave = Object.keys(query)[0];
+      const chave2 = Object.keys(query)[1];
+      const valor = query[Object.keys(query)[0]];
+      const valor2 = query[Object.keys(query)[1]];
+      const updateQuery = `UPDATE "${this.tableName}" SET "${keyToPush}" = $1 WHERE "${chave}" = $2 AND "${chave2}" = $3 RETURNING *`;
+      result = await client.query(updateQuery, [
+        JSON.stringify(updatedArray),
+        valor,
+        valor2,
+      ]);
 
       await client.query("COMMIT");
       return result.rows[0];

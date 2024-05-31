@@ -1,7 +1,8 @@
 @apiurl = http://127.0.0.1:3333/api
 
 @token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1NGI3YThhNC00YTc5LTQ1N2UtYjhmMC0yMGRhZDE5ZmUwNDgiLCJpYXQiOjE3MTcwOTQ3MTEsImV4cCI6MTcyMjI3ODcxMX0.6jmPXDkjUF3ADvwYJ19c_A2oBVD9UF8rRKPYOKPNTSQ
-@entityId=c9ed5425-5d91-4725-877b-578ef7abb84c
+
+@entityId=107f00b2-997f-4707-b7e0-772104d5a863
 
 @routeId=0184be9b-5a03-4740-9080-b7be7c5f4265
 
@@ -13,7 +14,7 @@ Content-Type: application/json
 Authorization: Bearer {{token}}
 
 {
-  "name": "Route Driver 1",
+  "name": "Route Driver 3",
   "routeId": "0184be9b-5a03-4740-9080-b7be7c5f4265",
   "points": [
   ],
