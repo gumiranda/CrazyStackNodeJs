@@ -4,10 +4,11 @@ import {
   loadRatingResultByPage,
   LoadRatingResultByPage,
 } from "@/slices/ratingResult/useCases";
+import { whiteLabel } from "@/application/infra/config/whiteLabel";
 
 export const makeLoadRatingResultByPageFactory = (): LoadRatingResultByPage => {
   const repository = new RatingResultRepository(
-    makeDatabaseInstance("mongodb", "ratingResult")
+    makeDatabaseInstance(whiteLabel.database, "ratingResult")
   );
   return loadRatingResultByPage(repository);
 };
