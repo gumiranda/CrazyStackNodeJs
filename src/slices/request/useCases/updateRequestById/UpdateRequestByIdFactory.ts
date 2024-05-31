@@ -15,12 +15,12 @@ import { whiteLabel } from "@/application/infra/config/whiteLabel";
 export const makeUpdateRequestByIdFactory = (): IUpdateRequestById => {
   return new UpdateRequestById(
     new RequestRepository(makeDatabaseInstance(whiteLabel.database, "request")),
-    new OrderRepository(makeDatabaseInstance("mongodb", "order")),
+    new OrderRepository(makeDatabaseInstance(whiteLabel.database, "order")),
     new AppointmentRepository(makeDatabaseInstance(whiteLabel.database, "appointment")),
     new ServiceRepository(makeDatabaseInstance(whiteLabel.database, "service")),
     new UserRepository(makeDatabaseInstance(whiteLabel.database, "users")),
-    new RideRepository(makeDatabaseInstance("mongodb", "ride")),
-    new RecurrenceRepository(makeDatabaseInstance("mongodb", "recurrence")),
+    new RideRepository(makeDatabaseInstance(whiteLabel.database, "ride")),
+    new RecurrenceRepository(makeDatabaseInstance(whiteLabel.database, "recurrence")),
     new FidelityRepository(makeDatabaseInstance("mongodb", "fidelity")),
     new ClientRepository(makeDatabaseInstance(whiteLabel.database, "client"))
   );

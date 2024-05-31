@@ -4,10 +4,11 @@ import {
   loadSubscriptionByPage,
   LoadSubscriptionByPage,
 } from "@/slices/payment/subscription/useCases";
+import { whiteLabel } from "@/application/infra/config/whiteLabel";
 
 export const makeLoadSubscriptionByPageFactory = (): LoadSubscriptionByPage => {
   const repository = new SubscriptionRepository(
-    makeDatabaseInstance("mongodb", "subscription")
+    makeDatabaseInstance(whiteLabel.database, "subscription")
   );
   return loadSubscriptionByPage(repository);
 };

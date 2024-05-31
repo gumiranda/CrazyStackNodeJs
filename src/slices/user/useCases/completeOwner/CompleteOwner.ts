@@ -125,6 +125,9 @@ export const completeOwner: CompleteOwnerSignature =
       correlationID: uuidv4(),
     };
     const customerCreated: any = await addCustomer(customer as any);
+    if (customerCreated?.error === "Há outro cliente com esses dados") {
+      return null;
+    }
     const { gatewayDetails } = customerCreated;
     const subscription = await addSubscription({
       createdById: _id,
@@ -136,39 +139,38 @@ export const completeOwner: CompleteOwnerSignature =
       dayGenerateCharge: String(new Date().getDate()),
       globalID: uuidv4(),
     });
+    const professional = new UserEntity({
+      name: userCreated?.name as string,
+      createdById: userCreated?._id as string,
+      serviceIds: serviceIds,
+      serviceOptions: serviceOptions,
+      email: ("profissional" + email) as string,
+      role: "professional",
+      password: password ?? "",
+      myOwnerId: _id as string,
+      ownerId: ownerData?._id as string,
+      active: true,
+    });
+    const client = new UserEntity({
+      name: name as string,
+      createdById: _id as string,
+      email: ("cliente" + email) as string,
+      role: "client",
+      password: password ?? "",
+      active: true,
+      myOwnerId: _id as string,
+      ownerId: ownerData?._id as string,
+    });
     const [professionalData, clientUserData, updateUser] = await Promise.all([
-      userRepository.addUser(
-        new UserEntity({
-          name: userCreated?.name as string,
-          createdById: userCreated?._id as string,
-          serviceIds: serviceIds,
-          serviceOptions: serviceOptions,
-          email: ("profissional" + email) as string,
-          role: "professional",
-          password: password ?? "",
-          myOwnerId: _id as string,
-          ownerId: ownerData?._id as string,
-          active: true,
-        })
-      ),
-      userRepository.addUser(
-        new UserEntity({
-          name: name as string,
-          createdById: _id as string,
-          email: ("cliente" + email) as string,
-          role: "client",
-          password: password ?? "",
-          active: true,
-          myOwnerId: _id as string,
-          ownerId: ownerData?._id as string,
-        })
-      ),
+      userRepository.addUser(professional),
+      userRepository.addUser(client),
       userRepository.updateUser(
         { fields: { _id } },
         {
           myOwnerId: _id,
           ownerId: ownerData?._id as string,
-          createdById: customer?.correlationID,
+          createdById: _id,
+          customerID: customer?.correlationID,
           globalID: subscription?.globalID,
         }
       ),

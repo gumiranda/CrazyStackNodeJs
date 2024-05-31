@@ -6,7 +6,7 @@ import { addSubscription, AddSubscription } from "@/slices/payment/subscription/
 
 export const makeAddSubscriptionFactory = (): AddSubscription => {
   const repository = new SubscriptionRepository(
-    makeDatabaseInstance("mongodb", "subscription")
+    makeDatabaseInstance(whiteLabel.database, "subscription")
   );
   return addSubscription(repository, makePaymentAdapter(whiteLabel.gatewayPix));
 };

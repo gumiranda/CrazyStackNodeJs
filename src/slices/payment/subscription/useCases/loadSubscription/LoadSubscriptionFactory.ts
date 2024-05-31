@@ -6,7 +6,7 @@ import { whiteLabel } from "@/application/infra/config/whiteLabel";
 
 export const makeLoadSubscriptionFactory = (): LoadSubscription => {
   const repository = new SubscriptionRepository(
-    makeDatabaseInstance("mongodb", "subscription")
+    makeDatabaseInstance(whiteLabel.database, "subscription")
   );
   return loadSubscription(repository, makePaymentAdapter(whiteLabel.gatewayPix));
 };

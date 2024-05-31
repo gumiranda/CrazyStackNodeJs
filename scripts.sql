@@ -40,11 +40,12 @@ CREATE TABLE users (
     "updatedAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     "serviceIds" VARCHAR(255)[],
     "serviceOptions" JSONB[],
-    "globalID" UUID,
+    "globalID" VARCHAR(255),
     FOREIGN KEY ("createdById") REFERENCES users("_id"),
     FOREIGN KEY ("myOwnerId") REFERENCES users("_id")
 );
-
+-- ALTER TABLE users ALTER COLUMN "globalID" TYPE VARCHAR(255);
+ALTER TABLE users ADD COLUMN "customerID" VARCHAR(255);
 CREATE TABLE account (
     "_id" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     "createdById" UUID NOT NULL,
@@ -267,4 +268,169 @@ CREATE TABLE rating_result (
     "ratings" JSONB NOT NULL,
     CONSTRAINT "fk_createdById" FOREIGN KEY ("createdById") REFERENCES users("_id"),
     CONSTRAINT "fk_ratingId" FOREIGN KEY ("ratingId") REFERENCES rating("_id")
+);
+CREATE TABLE ride (
+    "_id" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    "createdById" UUID NOT NULL,
+    "name" VARCHAR(255) NOT NULL,
+    "active" BOOLEAN DEFAULT TRUE,
+    "createdAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    "driverUserType" VARCHAR(255) NOT NULL,
+    "requestId" UUID NOT NULL,
+    "origin" JSONB NOT NULL,
+    "destiny" JSONB NOT NULL,
+    "status" INT NOT NULL,
+    "distance" NUMERIC NOT NULL,
+    "distanceTime" INT NOT NULL,
+    "maxCostEstimated" NUMERIC NOT NULL,
+    "minCostEstimated" NUMERIC NOT NULL,
+    "finalCost" NUMERIC NOT NULL,
+    "costDefinedByOwner" NUMERIC,
+    "initDate" TIMESTAMP NOT NULL,
+    "endDateEstimated" TIMESTAMP NOT NULL,
+    "endDate" TIMESTAMP,
+    CONSTRAINT "fk_createdById_ride" FOREIGN KEY ("createdById") REFERENCES users("_id"),
+    CONSTRAINT "fk_requestId_ride" FOREIGN KEY ("requestId") REFERENCES request("_id")
+);
+
+CREATE TABLE "order" (
+    "_id" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    "createdById" UUID NOT NULL,
+    "name" VARCHAR(255) NOT NULL,
+    "active" BOOLEAN DEFAULT TRUE,
+    "createdAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    "percentageAdopted" NUMERIC,
+    "paymentForm" VARCHAR(255),
+    "orderPaidByClient" BOOLEAN,
+    "comissionPaidByOwner" BOOLEAN,
+    "comissionValue" NUMERIC,
+    "totalValue" NUMERIC,
+    "professionalId" UUID,
+    "ownerId" UUID,
+    "requestId" UUID,
+    "clientId" UUID,
+    "extraCost" NUMERIC,
+    "normalCost" NUMERIC,
+    "haveFidelity" BOOLEAN,
+    "haveDelivery" BOOLEAN,
+    "pointsUsed" INT,
+    "appointmentDate" TIMESTAMP,
+    CONSTRAINT "fk_createdById_order" FOREIGN KEY ("createdById") REFERENCES users("_id"),
+    CONSTRAINT "fk_professionalId_order" FOREIGN KEY ("professionalId") REFERENCES users("_id"),
+    CONSTRAINT "fk_ownerId_order" FOREIGN KEY ("ownerId") REFERENCES owner("_id"),
+    CONSTRAINT "fk_requestId_order" FOREIGN KEY ("requestId") REFERENCES request("_id"),
+    CONSTRAINT "fk_clientId_order" FOREIGN KEY ("clientId") REFERENCES client("_id")
+);
+
+CREATE TABLE recurrence (
+    "_id" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    "createdById" UUID NOT NULL,
+    "name" VARCHAR(255) NOT NULL,
+    "active" BOOLEAN DEFAULT TRUE,
+    "createdAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    "type" INT CHECK ("type" IN (0, 1)) NOT NULL,  -- 0 is weekly, 1 is monthly
+    "accept" BOOLEAN NOT NULL,
+    "appointmentsWasInserted" BOOLEAN NOT NULL,
+    "frequency" INT NOT NULL,
+    "initDate" TIMESTAMP NOT NULL,
+    "endDate" TIMESTAMP NOT NULL,
+    "professionalId" UUID NOT NULL,
+    "requestId" UUID NOT NULL,
+    "clientId" UUID NOT NULL,
+    "ownerId" UUID NOT NULL,
+    "serviceId" UUID NOT NULL,
+    CONSTRAINT "fk_createdById_recurrence" FOREIGN KEY ("createdById") REFERENCES users("_id"),
+    CONSTRAINT "fk_professionalId_recurrence" FOREIGN KEY ("professionalId") REFERENCES users("_id"),
+    CONSTRAINT "fk_requestId_recurrence" FOREIGN KEY ("requestId") REFERENCES request("_id"),
+    CONSTRAINT "fk_clientId_recurrence" FOREIGN KEY ("clientId") REFERENCES client("_id"),
+    CONSTRAINT "fk_ownerId_recurrence" FOREIGN KEY ("ownerId") REFERENCES owner("_id"),
+    CONSTRAINT "fk_serviceId_recurrence" FOREIGN KEY ("serviceId") REFERENCES service("_id")
+);
+
+CREATE TABLE charge (
+    "_id" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    "createdById" UUID NOT NULL,
+    "name" VARCHAR(255),
+    "active" BOOLEAN DEFAULT TRUE,
+    "createdAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    "status" VARCHAR(255),
+    "customer" JSONB,
+    "value" NUMERIC NOT NULL,
+    "comment" TEXT,
+    "correlationID" VARCHAR(255),
+    "discount" NUMERIC,
+    "fee" NUMERIC,
+    "globalID" VARCHAR(255)  ,
+    "transactionID" VARCHAR(255),
+    "valueWithDiscount" NUMERIC,
+    "identifier" VARCHAR(255),
+    "paymentLinkID" VARCHAR(255),
+    "paymentLinkUrl" VARCHAR(255),
+    "qrCodeImage" VARCHAR(255),
+    "expiresIn" INT,
+    "expiresDate" TIMESTAMP,
+    "brCode" TEXT,
+    "pixKey" VARCHAR(255),
+    "additionalInfo" JSONB,
+    "gatewayDetails" JSONB,
+    "pagarmeOrder" JSONB,
+    "type" VARCHAR(255),  -- Adicionando a coluna type
+    CONSTRAINT "fk_createdById_charge" FOREIGN KEY ("createdById") REFERENCES users("_id")
+);
+
+
+CREATE TABLE customer (
+    "_id" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    "createdById" UUID NOT NULL,
+    "active" BOOLEAN DEFAULT TRUE,
+    "createdAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    "cpf" VARCHAR(14),
+    "correlationID" VARCHAR(255),
+    "gatewayDetails" JSONB,
+    "pagarmeCustomer" JSONB,
+    "name" VARCHAR(255) NOT NULL,
+    "email" VARCHAR(255) NOT NULL,
+    "phone" VARCHAR(15) NOT NULL,
+    "taxID" JSONB NOT NULL,
+    "address" JSONB,
+    CONSTRAINT "fk_createdById_customer" FOREIGN KEY ("createdById") REFERENCES users("_id")
+);
+
+CREATE TABLE subscription (
+    "_id" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    "createdById" UUID NOT NULL,
+    "name" VARCHAR(255) ,
+    "active" BOOLEAN DEFAULT TRUE,
+    "createdAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    "customer" JSONB ,
+    "value" NUMERIC  ,
+    "comment" TEXT,
+    "additionalInfo" JSONB  ,
+    "dayGenerateCharge" VARCHAR(10) ,
+    "globalID" VARCHAR(255)  ,
+    "gatewayDetails" JSONB,
+    "priceId" UUID,
+    "pagarmeSubscription" JSONB,
+    CONSTRAINT "fk_createdById_subscription" FOREIGN KEY ("createdById") REFERENCES users("_id")
+);
+
+CREATE TABLE transaction (
+    "_id" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    "createdById" UUID NOT NULL,
+    "name" VARCHAR(255) NOT NULL,
+    "active" BOOLEAN DEFAULT TRUE,
+    "createdAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    "event" VARCHAR(255) NOT NULL,
+    "charge" JSONB NOT NULL,
+    "pix" JSONB,
+    "company" JSONB,
+    "account" JSONB,
+    CONSTRAINT "fk_createdById_transaction" FOREIGN KEY ("createdById") REFERENCES users("_id")
 );

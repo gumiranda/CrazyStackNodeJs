@@ -4,10 +4,11 @@ import {
   loadTransactionByPage,
   LoadTransactionByPage,
 } from "@/slices/payment/transaction/useCases";
+import { whiteLabel } from "@/application/infra/config/whiteLabel";
 
 export const makeLoadTransactionByPageFactory = (): LoadTransactionByPage => {
   const repository = new TransactionRepository(
-    makeDatabaseInstance("mongodb", "transaction")
+    makeDatabaseInstance(whiteLabel.database, "transaction")
   );
   return loadTransactionByPage(repository);
 };

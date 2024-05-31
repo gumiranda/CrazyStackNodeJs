@@ -9,7 +9,9 @@ import {
 } from "@/slices/payment/customer/useCases";
 
 export const makeLoadCustomerFactory = (): LoadCustomer => {
-  const repository = new CustomerRepository(makeDatabaseInstance("mongodb", "customer"));
+  const repository = new CustomerRepository(
+    makeDatabaseInstance(whiteLabel.database, "customer")
+  );
   return loadCustomer(
     repository,
     makePaymentAdapter(whiteLabel.gatewayPix),

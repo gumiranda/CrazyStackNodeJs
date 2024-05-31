@@ -4,8 +4,11 @@ import {
   loadCustomerByPage,
   LoadCustomerByPage,
 } from "@/slices/payment/customer/useCases";
+import { whiteLabel } from "@/application/infra/config/whiteLabel";
 
 export const makeLoadCustomerByPageFactory = (): LoadCustomerByPage => {
-  const repository = new CustomerRepository(makeDatabaseInstance("mongodb", "customer"));
+  const repository = new CustomerRepository(
+    makeDatabaseInstance(whiteLabel.database, "customer")
+  );
   return loadCustomerByPage(repository);
 };

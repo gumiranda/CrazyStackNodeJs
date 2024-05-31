@@ -3,6 +3,7 @@ import { addDays } from "@/application/helpers";
 export type UserData = {
   _id?: string;
   createdById: string;
+  customerID?: string;
   name: string;
   email: string;
   role: string;
@@ -89,6 +90,7 @@ export class UserEntity {
   serviceIds?: string[];
   serviceOptions?: any[];
   globalID?: string;
+  customerID?: string;
 
   constructor(data: UserData) {
     this.createdById = data.createdById;
@@ -131,5 +133,6 @@ export class UserEntity {
     this.serviceOptions = data.serviceOptions;
     this.payDay = addDays(new Date(), 30);
     this.globalID = data.globalID;
+    this.customerID = data.customerID;
   }
 }

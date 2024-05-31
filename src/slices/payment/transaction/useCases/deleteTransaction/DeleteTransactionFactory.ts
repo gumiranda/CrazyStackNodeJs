@@ -4,10 +4,11 @@ import {
   deleteTransaction,
   DeleteTransaction,
 } from "@/slices/payment/transaction/useCases";
+import { whiteLabel } from "@/application/infra/config/whiteLabel";
 
 export const makeDeleteTransactionFactory = (): DeleteTransaction => {
   const repository = new TransactionRepository(
-    makeDatabaseInstance("mongodb", "transaction")
+    makeDatabaseInstance(whiteLabel.database, "transaction")
   );
   return deleteTransaction(repository);
 };

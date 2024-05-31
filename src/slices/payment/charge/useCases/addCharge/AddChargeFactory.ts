@@ -5,6 +5,8 @@ import { ChargeRepository } from "@/slices/payment/charge/repositories";
 import { addCharge, AddCharge } from "@/slices/payment/charge/useCases";
 
 export const makeAddChargeFactory = (): AddCharge => {
-  const repository = new ChargeRepository(makeDatabaseInstance("mongodb", "charge"));
+  const repository = new ChargeRepository(
+    makeDatabaseInstance(whiteLabel.database, "charge")
+  );
   return addCharge(repository, makePaymentAdapter(whiteLabel.gatewayPix));
 };

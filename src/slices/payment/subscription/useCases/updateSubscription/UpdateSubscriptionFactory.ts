@@ -4,10 +4,11 @@ import {
   updateSubscription,
   UpdateSubscription,
 } from "@/slices/payment/subscription/useCases";
+import { whiteLabel } from "@/application/infra/config/whiteLabel";
 
 export const makeUpdateSubscriptionFactory = (): UpdateSubscription => {
   const repository = new SubscriptionRepository(
-    makeDatabaseInstance("mongodb", "subscription")
+    makeDatabaseInstance(whiteLabel.database, "subscription")
   );
   return updateSubscription(repository);
 };
