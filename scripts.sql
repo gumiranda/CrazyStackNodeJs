@@ -46,6 +46,12 @@ CREATE TABLE users (
 );
 -- ALTER TABLE users ALTER COLUMN "globalID" TYPE VARCHAR(255);
 ALTER TABLE users ADD COLUMN "customerID" VARCHAR(255);
+
+-- Indexes for users table
+CREATE INDEX idx_users_createdById ON users("createdById");
+CREATE INDEX idx_users_ownerId ON users("ownerId");
+CREATE INDEX idx_users_myOwnerId ON users("myOwnerId");
+
 CREATE TABLE account (
     "_id" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     "createdById" UUID NOT NULL,
@@ -57,6 +63,8 @@ CREATE TABLE account (
     "expiresAt" TIMESTAMP,
    CONSTRAINT "fk_createdById" FOREIGN KEY ("createdById") REFERENCES users("_id")
 );
+-- Index for account table
+CREATE INDEX idx_account_createdById ON account("createdById");
 
 CREATE TABLE category (
     "_id" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
@@ -69,6 +77,8 @@ CREATE TABLE category (
     "updatedAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT "fk_createdById_category" FOREIGN KEY ("createdById") REFERENCES users("_id")
 );
+-- Index for category table
+CREATE INDEX idx_category_createdById ON category("createdById");
 
 CREATE TABLE service (
     "_id" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
@@ -95,6 +105,10 @@ CREATE TABLE service (
     CONSTRAINT "fk_createdById_service" FOREIGN KEY ("createdById") REFERENCES users("_id"),
     CONSTRAINT "fk_categoryId" FOREIGN KEY ("categoryId") REFERENCES category("_id")
 );
+-- Indexes for service table
+CREATE INDEX idx_service_createdById ON service("createdById");
+CREATE INDEX idx_service_categoryId ON service("categoryId");
+
 CREATE TABLE owner (
     "_id" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     "createdById" UUID NOT NULL,
@@ -138,7 +152,8 @@ CREATE TABLE owner (
     CONSTRAINT "fk_createdById_owner" FOREIGN KEY ("createdById") REFERENCES users("_id")
 );
 ALTER TABLE users ADD CONSTRAINT fk_ownerId FOREIGN KEY ("ownerId") REFERENCES owner("_id");
-
+-- Index for owner table
+CREATE INDEX idx_owner_createdById ON owner("createdById");
 CREATE TABLE client (
     "_id" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     "createdById" UUID NOT NULL,
@@ -158,7 +173,11 @@ CREATE TABLE client (
     FOREIGN KEY ("ownerId") REFERENCES owner("_id"),
     FOREIGN KEY ("myOwnerId") REFERENCES users("_id")
 );
-
+-- Indexes for client table
+CREATE INDEX idx_client_createdById ON client("createdById");
+CREATE INDEX idx_client_userId ON client("userId");
+CREATE INDEX idx_client_ownerId ON client("ownerId");
+CREATE INDEX idx_client_myOwnerId ON client("myOwnerId");
 CREATE TABLE request (
     "_id" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     "createdById" UUID NOT NULL,
@@ -203,7 +222,14 @@ CREATE TABLE request (
     CONSTRAINT "fk_createdForId_request" FOREIGN KEY ("createdForId") REFERENCES users("_id"),
     CONSTRAINT "fk_updatedById_request" FOREIGN KEY ("updatedById") REFERENCES users("_id")
 );
-
+-- Indexes for request table
+CREATE INDEX idx_request_createdById ON request("createdById");
+CREATE INDEX idx_request_serviceId ON request("serviceId");
+CREATE INDEX idx_request_ownerId ON request("ownerId");
+CREATE INDEX idx_request_clientId ON request("clientId");
+CREATE INDEX idx_request_clientUserId ON request("clientUserId");
+CREATE INDEX idx_request_professionalId ON request("professionalId");
+CREATE INDEX idx_request_createdForId ON request("createdForId");
 CREATE TABLE appointment (
     "_id" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     "createdById" UUID NOT NULL,
@@ -239,6 +265,12 @@ CREATE TABLE appointment (
     CONSTRAINT "fk_professionalId_appointment" FOREIGN KEY ("professionalId") REFERENCES users("_id"),
     CONSTRAINT "fk_cancelledById_appointment" FOREIGN KEY ("cancelledById") REFERENCES users("_id")
 );
+CREATE INDEX idx_appointment_createdById ON appointment("createdById");
+CREATE INDEX idx_appointment_requestId ON appointment("requestId");
+CREATE INDEX idx_appointment_serviceId ON appointment("serviceId");
+CREATE INDEX idx_appointment_ownerId ON appointment("ownerId");
+CREATE INDEX idx_appointment_clientId ON appointment("clientId");
+CREATE INDEX idx_appointment_professionalId ON appointment("professionalId");
 
 CREATE TABLE rating (
     "_id" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
@@ -251,8 +283,9 @@ CREATE TABLE rating (
     "ratings" JSONB NOT NULL,
     CONSTRAINT "fk_createdById" FOREIGN KEY ("createdById") REFERENCES users("_id")
 );
+CREATE INDEX idx_rating_createdById ON rating("createdById");
 
-CREATE TABLE rating_result (
+CREATE TABLE "ratingResult" (
     "_id" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     "createdById" UUID NOT NULL,
     "name" VARCHAR(255) NOT NULL,
@@ -269,6 +302,13 @@ CREATE TABLE rating_result (
     CONSTRAINT "fk_createdById" FOREIGN KEY ("createdById") REFERENCES users("_id"),
     CONSTRAINT "fk_ratingId" FOREIGN KEY ("ratingId") REFERENCES rating("_id")
 );
+
+CREATE INDEX idx_rating_result_createdById ON "ratingResult"("createdById");
+CREATE INDEX idx_rating_result_ratingId ON "ratingResult"("ratingId");
+CREATE INDEX idx_rating_result_requestId ON "ratingResult"("requestId");
+CREATE INDEX idx_rating_result_ratingForId ON "ratingResult"("ratingForId");
+
+
 CREATE TABLE ride (
     "_id" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     "createdById" UUID NOT NULL,
@@ -293,7 +333,9 @@ CREATE TABLE ride (
     CONSTRAINT "fk_createdById_ride" FOREIGN KEY ("createdById") REFERENCES users("_id"),
     CONSTRAINT "fk_requestId_ride" FOREIGN KEY ("requestId") REFERENCES request("_id")
 );
-
+-- Indexes for ride table
+CREATE INDEX idx_ride_createdById ON ride("createdById");
+CREATE INDEX idx_ride_requestId ON ride("requestId");
 CREATE TABLE "order" (
     "_id" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     "createdById" UUID NOT NULL,
@@ -323,7 +365,12 @@ CREATE TABLE "order" (
     CONSTRAINT "fk_requestId_order" FOREIGN KEY ("requestId") REFERENCES request("_id"),
     CONSTRAINT "fk_clientId_order" FOREIGN KEY ("clientId") REFERENCES client("_id")
 );
-
+-- Indexes for order table
+CREATE INDEX idx_order_createdById ON "order"("createdById");
+CREATE INDEX idx_order_professionalId ON "order"("professionalId");
+CREATE INDEX idx_order_ownerId ON "order"("ownerId");
+CREATE INDEX idx_order_requestId ON "order"("requestId");
+CREATE INDEX idx_order_clientId ON "order"("clientId");
 CREATE TABLE recurrence (
     "_id" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     "createdById" UUID NOT NULL,
@@ -349,7 +396,13 @@ CREATE TABLE recurrence (
     CONSTRAINT "fk_ownerId_recurrence" FOREIGN KEY ("ownerId") REFERENCES owner("_id"),
     CONSTRAINT "fk_serviceId_recurrence" FOREIGN KEY ("serviceId") REFERENCES service("_id")
 );
-
+-- Indexes for recurrence table
+CREATE INDEX idx_recurrence_createdById ON recurrence("createdById");
+CREATE INDEX idx_recurrence_professionalId ON recurrence("professionalId");
+CREATE INDEX idx_recurrence_requestId ON recurrence("requestId");
+CREATE INDEX idx_recurrence_clientId ON recurrence("clientId");
+CREATE INDEX idx_recurrence_ownerId ON recurrence("ownerId");
+CREATE INDEX idx_recurrence_serviceId ON recurrence("serviceId");
 CREATE TABLE charge (
     "_id" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     "createdById" UUID NOT NULL,
@@ -382,6 +435,7 @@ CREATE TABLE charge (
     CONSTRAINT "fk_createdById_charge" FOREIGN KEY ("createdById") REFERENCES users("_id")
 );
 
+CREATE INDEX idx_charge_createdById ON charge("createdById");
 
 CREATE TABLE customer (
     "_id" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
@@ -400,7 +454,8 @@ CREATE TABLE customer (
     "address" JSONB,
     CONSTRAINT "fk_createdById_customer" FOREIGN KEY ("createdById") REFERENCES users("_id")
 );
-
+CREATE INDEX idx_customer_createdById ON customer("createdById");
+CREATE INDEX idx_customer_correlationID ON customer("correlationID");
 CREATE TABLE subscription (
     "_id" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     "createdById" UUID NOT NULL,
@@ -419,6 +474,7 @@ CREATE TABLE subscription (
     "pagarmeSubscription" JSONB,
     CONSTRAINT "fk_createdById_subscription" FOREIGN KEY ("createdById") REFERENCES users("_id")
 );
+CREATE INDEX idx_subscription_createdById ON subscription("createdById");
 
 CREATE TABLE transaction (
     "_id" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
@@ -434,6 +490,8 @@ CREATE TABLE transaction (
     "account" JSONB,
     CONSTRAINT "fk_createdById_transaction" FOREIGN KEY ("createdById") REFERENCES users("_id")
 );
+CREATE INDEX idx_transaction_createdById ON transaction("createdById");
+
 CREATE TABLE product (
     "_id" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     "createdById" UUID NOT NULL,
@@ -444,6 +502,8 @@ CREATE TABLE product (
     "quantity" INT NOT NULL,
     CONSTRAINT "fk_createdById_product" FOREIGN KEY ("createdById") REFERENCES users("_id")
 );
+CREATE INDEX idx_product_createdById ON product("createdById");
+
 CREATE TABLE "mapRoute" (
     "_id" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     "createdById" UUID NOT NULL,
@@ -461,6 +521,8 @@ CREATE TABLE "mapRoute" (
     "routeDriver" JSONB  ,
     CONSTRAINT "fk_createdById_maproute" FOREIGN KEY ("createdById") REFERENCES users("_id")
 );
+CREATE INDEX idx_mapRoute_createdById ON "mapRoute"("createdById");
+
 CREATE TABLE "routeDriver" (
     "_id" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     "createdById" UUID NOT NULL,
@@ -474,6 +536,9 @@ CREATE TABLE "routeDriver" (
     CONSTRAINT "fk_createdById_routeDriver" FOREIGN KEY ("createdById") REFERENCES users("_id"),
     CONSTRAINT "fk_routeId_routeDriver" FOREIGN KEY ("routeId") REFERENCES "mapRoute"("_id")
 );
+-- Indexes for routeDriver table
+CREATE INDEX idx_routeDriver_createdById ON "routeDriver"("createdById");
+CREATE INDEX idx_routeDriver_routeId ON "routeDriver"("routeId");
 CREATE TABLE fidelity (
     "_id" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     "createdById" UUID NOT NULL,
@@ -490,3 +555,8 @@ CREATE TABLE fidelity (
     CONSTRAINT "fk_requestId_fidelity" FOREIGN KEY ("requestId") REFERENCES request("_id"),
     CONSTRAINT "fk_clientId_fidelity" FOREIGN KEY ("clientId") REFERENCES client("_id")
 );
+-- Indexes for fidelity table
+CREATE INDEX idx_fidelity_createdById ON fidelity("createdById");
+CREATE INDEX idx_fidelity_ownerId ON fidelity("ownerId");
+CREATE INDEX idx_fidelity_requestId ON fidelity("requestId");
+CREATE INDEX idx_fidelity_clientId ON fidelity("clientId");
