@@ -1,8 +1,8 @@
-import { RatingResultAverage } from "../../entities";
 import { QueryBuilder } from "@/application/helpers";
 import { mapAnyToMongoObject, MongoRepository } from "@/application/infra";
 import { Query } from "@/application/types";
-import { LoadAverageRatingResultRepository } from "../contracts";
+import { LoadAverageRatingResultRepository } from "../../contracts";
+import { RatingResultAverage } from "@/slices/ratingResult/entities";
 
 export class RatingResultAggregateRepository implements LoadAverageRatingResultRepository {
   constructor(private readonly repository: MongoRepository) {}
