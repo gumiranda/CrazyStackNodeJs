@@ -293,12 +293,12 @@ CREATE TABLE "ratingResult" (
     "createdAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     "ratingId" UUID NOT NULL,
-    "rating" VARCHAR(255),
+    "rating" INT DEFAULT 0,
     "comment" TEXT,
     "requestId" UUID NOT NULL,
     "ratingType" VARCHAR(255) NOT NULL,
     "ratingForId" UUID NOT NULL,
-    "ratings" JSONB[] NOT NULL,
+    "ratings" JSONB[],
     CONSTRAINT "fk_createdById" FOREIGN KEY ("createdById") REFERENCES users("_id"),
     CONSTRAINT "fk_ratingId" FOREIGN KEY ("ratingId") REFERENCES rating("_id")
 );
