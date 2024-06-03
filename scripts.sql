@@ -280,7 +280,7 @@ CREATE TABLE rating (
     "createdAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     "ratingType" VARCHAR(255) NOT NULL,
-    "ratings" JSONB NOT NULL,
+    "ratings" JSONB[] NOT NULL,
     CONSTRAINT "fk_createdById" FOREIGN KEY ("createdById") REFERENCES users("_id")
 );
 CREATE INDEX idx_rating_createdById ON rating("createdById");
@@ -298,7 +298,7 @@ CREATE TABLE "ratingResult" (
     "requestId" UUID NOT NULL,
     "ratingType" VARCHAR(255) NOT NULL,
     "ratingForId" UUID NOT NULL,
-    "ratings" JSONB NOT NULL,
+    "ratings" JSONB[] NOT NULL,
     CONSTRAINT "fk_createdById" FOREIGN KEY ("createdById") REFERENCES users("_id"),
     CONSTRAINT "fk_ratingId" FOREIGN KEY ("ratingId") REFERENCES rating("_id")
 );

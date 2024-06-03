@@ -1,7 +1,7 @@
 @apiurl = http://127.0.0.1:3333/api
 
 @token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1NGI3YThhNC00YTc5LTQ1N2UtYjhmMC0yMGRhZDE5ZmUwNDgiLCJpYXQiOjE3MTcwOTQ3MTEsImV4cCI6MTcyMjI3ODcxMX0.6jmPXDkjUF3ADvwYJ19c_A2oBVD9UF8rRKPYOKPNTSQ
-@entityId=1e498528-c1ad-4abe-b461-f7526b89c6de
+@entityId=59f06a08-d4d7-4f3a-8620-f81a873d7942
 
 @entityType=rating
 
@@ -11,7 +11,35 @@ Content-Type: application/json
 Authorization: Bearer {{token}}
 
 {
-  "name": "Categoria legal"
+  "name": "Categoria legal",
+  "ratingType": "service",
+  "ratings": [
+    {
+      "rating": "rating 1",
+      "stars": 5
+    },
+    {
+      "rating": "rating 2",
+      "stars": 4
+    },
+    {
+      "rating": "rating 3",
+      "stars": 3
+    },
+    {
+      "rating": "rating 4",
+      "stars": 2
+    },
+    {
+      "rating": "rating 5",
+      "stars": 1
+    },
+    {
+      "rating": "rating 6",
+      "stars": 0
+    }
+  ]
+
 }
 
 ### GET loadById
@@ -31,7 +59,7 @@ Content-Type: application/json
 Authorization: Bearer {{token}}
 
 {
-  "name": "categoria top"
+  "ratingType": "categoria top"
 }
 
 ### DELETE delete

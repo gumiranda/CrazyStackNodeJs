@@ -9,7 +9,7 @@ const bodyAddRatingJsonSchema = {
       maxItems: 10,
       items: {
         type: "object",
-        properties: { rating: { type: "string" }, stars: { type: "number" } },
+        properties: {},
       },
     },
     ratingType: { type: "string" },
@@ -31,7 +31,7 @@ const addRatingResponse = {
       maxItems: 10,
       items: {
         type: "object",
-        properties: { rating: { type: "string" }, stars: { type: "number" } },
+        properties: {},
       },
     },
     ratingType: { type: "string" },
@@ -64,7 +64,7 @@ const loadRatingResponse = {
       maxItems: 10,
       items: {
         type: "object",
-        properties: { rating: { type: "string" }, stars: { type: "number" } },
+        properties: {},
       },
     },
     ratingType: { type: "string" },
@@ -115,7 +115,7 @@ const updateRatingResponse = {
       maxItems: 10,
       items: {
         type: "object",
-        properties: { rating: { type: "string" }, stars: { type: "number" } },
+        properties: {},
       },
     },
     ratingType: { type: "string" },
@@ -130,7 +130,7 @@ const updateRatingBody = {
       maxItems: 10,
       items: {
         type: "object",
-        properties: { rating: { type: "string" }, stars: { type: "number" } },
+        properties: {},
       },
     },
     ratingType: { type: "string" },
@@ -168,10 +168,6 @@ const loadRatingByPageResponse = {
           ratings: {
             type: "array",
             maxItems: 10,
-            items: {
-              type: "object",
-              properties: { rating: { type: "string" }, stars: { type: "number" } },
-            },
           },
           ratingType: { type: "string" },
           active: { type: "boolean" },
