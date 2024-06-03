@@ -19,7 +19,7 @@ export const makeLoadAvailableTimesFactory = (): LoadAvailableTimes => {
     new OwnerRepository(makeDatabaseInstance(whiteLabel.database, "owner"))
   );
 };
-const makeAggregateRepository = () => {
+export const makeAggregateRepository = () => {
   if (whiteLabel.database === "mongodb") {
     return new AppointmentAggregateRepository(new MongoRepository("appointment"));
   }

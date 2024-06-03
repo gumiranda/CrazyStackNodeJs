@@ -29,6 +29,11 @@ export class SQLQueryBuilder {
     return this;
   }
 
+  projectSubQuery(fields: any, from: any, as: any) {
+    this.steps.push(`SELECT ${fields} FROM (${from}) as ${as}`);
+    return this;
+  }
+
   group({ _id, total }: any) {
     this.steps.push(`GROUP BY ${_id}`);
     if (total) {

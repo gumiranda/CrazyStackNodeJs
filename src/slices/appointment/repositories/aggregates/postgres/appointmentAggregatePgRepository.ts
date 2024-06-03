@@ -17,7 +17,39 @@ export class AppointmentAggregatePgRepository
     if (!query?.fields?.initDate || !query?.fields?.endDate) {
       return null;
     }
-    //const builder = new SQLQueryBuilder("appointment");
+    const subQuery = new SQLQueryBuilder("appointment")
+      .project(
+        `"appointment"."_id",
+      "appointment"."initDate",
+      "appointment"."endDate",
+      "appointment"."serviceId",
+      SUM(service.price) as total_price`
+      )
+      .join({
+        table: "service",
+        on: '"appointment"."serviceId" = "service"."_id"',
+      })
+      .match(`"appointment"."initDate" >= $1 AND "appointment"."endDate" <= $2`)
+      .group({
+        _id: '"appointment"."_id", "appointment"."initDate", "appointment"."endDate", "appointment"."serviceId"',
+      })
+      .addValue(query.fields.initDate)
+      .addValue(query.fields.endDate)
+      .build();
+    const queryBuilded = new SQLQueryBuilder("appointment")
+      .projectSubQuery(
+        'SUM(subquery."total_price") as "grand_total"',
+        subQuery.text,
+        "subquery"
+      )
+      .addValue(query.fields.initDate)
+      .addValue(query.fields.endDate)
+      .build();
+    const [total, result] = await Promise.all([
+      this.repository.aggregate(queryBuilded),
+      this.repository.aggregate(subQuery),
+    ]);
+    return { appointments: result, total: total?.[0]?.grand_total ?? 0 };
   }
   async loadAvailableTimes(
     query: QueryAvailableTimesRepository
