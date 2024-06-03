@@ -474,3 +474,19 @@ CREATE TABLE "routeDriver" (
     CONSTRAINT "fk_createdById_routeDriver" FOREIGN KEY ("createdById") REFERENCES users("_id"),
     CONSTRAINT "fk_routeId_routeDriver" FOREIGN KEY ("routeId") REFERENCES "mapRoute"("_id")
 );
+CREATE TABLE fidelity (
+    "_id" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    "createdById" UUID NOT NULL,
+    "name" VARCHAR(255) NOT NULL,
+    "active" BOOLEAN DEFAULT TRUE,
+    "createdAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    "ownerId" UUID NOT NULL,
+    "requestId" UUID NOT NULL,
+    "points" INT NOT NULL,
+    "clientId" UUID NOT NULL,
+    CONSTRAINT "fk_createdById_fidelity" FOREIGN KEY ("createdById") REFERENCES users("_id"),
+    CONSTRAINT "fk_ownerId_fidelity" FOREIGN KEY ("ownerId") REFERENCES owner("_id"),
+    CONSTRAINT "fk_requestId_fidelity" FOREIGN KEY ("requestId") REFERENCES request("_id"),
+    CONSTRAINT "fk_clientId_fidelity" FOREIGN KEY ("clientId") REFERENCES client("_id")
+);

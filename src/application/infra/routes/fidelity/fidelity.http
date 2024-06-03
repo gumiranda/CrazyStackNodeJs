@@ -1,7 +1,7 @@
 @apiurl = http://127.0.0.1:3333/api
 
 @token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1NGI3YThhNC00YTc5LTQ1N2UtYjhmMC0yMGRhZDE5ZmUwNDgiLCJpYXQiOjE3MTcwOTQ3MTEsImV4cCI6MTcyMjI3ODcxMX0.6jmPXDkjUF3ADvwYJ19c_A2oBVD9UF8rRKPYOKPNTSQ
-@entityId=1e498528-c1ad-4abe-b461-f7526b89c6de
+@entityId=1a9739c7-75b5-436e-86ce-853325a3ffe2
 
 @entityType=fidelity
 
@@ -11,8 +11,14 @@ Content-Type: application/json
 Authorization: Bearer {{token}}
 
 {
-  "name": "Categoria legal"
+  "name": "Fidelity Points for Service",
+  "active": true,
+  "ownerId": "a207030f-3cd7-4844-a64d-057e39b8b672",
+  "requestId": "f7323d26-9e8d-4a1b-9d3c-a6133b2dda3a",
+  "points": 50,
+  "clientId": "fc23d11a-229a-49db-80c3-bf7662b0d56a"
 }
+
 
 ### GET loadById
 GET {{apiurl}}/{{entityType}}/load?_id={{entityId}} HTTP/1.1
