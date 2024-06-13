@@ -18,6 +18,21 @@ export class SQLQueryBuilder {
     this.steps.push(`ORDER BY ${orderBy}`);
     return this;
   }
+  sortByDistance(lng: number, lat: number) {
+    this.steps.push(`ORDER BY
+    ST_DistanceSphere(
+        ST_SetSRID(
+            ST_MakePoint(
+                (users.coord->'coordinates'->>0)::float,
+                (users.coord->'coordinates'->>1)::float
+            ), 4326
+        ),
+        ST_SetSRID(ST_MakePoint($4, $5), 4326)
+    ) ASC`);
+    this.addValue(lng);
+    this.addValue(lat);
+    return this;
+  }
 
   join({ table, on }: any) {
     this.steps.push(`JOIN "${table}" ON ${on}`);
@@ -26,6 +41,15 @@ export class SQLQueryBuilder {
 
   project(fields: any) {
     this.steps.push(`SELECT ${fields} FROM "${this.tableName}"`);
+    return this;
+  }
+
+  projectWithDistance(lng: number, lat: number) {
+    this.steps.push(
+      `SELECT ${this.tableName}.*, ST_DistanceSphere( ST_SetSRID( ST_MakePoint( (${this.tableName}.coord->'coordinates'->>0)::float, (${this.tableName}.coord->'coordinates'->>1)::float ), 4326 ), ST_SetSRID(ST_MakePoint($1, $2), 4326) ) AS distance FROM "${this.tableName}" `
+    );
+    this.addValue(lng);
+    this.addValue(lat);
     return this;
   }
 
@@ -46,7 +70,14 @@ export class SQLQueryBuilder {
     this.values.push(value);
     return this;
   }
-
+  skip(count: number) {
+    this.steps.push(`OFFSET ${count}`);
+    return this;
+  }
+  limit(count: number) {
+    this.steps.push(`LIMIT ${count}`);
+    return this;
+  }
   build() {
     const query = this.steps.join(" ");
     return { text: query, values: this.values };
