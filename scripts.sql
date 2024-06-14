@@ -561,3 +561,14 @@ CREATE INDEX idx_fidelity_createdById ON fidelity("createdById");
 CREATE INDEX idx_fidelity_ownerId ON fidelity("ownerId");
 CREATE INDEX idx_fidelity_requestId ON fidelity("requestId");
 CREATE INDEX idx_fidelity_clientId ON fidelity("clientId");
+
+CREATE TABLE photo (
+    "_id" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    "createdById" UUID NOT NULL,
+    "title" VARCHAR(255) NOT NULL,
+    "url" VARCHAR(255) NOT NULL,
+    "active" BOOLEAN DEFAULT TRUE,
+    "createdAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT "fk_createdById_fidelity" FOREIGN KEY ("createdById") REFERENCES users("_id")
+);

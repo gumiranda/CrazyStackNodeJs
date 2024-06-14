@@ -52,9 +52,11 @@
     "@": "dist"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.598.0",
     "@fastify/cors": "^8.3.0",
     "@fastify/helmet": "^11.1.0",
     "@fastify/mongodb": "^8.0.0",
+    "@fastify/multipart": "^8.3.0",
     "@fastify/rate-limit": "^8.0.3",
     "@fastify/request-context": "^5.0.0",
     "@fastify/under-pressure": "^8.3.0",
@@ -69,6 +71,7 @@
     "date-fns-tz": "^2.0.0",
     "deep-email-validator": "^0.1.21",
     "fastify": "4.23.2",
+    "fastify-multer": "^2.0.3",
     "ioredis": "^5.3.2",
     "jsonwebtoken": "^9.0.2",
     "kafkajs": "^2.2.4",

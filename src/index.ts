@@ -13,10 +13,32 @@ import {
 } from "./application/infra/messaging/consumers";
 import { newOwnerConsumer } from "./application/infra/messaging/consumers/OwnerConsumer";
 import { closePool } from "./application/infra/database/postgres";
+import multer from "fastify-multer";
+
 export const makeFastifyInstance = async (externalMongoClient = null) => {
   const fastify: FastifyInstance = Fastify({ logger: true });
   try {
     const client = externalMongoClient ?? (await MongoHelper.connect(env.mongoUri));
+    fastify.register(require("@fastify/multipart"), {
+      limits: {
+        fieldNameSize: 100, // Max field name size in bytes
+        fieldSize: 100, // Max field value size in bytes
+        fields: 10, // Max number of non-file fields
+        fileSize: 1000000, // For multipart forms, the max file size in bytes
+        files: 1, // Max number of file fields
+        headerPairs: 2000, // Max number of header key=>value pairs
+        parts: 1000, // For multipart forms, the max number of parts (fields + files)
+      },
+    });
+    await fastify.register(multer.contentParser),
+      {
+        limits: {
+          fieldSize: 1024 * 1024 * 5,
+          fileSize: 1024 * 1024 * 5, // 5MB
+          files: 1, // 1 file per request
+        },
+      };
+
     await fastify.register(require("@fastify/helmet"), {
       contentSecurityPolicy: false,
       global: true,
