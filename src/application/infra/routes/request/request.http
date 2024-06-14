@@ -37,7 +37,7 @@ Authorization: Bearer {{token}}
 
 
 ### GET loadByPage
-GET {{apiurl}}/{{entityType}}/loadByPage?page=1 HTTP/1.1
+GET {{apiurl}}/{{entityType}}/loadByPage?page=1&initDate=2042-02-23T03:00:00.000Z&endDate=2042-02-24T03:00:00.000Z HTTP/1.1
 Content-Type: application/json
 Authorization: Bearer {{token}}
 

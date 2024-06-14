@@ -1,3 +1,4 @@
+/* eslint-disable prefer-const */
 import { Repository } from "@/application/infra/contracts";
 import { connect } from "@/application/infra/database/postgres/databaseConfig";
 export class PostgresRepository extends Repository {
@@ -183,13 +184,18 @@ export class PostgresRepository extends Repository {
           .join(", ");
       }
 
-      // Handle filtering (basic example, needs to be adjusted per use case)
       let whereClause = "";
       const filterConditions: string[] = [];
       const filterValues: any[] = [];
       Object.keys(fields).forEach((key) => {
         const value = fields[key];
-        if (typeof value === "string" || typeof value === "number") {
+        if (key.includes("initDate")) {
+          filterConditions.push(`"${key}" > $${filterValues.length + 1}`);
+          filterValues.push(value);
+        } else if (key.includes("endDate")) {
+          filterConditions.push(`"${key}" < $${filterValues.length + 1}`);
+          filterValues.push(value);
+        } else if (typeof value === "string" || typeof value === "number") {
           filterConditions.push(`"${key}" = $${filterValues.length + 1}`);
           filterValues.push(value);
         } else {
@@ -219,17 +225,34 @@ export class PostgresRepository extends Repository {
     }
   }
 
-  async getCount(query = {}) {
+  async getCount(query: any) {
     const client = await connect();
     try {
-      // Constructing WHERE clause based on the query object
-      const whereClause = Object.keys(query)
-        .map((key) => `"${key}" = $${Object.keys(query).indexOf(key) + 1}`)
-        .join(" AND ");
-      const queryParams = Object.values(query);
+      let whereClause = "";
+      const filterConditions: string[] = [];
+      const filterValues: any[] = [];
+      Object.keys(query).forEach((key) => {
+        const value = query[key];
+        if (key.includes("initDate")) {
+          filterConditions.push(`"${key}" > $${filterValues.length + 1}`);
+          filterValues.push(value);
+        } else if (key.includes("endDate")) {
+          filterConditions.push(`"${key}" < $${filterValues.length + 1}`);
+          filterValues.push(value);
+        } else if (typeof value === "string" || typeof value === "number") {
+          filterConditions.push(`"${key}" = $${filterValues.length + 1}`);
+          filterValues.push(value);
+        } else {
+          filterConditions.push(`"${key}" LIKE '%' || $${filterValues.length + 1} || '%'`);
+          filterValues.push(value); // Adjust this accordingly if you're sanitizing your inputs
+        }
+      });
+      if (filterConditions.length > 0) {
+        whereClause = `WHERE ${filterConditions.join(" AND ")}`;
+      }
 
-      const queryText = `SELECT COUNT(*) FROM "${this.tableName}" ${whereClause ? `WHERE ${whereClause}` : ""}`;
-      const result = await client.query(queryText, queryParams);
+      const queryText = `SELECT COUNT(*) FROM "${this.tableName}" ${whereClause ? `${whereClause}` : ""}`;
+      const result = await client.query(queryText, filterValues);
       return result.rows[0].count;
     } finally {
       client.release();
