@@ -53,6 +53,8 @@
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.598.0",
+    "@aws-sdk/lib-storage": "^3.598.0",
+    "@aws-sdk/s3-request-presigner": "^3.598.0",
     "@fastify/cors": "^8.3.0",
     "@fastify/helmet": "^11.1.0",
     "@fastify/mongodb": "^8.0.0",
@@ -63,7 +65,7 @@
     "@fastify/websocket": "^8.2.0",
     "@googlemaps/google-maps-services-js": "^3.3.38",
     "@gquittet/graceful-server": "^4.0.8",
-    "axios": "^1.6.8",
+    "axios": "^1.7.2",
     "bcrypt": "^5.1.1",
     "core-js": "^3.37.0",
     "crypto-js": "^4.2.0",
@@ -79,6 +81,7 @@
     "mongodb": "^6.1.0",
     "pg": "^8.11.5",
     "stripe": "^14.22.0",
-    "uuid": "^9.0.1"
+    "uuid": "^9.0.1",
+    "zod": "^3.23.8"
   }
 }

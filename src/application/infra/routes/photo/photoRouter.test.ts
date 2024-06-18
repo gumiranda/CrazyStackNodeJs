@@ -2,6 +2,7 @@ import { makeFastifyInstance } from "@/index";
 import { Collection, ObjectId } from "mongodb";
 import { MongoHelper, env } from "@/application/infra";
 import { sign } from "jsonwebtoken";
+import { addDays } from "date-fns";
 jest.setTimeout(500000);
 
 let userCollection: Collection;
@@ -19,7 +20,12 @@ const photoBody = {
   name: "test",
 };
 const makeAccessToken = async (role: string, password: string): Promise<any> => {
-  const result = await userCollection.insertOne({ ...userBody, password,payDay: addDays(new Date(), 30), role });
+  const result = await userCollection.insertOne({
+    ...userBody,
+    password,
+    payDay: addDays(new Date(), 30),
+    role,
+  });
   const _id = result?.insertedId;
   return { _id, token: sign({ _id }, env.jwtSecret) };
 };

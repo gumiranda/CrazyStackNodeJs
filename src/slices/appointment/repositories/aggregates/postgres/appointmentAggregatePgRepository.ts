@@ -8,6 +8,7 @@ import {
 import { SQLQueryBuilder } from "@/application/helpers/utils";
 import { PostgresRepository } from "@/application/infra/database/postgres/repository/pg-repository";
 import { subHours } from "@/application/helpers";
+import { env } from "@/application/infra";
 
 export class AppointmentAggregatePgRepository
   implements LoadAvailableTimesRepository, LoadInvoiceRepository
@@ -91,7 +92,7 @@ export class AppointmentAggregatePgRepository
   }
 }
 const handleTimezone = (date: any) => {
-  if (process.env.FUSORARIOBR === "production") {
+  if (env.FUSORARIOBR === "production") {
     return subHours(date, 3).toISOString();
   }
   return date.toISOString();

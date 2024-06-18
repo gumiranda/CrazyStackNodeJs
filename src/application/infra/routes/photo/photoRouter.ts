@@ -14,15 +14,11 @@ import {
   loadPhotoByPageGetSchema,
 } from "./photoSchema";
 
-async function photo(fastify: any, options: any) {
+async function photo(fastify: any) {
   fastify.addHook("preHandler", authLogged());
   fastify.post("/photo/add", addPhotoPostSchema, addPhotoAdapter());
   fastify.get("/photo/load", loadPhotoGetSchema, loadPhotoAdapter());
-  fastify.get(
-    "/photo/loadByPage",
-    loadPhotoByPageGetSchema,
-    loadPhotoByPageAdapter()
-  );
+  fastify.get("/photo/loadByPage", loadPhotoByPageGetSchema, loadPhotoByPageAdapter());
   fastify.delete("/photo/delete", deletePhotoSchema, deletePhotoAdapter());
   fastify.patch("/photo/update", updatePhotoSchema, updatePhotoAdapter());
 }
