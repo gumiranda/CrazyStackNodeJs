@@ -1,8 +1,9 @@
 import { makeDatabaseInstance } from "@/application/infra";
+import { whiteLabel } from "@/application/infra/config/whiteLabel";
 import { {{pascalCase name}}Repository } from "@/slices/{{camelCase name}}/repositories";
 import { load{{pascalCase name}}ByPage, Load{{pascalCase name}}ByPage } from "@/slices/{{camelCase name}}/useCases";
 
 export const makeLoad{{pascalCase name}}ByPageFactory = (): Load{{pascalCase name}}ByPage => {
-  const repository = new {{pascalCase name}}Repository(makeDatabaseInstance("mongodb","{{camelCase name}}"));
+  const repository = new {{pascalCase name}}Repository(makeDatabaseInstance(whiteLabel.database,"{{camelCase name}}"));
   return load{{pascalCase name}}ByPage(repository);
 };

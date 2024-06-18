@@ -2,6 +2,8 @@ import { makeFastifyInstance } from "@/index";
 import { Collection, ObjectId } from "mongodb";
 import { MongoHelper, env } from "@/application/infra";
 import { sign } from "jsonwebtoken";
+import { addDays } from "date-fns";
+
 jest.setTimeout(500000);
 
 let userCollection: Collection;
