@@ -10,6 +10,7 @@ const bodyAddUserJsonSchema = {
       type: "string",
       enum: ["professional"],
     },
+    photoId: idSchema,
     password: { type: "string" },
     passwordConfirmation: { type: "string" },
     serviceIds: { type: "array", items: idSchema },
@@ -118,6 +119,7 @@ const updateUserResponse = {
     },
     createdById: { type: "string" },
   },
+  additionalProperties: false,
 };
 const updateUserBody = {
   type: "object",
@@ -167,6 +169,7 @@ const loadUserByPageResponse = {
           active: { type: "boolean" },
           createdById: { type: "string" },
           createdAt: { type: "string" },
+          photoId: idSchema,
         },
       },
     },
@@ -204,6 +207,7 @@ const loadUserGeoNearResponse = {
             items: idSchema,
           },
           createdAt: { type: "string" },
+          photoId: idSchema,
         },
       },
     },

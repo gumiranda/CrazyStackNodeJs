@@ -565,9 +565,12 @@ CREATE INDEX idx_fidelity_clientId ON fidelity("clientId");
 CREATE TABLE photo (
     "_id" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     "createdById" UUID NOT NULL,
-    "title" VARCHAR(255) NOT NULL,
-    "url" VARCHAR(255) NOT NULL,
+    "url" TEXT NOT NULL,
+    "key" VARCHAR(255) NOT NULL,
+    "provider" VARCHAR(255) NOT NULL,
+    "expiresIn" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     "active" BOOLEAN DEFAULT TRUE,
+    "expiresInSeconds" INT NOT NULL DEFAULT 60,
     "createdAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT "fk_createdById_fidelity" FOREIGN KEY ("createdById") REFERENCES users("_id")

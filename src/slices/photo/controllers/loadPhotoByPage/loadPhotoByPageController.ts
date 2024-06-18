@@ -21,8 +21,13 @@ export class LoadPhotoByPageController extends Controller {
     if (errors?.length > 0) {
       return badRequest(errors);
     }
-    const { page, sortBy = "createdAt", typeSort = "asc", ...rest } = httpRequest?.query || {};
-    const fields = rest;
+    const {
+      page,
+      sortBy = "createdAt",
+      typeSort = "asc",
+      ...rest
+    } = httpRequest?.query || {};
+    const fields = { ...rest, createdById: httpRequest.userId };
     const sort = { [sortBy]: typeSort === "asc" ? 1 : -1 };
     const options = { sort, page };
     const photoLoaded = await this.loadPhotoByPage({

@@ -24,7 +24,7 @@ export class CloudflareR2UploadProvider implements UploadProvider {
     } as S3ClientConfig);
   }
 
-  async uploadFile(file: any): Promise<string> {
+  async uploadFile(file: any, expiresIn: number): Promise<any> {
     const key = `uploads/${Date.now()}-${file?.filename?.replace(/ /g, "_")}`;
     const params = {
       Bucket: env.bucketName,
@@ -38,9 +38,10 @@ export class CloudflareR2UploadProvider implements UploadProvider {
       params,
     });
     await upload.done();
-    return this.getSignedUrl(key);
+    const url = await this.getSignedUrl(key, expiresIn);
+    return { url, key };
   }
-  async getSignedUrlPut(key: string): Promise<string> {
+  async getSignedUrlPut(key: string, expiresIn: number): Promise<string> {
     const signedUrl = await getSignedUrl(
       this.client,
       new PutObjectCommand({
@@ -48,7 +49,7 @@ export class CloudflareR2UploadProvider implements UploadProvider {
         Key: key,
       }),
       {
-        expiresIn: 60 * 60 * 24, // URL válida por 1 minuto
+        expiresIn,
       }
     );
     // const response = await axios.put(signedUrlPut, params.Body, {
@@ -58,7 +59,7 @@ export class CloudflareR2UploadProvider implements UploadProvider {
     // });
     return signedUrl;
   }
-  async getSignedUrl(key: string): Promise<string> {
+  async getSignedUrl(key: string, expiresIn: number): Promise<string> {
     const signedUrl = await getSignedUrl(
       this.client,
       new GetObjectCommand({
@@ -66,7 +67,7 @@ export class CloudflareR2UploadProvider implements UploadProvider {
         Key: key,
       }),
       {
-        expiresIn: 60 * 60 * 24, // URL válida por 1 dia
+        expiresIn,
       }
     );
     return signedUrl;

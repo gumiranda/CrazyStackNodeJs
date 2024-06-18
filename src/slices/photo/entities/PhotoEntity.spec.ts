@@ -5,10 +5,12 @@ import { PhotoEntity } from "./PhotoEntity";
 export const fakePhotoEntity = {
   _id: "123",
   createdById: "123",
-  title: "fakePhotoEntity",
+  key: "fakePhotoEntity",
+  provider: "fakePhotoEntity",
   url: "fakeUrlEntity",
   active: true,
   createdAt: new Date(),
+  expiresIn: new Date(),
   updatedAt: new Date(),
 };
 export const fakePhotoPaginated = {

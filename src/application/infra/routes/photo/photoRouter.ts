@@ -3,14 +3,12 @@ import {
   addPhotoAdapter,
   loadPhotoAdapter,
   deletePhotoAdapter,
-  updatePhotoAdapter,
   loadPhotoByPageAdapter,
 } from "./photoAdapter";
 import {
   addPhotoPostSchema,
   loadPhotoGetSchema,
   deletePhotoSchema,
-  updatePhotoSchema,
   loadPhotoByPageGetSchema,
 } from "./photoSchema";
 
@@ -20,6 +18,5 @@ async function photo(fastify: any) {
   fastify.get("/photo/load", loadPhotoGetSchema, loadPhotoAdapter());
   fastify.get("/photo/loadByPage", loadPhotoByPageGetSchema, loadPhotoByPageAdapter());
   fastify.delete("/photo/delete", deletePhotoSchema, deletePhotoAdapter());
-  fastify.patch("/photo/update", updatePhotoSchema, updatePhotoAdapter());
 }
 export { photo };

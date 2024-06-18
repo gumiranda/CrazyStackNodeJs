@@ -38,6 +38,7 @@ Authorization: Bearer {{token}}
   "name": "John Doe3",
   "active":false,
   "password":"",
+  "photoId":"d5e7a601-5479-4ff3-9967-8b3ed9d86ea0",
   "createdById": null
 }
 
