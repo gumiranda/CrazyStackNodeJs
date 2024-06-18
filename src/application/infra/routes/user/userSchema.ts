@@ -119,13 +119,18 @@ const updateUserResponse = {
     },
     createdById: { type: "string" },
   },
-  additionalProperties: false,
 };
 const updateUserBody = {
   type: "object",
   properties: {
     name: { type: "string" },
+    serviceIds: {
+      type: "array",
+      nullable: true,
+      items: idSchema,
+    },
   },
+  additionalProperties: false,
 };
 export const updateUserSchema = {
   schema: {
