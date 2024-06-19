@@ -34,6 +34,11 @@ export const envSchema = z.object({
   stripeKeySecret: z.string(),
   database: z.enum(["postgres", "mongodb"]).default("mongodb"),
   FUSORARIOBR: z.string(),
+  PGUSER: z.string(),
+  PGPASSWORD: z.string(),
+  PGHOST: z.string(),
+  PGDATABASE: z.string(),
+  PGPORT: z.string(),
 });
 
 const mappedEnv = {

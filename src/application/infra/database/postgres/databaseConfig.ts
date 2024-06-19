@@ -1,5 +1,6 @@
 import { Pool } from "pg";
-const { PGHOST, PGUSER, PGPASSWORD, PGDATABASE, PGPORT } = process.env;
+import { env } from "../../config";
+const { PGHOST, PGUSER, PGPASSWORD, PGDATABASE, PGPORT } = env;
 
 export const pool = new Pool({
   host: PGHOST,

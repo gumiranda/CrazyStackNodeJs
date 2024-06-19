@@ -18,10 +18,11 @@ import {
   loadPlacesGetSchema,
 } from "./mapRouteSchema";
 import { onSendRedis, preHandlerRedis } from "../../redis";
+import { env } from "../../config";
 
 async function mapRoute(fastify: any) {
   fastify.addHook("preHandler", authLogged());
-  if (process.env.NODE_ENV === "production") {
+  if (env.environment === "production") {
     fastify.addHook(
       "preHandler",
       preHandlerRedis("mapRoute", ["load", "loadByPage", "directions", "places"])

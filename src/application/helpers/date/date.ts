@@ -16,6 +16,7 @@ import {
   startOfDay,
   trataTimezone,
 } from "@/application/helpers/dateFns";
+import { env } from "@/application/infra";
 import { OwnerAppointmentInfo } from "@/slices/appointment/entities";
 
 export type QueryDate = {
@@ -156,7 +157,7 @@ export const getDateWithCustomHourAndMinutes = (
   let dateAux = cloneDate(date);
   //forçar horario do brasil
   let newHours = hours + 3;
-  if (process.env.NODE_ENV !== "production") {
+  if (env.environment !== "production") {
     newHours = hours;
   }
   dateAux = setHours(dateAux, newHours);
