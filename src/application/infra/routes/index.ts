@@ -24,6 +24,7 @@ import { user } from "./user";
 import { service } from "./service";
 import { product } from "./product";
 import { webhooks } from "./webhooks";
+import { uploadRoutes } from "./photo/uploadPhotoRouter";
 
 const routes = [
   webhooks,
@@ -32,7 +33,7 @@ const routes = [
   account,
   category,
   // ADD FUNCTION IMPORTS
-photo,
+  photo,
   transaction,
   charge,
   subscription,
@@ -52,6 +53,7 @@ photo,
   user,
   service,
   product,
+  uploadRoutes,
 ];
 
 export { routes };

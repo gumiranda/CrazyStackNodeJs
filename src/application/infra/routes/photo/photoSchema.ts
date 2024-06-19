@@ -2,9 +2,13 @@ import { idSchema } from "@/application/types/id";
 
 const bodyAddPhotoJsonSchema = {
   type: "object",
-  required: ["name"],
+  required: ["key", "url", "provider", "expiresIn", "expiresInSeconds"],
   properties: {
-    name: { type: "string" },
+    key: { type: "string" },
+    url: { type: "string" },
+    provider: { type: "string" },
+    expiresIn: { type: "string" },
+    expiresInSeconds: { type: "string" },
   },
 };
 const headersJsonSchema = {
@@ -18,10 +22,13 @@ const addPhotoResponse = {
   type: "object",
   properties: {
     _id: idSchema,
-    name: { type: "string" },
+    key: { type: "string" },
     active: { type: "boolean" },
     createdById: { type: "string" },
     createdAt: { type: "string" },
+    url: { type: "string" },
+    provider: { type: "string" },
+    expiresIn: { type: "string" },
   },
 };
 export const addPhotoPostSchema = {
@@ -43,10 +50,13 @@ const loadPhotoResponse = {
   type: "object",
   properties: {
     _id: idSchema,
-    name: { type: "string" },
+    key: { type: "string" },
     active: { type: "boolean" },
     createdById: { type: "string" },
     createdAt: { type: "string" },
+    url: { type: "string" },
+    provider: { type: "string" },
+    expiresIn: { type: "string" },
   },
 };
 export const loadPhotoGetSchema = {
@@ -75,37 +85,6 @@ export const deletePhotoSchema = {
     },
   },
 };
-const queryStringJsonUpdatePhotoSchema = {
-  type: "object",
-  properties: {
-    _id: idSchema,
-  },
-  required: ["_id"],
-};
-const updatePhotoResponse = {
-  type: "object",
-  properties: {
-    _id: idSchema,
-    name: { type: "string" },
-    createdById: { type: "string" },
-  },
-};
-const updatePhotoBody = {
-  type: "object",
-  properties: {
-    name: { type: "string" },
-  },
-};
-export const updatePhotoSchema = {
-  schema: {
-    headers: headersJsonSchema,
-    querystring: queryStringJsonUpdatePhotoSchema,
-    body: updatePhotoBody,
-    response: {
-      200: updatePhotoResponse,
-    },
-  },
-};
 const queryStringJsonLoadPhotoByPageSchema = {
   type: "object",
   properties: {
@@ -125,10 +104,13 @@ const loadPhotoByPageResponse = {
         type: "object",
         properties: {
           _id: idSchema,
-          name: { type: "string" },
           active: { type: "boolean" },
           createdById: { type: "string" },
           createdAt: { type: "string" },
+          key: { type: "string" },
+          url: { type: "string" },
+          provider: { type: "string" },
+          expiresIn: { type: "string" },
         },
       },
     },
