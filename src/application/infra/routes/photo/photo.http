@@ -1,0 +1,38 @@
+
+@apiurl = http://127.0.0.1:3333/api
+
+@token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI4ZTkzNmMzZC05MmI2LTQ5NGMtYjVmOS0yNzIxOTJlOWZhNjYiLCJpYXQiOjE3MTgzOTkxNTksImV4cCI6MTcyMzU4MzE1OX0.moKmWkHgkk7YPyAQM6HtcqWmdsG-fstLKm0We3GjYoU
+@entityId=50e85f33-bec3-4cc5-91e7-73f08ed3edb4
+
+@entityType=photo
+
+### POST add
+POST {{apiurl}}/{{entityType}}/add  HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "url": "https://crazystack.571527a8590aad1eb25dc5b3338c4271.r2.cloudflarestorage.com/uploads/e154b76b-9466-4fe6-a5de-7a5db61c37f2?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=6da371cf59584f853aa90b34a71a1fca%2F20240619%2Fauto%2Fs3%2Faws4_request&X-Amz-Date=20240619T144948Z&X-Amz-Expires=604800&X-Amz-Signature=6ca57b0e391188060abf50b9c32c474553fc0be49f03777a29f664c36112beda&X-Amz-SignedHeaders=host&x-id=GetObject",
+  "key": "uploads/e154b76b-9466-4fe6-a5de-7a5db61c37f2",
+  "provider": "cloudflare_r2",
+  "expiresIn": "2024-06-26T14:49:48.990Z",
+  "active": false,
+  "expiresInSeconds": 604800
+}
+
+### GET loadById
+GET {{apiurl}}/{{entityType}}/load?_id={{entityId}} HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+
+### GET loadByPage
+GET {{apiurl}}/{{entityType}}/loadByPage?page=1 HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+### DELETE delete
+DELETE {{apiurl}}/{{entityType}}/delete?_id={{entityId}}	 HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{token}}
+

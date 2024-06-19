@@ -52,6 +52,9 @@
     "@": "dist"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.600.0",
+    "@aws-sdk/lib-storage": "^3.600.0",
+    "@aws-sdk/s3-request-presigner": "^3.600.0",
     "@fastify/cors": "^8.3.0",
     "@fastify/helmet": "^11.1.0",
     "@fastify/mongodb": "^8.0.0",
