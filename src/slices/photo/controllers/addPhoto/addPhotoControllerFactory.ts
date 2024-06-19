@@ -5,12 +5,9 @@ import { makeAddPhotoFactory } from "@/slices/photo/useCases";
 import { AddPhotoController } from "@/slices/photo/controllers";
 
 export const makeAddPhotoController = (): Controller => {
-  const requiredFields = ["name"];
+  const requiredFields = ["url", "provider", "key", "expiresIn", "expiresInSeconds"];
   return makeLogController(
     "addPhoto",
-    new AddPhotoController(
-      makeValidationComposite(requiredFields),
-      makeAddPhotoFactory()
-    )
+    new AddPhotoController(makeValidationComposite(requiredFields), makeAddPhotoFactory())
   );
 };
