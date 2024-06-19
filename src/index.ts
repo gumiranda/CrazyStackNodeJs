@@ -13,10 +13,22 @@ import {
 } from "./application/infra/messaging/consumers";
 import { newOwnerConsumer } from "./application/infra/messaging/consumers/OwnerConsumer";
 import { closePool } from "./application/infra/database/postgres";
+
 export const makeFastifyInstance = async (externalMongoClient = null) => {
   const fastify: FastifyInstance = Fastify({ logger: true });
   try {
     const client = externalMongoClient ?? (await MongoHelper.connect(env.mongoUri));
+    await fastify.register(require("@fastify/multipart"), {
+      limits: {
+        fieldNameSize: 250,
+        fieldSize: 1000000,
+        fields: 10,
+        fileSize: 1000000,
+        files: 1,
+        headerPairs: 2000,
+        parts: 1000,
+      },
+    });
     await fastify.register(require("@fastify/helmet"), {
       contentSecurityPolicy: false,
       global: true,
