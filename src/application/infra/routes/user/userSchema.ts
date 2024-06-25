@@ -71,6 +71,7 @@ const loadUserResponse = {
     active: { type: "boolean" },
     createdById: { type: "string" },
     payDay: { type: "string" },
+    photo: {},
     createdAt: { type: "string" },
   },
 };
@@ -118,12 +119,14 @@ const updateUserResponse = {
       items: idSchema,
     },
     createdById: { type: "string" },
+    photoId: { type: "string" },
   },
 };
 const updateUserBody = {
   type: "object",
   properties: {
     name: { type: "string" },
+    photoId: { type: "string" },
     serviceIds: {
       type: "array",
       nullable: true,
