@@ -2,7 +2,7 @@
 @apiurl = http://127.0.0.1:3333/api
 
 @token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI4ZTkzNmMzZC05MmI2LTQ5NGMtYjVmOS0yNzIxOTJlOWZhNjYiLCJpYXQiOjE3MTgzOTkxNTksImV4cCI6MTcyMzU4MzE1OX0.moKmWkHgkk7YPyAQM6HtcqWmdsG-fstLKm0We3GjYoU
-@entityId=50e85f33-bec3-4cc5-91e7-73f08ed3edb4
+@entityId=d5e7a601-5479-4ff3-9967-8b3ed9d86ea0
 
 @entityType=photo
 
@@ -32,7 +32,7 @@ Content-Type: application/json
 Authorization: Bearer {{token}}
 
 ### DELETE delete
-DELETE {{apiurl}}/{{entityType}}/delete?_id={{entityId}}	 HTTP/1.1
+DELETE {{apiurl}}/{{entityType}}/delete?_id={{entityId}}&key=uploads/1718716228711-acompanhante.png	 HTTP/1.1
 Content-Type: application/json
 Authorization: Bearer {{token}}
 
