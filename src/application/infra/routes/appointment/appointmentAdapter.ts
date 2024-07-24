@@ -6,6 +6,7 @@ import {
   makeUpdateAppointmentController,
   makeLoadAppointmentByPageController,
   makeLoadAvailableTimesController,
+  makeLoadInvoiceController,
 } from "@/slices/appointment/controllers";
 
 export const addAppointmentAdapter = () => adaptRoute(makeAddAppointmentController());
@@ -18,3 +19,4 @@ export const updateAppointmentAdapter = () =>
   adaptRoute(makeUpdateAppointmentController());
 export const loadAvailableTimesAdapter = () =>
   adaptRoute(makeLoadAvailableTimesController());
+export const loadInvoiceAdapter = () => adaptRoute(makeLoadInvoiceController());

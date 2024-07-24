@@ -1,22 +1,22 @@
-import { OwnerAppointmentInfo } from "@/slices/appointment/entities";
 import {
   cloneDate,
-  setHours,
-  setMinutes,
-  setMili,
-  setSeconds,
-  parseISO,
+  dayOfWeek,
   differenceInMinutes,
-  intervalsOverlapping,
   eachMinuteOfInterval,
-  trataTimezone,
+  endOfDay,
+  formatISO,
+  intervalsOverlapping,
   isBeforeToday,
   isToday,
+  parseISO,
+  setHours,
+  setMili,
+  setMinutes,
+  setSeconds,
   startOfDay,
-  dayOfWeek,
-  formatISO,
-  endOfDay,
+  trataTimezone,
 } from "@/application/helpers/dateFns";
+import { OwnerAppointmentInfo } from "@/slices/appointment/entities";
 
 export type QueryDate = {
   dayOfWeekFound: string;
@@ -98,7 +98,7 @@ export type Schedule = {
   endDate: any;
 };
 export type CalculateTimeAvailableInput = {
-  timeAvailableProfessional: Array<any>;
+  timeAvailableProfessional: Array<any>; // Disponibilidade do profissional
   duration: number;
   timeAvailable: Array<any>;
 };
@@ -154,7 +154,12 @@ export const getDateWithCustomHourAndMinutes = (
 ): Date => {
   const { hours, minutes, date } = getDateWithCustomHourAndMinutesInput;
   let dateAux = cloneDate(date);
-  dateAux = setHours(dateAux, hours);
+  //forçar horario do brasil
+  let newHours = hours + 3;
+  if (process.env.NODE_ENV !== "production") {
+    newHours = hours;
+  }
+  dateAux = setHours(dateAux, newHours);
   dateAux = setMinutes(dateAux, minutes);
   dateAux = setMili(dateAux, 0);
   dateAux = setSeconds(dateAux, 0);
@@ -235,6 +240,7 @@ export const getArrayTimes = (
     dateQuery,
   });
   if (!businessHours) {
+    //Nao tem horário cadastrado(disponível)
     return { timeAvailable, timeAvailableProfessional };
   }
   const { hourStart, hourEnd, hourLunchStart, hourLunchEnd, haveLunchTime } =
@@ -312,12 +318,14 @@ export const firstStep = (firstStepInput: FirstStepInput): void => {
   } = firstStepInput || {};
   if (haveLunchTime === true) {
     const insideFirstHalf = intervalsOverlapping(
+      // Saber se esta antes do horário de almoço
       initDate,
       endDate,
       hourStart,
       hourLunchStart
     );
     const insideSecondHalf = intervalsOverlapping(
+      // Saber se esta depois do horário de almoço
       initDate,
       endDate,
       hourLunchEnd,
@@ -401,7 +409,9 @@ export const secondStep = (secondStepInput: SecondStepInput): void => {
     const hasNext = initDateNext && endDateNext;
 
     if (!haveLunchTime) {
+      // Se não tiver horário de almoço
       if (!hasNext) {
+        // Se não tiver próximo agendamento é o ultimo
         addTimeInArray({
           initDate: parseISO(endDateAux as any),
           endDate: hourEnd,
@@ -445,6 +455,7 @@ export const secondStep = (secondStepInput: SecondStepInput): void => {
             array: timeAvailableProfessional,
           });
           addTimeInArray({
+            // Se to na primeira metade e so o ultimo posso fechar a segunda metade
             initDate: hourLunchEnd as any,
             endDate: hourEnd,
             dateQuery,
@@ -494,14 +505,15 @@ export const secondStep = (secondStepInput: SecondStepInput): void => {
   });
 };
 export const addTimeInArray = (addTimeInArrayInput: AddTimeInArrayInput): void => {
+  // Função para adicionar um intervalo de tempo em um array
   const { initDate, endDate, dateQuery, array } = addTimeInArrayInput || {};
   if (
     (initDate &&
       endDate &&
       initDate instanceof Date &&
       endDate instanceof Date &&
-      differenceInMinutes(initDate, endDate) < 0 &&
-      differenceInMinutes(initDate, dateQuery) > 0) ||
+      differenceInMinutes(initDate, endDate) < 0 && // Verifica se a data inicial é menor que a data final
+      differenceInMinutes(initDate, dateQuery) > 0) || //Data inicial é maior que a data de requisição
     (initDate &&
       endDate &&
       differenceInMinutes(parseISO(initDate as string), parseISO(endDate as string)) < 0 &&
@@ -522,7 +534,7 @@ export const calculateTimeAvailable = (
         { start: initDate, end: endDate },
         { step: duration }
       );
-      arrayBroken.pop();
+      arrayBroken.pop(); //Descarta a ultima posição porque duplica
       for (const time of arrayBroken) {
         timeAvailable.push({ time, available: true });
       }

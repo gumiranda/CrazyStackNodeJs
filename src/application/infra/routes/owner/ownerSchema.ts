@@ -198,10 +198,8 @@ export const addOwnerPostSchema = {
 
 const queryStringJsonLoadOwnerSchema = {
   type: "object",
-  properties: {
-    _id: { type: "string", maxLength: 24, minLength: 24 },
-  },
-  required: ["_id"],
+  properties: {},
+  required: [],
 };
 const loadOwnerResponse = {
   type: "object",

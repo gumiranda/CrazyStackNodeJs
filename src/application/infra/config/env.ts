@@ -12,4 +12,5 @@ export const env = {
   kafkaPassword: process.env.KAFKA_PASSWORD ?? "YOUR_KAFKA_PASSWORD",
   kafkaHost: process.env.KAFKA_HOST ?? "YOUR_KAFKA_HOST",
   kafkaClientId: process.env.KAFKA_CLIENT_ID ?? "YOUR_KAFKA_CLIENT_ID",
+  paymentKey: process.env.PAYMENT_KEY ?? "YOUR_PAYMENT",
 };

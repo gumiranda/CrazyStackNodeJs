@@ -6,6 +6,7 @@ import {
   updateAppointmentAdapter,
   loadAppointmentByPageAdapter,
   loadAvailableTimesAdapter,
+  loadInvoiceAdapter,
 } from "./appointmentAdapter";
 import {
   addAppointmentPostSchema,
@@ -14,12 +15,14 @@ import {
   updateAppointmentSchema,
   loadAppointmentByPageGetSchema,
   loadAvailableTimesSchema,
+  loadInvoiceSchema,
 } from "./appointmentSchema";
 
 async function appointment(fastify: any, options: any) {
   fastify.addHook("preHandler", authLogged());
   fastify.post("/appointment/add", addAppointmentPostSchema, addAppointmentAdapter());
   fastify.get("/appointment/load", loadAppointmentGetSchema, loadAppointmentAdapter());
+  fastify.get("/appointment/loadInvoice", loadInvoiceSchema, loadInvoiceAdapter());
   fastify.get(
     "/appointment/loadAvailableTimes",
     loadAvailableTimesSchema,

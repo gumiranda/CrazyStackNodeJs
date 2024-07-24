@@ -5,12 +5,8 @@ import { makeLoadOwnerFactory } from "@/slices/owner/useCases";
 import { LoadOwnerController } from "@/slices/owner/controllers";
 
 export const makeLoadOwnerController = (): Controller => {
-  const requiredFields = ["_id"];
   return makeLogController(
     "loadOwner",
-    new LoadOwnerController(
-      makeValidationComposite(requiredFields),
-      makeLoadOwnerFactory()
-    )
+    new LoadOwnerController(makeValidationComposite([]), makeLoadOwnerFactory())
   );
 };

@@ -3,6 +3,9 @@ import { auth } from "./auth";
 import { account } from "./account";
 import { category } from "./category";
 // IMPORT MODULE FILES
+import { charge } from "./charge";
+import { subscription } from "./subscription";
+import { customer } from "./customer";
 import { routeDriver } from "./routeDriver";
 import { mapRoute } from "./mapRoute";
 import { client } from "./client";
@@ -24,6 +27,9 @@ const routes = [
   account,
   category,
   // ADD FUNCTION IMPORTS
+charge,
+subscription,
+customer,
   routeDriver,
   mapRoute,
   client,

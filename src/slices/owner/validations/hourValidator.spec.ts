@@ -1,5 +1,6 @@
-import { useMapBusinessHours, hourValidator, validateHours } from "./hourValidator";
 import MockDate from "mockdate";
+
+import { hourValidator, useMapBusinessHours, validateHours } from "./hourValidator";
 describe("hourValidation", () => {
   let fakeBody: any;
   beforeAll(async () => {

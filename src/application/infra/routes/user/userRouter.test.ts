@@ -140,7 +140,7 @@ describe("Route api/user", () => {
     });
     test("Should return 200 on loadByPage", async () => {
       await userCollection.insertOne(userBody);
-      const { token } = await makeAccessToken("owner", "password");
+      const { token } = await makeAccessToken("admin", "password");
       const response = await fastify.inject({
         method: "GET",
         url: `/api/user/loadByPage?page=${1}`,

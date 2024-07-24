@@ -11,11 +11,11 @@ import {
   ok,
 } from "@/application/helpers";
 import { Controller } from "@/application/infra/contracts";
-import { AddUser, LoadUser } from "@/slices/user/useCases";
+import { AddUser, CompleteOwner, LoadUser } from "@/slices/user/useCases";
 import { AddAccount } from "@/slices/account/useCases";
 import { EmailInUseError, InvalidParamError } from "@/application/errors";
 import emailValidator from "deep-email-validator";
-import { env } from "@/application/infra";
+import { sendMessageKafka } from "@/application/infra/messaging/adapters/kafkaAdapter";
 
 export class SignupController extends Controller {
   constructor(
@@ -23,7 +23,8 @@ export class SignupController extends Controller {
     private readonly addUser: AddUser,
     private readonly loadUser: LoadUser,
     private readonly authentication: Authentication,
-    private readonly addAccount: AddAccount
+    private readonly addAccount: AddAccount,
+    private readonly completeOwner: CompleteOwner
   ) {
     super();
   }
@@ -32,7 +33,7 @@ export class SignupController extends Controller {
     if (errors?.length > 0) {
       return badRequest(errors);
     }
-    const { email, password } = httpRequest?.body;
+    const { email, password, role } = httpRequest?.body;
     //  if (env.environment !== "test") {
     const { validators = null } = (await emailValidator(email)) || {};
     const {
@@ -73,6 +74,24 @@ export class SignupController extends Controller {
       active: true,
       expiresAt: addDays(new Date(), 1) as unknown as string,
     });
+    if (role === "owner") {
+      // await this.completeOwner({
+      //   _id: userCreated?._id as string,
+      //   name: userCreated?.name as string,
+      //   email: userCreated?.email as string,
+      //   password: "random_password",
+      // });
+      sendMessageKafka({
+        topic: "newOwner",
+        message: JSON.stringify({
+          userCreated: {
+            email: userCreated?.email,
+            name: userCreated?.name,
+            _id: userCreated?._id,
+          },
+        }),
+      });
+    }
     return ok({ user: userCreated, accessToken, refreshToken });
   }
 }

@@ -3,18 +3,11 @@ import {
   fakeCategoryPaginated,
 } from "@/slices/category/entities/CategoryEntity.spec";
 import { Repository } from "@/application/infra/contracts/repository";
-import { CategoryData, CategoryPaginated } from "@/slices/category/entities";
-import {
-  AddCategoryRepository,
-  DeleteCategoryRepository,
-  LoadCategoryByPageRepository,
-  LoadCategoryRepository,
-  UpdateCategoryRepository,
-} from "./contracts";
-import { Query } from "@/application/types";
+
 import MockDate from "mockdate";
 import { mock, MockProxy } from "jest-mock-extended";
 import { CategoryRepository } from "./categoryRepository";
+import { Query } from "@/application/types";
 
 describe("Category Mongo Repository", () => {
   let fakeQuery: Query;
