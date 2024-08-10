@@ -1,4 +1,4 @@
-import { Customer } from "../../paymentTypes";
+import { Customer, PagarmeSubscription } from "../../paymentTypes";
 
 export type SubscriptionData = {
   _id?: string;
@@ -13,6 +13,9 @@ export type SubscriptionData = {
   additionalInfo: any[];
   dayGenerateCharge: string;
   globalID: string;
+  gatewayDetails?: any;
+  priceId?: string;
+  pagarmeSubscription?: PagarmeSubscription;
 };
 
 export type SubscriptionPaginated = {
@@ -32,6 +35,9 @@ export class SubscriptionEntity {
   additionalInfo: any[];
   dayGenerateCharge: string;
   globalID: string;
+  gatewayDetails?: any;
+  priceId?: string;
+
   constructor(data: SubscriptionData) {
     this.createdById = data.createdById;
     this.name = data.name;
@@ -44,5 +50,7 @@ export class SubscriptionEntity {
     this.additionalInfo = data.additionalInfo;
     this.dayGenerateCharge = data.dayGenerateCharge;
     this.globalID = data.globalID;
+    this.gatewayDetails = data.gatewayDetails;
+    this.priceId = data.priceId;
   }
 }

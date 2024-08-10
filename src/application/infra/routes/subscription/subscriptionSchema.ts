@@ -1,13 +1,77 @@
+const pagarmeSubscription = {
+  type: "object",
+  properties: {
+    currency: { type: "string" },
+    start_at: { type: "string", format: "date-time" },
+    interval: { type: "string" },
+    minimum_price: { type: "string" },
+    billing_type: { type: "string" },
+    installments: { type: "string" },
+    description: { type: "string" },
+    card: {
+      type: "object",
+      properties: {
+        number: { type: "string" },
+        holder_name: { type: "string" },
+        holder_document: { type: "string" },
+        exp_month: { type: "string" },
+        exp_year: { type: "string" },
+        cvv: { type: "string" },
+        billing_address_id: { type: "string" },
+        brand: { type: "string" },
+      },
+      required: [
+        "number",
+        "holder_name",
+        "holder_document",
+        "exp_month",
+        "exp_year",
+        "cvv",
+        "billing_address_id",
+        "brand",
+      ],
+    },
+    quantity: { type: "string" },
+    pricing_scheme: {
+      type: "object",
+      properties: {
+        scheme_type: { type: "string" },
+        price: { type: "string" },
+      },
+      required: ["scheme_type", "price"],
+    },
+    statement_descriptor: { type: "string" },
+    customer_id: { type: "string" },
+    payment_method: { type: "string" },
+  },
+  required: [
+    "currency",
+    "start_at",
+    "interval",
+    "minimum_price",
+    "billing_type",
+    "installments",
+    "description",
+    "card",
+    "quantity",
+    "pricing_scheme",
+    "statement_descriptor",
+    "customer_id",
+    "payment_method",
+  ],
+};
 const bodyAddSubscriptionJsonSchema = {
   type: "object",
   required: ["name", "customer", "value", "dayGenerateCharge"],
   properties: {
     name: { type: "string" },
     comment: { type: "string" },
+    priceId: { type: "string" },
     value: { type: "number" },
     dayGenerateCharge: { type: "number" },
     customer: { type: "object" },
     additionalInfo: { type: "array" },
+    pagarmeSubscription,
   },
 };
 const headersJsonSchema = {
@@ -31,6 +95,7 @@ const addSubscriptionResponse = {
     active: { type: "boolean" },
     createdById: { type: "string" },
     createdAt: { type: "string" },
+    gatewayDetails: {},
   },
 };
 export const addSubscriptionPostSchema = {
@@ -62,6 +127,7 @@ const loadSubscriptionResponse = {
     active: { type: "boolean" },
     createdById: { type: "string" },
     createdAt: { type: "string" },
+    gatewayDetails: {},
   },
 };
 export const loadSubscriptionGetSchema = {
@@ -109,6 +175,7 @@ const updateSubscriptionResponse = {
     customer: { type: "object" },
     additionalInfo: { type: "array" },
     createdById: { type: "string" },
+    gatewayDetails: {},
   },
 };
 const updateSubscriptionBody = {
@@ -161,6 +228,7 @@ const loadSubscriptionByPageResponse = {
           active: { type: "boolean" },
           createdById: { type: "string" },
           createdAt: { type: "string" },
+          gatewayDetails: {},
         },
       },
     },

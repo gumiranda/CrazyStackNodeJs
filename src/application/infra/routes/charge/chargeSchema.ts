@@ -1,8 +1,74 @@
+const PAGARME_ORDER = {
+  type: "object",
+  properties: {
+    customer_id: { type: "string" },
+    items: {
+      type: "array",
+      items: {
+        type: "object",
+        properties: {
+          amount: { type: "string" },
+          description: { type: "string" },
+          quantity: { type: "string" },
+          code: { type: "string" },
+        },
+        required: ["amount", "description", "quantity", "code"],
+      },
+    },
+    closed: { type: "string" },
+    payments: {
+      type: "array",
+      items: {
+        type: "object",
+        properties: {
+          credit_card: {
+            type: "object",
+            properties: {
+              operation_type: { type: "string" },
+              installments: { type: "string" },
+              card: {
+                type: "object",
+                properties: {
+                  number: { type: "string" },
+                  holder_name: { type: "string" },
+                  holder_document: { type: "string" },
+                  exp_month: { type: "string" },
+                  exp_year: { type: "string" },
+                  cvv: { type: "string" },
+                  billing_address_id: { type: "string" },
+                  brand: { type: "string" },
+                },
+                required: [
+                  "number",
+                  "holder_name",
+                  "holder_document",
+                  "exp_month",
+                  "exp_year",
+                  "cvv",
+                  "billing_address_id",
+                  "brand",
+                ],
+              },
+              statement_descriptor: { type: "string" },
+            },
+            required: ["operation_type", "installments", "card", "statement_descriptor"],
+          },
+          payment_method: { type: "string" },
+          amount: { type: "string" },
+        },
+        required: ["credit_card", "payment_method", "amount"],
+      },
+    },
+  },
+  required: ["customer_id", "items", "closed", "payments"],
+};
+
 const bodyAddChargeJsonSchema = {
   type: "object",
   required: ["correlationID"],
   properties: {
     correlationID: { type: "string" },
+    pagarmeOrder: PAGARME_ORDER,
   },
 };
 const headersJsonSchema = {
@@ -32,6 +98,7 @@ const addChargeResponse = {
     expiresDate: { type: "string" },
     brCode: { type: "string" },
     additionalInfo: { type: "array" },
+    gatewayDetails: {},
   },
 };
 export const addChargePostSchema = {
@@ -68,6 +135,7 @@ const loadChargeResponse = {
     active: { type: "boolean" },
     createdById: { type: "string" },
     createdAt: { type: "string" },
+    gatewayDetails: {},
   },
 };
 export const loadChargeGetSchema = {
@@ -120,6 +188,7 @@ const updateChargeResponse = {
     brCode: { type: "string" },
     additionalInfo: { type: "array" },
     createdById: { type: "string" },
+    gatewayDetails: {},
   },
 };
 const updateChargeBody = {
@@ -137,6 +206,7 @@ const updateChargeBody = {
     expiresDate: { type: "string" },
     brCode: { type: "string" },
     additionalInfo: { type: "array" },
+    gatewayDetails: {},
   },
 };
 export const updateChargeSchema = {
@@ -183,6 +253,7 @@ const loadChargeByPageResponse = {
           active: { type: "boolean" },
           createdById: { type: "string" },
           createdAt: { type: "string" },
+          gatewayDetails: {},
         },
       },
     },

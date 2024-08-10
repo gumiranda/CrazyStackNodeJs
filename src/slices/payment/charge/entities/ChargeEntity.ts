@@ -1,4 +1,4 @@
-import { AdditionalInfo, Customer } from "../../paymentTypes";
+import { AdditionalInfo, Customer, PagarmeOrder } from "../../paymentTypes";
 
 export type ChargeData = {
   _id?: string;
@@ -19,6 +19,8 @@ export type ChargeData = {
   expiresDate: string;
   brCode: string;
   additionalInfo: AdditionalInfo[];
+  gatewayDetails?: any;
+  pagarmeOrder?: PagarmeOrder;
 };
 
 export type ChargePaginated = {
@@ -44,6 +46,8 @@ export class ChargeEntity {
   expiresDate: string;
   brCode: string;
   additionalInfo: AdditionalInfo[];
+  gatewayDetails?: any;
+
   constructor(data: ChargeData) {
     this.createdById = data.createdById;
     this.name = data.name;
@@ -62,5 +66,6 @@ export class ChargeEntity {
     this.expiresDate = data.expiresDate;
     this.brCode = data.brCode;
     this.additionalInfo = data.additionalInfo;
+    this.gatewayDetails = data.gatewayDetails;
   }
 }

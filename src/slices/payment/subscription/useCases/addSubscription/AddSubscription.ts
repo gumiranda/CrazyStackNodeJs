@@ -28,12 +28,16 @@ export const addSubscription: AddSubscriptionSignature =
         dayGenerateCharge: data.dayGenerateCharge,
         chargeType: "DYNAMIC",
         dayDue: 7,
+        priceId: data?.priceId,
+        pagarmeSubscription: data?.pagarmeSubscription,
       });
       if (!subscription) return null;
       return addSubscriptionRepository.addSubscription(
         new SubscriptionEntity({
           ...data,
           ...subscription,
+          gatewayDetails: subscription,
+          globalID: subscription?.id ?? subscription?.globalID ?? data?.globalID,
         })
       );
     } catch (error) {

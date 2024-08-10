@@ -13,6 +13,11 @@ export const addCustomer: AddCustomerSignature =
     const response = await paymentProvider.createCustomer(data);
     if (!response?.customer) return null;
     return addCustomerRepository.addCustomer(
-      new CustomerEntity({ ...data, ...response?.customer })
+      new CustomerEntity({
+        ...data,
+        gatewayDetails: response?.customer,
+        ...response?.customer,
+        correlationID: response?.customer?.id ?? data?.correlationID,
+      })
     );
   };

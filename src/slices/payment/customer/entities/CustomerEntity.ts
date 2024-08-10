@@ -1,4 +1,4 @@
-import { Address, Customer, TaxID } from "../../paymentTypes";
+import { Address, Customer, TaxID, PagarmeCustomer } from "../../paymentTypes";
 
 export type CustomerData = {
   _id?: string;
@@ -8,6 +8,8 @@ export type CustomerData = {
   updatedAt?: Date;
   cpf?: string;
   correlationID?: string;
+  gatewayDetails?: any;
+  pagarmeCustomer?: PagarmeCustomer;
 } & Customer;
 
 export type CustomerPaginated = {
@@ -27,6 +29,8 @@ export class CustomerEntity {
   address?: Address;
   cpf?: string;
   correlationID?: string;
+  gatewayDetails?: any;
+  pagarmeCustomer?: PagarmeCustomer;
 
   constructor(data: CustomerData) {
     this.createdById = data.createdById;
@@ -40,5 +44,6 @@ export class CustomerEntity {
     this.address = data.address;
     this.cpf = data.cpf;
     this.correlationID = data.correlationID;
+    this.gatewayDetails = data.gatewayDetails;
   }
 }
