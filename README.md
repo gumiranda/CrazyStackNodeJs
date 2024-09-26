@@ -56,15 +56,15 @@ Este projeto utiliza as seguintes tecnologias:
 
 4. Compile o projeto (caso esteja usando TypeScript):
 
-   ```bash
+```bash
   yarn build
-   ```
+```
 
 5. Rode o projeto:
 
-   ```bash
+```bash
   yarn start
-   ```
+```
 
 ## Configuração ⚙️
 
