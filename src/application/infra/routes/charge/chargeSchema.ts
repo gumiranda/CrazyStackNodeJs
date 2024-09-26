@@ -1,3 +1,5 @@
+import { idSchema } from "@/application/types/id";
+
 const PAGARME_ORDER = {
   type: "object",
   properties: {
@@ -81,7 +83,7 @@ const headersJsonSchema = {
 const addChargeResponse = {
   type: "object",
   properties: {
-    _id: { type: "string", maxLength: 24, minLength: 24 },
+    _id: idSchema,
     name: { type: "string" },
     active: { type: "boolean" },
     createdById: { type: "string" },
@@ -97,7 +99,7 @@ const addChargeResponse = {
     expiresIn: { type: "number" },
     expiresDate: { type: "string" },
     brCode: { type: "string" },
-    additionalInfo: { type: "array" },
+    additionalInfo: {},
     gatewayDetails: {},
   },
 };
@@ -119,7 +121,7 @@ const queryStringJsonLoadChargeSchema = {
 const loadChargeResponse = {
   type: "object",
   properties: {
-    _id: { type: "string", maxLength: 24, minLength: 24 },
+    _id: idSchema,
     status: { type: "string" },
     customer: { type: "object" },
     value: { type: "number" },
@@ -131,7 +133,7 @@ const loadChargeResponse = {
     expiresIn: { type: "number" },
     expiresDate: { type: "string" },
     brCode: { type: "string" },
-    additionalInfo: { type: "array" },
+    additionalInfo: {},
     active: { type: "boolean" },
     createdById: { type: "string" },
     createdAt: { type: "string" },
@@ -174,7 +176,7 @@ const queryStringJsonUpdateChargeSchema = {
 const updateChargeResponse = {
   type: "object",
   properties: {
-    _id: { type: "string", maxLength: 24, minLength: 24 },
+    _id: idSchema,
     status: { type: "string" },
     customer: { type: "object" },
     value: { type: "number" },
@@ -186,7 +188,7 @@ const updateChargeResponse = {
     expiresIn: { type: "number" },
     expiresDate: { type: "string" },
     brCode: { type: "string" },
-    additionalInfo: { type: "array" },
+    additionalInfo: {},
     createdById: { type: "string" },
     gatewayDetails: {},
   },
@@ -205,7 +207,7 @@ const updateChargeBody = {
     expiresIn: { type: "number" },
     expiresDate: { type: "string" },
     brCode: { type: "string" },
-    additionalInfo: { type: "array" },
+    additionalInfo: {},
     gatewayDetails: {},
   },
 };
@@ -237,7 +239,7 @@ const loadChargeByPageResponse = {
       items: {
         type: "object",
         properties: {
-          _id: { type: "string", maxLength: 24, minLength: 24 },
+          _id: idSchema,
           status: { type: "string" },
           customer: { type: "object" },
           value: { type: "number" },
@@ -249,7 +251,7 @@ const loadChargeByPageResponse = {
           expiresIn: { type: "number" },
           expiresDate: { type: "string" },
           brCode: { type: "string" },
-          additionalInfo: { type: "array" },
+          additionalInfo: {},
           active: { type: "boolean" },
           createdById: { type: "string" },
           createdAt: { type: "string" },

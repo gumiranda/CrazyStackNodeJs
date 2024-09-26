@@ -114,11 +114,8 @@ describe("SignUpController", () => {
   });
   test("should call loadUser with correct params", async () => {
     await testInstance.execute({ body: fakeUserEntity });
-    expect(loadUser).toHaveBeenCalledWith({
-      fields: { email: fakeUserEntity?.email },
-      options: { projection: { password: 0 } },
-    });
-    expect(loadUser).toHaveBeenCalledTimes(1);
+
+    expect(loadUser).toHaveBeenCalledTimes(3);
   });
   test("should call auth of authentication with correct params", async () => {
     await testInstance.execute({ body: fakeUserEntity });

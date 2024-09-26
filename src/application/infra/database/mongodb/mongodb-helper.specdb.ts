@@ -11,14 +11,14 @@ describe("Mongo Helper", () => {
     await MongoHelper.disconnect();
   });
   beforeEach(async () => {
-    userCollection = await MongoHelper.getCollection("user");
+    userCollection = await MongoHelper.getCollection("users");
     await userCollection.deleteMany({});
   });
   it("should reconnect if mongodb is down", async () => {
-    let userCollection = await MongoHelper.getCollection("user");
+    let userCollection = await MongoHelper.getCollection("users");
     expect(userCollection).toBeTruthy();
     await MongoHelper.disconnect();
-    userCollection = await MongoHelper.getCollection("user");
+    userCollection = await MongoHelper.getCollection("users");
     expect(userCollection).toBeTruthy();
   });
   it("should return an session with success", async () => {
@@ -29,7 +29,7 @@ describe("Mongo Helper", () => {
       writeConcern: { w: "majority" },
     };
     let users: any = [];
-    const userCollection = await MongoHelper.getCollection("user");
+    const userCollection = await MongoHelper.getCollection("users");
     await session.withTransaction(async () => {
       try {
         await userCollection.insertOne({
@@ -50,7 +50,7 @@ describe("Mongo Helper", () => {
     expect(users).toHaveLength(1);
   });
   it("should return mappedPassword when i pass any object", async () => {
-    const userCollection = await MongoHelper.getCollection("user");
+    const userCollection = await MongoHelper.getCollection("users");
     const { insertedId } = await userCollection.insertOne({
       name: "Dona Maria",
       email: "donamaria@hotmail.com",
@@ -65,7 +65,7 @@ describe("Mongo Helper", () => {
     });
   });
   it("should return mapCollectionPassword when i pass any object", async () => {
-    const userCollection = await MongoHelper.getCollection("user");
+    const userCollection = await MongoHelper.getCollection("users");
     const { insertedId } = await userCollection.insertOne({
       name: "Dona Maria",
       email: "donamaria@hotmail.com",

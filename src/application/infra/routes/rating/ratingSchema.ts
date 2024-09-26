@@ -1,3 +1,5 @@
+import { idSchema } from "@/application/types/id";
+
 const bodyAddRatingJsonSchema = {
   type: "object",
   required: ["ratingType", "ratings"],
@@ -7,7 +9,7 @@ const bodyAddRatingJsonSchema = {
       maxItems: 10,
       items: {
         type: "object",
-        properties: { rating: { type: "string" }, stars: { type: "number" } },
+        properties: {},
       },
     },
     ratingType: { type: "string" },
@@ -23,13 +25,13 @@ const headersJsonSchema = {
 const addRatingResponse = {
   type: "object",
   properties: {
-    _id: { type: "string", maxLength: 24, minLength: 24 },
+    _id: idSchema,
     ratings: {
       type: "array",
       maxItems: 10,
       items: {
         type: "object",
-        properties: { rating: { type: "string" }, stars: { type: "number" } },
+        properties: {},
       },
     },
     ratingType: { type: "string" },
@@ -49,20 +51,20 @@ export const addRatingPostSchema = {
 const queryStringJsonLoadRatingSchema = {
   type: "object",
   properties: {
-    _id: { type: "string", maxLength: 24, minLength: 24 },
+    _id: idSchema,
   },
   required: ["_id"],
 };
 const loadRatingResponse = {
   type: "object",
   properties: {
-    _id: { type: "string", maxLength: 24, minLength: 24 },
+    _id: idSchema,
     ratings: {
       type: "array",
       maxItems: 10,
       items: {
         type: "object",
-        properties: { rating: { type: "string" }, stars: { type: "number" } },
+        properties: {},
       },
     },
     ratingType: { type: "string" },
@@ -84,7 +86,7 @@ const deleteRatingResponse = { type: "boolean" };
 const queryStringJsonDeleteRatingSchema = {
   type: "object",
   properties: {
-    _id: { type: "string", maxLength: 24, minLength: 24 },
+    _id: idSchema,
   },
   required: ["_id"],
 };
@@ -100,20 +102,20 @@ export const deleteRatingSchema = {
 const queryStringJsonUpdateRatingSchema = {
   type: "object",
   properties: {
-    _id: { type: "string", maxLength: 24, minLength: 24 },
+    _id: idSchema,
   },
   required: ["_id"],
 };
 const updateRatingResponse = {
   type: "object",
   properties: {
-    _id: { type: "string", maxLength: 24, minLength: 24 },
+    _id: idSchema,
     ratings: {
       type: "array",
       maxItems: 10,
       items: {
         type: "object",
-        properties: { rating: { type: "string" }, stars: { type: "number" } },
+        properties: {},
       },
     },
     ratingType: { type: "string" },
@@ -128,7 +130,7 @@ const updateRatingBody = {
       maxItems: 10,
       items: {
         type: "object",
-        properties: { rating: { type: "string" }, stars: { type: "number" } },
+        properties: {},
       },
     },
     ratingType: { type: "string" },
@@ -162,14 +164,10 @@ const loadRatingByPageResponse = {
       items: {
         type: "object",
         properties: {
-          _id: { type: "string", maxLength: 24, minLength: 24 },
+          _id: idSchema,
           ratings: {
             type: "array",
             maxItems: 10,
-            items: {
-              type: "object",
-              properties: { rating: { type: "string" }, stars: { type: "number" } },
-            },
           },
           ratingType: { type: "string" },
           active: { type: "boolean" },

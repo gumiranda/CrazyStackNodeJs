@@ -21,10 +21,20 @@ export class LoadUserByPageGeoNearController extends Controller {
     if (errors?.length > 0) {
       return badRequest(errors);
     }
-    const { page, sortBy, typeSort = "asc", ...rest } = httpRequest?.query || {};
-    const fields = rest;
+    const {
+      page,
+      sortBy = "createdAt",
+      typeSort = "asc",
+      limitPerPage = 10,
+      ...rest
+    } = httpRequest?.query || {};
+    const fields = {
+      ...rest,
+      lng: httpRequest?.userLogged?.coord?.coordinates?.[0],
+      lat: httpRequest?.userLogged?.coord?.coordinates?.[1],
+    };
     const sort = { [sortBy]: typeSort === "asc" ? 1 : -1 };
-    const options = { sort, page, userLoggedId: httpRequest?.userId };
+    const options = { sort, page, userLoggedId: httpRequest?.userId, limitPerPage };
     const userLoaded = await this.loadUserByPageGeoNear({
       fields,
       options,

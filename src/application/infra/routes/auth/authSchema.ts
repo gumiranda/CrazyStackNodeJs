@@ -4,7 +4,10 @@ const bodyJsonSchema = {
   properties: {
     name: { type: "string" },
     email: { type: "string" },
+    cpf: { type: "string" },
+    cnpj: { type: "string" },
     password: { type: "string" },
+    phone: { type: "string" },
     passwordConfirmation: { type: "string" },
     coord: {
       type: "object",
@@ -29,6 +32,8 @@ const signupResponse = {
           email: { type: "string" },
           name: { type: "string" },
           role: { type: "string" },
+          phone: { type: "string" },
+          createdAt: { type: "string" },
           active: { type: "boolean" },
           coord: {
             type: "object",
@@ -69,8 +74,10 @@ const loginResponse = {
           _id: { type: "string" },
           email: { type: "string" },
           name: { type: "string" },
+          phone: { type: "string" },
           role: { type: "string" },
           active: { type: "boolean" },
+          createdAt: { type: "string" },
         },
       },
     },

@@ -1,3 +1,5 @@
+import { idSchema } from "@/application/types/id";
+
 const bodyAddOwnerJsonSchema = {
   type: "object",
   required: [
@@ -101,7 +103,7 @@ const headersJsonSchema = {
 const addOwnerResponse = {
   type: "object",
   properties: {
-    _id: { type: "string", maxLength: 24, minLength: 24 },
+    _id: idSchema,
     name: { type: "string" },
     description: { type: "string" },
     haveDelivery: { type: "boolean", nullable: true },
@@ -204,7 +206,7 @@ const queryStringJsonLoadOwnerSchema = {
 const loadOwnerResponse = {
   type: "object",
   properties: {
-    _id: { type: "string", maxLength: 24, minLength: 24 },
+    _id: idSchema,
     name: { type: "string" },
     description: { type: "string" },
     haveDelivery: { type: "boolean", nullable: true },
@@ -304,7 +306,7 @@ const deleteOwnerResponse = { type: "boolean" };
 const queryStringJsonDeleteOwnerSchema = {
   type: "object",
   properties: {
-    _id: { type: "string", maxLength: 24, minLength: 24 },
+    _id: idSchema,
   },
   required: ["_id"],
 };
@@ -320,14 +322,14 @@ export const deleteOwnerSchema = {
 const queryStringJsonUpdateOwnerSchema = {
   type: "object",
   properties: {
-    _id: { type: "string", maxLength: 24, minLength: 24 },
+    _id: idSchema,
   },
   required: ["_id"],
 };
 const updateOwnerResponse = {
   type: "object",
   properties: {
-    _id: { type: "string", maxLength: 24, minLength: 24 },
+    _id: idSchema,
     name: { type: "string" },
     description: { type: "string" },
     haveDelivery: { type: "boolean", nullable: true },
@@ -528,7 +530,7 @@ const loadOwnerByPageResponse = {
       items: {
         type: "object",
         properties: {
-          _id: { type: "string", maxLength: 24, minLength: 24 },
+          _id: idSchema,
           name: { type: "string" },
           description: { type: "string" },
           haveDelivery: { type: "boolean", nullable: true },

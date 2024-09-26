@@ -16,7 +16,7 @@ describe("LoadUser", () => {
     loadUserRepository.loadUser.mockResolvedValue(fakeUserEntity);
   });
   beforeEach(() => {
-    testInstance = loadUser(loadUserRepository);
+    testInstance = loadUser(loadUserRepository, mock());
   });
   afterAll(async () => {
     MockDate.reset();

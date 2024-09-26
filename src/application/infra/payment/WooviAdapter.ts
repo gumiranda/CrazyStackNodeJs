@@ -120,6 +120,22 @@ export class WooviPaymentGateway extends PaymentGateway {
       return e?.response?.data;
     }
   }
+  async getChargeByCustomer(correlationID: string): Promise<any> {
+    try {
+      const response = await axios.get(
+        `https://api.openpix.com.br/api/v1/charge?customer=${correlationID}&status=ACTIVE`,
+        {
+          headers: {
+            Authorization: this.apiKey,
+            "content-type": "application/json",
+          },
+        }
+      );
+      return response?.data;
+    } catch (e: any) {
+      return e?.response?.data;
+    }
+  }
 }
 export const makeWooviAdapter = () => {
   return new WooviPaymentGateway(env.wooviKey);

@@ -14,7 +14,8 @@
     "test:v": "jest --passWithNoTests --forceExit --noStackTrace --runInBand",
     "clean": "rimraf dist",
     "build": "npm run clean && tsc",
-    "start": "node -r dotenv/config dist",
+    "start2": "node -r dotenv/config dist",
+    "start": "node  -r module-alias/register -r dotenv/config -r ts-node/register -r tsconfig-paths/register src/index.ts",
     "format": "prettier --write \"**/*.{ts,tsx,json,md}\"",
     "generate": "yarn plop --plopfile ./generators/plopfile.js"
   },
@@ -25,6 +26,8 @@
     "@types/jest": "^29.5.4",
     "@types/jsonwebtoken": "^9.0.2",
     "@types/module-alias": "^2.0.2",
+    "@types/pg": "^8.11.6",
+    "@types/uuid": "^9.0.8",
     "@types/ws": "^8.5.5",
     "@typescript-eslint/eslint-plugin": "^6.7.0",
     "@typescript-eslint/parser": "^6.7.0",
@@ -41,15 +44,21 @@
     "plop": "^4.0.0",
     "prettier": "^3.0.3",
     "ts-jest": "^29.1.1",
+    "ts-node": "^10.9.2",
+    "tsconfig-paths": "^4.2.0",
     "typescript": "^5.2.2"
   },
   "_moduleAliases": {
     "@": "dist"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.600.0",
+    "@aws-sdk/lib-storage": "^3.600.0",
+    "@aws-sdk/s3-request-presigner": "^3.600.0",
     "@fastify/cors": "^8.3.0",
     "@fastify/helmet": "^11.1.0",
     "@fastify/mongodb": "^8.0.0",
+    "@fastify/multipart": "^8.3.0",
     "@fastify/rate-limit": "^8.0.3",
     "@fastify/request-context": "^5.0.0",
     "@fastify/under-pressure": "^8.3.0",
@@ -58,6 +67,8 @@
     "@gquittet/graceful-server": "^4.0.8",
     "axios": "^1.6.8",
     "bcrypt": "^5.1.1",
+    "core-js": "^3.37.0",
+    "crypto-js": "^4.2.0",
     "date-fns": "^2.30.0",
     "date-fns-tz": "^2.0.0",
     "deep-email-validator": "^0.1.21",
@@ -67,6 +78,9 @@
     "kafkajs": "^2.2.4",
     "module-alias": "^2.2.3",
     "mongodb": "^6.1.0",
-    "stripe": "^14.22.0"
+    "pg": "^8.11.5",
+    "stripe": "^14.22.0",
+    "uuid": "^9.0.1",
+    "zod": "^3.23.8"
   }
 }

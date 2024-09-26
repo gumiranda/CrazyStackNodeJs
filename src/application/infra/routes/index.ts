@@ -3,6 +3,8 @@ import { auth } from "./auth";
 import { account } from "./account";
 import { category } from "./category";
 // IMPORT MODULE FILES
+import { photo } from "./photo";
+import { transaction } from "./transaction";
 import { charge } from "./charge";
 import { subscription } from "./subscription";
 import { customer } from "./customer";
@@ -21,15 +23,21 @@ import { owner } from "./owner";
 import { user } from "./user";
 import { service } from "./service";
 import { product } from "./product";
+import { webhooks } from "./webhooks";
+import { uploadRoutes } from "./photo/uploadPhotoRouter";
+
 const routes = [
+  webhooks,
   health,
   auth,
   account,
   category,
   // ADD FUNCTION IMPORTS
-charge,
-subscription,
-customer,
+  photo,
+  transaction,
+  charge,
+  subscription,
+  customer,
   routeDriver,
   mapRoute,
   client,
@@ -45,6 +53,7 @@ customer,
   user,
   service,
   product,
+  uploadRoutes,
 ];
 
 export { routes };

@@ -16,6 +16,7 @@ import {
   startOfDay,
   trataTimezone,
 } from "@/application/helpers/dateFns";
+import { env } from "@/application/infra";
 import { OwnerAppointmentInfo } from "@/slices/appointment/entities";
 
 export type QueryDate = {
@@ -156,7 +157,7 @@ export const getDateWithCustomHourAndMinutes = (
   let dateAux = cloneDate(date);
   //forçar horario do brasil
   let newHours = hours + 3;
-  if (process.env.NODE_ENV !== "production") {
+  if (env.environment !== "production") {
     newHours = hours;
   }
   dateAux = setHours(dateAux, newHours);
@@ -557,3 +558,19 @@ export const queryDateGenerator = (date: string): QueryDate | null => {
   }
   return null;
 };
+export const calculateDaysSinceRegister = (createdAt: string) => {
+  if (!createdAt) return 9999;
+  return Math.floor(
+    (new Date().getTime() - new Date(createdAt).getTime()) / (1000 * 60 * 60 * 24)
+  );
+};
+export const calculateDaysToNextPayment = (payDay: string) => {
+  if (!payDay) return 0;
+  return Math.floor(
+    (new Date(payDay).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24)
+  );
+};
+export const daysSinceRegister = (user: any) =>
+  user?.createdAt ? calculateDaysSinceRegister(user?.createdAt) : 9999;
+export const userHaveToPay = ({ user, paidDaysAgo = 9999 }: any) =>
+  user?.role === "owner" && paidDaysAgo > 30 && daysSinceRegister(user) > 30;

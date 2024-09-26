@@ -2,6 +2,8 @@ import { makeFastifyInstance } from "@/index";
 import { Collection, ObjectId } from "mongodb";
 import { MongoHelper, env } from "@/application/infra";
 import { sign } from "jsonwebtoken";
+import { addDays } from "date-fns";
+
 jest.setTimeout(500000);
 
 let userCollection: Collection;
@@ -19,7 +21,7 @@ const {{camelCase name}}Body = {
   name: "test",
 };
 const makeAccessToken = async (role: string, password: string): Promise<any> => {
-  const result = await userCollection.insertOne({ ...userBody, password, role });
+  const result = await userCollection.insertOne({ ...userBody, password,payDay: addDays(new Date(), 30), role });
   const _id = result?.insertedId;
   return { _id, token: sign({ _id }, env.jwtSecret) };
 };
@@ -36,7 +38,7 @@ describe("Route api/{{camelCase name}}", () => {
     fastify = null;
   });
   beforeEach(async () => {
-    userCollection = await MongoHelper.getCollection("user");
+    userCollection = await MongoHelper.getCollection("users");
     {{camelCase name}}Collection = await MongoHelper.getCollection("{{camelCase name}}");
     await userCollection.deleteMany({});
     await {{camelCase name}}Collection.deleteMany({});

@@ -2,18 +2,10 @@ import { makeFastifyInstance } from "@/index";
 import { Collection } from "mongodb";
 import { MongoHelper } from "@/application/infra";
 import { hash } from "bcrypt";
+import { userBody } from "@/application/helpers/mocks/userBody";
 jest.setTimeout(500000);
 
 let userCollection: Collection;
-
-const userBody = {
-  email: "gustavoteste41@hotmail.com",
-  name: "Gustavo",
-  role: "client",
-  password: "123456",
-  passwordConfirmation: "123456",
-  coord: { type: "Point", coordinates: [-46.693419, -23.568704] },
-};
 
 describe("Route api/auth", () => {
   let fastify: any;
@@ -28,7 +20,7 @@ describe("Route api/auth", () => {
     fastify = null;
   });
   beforeEach(async () => {
-    userCollection = await MongoHelper.getCollection("user");
+    userCollection = await MongoHelper.getCollection("users");
     await userCollection.deleteMany({});
   });
   describe("POST /api/auth/signup", () => {

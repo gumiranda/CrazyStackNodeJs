@@ -1,3 +1,5 @@
+import { idSchema } from "@/application/types/id";
+
 const bodyAddUserJsonSchema = {
   type: "object",
   required: ["name", "email", "password", "passwordConfirmation", "role", "serviceIds"],
@@ -8,9 +10,10 @@ const bodyAddUserJsonSchema = {
       type: "string",
       enum: ["professional"],
     },
+    photoId: idSchema,
     password: { type: "string" },
     passwordConfirmation: { type: "string" },
-    serviceIds: { type: "array", items: { type: "string", maxLength: 24, minLength: 24 } },
+    serviceIds: { type: "array", items: idSchema },
     coord: {
       type: "object",
       properties: {
@@ -30,7 +33,7 @@ const headersJsonSchema = {
 const addUserResponse = {
   type: "object",
   properties: {
-    _id: { type: "string", maxLength: 24, minLength: 24 },
+    _id: idSchema,
     name: { type: "string" },
     email: { type: "string" },
     active: { type: "boolean" },
@@ -49,24 +52,26 @@ export const addUserPostSchema = {
 const queryStringJsonLoadUserSchema = {
   type: "object",
   properties: {
-    _id: { type: "string", maxLength: 24, minLength: 24 },
+    _id: idSchema,
   },
   required: ["_id"],
 };
 const loadUserResponse = {
   type: "object",
   properties: {
-    _id: { type: "string", maxLength: 24, minLength: 24 },
+    _id: idSchema,
     name: { type: "string" },
     serviceIds: {
       type: "array",
       nullable: true,
-      items: { type: "string", maxLength: 24, minLength: 24 },
+      items: idSchema,
     },
-    ownerId: { type: "string", maxLength: 24, minLength: 24 },
-    myOwnerId: { type: "string", maxLength: 24, minLength: 24 },
+    ownerId: idSchema,
+    myOwnerId: idSchema,
     active: { type: "boolean" },
     createdById: { type: "string" },
+    payDay: { type: "string" },
+    photo: {},
     createdAt: { type: "string" },
   },
 };
@@ -83,7 +88,7 @@ const deleteUserResponse = { type: "boolean" };
 const queryStringJsonDeleteUserSchema = {
   type: "object",
   properties: {
-    _id: { type: "string", maxLength: 24, minLength: 24 },
+    _id: idSchema,
   },
   required: ["_id"],
 };
@@ -99,28 +104,36 @@ export const deleteUserSchema = {
 const queryStringJsonUpdateUserSchema = {
   type: "object",
   properties: {
-    _id: { type: "string", maxLength: 24, minLength: 24 },
+    _id: idSchema,
   },
   required: ["_id"],
 };
 const updateUserResponse = {
   type: "object",
   properties: {
-    _id: { type: "string", maxLength: 24, minLength: 24 },
+    _id: idSchema,
     name: { type: "string" },
     serviceIds: {
       type: "array",
       nullable: true,
-      items: { type: "string", maxLength: 24, minLength: 24 },
+      items: idSchema,
     },
     createdById: { type: "string" },
+    photoId: { type: "string" },
   },
 };
 const updateUserBody = {
   type: "object",
   properties: {
     name: { type: "string" },
+    photoId: { type: "string" },
+    serviceIds: {
+      type: "array",
+      nullable: true,
+      items: idSchema,
+    },
   },
+  additionalProperties: false,
 };
 export const updateUserSchema = {
   schema: {
@@ -150,7 +163,7 @@ const loadUserByPageResponse = {
       items: {
         type: "object",
         properties: {
-          _id: { type: "string", maxLength: 24, minLength: 24 },
+          _id: idSchema,
           name: { type: "string" },
           role: {
             type: "string",
@@ -159,11 +172,12 @@ const loadUserByPageResponse = {
           serviceIds: {
             type: "array",
             nullable: true,
-            items: { type: "string", maxLength: 24, minLength: 24 },
+            items: idSchema,
           },
           active: { type: "boolean" },
           createdById: { type: "string" },
           createdAt: { type: "string" },
+          photoId: idSchema,
         },
       },
     },
@@ -188,7 +202,7 @@ const loadUserGeoNearResponse = {
       items: {
         type: "object",
         properties: {
-          _id: { type: "string", maxLength: 24, minLength: 24 },
+          _id: idSchema,
           name: { type: "string" },
           distance: { type: "number" },
           role: {
@@ -198,9 +212,10 @@ const loadUserGeoNearResponse = {
           serviceIds: {
             type: "array",
             nullable: true,
-            items: { type: "string", maxLength: 24, minLength: 24 },
+            items: idSchema,
           },
           createdAt: { type: "string" },
+          photoId: idSchema,
         },
       },
     },

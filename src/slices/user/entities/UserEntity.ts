@@ -1,6 +1,9 @@
+import { addDays } from "@/application/helpers";
+
 export type UserData = {
   _id?: string;
   createdById: string;
+  customerID?: string;
   name: string;
   email: string;
   role: string;
@@ -38,6 +41,7 @@ export type UserData = {
   updatedAt?: Date;
   serviceIds?: string[];
   serviceOptions?: any[];
+  globalID?: string;
 };
 
 export type UserPaginated = {
@@ -85,6 +89,9 @@ export class UserEntity {
   updatedAt?: Date;
   serviceIds?: string[];
   serviceOptions?: any[];
+  globalID?: string;
+  customerID?: string;
+
   constructor(data: UserData) {
     this.createdById = data.createdById;
     this.name = data.name;
@@ -124,5 +131,8 @@ export class UserEntity {
     this.createdAt = new Date();
     this.updatedAt = new Date();
     this.serviceOptions = data.serviceOptions;
+    this.payDay = addDays(new Date(), 30);
+    this.globalID = data.globalID;
+    this.customerID = data.customerID;
   }
 }

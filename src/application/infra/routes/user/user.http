@@ -1,0 +1,105 @@
+@apiurl = http://127.0.0.1:3333/api
+
+@token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1NGI3YThhNC00YTc5LTQ1N2UtYjhmMC0yMGRhZDE5ZmUwNDgiLCJpYXQiOjE3MTcwOTQ3MTEsImV4cCI6MTcyMjI3ODcxMX0.6jmPXDkjUF3ADvwYJ19c_A2oBVD9UF8rRKPYOKPNTSQ
+
+@tokenGeolocalizado=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiIxYjZjNTg2OS05MTc2LTQzZmEtYjg3Yy03MDdhZjY0ZDljNjQiLCJpYXQiOjE3MTgzMTA4MzEsImV4cCI6MTcyMzQ5NDgzMX0.QUpfzYZtMxiG82cEQi6fD7XFvdxudElaiofuMw0DPYs
+
+
+@entityId=54b7a8a4-4a79-457e-b8f0-20dad19fe048
+
+@myOwnerId=54b7a8a4-4a79-457e-b8f0-20dad19fe048
+
+@ownerId=a207030f-3cd7-4844-a64d-057e39b8b672
+
+@professionalId=cea9468a-1fdb-4296-956c-ba3c43453ab8
+
+@entityType=user
+### GET loadUserById
+GET {{apiurl}}/{{entityType}}/load?_id={{entityId}} HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+
+### GET loadUserByPage
+GET {{apiurl}}/{{entityType}}/loadByPage?page=1 HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+### GET loadByGeoNear
+GET {{apiurl}}/{{entityType}}/loadByGeoNear?page=1&limitPerPage=10 HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{tokenGeolocalizado}}
+### PATCH update
+PATCH {{apiurl}}/{{entityType}}/update?_id={{entityId}} HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "name": "John Doe3",
+  "active":false,
+  "photoId":"50e85f33-bec3-4cc5-91e7-73f08ed3edb4",
+  "password":"",
+  "createdById": null
+}
+
+### DELETE delete user
+DELETE {{apiurl}}/{{entityType}}/delete?_id={{entityId}}	 HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+### POST add
+POST {{apiurl}}/{{entityType}}/add  HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "name": "John Doe2",
+  "password": "123456",
+  "passwordConfirmation": "123456",
+  "cpf": "12345678900",
+  "role": "professional",
+  "myOwnerId":"54b7a8a4-4a79-457e-b8f0-20dad19fe048",
+  "ownerId":"a207030f-3cd7-4844-a64d-057e39b8b672",
+  "serviceIds": ["79fe5bd5-841d-48ff-92a8-af79c2a1c7da"],
+  "email":"email343@teste.com"
+}
+
+
+### POST signup
+POST {{apiurl}}/auth/signup HTTP/1.1
+Content-Type: application/json
+
+
+{
+  "email": "teste9@gmail.com",
+  "password": "123456",
+  "passwordConfirmation": "123456",
+  "name": "John Doe",
+  "cpf": "55161527048",
+  "phone": "12345678900",
+  "role": "owner",
+  "coord":  {"coordinates": [-46.6333, -23.5405] }
+}
+
+### POST LOGIN geolocalizado
+POST {{apiurl}}/auth/login HTTP/1.1
+Content-Type: application/json
+
+
+{
+  "email": "teste9@gmail.com",
+  "password": "123456",
+  "passwordConfirmation": "123456"
+}
+
+
+### POST LOGIN
+POST {{apiurl}}/auth/login HTTP/1.1
+Content-Type: application/json
+
+
+{
+  "email": "gustavao@gmail.com",
+  "password": "123456",
+  "passwordConfirmation": "123456"
+}

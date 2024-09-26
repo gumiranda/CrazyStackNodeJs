@@ -1,3 +1,4 @@
+import { addDays } from "@/application/helpers";
 import { UserEntity } from "./UserEntity";
 import MockDate from "mockdate";
 
@@ -16,7 +17,6 @@ export const fakeUserEntity = {
   cardId: "string",
   ownerId: "string",
   myOwnerId: "string",
-  payDay: "string",
   photoUrl: "string",
   cpf: "string",
   phone: "string",
@@ -39,6 +39,8 @@ export const fakeUserEntity = {
   nextPlan: "string",
   addresses: [],
   clientId: "string",
+  globalID: "string",
+  payDay: addDays(new Date(), 30),
 };
 export const fakeUserPaginated = {
   total: 11,
@@ -76,6 +78,7 @@ describe("User", () => {
       appointmentsTotal: 0,
       createdAt: new Date(),
       updatedAt: new Date(),
+      payDay: addDays(new Date(), 30),
     });
   });
 });

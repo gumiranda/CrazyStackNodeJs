@@ -12,11 +12,23 @@ import {
   updatePositionConsumer,
 } from "./application/infra/messaging/consumers";
 import { newOwnerConsumer } from "./application/infra/messaging/consumers/OwnerConsumer";
+import { closePool } from "./application/infra/database/postgres";
 
 export const makeFastifyInstance = async (externalMongoClient = null) => {
   const fastify: FastifyInstance = Fastify({ logger: true });
   try {
     const client = externalMongoClient ?? (await MongoHelper.connect(env.mongoUri));
+    await fastify.register(require("@fastify/multipart"), {
+      limits: {
+        fieldNameSize: 250,
+        fieldSize: 1000000,
+        fields: 10,
+        fileSize: 1000000,
+        files: 1,
+        headerPairs: 2000,
+        parts: 1000,
+      },
+    });
     await fastify.register(require("@fastify/helmet"), {
       contentSecurityPolicy: false,
       global: true,
@@ -57,6 +69,7 @@ export const makeFastifyInstance = async (externalMongoClient = null) => {
     }
     return fastify;
   } catch (error) {
+    await closePool();
     fastify.log.error(error);
     process.exit(1);
   }
@@ -77,6 +90,9 @@ const start = async () => {
       console.log("O pai ta on");
     });
     gracefulServer.on(GracefulServer.SHUTTING_DOWN, () => {
+      closePool().then(() => {
+        console.log("desconectou do banco");
+      });
       kafkaAdapter.disconnectConsumer().then(() => {
         console.log("desconectou kafka consumer");
       });
@@ -91,6 +107,7 @@ const start = async () => {
     gracefulServer.setReady();
     kafkaAdapter = await consumeMessageKafka({ consumers: kafkaConsumers });
   } catch (err) {
+    await closePool();
     process.exit(1);
   }
 };

@@ -1,4 +1,5 @@
-import { MongoRepository } from "@/application/infra";
+import { makeDatabaseInstance } from "@/application/infra";
+import { whiteLabel } from "@/application/infra/config/whiteLabel";
 import { makePaymentAdapter } from "@/application/infra/payment/paymentAdapter";
 import { CustomerRepository } from "@/slices/payment/customer/repositories";
 import {
@@ -8,10 +9,12 @@ import {
 } from "@/slices/payment/customer/useCases";
 
 export const makeLoadCustomerFactory = (): LoadCustomer => {
-  const repository = new CustomerRepository(new MongoRepository("customer"));
+  const repository = new CustomerRepository(
+    makeDatabaseInstance(whiteLabel.database, "customer")
+  );
   return loadCustomer(
     repository,
-    makePaymentAdapter("pagarme"),
+    makePaymentAdapter(whiteLabel.gatewayPix),
     makeUpdateCustomerFactory()
   );
 };

@@ -1,0 +1,57 @@
+@apiurl = http://127.0.0.1:3333/api
+
+@token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1NGI3YThhNC00YTc5LTQ1N2UtYjhmMC0yMGRhZDE5ZmUwNDgiLCJpYXQiOjE3MTcwOTQ3MTEsImV4cCI6MTcyMjI3ODcxMX0.6jmPXDkjUF3ADvwYJ19c_A2oBVD9UF8rRKPYOKPNTSQ
+
+@entityId=c762bd53-938e-4e75-8f8c-43f4ac0f5b80
+
+@entityType=recurrence
+
+### POST add
+POST {{apiurl}}/{{entityType}}/add  HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "name": "Weekly Team Meeting",
+  "active": true,
+  "createdAt": "2024-05-30T10:30:00Z",
+  "updatedAt": "2024-05-30T10:30:00Z",
+  "type": 0,
+  "accept": true,
+  "appointmentsWasInserted": false,
+  "frequency": 1,
+  "initDate": "2024-06-01T09:00:00Z",
+  "endDate": "2024-12-01T09:00:00Z",
+  "professionalId": "cea9468a-1fdb-4296-956c-ba3c43453ab8",
+  "requestId": "f7323d26-9e8d-4a1b-9d3c-a6133b2dda3a",
+  "clientId": "fc23d11a-229a-49db-80c3-bf7662b0d56a",
+  "ownerId": "a207030f-3cd7-4844-a64d-057e39b8b672",
+  "serviceId": "9f8bafca-84a2-4520-8682-7a2edeba1267"
+}
+
+
+### GET loadById
+GET {{apiurl}}/{{entityType}}/load?_id={{entityId}} HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+
+### GET loadByPage
+GET {{apiurl}}/{{entityType}}/loadByPage?page=1 HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+### PATCH update
+PATCH {{apiurl}}/{{entityType}}/update?_id={{entityId}} HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "name": "categoria top"
+}
+
+### DELETE delete
+DELETE {{apiurl}}/{{entityType}}/delete?_id={{entityId}}	 HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{token}}
+

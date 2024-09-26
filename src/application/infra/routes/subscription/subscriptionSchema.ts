@@ -1,3 +1,5 @@
+import { idSchema } from "@/application/types/id";
+
 const pagarmeSubscription = {
   type: "object",
   properties: {
@@ -70,7 +72,7 @@ const bodyAddSubscriptionJsonSchema = {
     value: { type: "number" },
     dayGenerateCharge: { type: "number" },
     customer: { type: "object" },
-    additionalInfo: { type: "array" },
+    additionalInfo: {},
     pagarmeSubscription,
   },
 };
@@ -84,14 +86,14 @@ const headersJsonSchema = {
 const addSubscriptionResponse = {
   type: "object",
   properties: {
-    _id: { type: "string", maxLength: 24, minLength: 24 },
+    _id: idSchema,
     name: { type: "string" },
     comment: { type: "string" },
     globalID: { type: "string" },
     value: { type: "number" },
     dayGenerateCharge: { type: "number" },
     customer: { type: "object" },
-    additionalInfo: { type: "array" },
+    additionalInfo: {},
     active: { type: "boolean" },
     createdById: { type: "string" },
     createdAt: { type: "string" },
@@ -111,23 +113,24 @@ const queryStringJsonLoadSubscriptionSchema = {
   properties: {
     globalID: { type: "string" },
   },
-  required: ["globalID"],
+  required: [],
 };
 const loadSubscriptionResponse = {
   type: "object",
   properties: {
-    _id: { type: "string", maxLength: 24, minLength: 24 },
+    _id: idSchema,
     name: { type: "string" },
     comment: { type: "string" },
     globalID: { type: "string" },
     value: { type: "number" },
     dayGenerateCharge: { type: "number" },
     customer: { type: "object" },
-    additionalInfo: { type: "array" },
+    additionalInfo: {},
     active: { type: "boolean" },
     createdById: { type: "string" },
     createdAt: { type: "string" },
     gatewayDetails: {},
+    chargesByCustomer: {},
   },
 };
 export const loadSubscriptionGetSchema = {
@@ -166,14 +169,14 @@ const queryStringJsonUpdateSubscriptionSchema = {
 const updateSubscriptionResponse = {
   type: "object",
   properties: {
-    _id: { type: "string", maxLength: 24, minLength: 24 },
+    _id: idSchema,
     name: { type: "string" },
     comment: { type: "string" },
     globalID: { type: "string" },
     value: { type: "number" },
     dayGenerateCharge: { type: "number" },
     customer: { type: "object" },
-    additionalInfo: { type: "array" },
+    additionalInfo: {},
     createdById: { type: "string" },
     gatewayDetails: {},
   },
@@ -186,7 +189,7 @@ const updateSubscriptionBody = {
     value: { type: "number" },
     dayGenerateCharge: { type: "number" },
     customer: { type: "object" },
-    additionalInfo: { type: "array" },
+    additionalInfo: {},
   },
 };
 export const updateSubscriptionSchema = {
@@ -217,14 +220,14 @@ const loadSubscriptionByPageResponse = {
       items: {
         type: "object",
         properties: {
-          _id: { type: "string", maxLength: 24, minLength: 24 },
+          _id: idSchema,
           name: { type: "string" },
           comment: { type: "string" },
           globalID: { type: "string" },
           value: { type: "number" },
           dayGenerateCharge: { type: "number" },
           customer: { type: "object" },
-          additionalInfo: { type: "array" },
+          additionalInfo: {},
           active: { type: "boolean" },
           createdById: { type: "string" },
           createdAt: { type: "string" },

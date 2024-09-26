@@ -1,0 +1,102 @@
+@apiurl = http://127.0.0.1:3333/api
+
+@token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1NGI3YThhNC00YTc5LTQ1N2UtYjhmMC0yMGRhZDE5ZmUwNDgiLCJpYXQiOjE3MTcwOTQ3MTEsImV4cCI6MTcyMjI3ODcxMX0.6jmPXDkjUF3ADvwYJ19c_A2oBVD9UF8rRKPYOKPNTSQ
+
+@entityId=f7323d26-9e8d-4a1b-9d3c-a6133b2dda3a
+
+@clientUserId=54b7a8a4-4a79-457e-b8f0-20dad19fe048
+
+@myOwnerId=54b7a8a4-4a79-457e-b8f0-20dad19fe048
+
+@createdForId=54b7a8a4-4a79-457e-b8f0-20dad19fe048
+
+@ownerId=a207030f-3cd7-4844-a64d-057e39b8b672
+
+@professionalId=cea9468a-1fdb-4296-956c-ba3c43453ab8
+
+@serviceId=9f8bafca-84a2-4520-8682-7a2edeba1267
+
+@clientId=fc23d11a-229a-49db-80c3-bf7662b0d56a
+
+@entityType=request
+
+### GET loadAvailableTimes
+GET {{apiurl}}/appointment/loadAvailableTimes?serviceId={{serviceId}}&professionalId={{professionalId}}&date=2043-02-23T03:00:00.000Z&ownerId={{ownerId}} HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+### GET loadInvoice
+GET {{apiurl}}/appointment/loadInvoice?serviceId={{serviceId}}&professionalId={{professionalId}}&initDate=1999-02-23T03:00:00.000Z&endDate=2044-02-23T03:00:00.000Z&ownerId={{ownerId}} HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+### GET loadById
+GET {{apiurl}}/{{entityType}}/load?_id={{entityId}} HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+
+### GET loadByPage
+GET {{apiurl}}/{{entityType}}/loadByPage?page=1&initDate=2042-02-23T03:00:00.000Z&endDate=2042-02-24T03:00:00.000Z HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+### PATCH update
+PATCH {{apiurl}}/{{entityType}}/update?_id={{entityId}} HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "message": "teste",
+  "clientId":"fc23d11a-229a-49db-80c3-bf7662b0d56a",
+  "serviceId":"9f8bafca-84a2-4520-8682-7a2edeba1267",
+  "professionalId":"cea9468a-1fdb-4296-956c-ba3c43453ab8",
+  "endDate": "2043-02-23T16:15:00.000Z",
+  "initDate": "2043-02-23T16:00:00.000Z",
+  "haveDelivery": false,
+  "status": 1,
+  "duration":15,
+  "haveRecurrence": false,
+  "haveFidelity": false,
+  "haveRide": false,
+  "serviceName": "string",
+  "professionalName": "string",
+  "clientName": "string",
+  "ownerName": "string",
+  "ownerId":"a207030f-3cd7-4844-a64d-057e39b8b672",
+  "createdForId":"54b7a8a4-4a79-457e-b8f0-20dad19fe048",
+  "clientUserId":"54b7a8a4-4a79-457e-b8f0-20dad19fe048"
+}
+
+### DELETE delete
+DELETE {{apiurl}}/{{entityType}}/delete?_id={{entityId}}	 HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+### POST add
+POST {{apiurl}}/{{entityType}}/add  HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "message": "teste",
+  "clientId":"fc23d11a-229a-49db-80c3-bf7662b0d56a",
+  "serviceId":"9f8bafca-84a2-4520-8682-7a2edeba1267",
+  "professionalId":"cea9468a-1fdb-4296-956c-ba3c43453ab8",
+  "endDate": "2043-02-23T16:15:00.000Z",
+  "initDate": "2043-02-23T16:00:00.000Z",
+  "haveDelivery": false,
+  "status": 0,
+  "duration":15,
+  "haveRecurrence": false,
+  "haveFidelity": false,
+  "haveRide": false,
+  "serviceName": "string",
+  "professionalName": "string",
+  "clientName": "string",
+  "ownerName": "string",
+  "ownerId":"a207030f-3cd7-4844-a64d-057e39b8b672",
+  "createdForId":"54b7a8a4-4a79-457e-b8f0-20dad19fe048",
+  "clientUserId":"54b7a8a4-4a79-457e-b8f0-20dad19fe048"
+}
+

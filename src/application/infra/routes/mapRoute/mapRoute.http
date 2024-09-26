@@ -1,0 +1,50 @@
+@apiurl = http://127.0.0.1:3333/api
+
+@token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1NGI3YThhNC00YTc5LTQ1N2UtYjhmMC0yMGRhZDE5ZmUwNDgiLCJpYXQiOjE3MTcwOTQ3MTEsImV4cCI6MTcyMjI3ODcxMX0.6jmPXDkjUF3ADvwYJ19c_A2oBVD9UF8rRKPYOKPNTSQ
+
+@entityId=0184be9b-5a03-4740-9080-b7be7c5f4265
+
+@entityType=mapRoute
+
+### POST add
+POST {{apiurl}}/{{entityType}}/add  HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "name": "fakeMapRouteEntity",
+  "active": true,
+  "createdAt": "2024-05-31T14:53:00Z",
+  "updatedAt": "2024-05-31T14:53:00Z",
+  "source_id": "ChIJN1t_tDeuEmsRUsoyG83frY4",
+  "destination_id": "ChIJP3Sa8ziYEmsRUKgyFmh9AQM"
+}
+
+
+### GET loadById
+GET {{apiurl}}/{{entityType}}/load?_id={{entityId}} HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+
+### GET loadByPage
+GET {{apiurl}}/{{entityType}}/loadByPage?page=1 HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+### PATCH update
+PATCH {{apiurl}}/{{entityType}}/update?_id={{entityId}} HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "name": "categoria top",
+  "destination_id": "ChIJN1t_tDeuEmsRUsoyG83frY4",
+  "source_id": "ChIJP3Sa8ziYEmsRUKgyFmh9AQM"
+}
+
+### DELETE delete
+DELETE {{apiurl}}/{{entityType}}/delete?_id={{entityId}}	 HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{token}}
+

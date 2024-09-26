@@ -1,8 +1,11 @@
-import { MongoRepository } from "@/application/infra";
+import { makeDatabaseInstance } from "@/application/infra";
 import { UserRepository } from "@/slices/user/repositories";
 import { deleteUser, DeleteUser } from "@/slices/user/useCases";
+import { whiteLabel } from "@/application/infra/config/whiteLabel";
 
 export const makeDeleteUserFactory = (): DeleteUser => {
-  const repository = new UserRepository(new MongoRepository("user"));
+  const repository = new UserRepository(
+    makeDatabaseInstance(whiteLabel.database, "users")
+  );
   return deleteUser(repository);
 };
