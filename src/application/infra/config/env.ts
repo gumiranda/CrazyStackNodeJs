@@ -39,7 +39,7 @@ export const envSchema = z.object({
   PGHOST: z.string(),
   PGDATABASE: z.string(),
   PGPORT: z.string(),
-  rabbitMqUrl: z.string(),
+  rabbitMqUrl: z.string().optional(),
   messageBroker: z.enum(["kafka", "rabbitmq"]).default("rabbitmq"),
 });
 

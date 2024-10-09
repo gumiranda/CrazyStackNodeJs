@@ -14,7 +14,7 @@ import { newOwnerConsumer } from "./application/infra/messaging/consumers/OwnerC
 import { closePool } from "./application/infra/database/postgres";
 import { consumeMessage } from "./application/infra/messaging";
 
-export const makeFastifyInstance = async (externalMongoClient = null) => {
+export const makeFastifyInstance = async (externalMongoClient: any) => {
   const fastify: FastifyInstance = Fastify({ logger: true });
   try {
     const client = externalMongoClient ?? (await MongoHelper.connect(env.mongoUri));
@@ -78,7 +78,9 @@ let brokerMessagingAdapter: any;
 // Run the server!
 const start = async () => {
   try {
-    const fastifyInstance = await makeFastifyInstance();
+    const fastifyInstance = await makeFastifyInstance(
+      env.database === "postgres" ? {} : null
+    );
     if (!fastifyInstance) return;
     const brokerMessagingConsumers = [
       updatePositionConsumer,

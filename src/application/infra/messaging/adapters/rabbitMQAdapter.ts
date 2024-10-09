@@ -40,7 +40,7 @@ export class RabbitMQAdapter {
 }
 
 export const makeRabbitMQAdapter = () => {
-  return new RabbitMQAdapter(env.rabbitMqUrl);
+  return new RabbitMQAdapter(env.rabbitMqUrl ?? "");
 };
 
 export async function sendMessageRabbitMQ({ topic, message }: SendMessageInput) {
