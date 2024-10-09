@@ -46,7 +46,7 @@ export class RouteDriverRepository
     data: RouteDriverData
   ): Promise<RouteDriverData | null> {
     return this.repository.upsertAndPush(
-      { routeId: query?.fields?.routeId, _id: query?.fields?._id } ?? {},
+      { routeId: query?.fields?.routeId, _id: query?.fields?._id },
       data,
       {
         points: { location: { lat: query?.fields?.lat, lng: query?.fields?.lng } },

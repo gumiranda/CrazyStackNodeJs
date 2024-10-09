@@ -15,7 +15,7 @@ import { AddUser, CompleteOwner, LoadUser } from "@/slices/user/useCases";
 import { AddAccount } from "@/slices/account/useCases";
 import { EmailInUseError, InvalidParamError } from "@/application/errors";
 import emailValidator from "deep-email-validator";
-import { sendMessageKafka } from "@/application/infra/messaging/adapters/kafkaAdapter";
+import { sendMessage } from "@/application/infra/messaging";
 
 export class SignupController extends Controller {
   constructor(
@@ -113,7 +113,7 @@ export class SignupController extends Controller {
         },
       };
       const message = JSON.stringify(msg);
-      await sendMessageKafka({
+      await sendMessage({
         topic: "newOwner",
         message,
       });
