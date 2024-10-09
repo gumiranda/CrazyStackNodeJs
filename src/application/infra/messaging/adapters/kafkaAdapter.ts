@@ -1,5 +1,10 @@
 import { Kafka } from "kafkajs";
 import { env } from "@/application/infra";
+import type {
+  ConsumerInput,
+  Consumer,
+  SendMessageInput,
+} from "../protocols/message.types";
 
 export class KafkaAdapter {
   private kafka: Kafka;
@@ -28,14 +33,17 @@ export class KafkaAdapter {
   async disconnectConsumer() {
     await this.consumer.disconnect();
   }
+  async disconnect() {
+    await this.consumer.disconnect();
+  }
   async disconnectProducer() {
     await this.producer.disconnect();
   }
   async sendMessage(topic: string, message: string) {
     await this.producer.send({ topic, messages: [{ value: message }] });
   }
-  async consumeMessages(consumers: ConsumerKafka[]) {
-    const topics = consumers.map((consumer: ConsumerKafka) => consumer.topic);
+  async consumeMessages(consumers: Consumer[]) {
+    const topics = consumers.map((consumer: Consumer) => consumer.topic);
     await this.consumer.subscribe({ topics, fromBeginning: true });
     await this.consumer.run({
       eachMessage: async ({ topic, message }: any) => {
@@ -58,20 +66,9 @@ export async function sendMessageKafka({ topic, message }: SendMessageInput) {
   await kafkaAdapterInstance.sendMessage(topic, message);
   await kafkaAdapterInstance.disconnectProducer();
 }
-export async function consumeMessageKafka({ consumers }: KafkaConsumerInput) {
+export async function consumeMessageKafka({ consumers }: ConsumerInput) {
   const kafkaAdapterInstance = makeKafkaAdapter();
   await kafkaAdapterInstance.connectConsumer();
   await kafkaAdapterInstance.consumeMessages(consumers);
   return kafkaAdapterInstance;
 }
-export type SendMessageInput = {
-  topic: string;
-  message: string;
-};
-type KafkaConsumerInput = {
-  consumers: ConsumerKafka[];
-};
-export type ConsumerKafka = {
-  topic: string;
-  callback: (message: any) => Promise<void>;
-};

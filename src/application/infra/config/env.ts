@@ -39,6 +39,8 @@ export const envSchema = z.object({
   PGHOST: z.string(),
   PGDATABASE: z.string(),
   PGPORT: z.string(),
+  rabbitMqUrl: z.string(),
+  messageBroker: z.enum(["kafka", "rabbitmq"]).default("rabbitmq"),
 });
 
 const mappedEnv = {
@@ -74,6 +76,8 @@ const mappedEnv = {
   PGPASSWORD: process.env.PGPASSWORD,
   PGDATABASE: process.env.PGDATABASE,
   PGHOST: process.env.PGHOST,
+  rabbitMqUrl: process.env.RABBITMQ_URL,
+  messageBroker: process.env.MESSAGE_BROKER ?? "rabbitmq",
 };
 
 export type EnvInfer = z.infer<typeof envSchema>;

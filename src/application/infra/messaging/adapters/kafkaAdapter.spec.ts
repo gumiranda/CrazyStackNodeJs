@@ -1,6 +1,7 @@
-import { KafkaAdapter, SendMessageInput, ConsumerKafka } from "./kafkaAdapter";
 import { Kafka, Producer, Consumer } from "kafkajs";
 import { mock, MockProxy } from "jest-mock-extended";
+import { KafkaAdapter } from "./kafkaAdapter";
+import type { SendMessageInput } from "../protocols/message.types";
 describe("Kafka Adapter tests", () => {
   let kafkaAdapter: KafkaAdapter;
   let kafkaMock: MockProxy<Kafka> & Kafka;
@@ -49,7 +50,7 @@ describe("Kafka Adapter tests", () => {
   });
 
   test("consumeMessages subscribes and runs the consumer", async () => {
-    const consumers: ConsumerKafka[] = [{ topic: "topic", callback: jest.fn() }];
+    const consumers = [{ topic: "topic", callback: jest.fn() }];
     await kafkaAdapter.consumeMessages(consumers);
     expect(consumerMock.subscribe).toHaveBeenCalledWith({
       topics: ["topic"],

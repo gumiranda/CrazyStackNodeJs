@@ -5,7 +5,6 @@ import Fastify, { FastifyInstance } from "fastify";
 import cors from "@fastify/cors";
 import websocket from "@fastify/websocket";
 const { fastifyRequestContextPlugin } = require("@fastify/request-context");
-import { consumeMessageKafka } from "./application/infra/messaging/adapters/kafkaAdapter";
 import GracefulServer from "@gquittet/graceful-server";
 import {
   routeDriverFinishedConsumer,
@@ -13,6 +12,7 @@ import {
 } from "./application/infra/messaging/consumers";
 import { newOwnerConsumer } from "./application/infra/messaging/consumers/OwnerConsumer";
 import { closePool } from "./application/infra/database/postgres";
+import { consumeMessage } from "./application/infra/messaging";
 
 export const makeFastifyInstance = async (externalMongoClient = null) => {
   const fastify: FastifyInstance = Fastify({ logger: true });
@@ -74,13 +74,13 @@ export const makeFastifyInstance = async (externalMongoClient = null) => {
     process.exit(1);
   }
 };
-let kafkaAdapter: any;
+let brokerMessagingAdapter: any;
 // Run the server!
 const start = async () => {
   try {
     const fastifyInstance = await makeFastifyInstance();
     if (!fastifyInstance) return;
-    const kafkaConsumers = [
+    const brokerMessagingConsumers = [
       updatePositionConsumer,
       routeDriverFinishedConsumer,
       newOwnerConsumer,
@@ -93,8 +93,8 @@ const start = async () => {
       closePool().then(() => {
         console.log("desconectou do banco");
       });
-      kafkaAdapter.disconnectConsumer().then(() => {
-        console.log("desconectou kafka consumer");
+      brokerMessagingAdapter.disconnect().then(() => {
+        console.log("desconectou brokerMessaging");
       });
       console.log("O pai ta ficando off");
     });
@@ -105,7 +105,7 @@ const start = async () => {
     await fastifyInstance.listen({ port, host: "0.0.0.0" });
     fastifyInstance.log.info(`server listening on ${port}`);
     gracefulServer.setReady();
-    kafkaAdapter = await consumeMessageKafka({ consumers: kafkaConsumers });
+    brokerMessagingAdapter = await consumeMessage({ consumers: brokerMessagingConsumers });
   } catch (err) {
     await closePool();
     process.exit(1);
