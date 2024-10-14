@@ -568,6 +568,7 @@ model users {
   photoUrl                                      String?        @db.VarChar(255)
   cpf                                           String?        @db.VarChar(255)
   phone                                         String?        @db.VarChar(255)
+  slug                                          String?        @db.VarChar(255)
   coord                                         Json?
   distance                                      Decimal?       @db.Decimal
   appointmentsTotal                             Int?           @default(0)

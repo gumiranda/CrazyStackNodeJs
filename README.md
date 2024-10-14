@@ -75,62 +75,42 @@ Crie um arquivo `.env` na raiz do projeto e defina as variáveis de ambiente nec
 MONGO_URL=mongodb+srv://seuusuario:suasenha@clusterseilaoqdomongo.mongodb.net/nomedobanco?retryWrites=true&w=majority
 MONGO_URL_PROD=mongodb+srv://seuusuario:suasenha@clusterseilaoqdomongo.mongodb.net/nomedobanco?retryWrites=true&w=majority
 
-# Ambiente de produção
 NODE_ENV=production
 
-# Segurança e autenticação
-JWT_SECRET=hdfshfhf8ds8fds8fds8f8
+JWT_SECRET=dsdsdsdsdsdsd
+JWT_REFRESH_SECRET=dsdsdsdsdsdsd
 
-# Configurações do Redis
-REDIS_PORT=40043
-REDIS_URL=us1-active-EXAMPLE-40043.upstash.io
-REDIS_PASSWORD=YOUR_PASSWORD
+REDIS_PORT=NUMERO_DA_PORTA
+REDIS_URL=HOST_DO_REDIS
+REDIS_PASSWORD=SENHA_DO_REDIS
 
-# API do Google Maps
-GOOGLE_MAPS_API_KEY=YOURGOOGLEMAPSKEY
+GOOGLE_MAPS_API_KEY=SUAGOOGLEMAPSAPIKEY
 
-# Kafka
-KAFKAJS_NO_PARTITIONER_WARNING=1
-KAFKA_USERNAME=
-KAFKA_PASSWORD=
-KAFKA_HOST=
-KAFKA_CLIENT_ID=
+WOOVI_WEBHOOK_SECRET=SUAWOOVIWEBHOOKSECRET
+WOOVI_KEY=SUAWOOVIKEY
 
-# Gateways de pagamento
-WOOVI_KEY=YOUR_WOOVI_KEY
-PAGARME_SECRET_KEY=YOUR_PAGARME_SECRET_KEY
-PAGARME_PUBLIC_KEY=YOUR_PAGARME_PUBLIC_KEY
-PUBLIC_STRIPE_KEY=YOUR_STRIPE_PUBLIC_KEY
-SECRECT_STRIPE_KEY=YOUR_STRIPE_SECRET_KEY
-
-# Banco de dados Postgres (Neon)
 PGHOST='ep-black-water-a5s6ziyz.us-east-2.aws.neon.tech'
 PGDATABASE='neondb'
 PGUSER='neondb_owner'
 PGPASSWORD='nvi9XBpaRVQ0'
 ENDPOINT_ID='ep-black-water-a5s6ziyz'
 PGPORT=5432
+
 FUSORARIOBR="production"
+# postgres ou mongodb
 DATABASE="postgres"
 
-# Provedores de armazenamento
-UPLOAD_PROVIDER=cloudflare_r2
-CLOUDFLARE_R2_ACCOUNT_ID=your_account_id
-CLOUDFLARE_R2_ACCESS_KEY_ID=your_access_key_id
-CLOUDFLARE_R2_SECRET_ACCESS_KEY=your_secret_access_key
-CLOUDFLARE_R2_BUCKET_NAME=your_bucket_name
+UPLOAD_PROVIDER="cloudflare_r2"
+CLOUDFLARE_R2_ACCESS_KEY_ID=SEU_ACCESS_KEY_DA_CLOUDFLARE
+CLOUDFLARE_R2_ACCOUNT_ID=SEU_ACCOUNT_ID_DA_CLOUDFLARE
+CLOUDFLARE_R2_BUCKET_NAME=crazystack
+CLOUDFLARE_R2_SECRET_ACCESS_KEY=SEU_ACCESS_SECRET_DA_CLOUDFLARE
 
-S3_ACCESS_KEY_ID=your_s3_access_key_id
-S3_SECRET_ACCESS_KEY=your_s3_secret_access_key
-S3_BUCKET_NAME=your_s3_bucket_name
-S3_REGION=your_s3_region
+#rabbitmq ou kafka
+MESSAGE_BROKER=rabbitmq
+RABBITMQ_URL=SUA_URL_DO_RABBITMQ
 
-GCS_PROJECT_ID=your_gcs_project_id
-GCS_BUCKET_NAME=your_gcs_bucket_name
-GCS_KEY_FILENAME=path_to_your_gcs_keyfile
-
-AZURE_STORAGE_CONNECTION_STRING=your_azure_connection_string
-AZURE_CONTAINER_NAME=your_azure_container_name
+PORT=3333
 ```
 
 
