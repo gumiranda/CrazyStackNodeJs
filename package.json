@@ -44,6 +44,7 @@
     "mongodb-memory-server-core": "^8.15.1",
     "plop": "^4.0.0",
     "prettier": "^3.0.3",
+    "prisma": "^5.20.0",
     "ts-jest": "^29.1.1",
     "ts-node": "^10.9.2",
     "tsconfig-paths": "^4.2.0",
