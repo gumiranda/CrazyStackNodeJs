@@ -1,0 +1,650 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model account {
+  id           String    @id @default(dbgenerated("uuid_generate_v4()")) @map("_id") @db.Uuid
+  createdById  String    @db.Uuid
+  name         String    @db.VarChar(255)
+  active       Boolean?  @default(true)
+  createdAt    DateTime? @default(now()) @db.Timestamp(6)
+  updatedAt    DateTime? @default(now()) @db.Timestamp(6)
+  refreshToken String    @db.VarChar(255)
+  expiresAt    DateTime? @db.Timestamp(6)
+  users        users     @relation(fields: [createdById], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_createdById")
+
+  @@index([createdById], map: "idx_account_createdbyid")
+}
+
+model appointment {
+  id                                      String    @id @default(dbgenerated("uuid_generate_v4()")) @map("_id") @db.Uuid
+  createdById                             String    @db.Uuid
+  name                                    String?   @db.VarChar(255)
+  service                                 String?   @db.VarChar(255)
+  active                                  Boolean?  @default(true)
+  cancelled                               Boolean?  @default(false)
+  createdAt                               DateTime? @default(now()) @db.Timestamp(6)
+  updatedAt                               DateTime? @default(now()) @db.Timestamp(6)
+  requestId                               String    @db.Uuid
+  message                                 String?
+  serviceId                               String    @db.Uuid
+  ownerId                                 String    @db.Uuid
+  clientId                                String    @db.Uuid
+  professionalId                          String    @db.Uuid
+  status                                  Int
+  cancelledById                           String?   @db.Uuid
+  updatedByRole                           String?   @db.VarChar(45)
+  read                                    Boolean?  @default(false)
+  push                                    Boolean?  @default(false)
+  email                                   Boolean?  @default(false)
+  initDate                                DateTime  @db.Timestamp(6)
+  endDate                                 DateTime  @db.Timestamp(6)
+  cancelledAt                             DateTime? @db.Timestamp(6)
+  serviceName                             String?   @db.VarChar(255)
+  professionalName                        String?   @db.VarChar(255)
+  clientName                              String?   @db.VarChar(255)
+  ownerName                               String?   @db.VarChar(255)
+  users_appointment_cancelledByIdTousers  users?    @relation("appointment_cancelledByIdTousers", fields: [cancelledById], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_cancelledById_appointment")
+  client                                  client    @relation(fields: [clientId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_clientId_appointment")
+  owner                                   owner     @relation(fields: [ownerId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_ownerId_appointment")
+  users_appointment_professionalIdTousers users     @relation("appointment_professionalIdTousers", fields: [professionalId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_professionalId_appointment")
+  request                                 request   @relation(fields: [requestId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_requestId_appointment")
+
+  @@index([clientId], map: "idx_appointment_clientid")
+  @@index([createdById], map: "idx_appointment_createdbyid")
+  @@index([ownerId], map: "idx_appointment_ownerid")
+  @@index([professionalId], map: "idx_appointment_professionalid")
+  @@index([requestId], map: "idx_appointment_requestid")
+  @@index([serviceId], map: "idx_appointment_serviceid")
+}
+
+model category {
+  id          String    @id @default(dbgenerated("uuid_generate_v4()")) @map("_id") @db.Uuid
+  createdById String    @db.Uuid
+  name        String    @db.VarChar(255)
+  description String?
+  image       String?   @db.VarChar(255)
+  active      Boolean?  @default(true)
+  createdAt   DateTime? @default(now()) @db.Timestamp(6)
+  updatedAt   DateTime? @default(now()) @db.Timestamp(6)
+  users       users     @relation(fields: [createdById], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_createdById_category")
+  service     service[]
+
+  @@index([createdById], map: "idx_category_createdbyid")
+}
+
+model charge {
+  id                String    @id @default(dbgenerated("uuid_generate_v4()")) @map("_id") @db.Uuid
+  createdById       String    @db.Uuid
+  name              String?   @db.VarChar(255)
+  active            Boolean?  @default(true)
+  createdAt         DateTime? @default(now()) @db.Timestamp(6)
+  updatedAt         DateTime? @default(now()) @db.Timestamp(6)
+  status            String?   @db.VarChar(255)
+  customer          Json?
+  value             Decimal   @db.Decimal
+  comment           String?
+  correlationID     String?   @db.VarChar(255)
+  discount          Decimal?  @db.Decimal
+  fee               Decimal?  @db.Decimal
+  globalID          String?   @db.VarChar(255)
+  transactionID     String?   @db.VarChar(255)
+  valueWithDiscount Decimal?  @db.Decimal
+  identifier        String?   @db.VarChar(255)
+  paymentLinkID     String?   @db.VarChar(255)
+  paymentLinkUrl    String?   @db.VarChar(255)
+  qrCodeImage       String?   @db.VarChar(255)
+  expiresIn         Int?
+  expiresDate       DateTime? @db.Timestamp(6)
+  brCode            String?
+  pixKey            String?   @db.VarChar(255)
+  additionalInfo    Json?
+  gatewayDetails    Json?
+  pagarmeOrder      Json?
+  type              String?   @db.VarChar(255)
+  users             users     @relation(fields: [createdById], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_createdById_charge")
+
+  @@index([createdById], map: "idx_charge_createdbyid")
+}
+
+model client {
+  id                              String        @id @default(dbgenerated("uuid_generate_v4()")) @map("_id") @db.Uuid
+  createdById                     String        @db.Uuid
+  name                            String        @db.VarChar(255)
+  active                          Boolean?      @default(true)
+  createdAt                       DateTime?     @default(now()) @db.Timestamp(6)
+  updatedAt                       DateTime?     @default(now()) @db.Timestamp(6)
+  cpf                             String?       @db.VarChar(14)
+  phone                           String?       @db.VarChar(15)
+  userId                          String        @db.Uuid
+  ownerId                         String        @db.Uuid
+  birthDate                       DateTime?     @db.Date
+  appointmentsTotal               Int?
+  myOwnerId                       String?       @db.Uuid
+  appointment                     appointment[]
+  users_client_createdByIdTousers users         @relation("client_createdByIdTousers", fields: [createdById], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  users_client_myOwnerIdTousers   users?        @relation("client_myOwnerIdTousers", fields: [myOwnerId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  owner                           owner         @relation(fields: [ownerId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  users_client_userIdTousers      users         @relation("client_userIdTousers", fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  fidelity                        fidelity[]
+  order                           order[]
+  recurrence                      recurrence[]
+  request                         request[]
+
+  @@index([createdById], map: "idx_client_createdbyid")
+  @@index([myOwnerId], map: "idx_client_myownerid")
+  @@index([ownerId], map: "idx_client_ownerid")
+  @@index([userId], map: "idx_client_userid")
+}
+
+model customer {
+  id              String    @id @default(dbgenerated("uuid_generate_v4()")) @map("_id") @db.Uuid
+  createdById     String    @db.Uuid
+  active          Boolean?  @default(true)
+  createdAt       DateTime? @default(now()) @db.Timestamp(6)
+  updatedAt       DateTime? @default(now()) @db.Timestamp(6)
+  cpf             String?   @db.VarChar(14)
+  correlationID   String?   @db.VarChar(255)
+  gatewayDetails  Json?
+  pagarmeCustomer Json?
+  name            String    @db.VarChar(255)
+  email           String    @db.VarChar(255)
+  phone           String    @db.VarChar(15)
+  taxID           Json
+  address         Json?
+  users           users     @relation(fields: [createdById], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_createdById_customer")
+
+  @@index([correlationID], map: "idx_customer_correlationid")
+  @@index([createdById], map: "idx_customer_createdbyid")
+}
+
+model fidelity {
+  id          String    @id @default(dbgenerated("uuid_generate_v4()")) @map("_id") @db.Uuid
+  createdById String    @db.Uuid
+  name        String    @db.VarChar(255)
+  active      Boolean?  @default(true)
+  createdAt   DateTime? @default(now()) @db.Timestamp(6)
+  updatedAt   DateTime? @default(now()) @db.Timestamp(6)
+  ownerId     String    @db.Uuid
+  requestId   String    @db.Uuid
+  points      Int
+  clientId    String    @db.Uuid
+  client      client    @relation(fields: [clientId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_clientId_fidelity")
+  users       users     @relation(fields: [createdById], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_createdById_fidelity")
+  owner       owner     @relation(fields: [ownerId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_ownerId_fidelity")
+
+  @@index([clientId], map: "idx_fidelity_clientid")
+  @@index([createdById], map: "idx_fidelity_createdbyid")
+  @@index([ownerId], map: "idx_fidelity_ownerid")
+  @@index([requestId], map: "idx_fidelity_requestid")
+}
+
+model mapRoute {
+  id             String    @id @default(dbgenerated("uuid_generate_v4()")) @map("_id") @db.Uuid
+  createdById    String    @db.Uuid
+  name           String    @db.VarChar(255)
+  active         Boolean?  @default(true)
+  createdAt      DateTime? @default(now()) @db.Timestamp(6)
+  updatedAt      DateTime? @default(now()) @db.Timestamp(6)
+  source         Json
+  source_id      String?   @db.VarChar(255)
+  destination_id String?   @db.VarChar(255)
+  destination    Json
+  distance       Decimal   @db.Decimal
+  duration       Decimal   @db.Decimal
+  directions     String
+  routeDriver    Json?
+  users          users     @relation(fields: [createdById], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_createdById_maproute")
+
+  @@index([createdById], map: "idx_maproute_createdbyid")
+}
+
+model order {
+  id                                String    @id @default(dbgenerated("uuid_generate_v4()")) @map("_id") @db.Uuid
+  createdById                       String    @db.Uuid
+  name                              String    @db.VarChar(255)
+  active                            Boolean?  @default(true)
+  createdAt                         DateTime? @default(now()) @db.Timestamp(6)
+  updatedAt                         DateTime? @default(now()) @db.Timestamp(6)
+  percentageAdopted                 Decimal?  @db.Decimal
+  paymentForm                       String?   @db.VarChar(255)
+  orderPaidByClient                 Boolean?
+  comissionPaidByOwner              Boolean?
+  comissionValue                    Decimal?  @db.Decimal
+  totalValue                        Decimal?  @db.Decimal
+  professionalId                    String?   @db.Uuid
+  ownerId                           String?   @db.Uuid
+  requestId                         String?   @db.Uuid
+  clientId                          String?   @db.Uuid
+  extraCost                         Decimal?  @db.Decimal
+  normalCost                        Decimal?  @db.Decimal
+  haveFidelity                      Boolean?
+  haveDelivery                      Boolean?
+  pointsUsed                        Int?
+  appointmentDate                   DateTime? @db.Timestamp(6)
+  client                            client?   @relation(fields: [clientId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_clientId_order")
+  users_order_createdByIdTousers    users     @relation("order_createdByIdTousers", fields: [createdById], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_createdById_order")
+  owner                             owner?    @relation(fields: [ownerId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_ownerId_order")
+  users_order_professionalIdTousers users?    @relation("order_professionalIdTousers", fields: [professionalId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_professionalId_order")
+
+  @@index([clientId], map: "idx_order_clientid")
+  @@index([createdById], map: "idx_order_createdbyid")
+  @@index([ownerId], map: "idx_order_ownerid")
+  @@index([professionalId], map: "idx_order_professionalid")
+  @@index([requestId], map: "idx_order_requestid")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model owner {
+  id                             String        @id @default(dbgenerated("uuid_generate_v4()")) @map("_id") @db.Uuid
+  createdById                    String        @db.Uuid
+  name                           String        @db.VarChar(255)
+  active                         Boolean?      @default(true)
+  createdAt                      DateTime?     @default(now()) @db.Timestamp(6)
+  updatedAt                      DateTime?     @default(now()) @db.Timestamp(6)
+  appointmentsTotal              Int?          @default(0)
+  ratingsTotal                   Int?          @default(0)
+  haveDelivery                   Boolean?
+  typeTax                        String?       @db.VarChar(50)
+  costByTimeDriving              Decimal?      @db.Decimal
+  fidelityTaxPoints              Decimal?      @db.Decimal
+  fixedTax                       Decimal?      @db.Decimal
+  minimumTimeForReSchedule       Int?
+  description                    String?
+  days1                          Json?
+  days2                          Json?
+  hourStart1                     String?       @db.VarChar(10)
+  hourStart2                     String?       @db.VarChar(10)
+  hourEnd1                       String?       @db.VarChar(10)
+  hourEnd2                       String?       @db.VarChar(10)
+  hourLunchStart1                String?       @db.VarChar(10)
+  hourLunchEnd1                  String?       @db.VarChar(10)
+  hourLunchStart2                String?       @db.VarChar(10)
+  hourLunchEnd2                  String?       @db.VarChar(10)
+  days3                          Json?
+  days4                          Json?
+  hourStart3                     String?       @db.VarChar(10)
+  hourStart4                     String?       @db.VarChar(10)
+  hourEnd3                       String?       @db.VarChar(10)
+  hourEnd4                       String?       @db.VarChar(10)
+  hourLunchStart3                String?       @db.VarChar(10)
+  hourLunchEnd3                  String?       @db.VarChar(10)
+  hourLunchStart4                String?       @db.VarChar(10)
+  hourLunchEnd4                  String?       @db.VarChar(10)
+  appointment                    appointment[]
+  client                         client[]
+  fidelity                       fidelity[]
+  order                          order[]
+  users_owner_createdByIdTousers users         @relation("owner_createdByIdTousers", fields: [createdById], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_createdById_owner")
+  recurrence                     recurrence[]
+  request                        request[]
+  users_users_ownerIdToowner     users[]       @relation("users_ownerIdToowner")
+
+  @@index([createdById], map: "idx_owner_createdbyid")
+}
+
+model photo {
+  id               String    @id @default(dbgenerated("uuid_generate_v4()")) @map("_id") @db.Uuid
+  createdById      String    @db.Uuid
+  url              String
+  key              String    @db.VarChar(255)
+  provider         String    @db.VarChar(255)
+  expiresIn        DateTime? @default(now()) @db.Timestamp(6)
+  active           Boolean?  @default(true)
+  expiresInSeconds Int       @default(60)
+  createdAt        DateTime? @default(now()) @db.Timestamp(6)
+  updatedAt        DateTime? @default(now()) @db.Timestamp(6)
+  users            users     @relation(fields: [createdById], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_createdById_fidelity")
+
+  @@index([createdById], map: "idx_photo_createdbyid")
+}
+
+model playing_with_neon {
+  id    Int    @id @default(autoincrement())
+  name  String
+  value Float? @db.Real
+}
+
+model product {
+  id          String    @id @default(dbgenerated("uuid_generate_v4()")) @map("_id") @db.Uuid
+  createdById String    @db.Uuid
+  name        String    @db.VarChar(255)
+  active      Boolean?  @default(true)
+  createdAt   DateTime? @default(now()) @db.Timestamp(6)
+  updatedAt   DateTime? @default(now()) @db.Timestamp(6)
+  quantity    Int
+  users       users     @relation(fields: [createdById], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_createdById_product")
+
+  @@index([createdById], map: "idx_product_createdbyid")
+}
+
+model rating {
+  id          String    @id @default(dbgenerated("uuid_generate_v4()")) @map("_id") @db.Uuid
+  createdById String    @db.Uuid
+  name        String    @db.VarChar(255)
+  active      Boolean?  @default(true)
+  createdAt   DateTime? @default(now()) @db.Timestamp(6)
+  updatedAt   DateTime? @default(now()) @db.Timestamp(6)
+  ratingType  String    @db.VarChar(255)
+  ratings     Json[]
+  users       users     @relation(fields: [createdById], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_createdById")
+
+  @@index([createdById], map: "idx_rating_createdbyid")
+}
+
+model ratingResult {
+  id          String    @id @default(dbgenerated("uuid_generate_v4()")) @map("_id") @db.Uuid
+  createdById String    @db.Uuid
+  name        String    @db.VarChar(255)
+  active      Boolean?  @default(true)
+  createdAt   DateTime? @default(now()) @db.Timestamp(6)
+  updatedAt   DateTime? @default(now()) @db.Timestamp(6)
+  ratingId    String    @db.Uuid
+  rating      Int?      @default(0)
+  comment     String?
+  requestId   String    @db.Uuid
+  ratingType  String    @db.VarChar(255)
+  ratingForId String    @db.Uuid
+  ratings     Json[]
+  users       users     @relation(fields: [createdById], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_createdById")
+
+  @@index([createdById], map: "idx_rating_result_createdbyid")
+  @@index([ratingForId], map: "idx_rating_result_ratingforid")
+  @@index([ratingId], map: "idx_rating_result_ratingid")
+  @@index([requestId], map: "idx_rating_result_requestid")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model recurrence {
+  id                                     String    @id @default(dbgenerated("uuid_generate_v4()")) @map("_id") @db.Uuid
+  createdById                            String    @db.Uuid
+  name                                   String    @db.VarChar(255)
+  active                                 Boolean?  @default(true)
+  createdAt                              DateTime? @default(now()) @db.Timestamp(6)
+  updatedAt                              DateTime? @default(now()) @db.Timestamp(6)
+  type                                   Int
+  accept                                 Boolean
+  appointmentsWasInserted                Boolean
+  frequency                              Int
+  initDate                               DateTime  @db.Timestamp(6)
+  endDate                                DateTime  @db.Timestamp(6)
+  professionalId                         String    @db.Uuid
+  requestId                              String    @db.Uuid
+  clientId                               String    @db.Uuid
+  ownerId                                String    @db.Uuid
+  serviceId                              String    @db.Uuid
+  client                                 client    @relation(fields: [clientId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_clientId_recurrence")
+  users_recurrence_createdByIdTousers    users     @relation("recurrence_createdByIdTousers", fields: [createdById], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_createdById_recurrence")
+  owner                                  owner     @relation(fields: [ownerId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_ownerId_recurrence")
+  users_recurrence_professionalIdTousers users     @relation("recurrence_professionalIdTousers", fields: [professionalId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_professionalId_recurrence")
+  service                                service   @relation(fields: [serviceId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_serviceId_recurrence")
+
+  @@index([clientId], map: "idx_recurrence_clientid")
+  @@index([createdById], map: "idx_recurrence_createdbyid")
+  @@index([ownerId], map: "idx_recurrence_ownerid")
+  @@index([professionalId], map: "idx_recurrence_professionalid")
+  @@index([requestId], map: "idx_recurrence_requestid")
+  @@index([serviceId], map: "idx_recurrence_serviceid")
+}
+
+model request {
+  id                                  String        @id @default(dbgenerated("uuid_generate_v4()")) @map("_id") @db.Uuid
+  createdById                         String        @db.Uuid
+  name                                String?       @db.VarChar(255)
+  active                              Boolean?      @default(true)
+  createdAt                           DateTime?     @default(now()) @db.Timestamp(6)
+  updatedAt                           DateTime?     @default(now()) @db.Timestamp(6)
+  message                             String
+  serviceId                           String        @db.Uuid
+  ownerId                             String        @db.Uuid
+  clientId                            String        @db.Uuid
+  clientUserId                        String        @db.Uuid
+  professionalId                      String        @db.Uuid
+  status                              Int
+  createdForId                        String        @db.Uuid
+  updatedById                         String?       @db.Uuid
+  updatedByRole                       String?       @db.VarChar(45)
+  read                                Boolean?      @default(false)
+  push                                Boolean?      @default(false)
+  email                               Boolean?      @default(false)
+  haveDelivery                        Boolean?      @default(false)
+  haveRecurrence                      Boolean?      @default(false)
+  haveFidelity                        Boolean?      @default(false)
+  haveRide                            Boolean?      @default(false)
+  initDate                            DateTime      @db.Timestamp(6)
+  endDate                             DateTime      @db.Timestamp(6)
+  cancelledAt                         DateTime?     @db.Timestamp(6)
+  duration                            Int
+  serviceName                         String?       @db.VarChar(255)
+  professionalName                    String?       @db.VarChar(255)
+  clientName                          String?       @db.VarChar(255)
+  ownerName                           String?       @db.VarChar(255)
+  fidelity                            Json?
+  ride                                Json?
+  recurrence                          Json?
+  order                               Json?
+  appointment                         appointment[]
+  client                              client        @relation(fields: [clientId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_clientId_request")
+  users_request_clientUserIdTousers   users         @relation("request_clientUserIdTousers", fields: [clientUserId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_clientUserId_request")
+  users_request_createdForIdTousers   users         @relation("request_createdForIdTousers", fields: [createdForId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_createdForId_request")
+  owner                               owner         @relation(fields: [ownerId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_ownerId_request")
+  users_request_professionalIdTousers users         @relation("request_professionalIdTousers", fields: [professionalId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_professionalId_request")
+  service                             service       @relation(fields: [serviceId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_serviceId_request")
+  users_request_updatedByIdTousers    users?        @relation("request_updatedByIdTousers", fields: [updatedById], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_updatedById_request")
+
+  @@index([clientId], map: "idx_request_clientid")
+  @@index([clientUserId], map: "idx_request_clientuserid")
+  @@index([createdById], map: "idx_request_createdbyid")
+  @@index([createdForId], map: "idx_request_createdforid")
+  @@index([ownerId], map: "idx_request_ownerid")
+  @@index([professionalId], map: "idx_request_professionalid")
+  @@index([serviceId], map: "idx_request_serviceid")
+}
+
+model ride {
+  id                 String    @id @default(dbgenerated("uuid_generate_v4()")) @map("_id") @db.Uuid
+  createdById        String    @db.Uuid
+  name               String    @db.VarChar(255)
+  active             Boolean?  @default(true)
+  createdAt          DateTime? @default(now()) @db.Timestamp(6)
+  updatedAt          DateTime? @default(now()) @db.Timestamp(6)
+  driverUserType     String    @db.VarChar(255)
+  requestId          String    @db.Uuid
+  origin             Json
+  destiny            Json
+  status             Int
+  distance           Decimal   @db.Decimal
+  distanceTime       Int
+  maxCostEstimated   Decimal   @db.Decimal
+  minCostEstimated   Decimal   @db.Decimal
+  finalCost          Decimal   @db.Decimal
+  costDefinedByOwner Decimal?  @db.Decimal
+  initDate           DateTime  @db.Timestamp(6)
+  endDateEstimated   DateTime  @db.Timestamp(6)
+  endDate            DateTime? @db.Timestamp(6)
+  users              users     @relation(fields: [createdById], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_createdById_ride")
+
+  @@index([createdById], map: "idx_ride_createdbyid")
+  @@index([requestId], map: "idx_ride_requestid")
+}
+
+model routeDriver {
+  id          String    @id @default(dbgenerated("uuid_generate_v4()")) @map("_id") @db.Uuid
+  createdById String    @db.Uuid
+  name        String    @db.VarChar(255)
+  routeId     String    @db.Uuid
+  points      Json
+  status      String    @db.VarChar(50)
+  active      Boolean?  @default(true)
+  createdAt   DateTime? @default(now()) @db.Timestamp(6)
+  updatedAt   DateTime? @default(now()) @db.Timestamp(6)
+  users       users     @relation(fields: [createdById], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_createdById_routeDriver")
+
+  @@index([createdById], map: "idx_routedriver_createdbyid")
+  @@index([routeId], map: "idx_routedriver_routeid")
+}
+
+model service {
+  id                            String       @id @default(dbgenerated("uuid_generate_v4()")) @map("_id") @db.Uuid
+  createdById                   String       @db.Uuid
+  name                          String       @db.VarChar(255)
+  description                   String?
+  price                         Decimal      @db.Decimal
+  duration                      Int
+  comission                     Decimal      @db.Decimal
+  categoryId                    String       @db.Uuid
+  productsQuantityNeeded        Int?
+  productId                     String?      @db.Uuid
+  promotionalPrice              Decimal?     @db.Decimal
+  finalPrice                    Decimal?     @db.Decimal
+  havePromotionalPrice          Boolean?
+  hasFidelityGenerator          Boolean?
+  generateHowManyPoints         Int?
+  appointmentsTotal             Int?         @default(0)
+  canPayWithFidelityPoints      Boolean?
+  howManyPointsIsNeededToRescue Int?
+  active                        Boolean?     @default(true)
+  createdAt                     DateTime?    @default(now()) @db.Timestamp(6)
+  updatedAt                     DateTime?    @default(now()) @db.Timestamp(6)
+  recurrence                    recurrence[]
+  request                       request[]
+  category                      category     @relation(fields: [categoryId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_categoryId")
+  users                         users        @relation(fields: [createdById], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_createdById_service")
+
+  @@index([categoryId], map: "idx_service_categoryid")
+  @@index([createdById], map: "idx_service_createdbyid")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model spatial_ref_sys {
+  srid      Int     @id
+  auth_name String? @db.VarChar(256)
+  auth_srid Int?
+  srtext    String? @db.VarChar(2048)
+  proj4text String? @db.VarChar(2048)
+}
+
+model subscription {
+  id                  String    @id @default(dbgenerated("uuid_generate_v4()")) @map("_id") @db.Uuid
+  createdById         String    @db.Uuid
+  name                String?   @db.VarChar(255)
+  active              Boolean?  @default(true)
+  createdAt           DateTime? @default(now()) @db.Timestamp(6)
+  updatedAt           DateTime? @default(now()) @db.Timestamp(6)
+  customer            Json?
+  value               Decimal?  @db.Decimal
+  comment             String?
+  additionalInfo      Json?
+  dayGenerateCharge   String?   @db.VarChar(10)
+  globalID            String?   @db.VarChar(255)
+  gatewayDetails      Json?
+  priceId             String?   @db.Uuid
+  pagarmeSubscription Json?
+  users               users     @relation(fields: [createdById], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_createdById_subscription")
+
+  @@index([createdById], map: "idx_subscription_createdbyid")
+}
+
+model transaction {
+  id          String    @id @default(dbgenerated("uuid_generate_v4()")) @map("_id") @db.Uuid
+  createdById String    @db.Uuid
+  name        String    @db.VarChar(255)
+  active      Boolean?  @default(true)
+  createdAt   DateTime? @default(now()) @db.Timestamp(6)
+  updatedAt   DateTime? @default(now()) @db.Timestamp(6)
+  event       String    @db.VarChar(255)
+  charge      Json
+  pix         Json?
+  company     Json?
+  account     Json?
+  users       users     @relation(fields: [createdById], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_createdById_transaction")
+
+  @@index([createdById], map: "idx_transaction_createdbyid")
+}
+
+model users {
+  id                                            String         @id @default(dbgenerated("uuid_generate_v4()")) @map("_id") @db.Uuid
+  createdById                                   String?        @db.Uuid
+  name                                          String         @db.VarChar(255)
+  email                                         String         @unique @db.VarChar(255)
+  role                                          String         @db.VarChar(255)
+  confirmedEmail                                Boolean?       @default(false)
+  sendedEmail                                   Boolean?       @default(false)
+  password                                      String         @db.VarChar(255)
+  cardId                                        String?        @db.Uuid
+  ownerId                                       String?        @db.Uuid
+  myOwnerId                                     String?        @db.Uuid
+  payDay                                        String?        @db.VarChar(255)
+  photoUrl                                      String?        @db.VarChar(255)
+  cpf                                           String?        @db.VarChar(255)
+  phone                                         String?        @db.VarChar(255)
+  coord                                         Json?
+  distance                                      Decimal?       @db.Decimal
+  appointmentsTotal                             Int?           @default(0)
+  plan                                          String?        @db.VarChar(255)
+  cnpj                                          String?        @db.VarChar(255)
+  city                                          String?        @db.VarChar(255)
+  uf                                            String?        @db.VarChar(255)
+  address                                       String?
+  complement                                    String?
+  photoId                                       String?        @db.Uuid
+  cash                                          Boolean?       @default(false)
+  creditcard                                    Boolean?       @default(false)
+  debitcard                                     Boolean?       @default(false)
+  transferbank                                  Boolean?       @default(false)
+  cheque                                        Boolean?       @default(false)
+  pix                                           Boolean?       @default(false)
+  nextPlan                                      String?        @db.VarChar(255)
+  addresses                                     Json?
+  clientId                                      String?        @db.Uuid
+  active                                        Boolean?       @default(false)
+  createdAt                                     DateTime?      @default(now()) @db.Timestamp(6)
+  updatedAt                                     DateTime?      @default(now()) @db.Timestamp(6)
+  serviceIds                                    String[]       @db.VarChar(255)
+  serviceOptions                                Json[]
+  globalID                                      String?        @db.VarChar(255)
+  customerID                                    String?        @db.VarChar(255)
+  account                                       account[]
+  appointment_appointment_cancelledByIdTousers  appointment[]  @relation("appointment_cancelledByIdTousers")
+  appointment_appointment_professionalIdTousers appointment[]  @relation("appointment_professionalIdTousers")
+  category                                      category[]
+  charge                                        charge[]
+  client_client_createdByIdTousers              client[]       @relation("client_createdByIdTousers")
+  client_client_myOwnerIdTousers                client[]       @relation("client_myOwnerIdTousers")
+  client_client_userIdTousers                   client[]       @relation("client_userIdTousers")
+  customer                                      customer[]
+  fidelity                                      fidelity[]
+  mapRoute                                      mapRoute[]
+  order_order_createdByIdTousers                order[]        @relation("order_createdByIdTousers")
+  order_order_professionalIdTousers             order[]        @relation("order_professionalIdTousers")
+  owner_owner_createdByIdTousers                owner[]        @relation("owner_createdByIdTousers")
+  photo                                         photo[]
+  product                                       product[]
+  rating                                        rating[]
+  ratingResult                                  ratingResult[]
+  recurrence_recurrence_createdByIdTousers      recurrence[]   @relation("recurrence_createdByIdTousers")
+  recurrence_recurrence_professionalIdTousers   recurrence[]   @relation("recurrence_professionalIdTousers")
+  request_request_clientUserIdTousers           request[]      @relation("request_clientUserIdTousers")
+  request_request_createdForIdTousers           request[]      @relation("request_createdForIdTousers")
+  request_request_professionalIdTousers         request[]      @relation("request_professionalIdTousers")
+  request_request_updatedByIdTousers            request[]      @relation("request_updatedByIdTousers")
+  ride                                          ride[]
+  routeDriver                                   routeDriver[]
+  service                                       service[]
+  subscription                                  subscription[]
+  transaction                                   transaction[]
+  owner_users_ownerIdToowner                    owner?         @relation("users_ownerIdToowner", fields: [ownerId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_ownerid")
+  users_users_createdByIdTousers                users?         @relation("users_createdByIdTousers", fields: [createdById], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  other_users_users_createdByIdTousers          users[]        @relation("users_createdByIdTousers")
+  users_users_myOwnerIdTousers                  users?         @relation("users_myOwnerIdTousers", fields: [myOwnerId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  other_users_users_myOwnerIdTousers            users[]        @relation("users_myOwnerIdTousers")
+
+  @@index([createdById], map: "idx_users_createdbyid")
+  @@index([myOwnerId], map: "idx_users_myownerid")
+  @@index([ownerId], map: "idx_users_ownerid")
+}
