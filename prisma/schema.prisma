@@ -8,7 +8,7 @@ datasource db {
 }
 
 model account {
-  id           String    @id @default(dbgenerated("uuid_generate_v4()")) @map("_id") @db.Uuid
+  id           String    @id @default(uuid()) @map("_id") @db.Uuid
   createdById  String    @db.Uuid
   name         String    @db.VarChar(255)
   active       Boolean?  @default(true)
@@ -22,7 +22,7 @@ model account {
 }
 
 model appointment {
-  id                                      String    @id @default(dbgenerated("uuid_generate_v4()")) @map("_id") @db.Uuid
+  id                                      String    @id @default(uuid()) @map("_id") @db.Uuid
   createdById                             String    @db.Uuid
   name                                    String?   @db.VarChar(255)
   service                                 String?   @db.VarChar(255)
@@ -54,7 +54,6 @@ model appointment {
   owner                                   owner     @relation(fields: [ownerId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_ownerId_appointment")
   users_appointment_professionalIdTousers users     @relation("appointment_professionalIdTousers", fields: [professionalId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_professionalId_appointment")
   request                                 request   @relation(fields: [requestId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_requestId_appointment")
-  service                                 service   @relation(fields: [serviceId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_serviceId_appointment")
 
   @@index([clientId], map: "idx_appointment_clientid")
   @@index([createdById], map: "idx_appointment_createdbyid")
@@ -65,7 +64,7 @@ model appointment {
 }
 
 model category {
-  id          String    @id @default(dbgenerated("uuid_generate_v4()")) @map("_id") @db.Uuid
+  id          String    @id @default(uuid()) @map("_id") @db.Uuid
   createdById String    @db.Uuid
   name        String    @db.VarChar(255)
   description String?
@@ -80,7 +79,7 @@ model category {
 }
 
 model charge {
-  id                String    @id @default(dbgenerated("uuid_generate_v4()")) @map("_id") @db.Uuid
+  id                String    @id @default(uuid()) @map("_id") @db.Uuid
   createdById       String    @db.Uuid
   name              String?   @db.VarChar(255)
   active            Boolean?  @default(true)
@@ -114,7 +113,7 @@ model charge {
 }
 
 model client {
-  id                              String        @id @default(dbgenerated("uuid_generate_v4()")) @map("_id") @db.Uuid
+  id                              String        @id @default(uuid()) @map("_id") @db.Uuid
   createdById                     String        @db.Uuid
   name                            String        @db.VarChar(255)
   active                          Boolean?      @default(true)
@@ -144,7 +143,7 @@ model client {
 }
 
 model customer {
-  id              String    @id @default(dbgenerated("uuid_generate_v4()")) @map("_id") @db.Uuid
+  id              String    @id @default(uuid()) @map("_id") @db.Uuid
   createdById     String    @db.Uuid
   active          Boolean?  @default(true)
   createdAt       DateTime? @default(now()) @db.Timestamp(6)
@@ -165,7 +164,7 @@ model customer {
 }
 
 model fidelity {
-  id          String    @id @default(dbgenerated("uuid_generate_v4()")) @map("_id") @db.Uuid
+  id          String    @id @default(uuid()) @map("_id") @db.Uuid
   createdById String    @db.Uuid
   name        String    @db.VarChar(255)
   active      Boolean?  @default(true)
@@ -178,7 +177,6 @@ model fidelity {
   client      client    @relation(fields: [clientId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_clientId_fidelity")
   users       users     @relation(fields: [createdById], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_createdById_fidelity")
   owner       owner     @relation(fields: [ownerId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_ownerId_fidelity")
-  request     request   @relation(fields: [requestId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_requestId_fidelity")
 
   @@index([clientId], map: "idx_fidelity_clientid")
   @@index([createdById], map: "idx_fidelity_createdbyid")
@@ -187,28 +185,27 @@ model fidelity {
 }
 
 model mapRoute {
-  id             String        @id @default(dbgenerated("uuid_generate_v4()")) @map("_id") @db.Uuid
-  createdById    String        @db.Uuid
-  name           String        @db.VarChar(255)
-  active         Boolean?      @default(true)
-  createdAt      DateTime?     @default(now()) @db.Timestamp(6)
-  updatedAt      DateTime?     @default(now()) @db.Timestamp(6)
+  id             String    @id @default(uuid()) @map("_id") @db.Uuid
+  createdById    String    @db.Uuid
+  name           String    @db.VarChar(255)
+  active         Boolean?  @default(true)
+  createdAt      DateTime? @default(now()) @db.Timestamp(6)
+  updatedAt      DateTime? @default(now()) @db.Timestamp(6)
   source         Json
-  source_id      String?       @db.VarChar(255)
-  destination_id String?       @db.VarChar(255)
+  source_id      String?   @db.VarChar(255)
+  destination_id String?   @db.VarChar(255)
   destination    Json
-  distance       Decimal       @db.Decimal
-  duration       Decimal       @db.Decimal
+  distance       Decimal   @db.Decimal
+  duration       Decimal   @db.Decimal
   directions     String
   routeDriver    Json?
-  users          users         @relation(fields: [createdById], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_createdById_maproute")
-  routeDriver    routeDriver[]
+  users          users     @relation(fields: [createdById], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_createdById_maproute")
 
   @@index([createdById], map: "idx_maproute_createdbyid")
 }
 
 model order {
-  id                                String    @id @default(dbgenerated("uuid_generate_v4()")) @map("_id") @db.Uuid
+  id                                String    @id @default(uuid()) @map("_id") @db.Uuid
   createdById                       String    @db.Uuid
   name                              String    @db.VarChar(255)
   active                            Boolean?  @default(true)
@@ -234,7 +231,6 @@ model order {
   users_order_createdByIdTousers    users     @relation("order_createdByIdTousers", fields: [createdById], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_createdById_order")
   owner                             owner?    @relation(fields: [ownerId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_ownerId_order")
   users_order_professionalIdTousers users?    @relation("order_professionalIdTousers", fields: [professionalId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_professionalId_order")
-  request                           request?  @relation(fields: [requestId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_requestId_order")
 
   @@index([clientId], map: "idx_order_clientid")
   @@index([createdById], map: "idx_order_createdbyid")
@@ -245,7 +241,7 @@ model order {
 
 /// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
 model owner {
-  id                             String        @id @default(dbgenerated("uuid_generate_v4()")) @map("_id") @db.Uuid
+  id                             String        @id @default(uuid()) @map("_id") @db.Uuid
   createdById                    String        @db.Uuid
   name                           String        @db.VarChar(255)
   active                         Boolean?      @default(true)
@@ -293,7 +289,7 @@ model owner {
 }
 
 model photo {
-  id               String    @id @default(dbgenerated("uuid_generate_v4()")) @map("_id") @db.Uuid
+  id               String    @id @default(uuid()) @map("_id") @db.Uuid
   createdById      String    @db.Uuid
   url              String
   key              String    @db.VarChar(255)
@@ -309,7 +305,7 @@ model photo {
 }
 
 model product {
-  id          String    @id @default(dbgenerated("uuid_generate_v4()")) @map("_id") @db.Uuid
+  id          String    @id @default(uuid()) @map("_id") @db.Uuid
   createdById String    @db.Uuid
   name        String    @db.VarChar(255)
   active      Boolean?  @default(true)
@@ -322,22 +318,21 @@ model product {
 }
 
 model rating {
-  id           String         @id @default(dbgenerated("uuid_generate_v4()")) @map("_id") @db.Uuid
-  createdById  String         @db.Uuid
-  name         String         @db.VarChar(255)
-  active       Boolean?       @default(true)
-  createdAt    DateTime?      @default(now()) @db.Timestamp(6)
-  updatedAt    DateTime?      @default(now()) @db.Timestamp(6)
-  ratingType   String         @db.VarChar(255)
-  ratings      Json[]
-  users        users          @relation(fields: [createdById], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_createdById")
-  ratingResult ratingResult[]
+  id          String    @id @default(uuid()) @map("_id") @db.Uuid
+  createdById String    @db.Uuid
+  name        String    @db.VarChar(255)
+  active      Boolean?  @default(true)
+  createdAt   DateTime? @default(now()) @db.Timestamp(6)
+  updatedAt   DateTime? @default(now()) @db.Timestamp(6)
+  ratingType  String    @db.VarChar(255)
+  ratings     Json[]
+  users       users     @relation(fields: [createdById], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_createdById")
 
   @@index([createdById], map: "idx_rating_createdbyid")
 }
 
 model ratingResult {
-  id          String    @id @default(dbgenerated("uuid_generate_v4()")) @map("_id") @db.Uuid
+  id          String    @id @default(uuid()) @map("_id") @db.Uuid
   createdById String    @db.Uuid
   name        String    @db.VarChar(255)
   active      Boolean?  @default(true)
@@ -351,7 +346,6 @@ model ratingResult {
   ratingForId String    @db.Uuid
   ratings     Json[]
   users       users     @relation(fields: [createdById], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_createdById")
-  rating      rating    @relation(fields: [ratingId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_ratingId")
 
   @@index([createdById], map: "idx_rating_result_createdbyid")
   @@index([ratingForId], map: "idx_rating_result_ratingforid")
@@ -361,7 +355,7 @@ model ratingResult {
 
 /// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
 model recurrence {
-  id                                     String    @id @default(dbgenerated("uuid_generate_v4()")) @map("_id") @db.Uuid
+  id                                     String    @id @default(uuid()) @map("_id") @db.Uuid
   createdById                            String    @db.Uuid
   name                                   String    @db.VarChar(255)
   active                                 Boolean?  @default(true)
@@ -382,7 +376,6 @@ model recurrence {
   users_recurrence_createdByIdTousers    users     @relation("recurrence_createdByIdTousers", fields: [createdById], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_createdById_recurrence")
   owner                                  owner     @relation(fields: [ownerId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_ownerId_recurrence")
   users_recurrence_professionalIdTousers users     @relation("recurrence_professionalIdTousers", fields: [professionalId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_professionalId_recurrence")
-  request                                request   @relation(fields: [requestId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_requestId_recurrence")
   service                                service   @relation(fields: [serviceId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_serviceId_recurrence")
 
   @@index([clientId], map: "idx_recurrence_clientid")
@@ -394,7 +387,7 @@ model recurrence {
 }
 
 model request {
-  id                                  String        @id @default(dbgenerated("uuid_generate_v4()")) @map("_id") @db.Uuid
+  id                                  String        @id @default(uuid()) @map("_id") @db.Uuid
   createdById                         String        @db.Uuid
   name                                String?       @db.VarChar(255)
   active                              Boolean?      @default(true)
@@ -430,9 +423,6 @@ model request {
   recurrence                          Json?
   order                               Json?
   appointment                         appointment[]
-  fidelity                            fidelity[]
-  order                               order[]
-  recurrence                          recurrence[]
   client                              client        @relation(fields: [clientId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_clientId_request")
   users_request_clientUserIdTousers   users         @relation("request_clientUserIdTousers", fields: [clientUserId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_clientUserId_request")
   users_request_createdForIdTousers   users         @relation("request_createdForIdTousers", fields: [createdForId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_createdForId_request")
@@ -440,7 +430,6 @@ model request {
   users_request_professionalIdTousers users         @relation("request_professionalIdTousers", fields: [professionalId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_professionalId_request")
   service                             service       @relation(fields: [serviceId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_serviceId_request")
   users_request_updatedByIdTousers    users?        @relation("request_updatedByIdTousers", fields: [updatedById], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_updatedById_request")
-  ride                                ride[]
 
   @@index([clientId], map: "idx_request_clientid")
   @@index([clientUserId], map: "idx_request_clientuserid")
@@ -452,7 +441,7 @@ model request {
 }
 
 model ride {
-  id                 String    @id @default(dbgenerated("uuid_generate_v4()")) @map("_id") @db.Uuid
+  id                 String    @id @default(uuid()) @map("_id") @db.Uuid
   createdById        String    @db.Uuid
   name               String    @db.VarChar(255)
   active             Boolean?  @default(true)
@@ -473,14 +462,13 @@ model ride {
   endDateEstimated   DateTime  @db.Timestamp(6)
   endDate            DateTime? @db.Timestamp(6)
   users              users     @relation(fields: [createdById], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_createdById_ride")
-  request            request   @relation(fields: [requestId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_requestId_ride")
 
   @@index([createdById], map: "idx_ride_createdbyid")
   @@index([requestId], map: "idx_ride_requestid")
 }
 
 model routeDriver {
-  id          String    @id @default(dbgenerated("uuid_generate_v4()")) @map("_id") @db.Uuid
+  id          String    @id @default(uuid()) @map("_id") @db.Uuid
   createdById String    @db.Uuid
   name        String    @db.VarChar(255)
   routeId     String    @db.Uuid
@@ -490,55 +478,44 @@ model routeDriver {
   createdAt   DateTime? @default(now()) @db.Timestamp(6)
   updatedAt   DateTime? @default(now()) @db.Timestamp(6)
   users       users     @relation(fields: [createdById], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_createdById_routeDriver")
-  mapRoute    mapRoute  @relation(fields: [routeId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_routeId_routeDriver")
 
   @@index([createdById], map: "idx_routedriver_createdbyid")
   @@index([routeId], map: "idx_routedriver_routeid")
 }
 
 model service {
-  id                            String        @id @default(dbgenerated("uuid_generate_v4()")) @map("_id") @db.Uuid
-  createdById                   String        @db.Uuid
-  name                          String        @db.VarChar(255)
+  id                            String       @id @default(uuid()) @map("_id") @db.Uuid
+  createdById                   String       @db.Uuid
+  name                          String       @db.VarChar(255)
   description                   String?
-  price                         Decimal       @db.Decimal
+  price                         Decimal      @db.Decimal
   duration                      Int
-  comission                     Decimal       @db.Decimal
-  categoryId                    String        @db.Uuid
+  comission                     Decimal      @db.Decimal
+  categoryId                    String       @db.Uuid
   productsQuantityNeeded        Int?
-  productId                     String?       @db.Uuid
-  promotionalPrice              Decimal?      @db.Decimal
-  finalPrice                    Decimal?      @db.Decimal
+  productId                     String?      @db.Uuid
+  promotionalPrice              Decimal?     @db.Decimal
+  finalPrice                    Decimal?     @db.Decimal
   havePromotionalPrice          Boolean?
   hasFidelityGenerator          Boolean?
   generateHowManyPoints         Int?
-  appointmentsTotal             Int?          @default(0)
+  appointmentsTotal             Int?         @default(0)
   canPayWithFidelityPoints      Boolean?
   howManyPointsIsNeededToRescue Int?
-  active                        Boolean?      @default(true)
-  createdAt                     DateTime?     @default(now()) @db.Timestamp(6)
-  updatedAt                     DateTime?     @default(now()) @db.Timestamp(6)
-  appointment                   appointment[]
+  active                        Boolean?     @default(true)
+  createdAt                     DateTime?    @default(now()) @db.Timestamp(6)
+  updatedAt                     DateTime?    @default(now()) @db.Timestamp(6)
   recurrence                    recurrence[]
   request                       request[]
-  category                      category      @relation(fields: [categoryId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_categoryId")
-  users                         users         @relation(fields: [createdById], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_createdById_service")
+  category                      category     @relation(fields: [categoryId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_categoryId")
+  users                         users        @relation(fields: [createdById], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_createdById_service")
 
   @@index([categoryId], map: "idx_service_categoryid")
   @@index([createdById], map: "idx_service_createdbyid")
 }
 
-/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
-model spatial_ref_sys {
-  srid      Int     @id
-  auth_name String? @db.VarChar(256)
-  auth_srid Int?
-  srtext    String? @db.VarChar(2048)
-  proj4text String? @db.VarChar(2048)
-}
-
 model subscription {
-  id                  String    @id @default(dbgenerated("uuid_generate_v4()")) @map("_id") @db.Uuid
+  id                  String    @id @default(uuid()) @map("_id") @db.Uuid
   createdById         String    @db.Uuid
   name                String?   @db.VarChar(255)
   active              Boolean?  @default(true)
@@ -559,7 +536,7 @@ model subscription {
 }
 
 model transaction {
-  id          String    @id @default(dbgenerated("uuid_generate_v4()")) @map("_id") @db.Uuid
+  id          String    @id @default(uuid()) @map("_id") @db.Uuid
   createdById String    @db.Uuid
   name        String    @db.VarChar(255)
   active      Boolean?  @default(true)
@@ -576,7 +553,7 @@ model transaction {
 }
 
 model users {
-  id                                            String         @id @default(dbgenerated("uuid_generate_v4()")) @map("_id") @db.Uuid
+  id                                            String         @id @default(uuid()) @map("_id") @db.Uuid
   createdById                                   String?        @db.Uuid
   name                                          String         @db.VarChar(255)
   email                                         String         @unique @db.VarChar(255)

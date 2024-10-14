@@ -67,6 +67,7 @@
     "@fastify/websocket": "^8.2.0",
     "@googlemaps/google-maps-services-js": "^3.3.38",
     "@gquittet/graceful-server": "^4.0.8",
+    "@prisma/client": "^5.20.0",
     "amqplib": "^0.10.4",
     "axios": "^1.6.8",
     "bcrypt": "^5.1.1",

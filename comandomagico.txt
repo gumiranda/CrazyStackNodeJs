@@ -9,4 +9,10 @@ set database_url IN NODE_ENV
 
 npx prisma db pull
 
+yarn add @prisma/client
+
+//fix prisma problems
+
+npx prisma format
+
 npx prisma generate
