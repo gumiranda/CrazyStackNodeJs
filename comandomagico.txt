@@ -16,3 +16,5 @@ yarn add @prisma/client
 npx prisma format
 
 npx prisma generate
+
+npx prisma migrate dev --name init
