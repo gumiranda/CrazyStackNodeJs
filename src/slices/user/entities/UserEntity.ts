@@ -7,6 +7,7 @@ export type UserData = {
   name: string;
   email: string;
   role: string;
+  slug?: string;
   confirmedEmail?: boolean;
   sendedEmail?: boolean;
   password: string;
@@ -91,7 +92,7 @@ export class UserEntity {
   serviceOptions?: any[];
   globalID?: string;
   customerID?: string;
-
+  slug?: string;
   constructor(data: UserData) {
     this.createdById = data.createdById;
     this.name = data.name;
@@ -134,5 +135,6 @@ export class UserEntity {
     this.payDay = addDays(new Date(), 30);
     this.globalID = data.globalID;
     this.customerID = data.customerID;
+    this.slug = data.slug;
   }
 }

@@ -5,6 +5,7 @@ import MockDate from "mockdate";
 export const fakeUserEntity = {
   _id: "123",
   createdById: "123",
+  slug: "123",
   name: "fakeUserEntity",
   active: true,
   createdAt: new Date(),
