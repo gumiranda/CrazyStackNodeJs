@@ -146,13 +146,17 @@ export class PrismaRepository extends Repository {
     fields: any,
     sort: any,
     limit = 10,
-    projection: any
+    projection: any = {}
   ): Promise<any[]> {
     const skip = (page - 1) * limit;
     fields = this.mapId(fields);
+
+    // Se o projection estiver vazio, omitimos o campo select (que é equivalente a "SELECT *")
+    const select = Object.keys(projection).length === 0 ? undefined : projection;
+
     const records = await this.tableName.findMany({
       where: fields,
-      select: projection,
+      select,
       orderBy: sort,
       take: limit,
       skip,
