@@ -44,15 +44,7 @@ export class SignupController extends Controller {
       smtp = null,
       mx = null,
     } = validators || {};
-    if (
-      !regex?.valid ||
-      !typo?.valid ||
-      !disposable?.valid ||
-      (!smtp?.valid && smtp?.reason !== "Timeout") ||
-      !mx?.valid
-    ) {
-      return badRequest([new InvalidParamError("email")]);
-    }
+
     // }
     const userValidation = [
       this.loadUser({
