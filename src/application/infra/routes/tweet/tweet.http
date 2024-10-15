@@ -1,7 +1,7 @@
 @apiurl = http://127.0.0.1:3333/api
 
 @token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI5YWYxNGJmMS00YmM0LTQzZTEtYTdjOC01NmExOTFlNTE5M2IiLCJpYXQiOjE3MjkwMjEwNDQsImV4cCI6MTczNDIwNTA0NH0.FtbUSy7sS7YjBjYSvesWPYkWiTkWp4MgT6HCApszKK4
-@entityId=1e498528-c1ad-4abe-b461-f7526b89c6de
+@entityId=5853a6c2-d85d-4ad3-8164-23b683c4cec4
 
 @entityType=tweet
 
@@ -34,7 +34,8 @@ Content-Type: application/json
 Authorization: Bearer {{token}}
 
 {
-  "name": "categoria top"
+  "userSlug": "devtop",
+  "body": "Tweet massa2"
 }
 
 ### DELETE delete
