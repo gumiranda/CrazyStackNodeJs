@@ -19,6 +19,7 @@ const userBody = {
 };
 const tweetlikeBody = {
   userSlug: "test",
+  tweetId: "test",
 };
 const makeAccessToken = async (role: string, password: string): Promise<any> => {
   const result = await userCollection.insertOne({
