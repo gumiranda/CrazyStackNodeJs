@@ -11,12 +11,12 @@ Content-Type: application/json
   "password": "123456",
   "passwordConfirmation": "123456",
   "name": "John Doe",
-  "cpf": "12345678900",
+  "cpf": "52966761067",
   "phone": "12345678900",
   "role": "owner",
   "coord": {
-    "lat": 0,
-    "long": 0
+    "lat": 33,
+    "long": 33
   }
 }
 
