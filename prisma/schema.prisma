@@ -627,12 +627,13 @@ model users {
   service                                       service[]
   subscription                                  subscription[]
   transaction                                   transaction[]
-  owner_users_ownerIdToowner                    owner?         @relation("users_ownerIdToowner", fields: [ownerId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_ownerid")
-  users_users_createdByIdTousers                users?         @relation("users_createdByIdTousers", fields: [createdById], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  other_users_users_createdByIdTousers          users[]        @relation("users_createdByIdTousers")
-  users_users_myOwnerIdTousers                  users?         @relation("users_myOwnerIdTousers", fields: [myOwnerId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  other_users_users_myOwnerIdTousers            users[]        @relation("users_myOwnerIdTousers")
-  tweet                                         tweet[]
+  owners                                        owner?         @relation("users_ownerIdToowner", fields: [ownerId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_ownerid")
+  professional                                  users?         @relation("users_createdByIdTousers", fields: [createdById], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  professionals                                 users[]        @relation("users_createdByIdTousers")
+  myOwner                                       users?         @relation("users_myOwnerIdTousers", fields: [myOwnerId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  myOwners                                      users[]        @relation("users_myOwnerIdTousers")
+  tweets                                        tweet[]
+  likes                                         tweetlike[]
 
   @@index([createdById], map: "idx_users_createdbyid")
   @@index([myOwnerId], map: "idx_users_myownerid")
@@ -656,4 +657,5 @@ model tweetlike {
   tweetId     String?  @db.Uuid
   userSlug    String
   createdAt   DateTime @default(now()) @db.Timestamp(6)
+  users       users?   @relation(fields: [createdById], references: [id])
 }
