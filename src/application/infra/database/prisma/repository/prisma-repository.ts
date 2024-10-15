@@ -17,7 +17,12 @@ export class PrismaRepository extends Repository {
     }
     return query;
   }
-
+  private mapSortOrder(sort: any) {
+    return Object.keys(sort).reduce((acc: any, key: string) => {
+      acc[key] = sort[key] === 1 ? "asc" : "desc";
+      return acc;
+    }, {});
+  }
   // Função auxiliar para mapear id de volta para _id nos retornos
   private mapReturnId(record: any) {
     if (record && record.id) {
@@ -150,17 +155,16 @@ export class PrismaRepository extends Repository {
   ): Promise<any[]> {
     const skip = (page - 1) * limit;
     fields = this.mapId(fields);
+    const query = { where: fields, orderBy: this.mapSortOrder(sort), take: limit, skip };
+    const queryFinal =
+      Object.keys(projection).length === 0
+        ? query
+        : {
+            ...query,
+            select: projection,
+          };
 
-    // Se o projection estiver vazio, omitimos o campo select (que é equivalente a "SELECT *")
-    const select = Object.keys(projection).length === 0 ? undefined : projection;
-
-    const records = await this.tableName.findMany({
-      where: fields,
-      select,
-      orderBy: sort,
-      take: limit,
-      skip,
-    });
+    const records = await this.tableName.findMany(queryFinal);
     return this.mapReturnIds(records);
   }
 
