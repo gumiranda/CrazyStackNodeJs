@@ -56,7 +56,7 @@ export class AuthMiddleware implements Middleware {
   }
 }
 const getQuery = ({ roles, _id }: any) => {
-  if (whiteLabel.database === "postgres") {
+  if (whiteLabel.database !== "mongodb") {
     return {
       fields: {
         _id,

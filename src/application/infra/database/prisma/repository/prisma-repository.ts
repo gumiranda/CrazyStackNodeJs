@@ -1,14 +1,12 @@
-import { PrismaClient } from "@prisma/client";
 import { Repository } from "@/application/infra/contracts";
-
-const prisma = new PrismaClient();
+import { prisma } from "../prisma";
 
 export class PrismaRepository extends Repository {
   private tableName: any;
 
-  constructor(tableName: keyof PrismaClient) {
+  constructor(tableName: string) {
     super();
-    this.tableName = prisma[tableName] as any; // Conecta a tabela do Prisma
+    this.tableName = (prisma as any)[tableName]; // Conecta a tabela do Prisma
   }
 
   async add(data: any): Promise<any> {
