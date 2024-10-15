@@ -79,7 +79,7 @@ let brokerMessagingAdapter: any;
 const start = async () => {
   try {
     const fastifyInstance = await makeFastifyInstance(
-      env.database === "postgres" ? {} : null
+      env.database !== "mongodb" ? {} : null
     );
     if (!fastifyInstance) return;
     const brokerMessagingConsumers = [

@@ -32,7 +32,7 @@ export const envSchema = z.object({
   wooviWebhookKey: z.string(),
   stripeKey: z.string(),
   stripeKeySecret: z.string(),
-  database: z.enum(["postgres", "mongodb"]).default("mongodb"),
+  database: z.enum(["postgres", "mongodb", "prisma"]).default("mongodb"),
   FUSORARIOBR: z.string(),
   PGUSER: z.string(),
   PGPASSWORD: z.string(),
