@@ -525,7 +525,7 @@ model subscription {
   value               Decimal?  @db.Decimal
   comment             String?
   additionalInfo      Json?
-  dayGenerateCharge   String?   @db.VarChar(10)
+  dayGenerateCharge   Int?
   globalID            String?   @db.VarChar(255)
   gatewayDetails      Json?
   priceId             String?   @db.Uuid
