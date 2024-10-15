@@ -642,11 +642,18 @@ model users {
 model tweet {
   id          String   @id @default(dbgenerated("uuid_generate_v4()")) @map("_id") @db.Uuid
   createdById String?  @db.Uuid
-  users       users?   @relation(fields: [usersId], references: [id])
-  usersId     String?  @db.Uuid
+  users       users?   @relation(fields: [createdById], references: [id])
   userSlug    String
   body        String
   image       String?
   answerOf    Int      @default(0)
+  createdAt   DateTime @default(now()) @db.Timestamp(6)
+}
+
+model tweetlike {
+  id          String   @id @default(dbgenerated("uuid_generate_v4()")) @map("_id") @db.Uuid
+  createdById String?  @db.Uuid
+  tweetId     String?  @db.Uuid
+  userSlug    String
   createdAt   DateTime @default(now()) @db.Timestamp(6)
 }

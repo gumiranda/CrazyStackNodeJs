@@ -7,34 +7,30 @@ import { addDays } from "date-fns";
 jest.setTimeout(500000);
 
 let userCollection: Collection;
+let tweetCollection: Collection;
 
-const ownerBody = {
-  email: "gustavo41@hotmail.com",
-  name: "any_name",
-  role: "owner",
-  password: "111123",
-  passwordConfirmation: "111123",
-  coord: { type: "Point", coordinates: [-18.9512678, -41.1838365] },
-  active: true,
-  payDay: addDays(new Date(), 30),
-};
 const userBody = {
-  email: "any_email2@mail.com",
-  name: "zzzz",
-  role: "professional",
-  password: "111123",
-  passwordConfirmation: "111123",
-  serviceIds: ["61dd880e81d2b01178d5962d"],
-  coord: { type: "Point", coordinates: [-22.9512678, -43.1838365] },
-  active: true,
-  payDay: addDays(new Date(), 30),
+  email: "gustavoteste41@hotmail.com",
+  name: "Gustavo",
+  role: "client",
+  password: "123456",
+  passwordConfirmation: "123456",
+  coord: { type: "Point", coordinates: [-46.693419, -23.568704] },
+};
+const tweetBody = {
+  userSlug: "test",
 };
 const makeAccessToken = async (role: string, password: string): Promise<any> => {
-  const result = await userCollection.insertOne({ ...ownerBody, password, role });
+  const result = await userCollection.insertOne({
+    ...userBody,
+    password,
+    payDay: addDays(new Date(), 30),
+    role,
+  });
   const _id = result?.insertedId;
   return { _id, token: sign({ _id }, env.jwtSecret) };
 };
-describe("Route api/user", () => {
+describe("Route api/tweet", () => {
   let fastify: any;
   beforeAll(async () => {
     const client = await MongoHelper.connect(process.env.MONGO_URL as string);
@@ -48,67 +44,68 @@ describe("Route api/user", () => {
   });
   beforeEach(async () => {
     userCollection = await MongoHelper.getCollection("users");
-    await userCollection.createIndex({ coord: "2dsphere" });
+    tweetCollection = await MongoHelper.getCollection("tweet");
     await userCollection.deleteMany({});
+    await tweetCollection.deleteMany({});
   });
-  describe("POST /api/user/add", () => {
+  describe("POST /api/tweet/add", () => {
     test("Should return 200 on add", async () => {
-      const { token } = await makeAccessToken("owner", "password");
+      const { token } = await makeAccessToken("admin", "password");
       const responseAdd = await fastify.inject({
         method: "POST",
-        url: "/api/user/add",
+        url: "/api/tweet/add",
         headers: { authorization: `Bearer ${token}` },
-        payload: userBody,
+        payload: tweetBody,
       });
       const responseBodyAdd = JSON.parse(responseAdd.body);
       expect(responseAdd.statusCode).toBe(200);
       expect(responseBodyAdd._id).toBeTruthy();
     });
     test("Should return 400 for bad requests", async () => {
-      const { token } = await makeAccessToken("owner", "password");
-      const userWrongBody = { ...userBody, name: null };
+      const { token } = await makeAccessToken("admin", "password");
+      const tweetWrongBody = { ...tweetBody, userSlug: null };
       const responseAdd = await fastify.inject({
         method: "POST",
-        url: "/api/user/add",
+        url: "/api/tweet/add",
         headers: { authorization: `Bearer ${token}` },
-        payload: userWrongBody,
+        payload: tweetWrongBody,
       });
       expect(responseAdd.statusCode).toBe(400);
     });
     test("Should return 401 for unauthorized access token", async () => {
       const response = await fastify.inject({
         method: "POST",
-        url: "/api/user/add",
+        url: "/api/tweet/add",
         headers: { authorization: "Bearer invalid_token" },
-        payload: userBody,
+        payload: tweetBody,
       });
       expect(response.statusCode).toBe(401);
     });
     test("Should return 400 if i dont pass any token", async () => {
       const response = await fastify.inject({
         method: "POST",
-        url: "/api/user/add",
-        payload: userBody,
+        url: "/api/tweet/add",
+        payload: tweetBody,
       });
       expect(response.statusCode).toBe(400);
     });
   });
-  describe("GET /api/user/load", () => {
+  describe("GET /api/tweet/load", () => {
     test("Should return 400 for bad requests", async () => {
-      const { token } = await makeAccessToken("owner", "password");
+      const { token } = await makeAccessToken("admin", "password");
       const response = await fastify.inject({
         method: "GET",
-        url: "/api/user/load",
+        url: "/api/tweet/load",
         headers: { authorization: `Bearer ${token}` },
       });
       expect(response.statusCode).toBe(400);
     });
     test("Should return 200 on load", async () => {
-      const { insertedId } = await userCollection.insertOne(userBody);
-      const { token } = await makeAccessToken("owner", "password");
+      const { insertedId } = await tweetCollection.insertOne(tweetBody);
+      const { token } = await makeAccessToken("admin", "password");
       const response = await fastify.inject({
         method: "GET",
-        url: `/api/user/load?_id=${insertedId.toString()}`,
+        url: `/api/tweet/load?_id=${insertedId.toString()}`,
         headers: { authorization: `Bearer ${token}` },
       });
       const responseBody = JSON.parse(response.body);
@@ -118,7 +115,7 @@ describe("Route api/user", () => {
     test("Should return 401 for unauthorized access token", async () => {
       const response = await fastify.inject({
         method: "GET",
-        url: `/api/user/load?_id=${new ObjectId().toString()}`,
+        url: `/api/tweet/load?_id=${new ObjectId().toString()}`,
         headers: { authorization: "Bearer invalid_token" },
       });
       expect(response.statusCode).toBe(401);
@@ -126,38 +123,39 @@ describe("Route api/user", () => {
     test("Should return 400 if i dont pass any token", async () => {
       const response = await fastify.inject({
         method: "GET",
-        url: "/api/user/load",
+        url: "/api/tweet/load",
       });
       expect(response.statusCode).toBe(400);
     });
   });
-  describe("GET /api/user/loadByPage", () => {
+
+  describe("GET /api/tweet/loadByPage", () => {
     test("Should return 400 for bad requests", async () => {
-      const { token } = await makeAccessToken("owner", "password");
+      const { token } = await makeAccessToken("admin", "password");
       const response = await fastify.inject({
         method: "GET",
-        url: "/api/user/loadByPage",
+        url: "/api/tweet/loadByPage",
         headers: { authorization: `Bearer ${token}` },
       });
       expect(response.statusCode).toBe(400);
     });
     test("Should return 200 on loadByPage", async () => {
-      await userCollection.insertOne(userBody);
+      await tweetCollection.insertOne(tweetBody);
       const { token } = await makeAccessToken("admin", "password");
       const response = await fastify.inject({
         method: "GET",
-        url: `/api/user/loadByPage?page=${1}`,
+        url: `/api/tweet/loadByPage?page=${1}`,
         headers: { authorization: `Bearer ${token}` },
       });
       const responseBody = JSON.parse(response.body);
       expect(response.statusCode).toBe(200);
-      expect(responseBody.users).toBeTruthy();
+      expect(responseBody.tweets).toBeTruthy();
       expect(responseBody.total).toBeTruthy();
     });
     test("Should return 401 for unauthorized access token", async () => {
       const response = await fastify.inject({
         method: "GET",
-        url: `/api/user/loadByPage?page=${1}`,
+        url: `/api/tweet/loadByPage?page=${1}`,
         headers: { authorization: "Bearer invalid_token" },
       });
       expect(response.statusCode).toBe(401);
@@ -165,30 +163,30 @@ describe("Route api/user", () => {
     test("Should return 400 if i dont pass any token", async () => {
       const response = await fastify.inject({
         method: "GET",
-        url: "/api/user/loadByPage",
+        url: "/api/tweet/loadByPage",
       });
       expect(response.statusCode).toBe(400);
     });
   });
-  describe("DELETE /api/user/delete", () => {
+  describe("DELETE /api/tweet/delete", () => {
     test("Should return 400 for bad requests", async () => {
-      const { token } = await makeAccessToken("owner", "password");
+      const { token } = await makeAccessToken("admin", "password");
       const response = await fastify.inject({
         method: "DELETE",
-        url: "/api/user/delete",
+        url: "/api/tweet/delete",
         headers: { authorization: `Bearer ${token}` },
       });
       expect(response.statusCode).toBe(400);
     });
     test("Should return 200 on delete", async () => {
-      const { token, _id } = await makeAccessToken("owner", "password");
-      const { insertedId } = await userCollection.insertOne({
-        ...userBody,
+      const { token, _id } = await makeAccessToken("admin", "password");
+      const { insertedId } = await tweetCollection.insertOne({
+        ...tweetBody,
         createdById: _id,
       });
       const response = await fastify.inject({
         method: "DELETE",
-        url: `/api/user/delete?_id=${insertedId.toString()}`,
+        url: `/api/tweet/delete?_id=${insertedId.toString()}`,
         headers: { authorization: `Bearer ${token}` },
       });
       const responseBody = JSON.parse(response.body);
@@ -198,7 +196,7 @@ describe("Route api/user", () => {
     test("Should return 401 for unauthorized access token", async () => {
       const response = await fastify.inject({
         method: "DELETE",
-        url: `/api/user/delete?_id=${new ObjectId().toString()}`,
+        url: `/api/tweet/delete?_id=${new ObjectId().toString()}`,
         headers: { authorization: "Bearer invalid_token" },
       });
       expect(response.statusCode).toBe(401);
@@ -206,90 +204,50 @@ describe("Route api/user", () => {
     test("Should return 400 if i dont pass any token", async () => {
       const response = await fastify.inject({
         method: "DELETE",
-        url: "/api/user/delete",
+        url: "/api/tweet/delete",
       });
       expect(response.statusCode).toBe(400);
     });
   });
-  describe("PATCH /api/user/update", () => {
+  describe("PATCH /api/tweet/update", () => {
     test("Should return 400 for bad requests", async () => {
-      const { token } = await makeAccessToken("owner", "password");
+      const { token } = await makeAccessToken("admin", "password");
       const response = await fastify.inject({
         method: "PATCH",
-        url: "/api/user/update",
+        url: "/api/tweet/update",
         headers: { authorization: `Bearer ${token}` },
       });
       expect(response.statusCode).toBe(400);
     });
     test("Should return 200 on update", async () => {
-      const { token, _id } = await makeAccessToken("owner", "password");
-      const { insertedId } = await userCollection.insertOne({
-        ...userBody,
+      const { token, _id } = await makeAccessToken("admin", "password");
+      const { insertedId } = await tweetCollection.insertOne({
+        ...tweetBody,
         createdById: _id,
       });
       const response = await fastify.inject({
         method: "PATCH",
-        url: `/api/user/update?_id=${insertedId.toString()}`,
+        url: `/api/tweet/update?_id=${insertedId.toString()}`,
         headers: { authorization: `Bearer ${token}` },
-        body: { name: "new name" },
+        body: { userSlug: "new userSlug" },
       });
       const responseBody = JSON.parse(response.body);
       expect(response.statusCode).toBe(200);
-      expect(responseBody.name).toEqual("new name");
+      expect(responseBody.userSlug).toEqual("new userSlug");
     });
     test("Should return 401 for unauthorized access token", async () => {
       const response = await fastify.inject({
         method: "PATCH",
-        url: `/api/user/update?_id=${new ObjectId().toString()}`,
+        url: `/api/tweet/update?_id=${new ObjectId().toString()}`,
         headers: { authorization: "Bearer invalid_token" },
-        body: { name: "new name" },
+        body: { userSlug: "new userSlug" },
       });
       expect(response.statusCode).toBe(401);
     });
     test("Should return 400 if i dont pass any token", async () => {
       const response = await fastify.inject({
         method: "PATCH",
-        url: "/api/user/update",
-      });
-      expect(response.statusCode).toBe(400);
-    });
-  });
-
-  describe("GET /api/user/loadByGeoNear", () => {
-    test("Should return 400 for bad requests", async () => {
-      const { token } = await makeAccessToken("owner", "password");
-      const response = await fastify.inject({
-        method: "GET",
-        url: "/api/user/loadByGeoNear",
-        headers: { authorization: `Bearer ${token}` },
-      });
-      expect(response.statusCode).toBe(400);
-    });
-    test("Should return 200 on loadByGeoNear", async () => {
-      await userCollection.insertOne(userBody);
-      const { token } = await makeAccessToken("owner", "password");
-      const response = await fastify.inject({
-        method: "GET",
-        url: `/api/user/loadByGeoNear?page=${1}`,
-        headers: { authorization: `Bearer ${token}` },
-      });
-      const responseBody = JSON.parse(response.body);
-      console.log(responseBody);
-      expect(response.statusCode).toBe(200);
-      expect(responseBody.users).toBeTruthy();
-    });
-    test("Should return 401 for unauthorized access token", async () => {
-      const response = await fastify.inject({
-        method: "GET",
-        url: `/api/user/loadByGeoNear?page=${1}`,
-        headers: { authorization: "Bearer invalid_token" },
-      });
-      expect(response.statusCode).toBe(401);
-    });
-    test("Should return 400 if i dont pass any token", async () => {
-      const response = await fastify.inject({
-        method: "GET",
-        url: "/api/user/loadByGeoNear",
+        url: "/api/tweet/update",
       });
       expect(response.statusCode).toBe(400);
     });

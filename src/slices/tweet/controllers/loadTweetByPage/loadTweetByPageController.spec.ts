@@ -1,22 +1,26 @@
 import MockDate from "mockdate";
 import { badRequest, ok, Validation } from "@/application/helpers";
 import { MockProxy, mock } from "jest-mock-extended";
-import { LoadUserByPageGeoNearController } from "./loadUserByPageGeoNearController";
-import { fakeUserEntity, fakeUserPaginated } from "@/slices/user/entities/UserEntity.spec";
+import { LoadTweetByPageController } from "./loadTweetByPageController";
+import {
+  fakeTweetEntity,
+  fakeTweetPaginated,
+} from "@/slices/tweet/entities/TweetEntity.spec";
 import { Controller } from "@/application/infra/contracts";
 import { MissingParamError } from "@/application/errors";
+import { fakeUserEntity } from "@/slices/user/entities/UserEntity.spec";
 
-describe("LoadUserByPageGeoNearController", () => {
-  let testInstance: LoadUserByPageGeoNearController;
-  let loadUserByPageGeoNear: jest.Mock;
+describe("LoadTweetByPageController", () => {
+  let testInstance: LoadTweetByPageController;
+  let loadTweetByPage: jest.Mock;
   let validation: MockProxy<Validation>;
   let fakeQuery: any;
   let fakeQueryParams: any;
   let fakeRestQuery: any;
   beforeAll(async () => {
     MockDate.set(new Date());
-    loadUserByPageGeoNear = jest.fn();
-    loadUserByPageGeoNear.mockResolvedValue(fakeUserPaginated);
+    loadTweetByPage = jest.fn();
+    loadTweetByPage.mockResolvedValue(fakeTweetPaginated);
     validation = mock();
     validation.validate.mockResolvedValue([] as never);
   });
@@ -24,10 +28,10 @@ describe("LoadUserByPageGeoNearController", () => {
     MockDate.reset();
   });
   beforeEach(() => {
-    fakeQueryParams = { _id: fakeUserEntity._id, lat: undefined, lng: undefined };
-    fakeRestQuery = { page: 1, sortBy: "name", typeSort: "asc", limitPerPage: 10 };
+    fakeQueryParams = { _id: fakeTweetEntity._id };
+    fakeRestQuery = { page: 1, sortBy: "name", typeSort: "asc" };
     fakeQuery = { ...fakeQueryParams, ...fakeRestQuery };
-    testInstance = new LoadUserByPageGeoNearController(validation, loadUserByPageGeoNear);
+    testInstance = new LoadTweetByPageController(validation, loadTweetByPage);
   });
   it("should extends class Controller", async () => {
     expect(testInstance).toBeInstanceOf(Controller);
@@ -37,48 +41,38 @@ describe("LoadUserByPageGeoNearController", () => {
     expect(validation.validate).toHaveBeenCalledWith(fakeQuery);
     expect(validation.validate).toHaveBeenCalledTimes(1);
   });
-  test("should call loadUserByPageGeoNear with correct params", async () => {
+  test("should call loadTweetByPage with correct params", async () => {
     const result = await testInstance.execute({
       query: fakeQuery,
       userId: fakeUserEntity?._id,
     });
-    expect(result).toEqual(ok(fakeUserPaginated));
-    expect(loadUserByPageGeoNear).toHaveBeenCalledWith({
+    expect(result).toEqual(ok(fakeTweetPaginated));
+    expect(loadTweetByPage).toHaveBeenCalledWith({
       fields: fakeQueryParams,
-      options: {
-        limitPerPage: fakeRestQuery.limitPerPage,
-        sort: { [fakeRestQuery?.sortBy]: 1 },
-        page: fakeRestQuery?.page,
-        userLoggedId: fakeUserEntity?._id,
-      },
+      options: { sort: { [fakeRestQuery?.sortBy]: 1 }, page: fakeRestQuery?.page },
     });
-    expect(loadUserByPageGeoNear).toHaveBeenCalledTimes(1);
+    expect(loadTweetByPage).toHaveBeenCalledTimes(1);
   });
-  test("should call loadUserByPageGeoNear with correct params in desc order", async () => {
+  test("should call loadTweetByPage with correct params in desc order", async () => {
     const result = await testInstance.execute({
       query: { ...fakeQuery, typeSort: "desc" },
       userId: fakeUserEntity?._id,
     });
-    expect(result).toEqual(ok(fakeUserPaginated));
-    expect(loadUserByPageGeoNear).toHaveBeenCalledWith({
+    expect(result).toEqual(ok(fakeTweetPaginated));
+    expect(loadTweetByPage).toHaveBeenCalledWith({
       fields: fakeQueryParams,
-      options: {
-        limitPerPage: fakeRestQuery.limitPerPage,
-        sort: { [fakeRestQuery?.sortBy]: -1 },
-        page: fakeRestQuery?.page,
-        userLoggedId: fakeUserEntity?._id,
-      },
+      options: { sort: { [fakeRestQuery?.sortBy]: -1 }, page: fakeRestQuery?.page },
     });
-    expect(loadUserByPageGeoNear).toHaveBeenCalledTimes(1);
+    expect(loadTweetByPage).toHaveBeenCalledTimes(1);
   });
-  test("should call loadUserByPageGeoNear with correct params without http query", async () => {
+  test("should call loadTweetByPage with correct params without http query", async () => {
     const result = await testInstance.execute({
       userId: fakeUserEntity?._id,
     });
-    expect(result).toEqual(ok(fakeUserPaginated));
+    expect(result).toEqual(ok(fakeTweetPaginated));
   });
-  test("should throws if loadUserByPageGeoNear throw", async () => {
-    loadUserByPageGeoNear.mockRejectedValueOnce(new Error("error"));
+  test("should throws if loadTweetByPage throw", async () => {
+    loadTweetByPage.mockRejectedValueOnce(new Error("error"));
     const result = testInstance.execute({
       query: fakeQuery,
       userId: fakeUserEntity?._id,

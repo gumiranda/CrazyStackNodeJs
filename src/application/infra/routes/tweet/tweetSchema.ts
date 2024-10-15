@@ -1,11 +1,10 @@
 import { idSchema } from "@/application/types/id";
 
-const bodyAddRatingJsonSchema = {
+const bodyAddTweetJsonSchema = {
   type: "object",
-  required: ["ratingType", "ratings"],
+  required: ["userSlug"],
   properties: {
-    ratings: {},
-    ratingType: { type: "string" },
+    userSlug: { type: "string" },
   },
 };
 const headersJsonSchema = {
@@ -15,117 +14,99 @@ const headersJsonSchema = {
   },
   required: ["authorization"],
 };
-const addRatingResponse = {
+const addTweetResponse = {
   type: "object",
   properties: {
     _id: idSchema,
-    ratings: {
-      type: "array",
-      maxItems: 10,
-      items: {
-        type: "object",
-        properties: {},
-      },
-    },
-    ratingType: { type: "string" },
+    userSlug: { type: "string" },
     active: { type: "boolean" },
     createdById: { type: "string" },
     createdAt: { type: "string" },
   },
 };
-export const addRatingPostSchema = {
+export const addTweetPostSchema = {
   schema: {
-    body: bodyAddRatingJsonSchema,
-    response: { 200: addRatingResponse },
+    body: bodyAddTweetJsonSchema,
+    response: { 200: addTweetResponse },
     headers: headersJsonSchema,
   },
 };
 
-const queryStringJsonLoadRatingSchema = {
+const queryStringJsonLoadTweetSchema = {
   type: "object",
   properties: {
     _id: idSchema,
   },
   required: ["_id"],
 };
-const loadRatingResponse = {
+const loadTweetResponse = {
   type: "object",
   properties: {
     _id: idSchema,
-    ratings: {
-      type: "array",
-      maxItems: 10,
-      items: {
-        type: "object",
-        properties: {},
-      },
-    },
-    ratingType: { type: "string" },
+    userSlug: { type: "string" },
     active: { type: "boolean" },
     createdById: { type: "string" },
     createdAt: { type: "string" },
   },
 };
-export const loadRatingGetSchema = {
+export const loadTweetGetSchema = {
   schema: {
     headers: headersJsonSchema,
-    querystring: queryStringJsonLoadRatingSchema,
+    querystring: queryStringJsonLoadTweetSchema,
     response: {
-      200: loadRatingResponse,
+      200: loadTweetResponse,
     },
   },
 };
-const deleteRatingResponse = { type: "boolean" };
-const queryStringJsonDeleteRatingSchema = {
+const deleteTweetResponse = { type: "boolean" };
+const queryStringJsonDeleteTweetSchema = {
   type: "object",
   properties: {
     _id: idSchema,
   },
   required: ["_id"],
 };
-export const deleteRatingSchema = {
+export const deleteTweetSchema = {
   schema: {
     headers: headersJsonSchema,
-    querystring: queryStringJsonDeleteRatingSchema,
+    querystring: queryStringJsonDeleteTweetSchema,
     response: {
-      200: deleteRatingResponse,
+      200: deleteTweetResponse,
     },
   },
 };
-const queryStringJsonUpdateRatingSchema = {
+const queryStringJsonUpdateTweetSchema = {
   type: "object",
   properties: {
     _id: idSchema,
   },
   required: ["_id"],
 };
-const updateRatingResponse = {
+const updateTweetResponse = {
   type: "object",
   properties: {
     _id: idSchema,
-    ratings: {},
-    ratingType: { type: "string" },
+    userSlug: { type: "string" },
     createdById: { type: "string" },
   },
 };
-const updateRatingBody = {
+const updateTweetBody = {
   type: "object",
   properties: {
-    ratings: {},
-    ratingType: { type: "string" },
+    userSlug: { type: "string" },
   },
 };
-export const updateRatingSchema = {
+export const updateTweetSchema = {
   schema: {
     headers: headersJsonSchema,
-    querystring: queryStringJsonUpdateRatingSchema,
-    body: updateRatingBody,
+    querystring: queryStringJsonUpdateTweetSchema,
+    body: updateTweetBody,
     response: {
-      200: updateRatingResponse,
+      200: updateTweetResponse,
     },
   },
 };
-const queryStringJsonLoadRatingByPageSchema = {
+const queryStringJsonLoadTweetByPageSchema = {
   type: "object",
   properties: {
     page: { type: "integer", minimum: 1 },
@@ -134,21 +115,17 @@ const queryStringJsonLoadRatingByPageSchema = {
   },
   required: ["page"],
 };
-const loadRatingByPageResponse = {
+const loadTweetByPageResponse = {
   type: "object",
   properties: {
-    ratings: {
+    tweets: {
       type: "array",
       maxItems: 10,
       items: {
         type: "object",
         properties: {
           _id: idSchema,
-          ratings: {
-            type: "array",
-            maxItems: 10,
-          },
-          ratingType: { type: "string" },
+          userSlug: { type: "string" },
           active: { type: "boolean" },
           createdById: { type: "string" },
           createdAt: { type: "string" },
@@ -158,12 +135,12 @@ const loadRatingByPageResponse = {
     total: { type: "integer" },
   },
 };
-export const loadRatingByPageGetSchema = {
+export const loadTweetByPageGetSchema = {
   schema: {
     headers: headersJsonSchema,
-    querystring: queryStringJsonLoadRatingByPageSchema,
+    querystring: queryStringJsonLoadTweetByPageSchema,
     response: {
-      200: loadRatingByPageResponse,
+      200: loadTweetByPageResponse,
     },
   },
 };
