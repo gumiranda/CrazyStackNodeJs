@@ -29,7 +29,7 @@ export class PrismaRepository extends Repository {
 
   // Função auxiliar para mapear id de volta para _id em listas de retornos
   private mapReturnIds(records: any[]) {
-    return records.map((record) => this.mapReturnId(record));
+    return records?.map?.((record) => this.mapReturnId(record));
   }
 
   async add(data: any): Promise<any> {

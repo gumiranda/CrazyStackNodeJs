@@ -7,11 +7,11 @@ Content-Type: application/json
 
 
 {
-  "email": "jhonlennon@gmail.com",
+  "email": "abcde@gmail.com",
   "password": "123456",
   "passwordConfirmation": "123456",
   "name": "John Doe",
-  "cpf": "53933934079",
+  "cpf": "60145037061",
   "phone": "12345678900",
   "role": "owner",
   "coord": {
