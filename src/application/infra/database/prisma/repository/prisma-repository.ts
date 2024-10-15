@@ -36,9 +36,9 @@ export class PrismaRepository extends Repository {
     });
     return incremented;
   }
-  async updateOne(id: any, data: any): Promise<any> {
+  async updateOne(_id: any, data: any): Promise<any> {
     const updated = await this.tableName.update({
-      where: { id },
+      where: { _id },
       data,
     });
     return updated;
