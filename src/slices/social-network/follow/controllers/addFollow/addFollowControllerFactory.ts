@@ -5,7 +5,7 @@ import { makeAddFollowFactory } from "@/slices/social-network/follow/useCases";
 import { AddFollowController } from "@/slices/social-network/follow/controllers";
 
 export const makeAddFollowController = (): Controller => {
-  const requiredFields = ["user1Slug"];
+  const requiredFields = ["user1Slug", "user2Slug"];
   return makeLogController(
     "addFollow",
     new AddFollowController(

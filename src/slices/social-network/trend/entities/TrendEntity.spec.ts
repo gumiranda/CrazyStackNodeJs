@@ -38,6 +38,7 @@ describe("Trend", () => {
     expect(obj).toEqual({
       ...fakeTrendEntity,
       _id: undefined,
+      counter: 1,
       createdAt: new Date(),
       updatedAt: new Date(),
     });

@@ -5,6 +5,7 @@ export const fakeFollowEntity = {
   _id: "123",
   createdById: "123",
   user1Slug: "fakeFollowEntity",
+  user2Slug: "fakeFollowEntity",
   createdAt: new Date(),
   updatedAt: new Date(),
 };
