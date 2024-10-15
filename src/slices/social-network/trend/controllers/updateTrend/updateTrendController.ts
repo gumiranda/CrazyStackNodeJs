@@ -30,7 +30,6 @@ export class UpdateTrendController extends Controller {
       {
         fields: {
           ...httpRequest?.query,
-          createdById: httpRequest?.userId,
         },
         options: {},
       },

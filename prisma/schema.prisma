@@ -568,7 +568,7 @@ model users {
   photoUrl                                      String?        @db.VarChar(255)
   cpf                                           String?        @db.VarChar(255)
   phone                                         String?        @db.VarChar(255)
-  slug                                          String?        @db.VarChar(255)
+  slug                                          String?        @unique @db.VarChar(255)
   bio                                           String?        @db.VarChar(255)
   cover                                         String?        @db.VarChar(255)
   link                                          String?        @db.VarChar(255)

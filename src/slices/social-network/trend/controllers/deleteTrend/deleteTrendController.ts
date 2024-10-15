@@ -22,7 +22,7 @@ export class DeleteTrendController extends Controller {
       return badRequest(errors);
     }
     const trendDeleteed = await this.deleteTrend({
-      fields: { ...httpRequest?.query, createdById: httpRequest?.userId },
+      fields: { ...httpRequest?.query },
       options: {},
     });
     return ok(trendDeleteed);

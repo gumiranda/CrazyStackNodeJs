@@ -41,7 +41,7 @@ describe("DeleteTrendController", () => {
     });
     expect(result).toEqual(ok(true));
     expect(deleteTrend).toHaveBeenCalledWith({
-      fields: { ...fakeQuery, createdById: fakeUserEntity?._id },
+      fields: { ...fakeQuery },
       options: {},
     });
     expect(deleteTrend).toHaveBeenCalledTimes(1);

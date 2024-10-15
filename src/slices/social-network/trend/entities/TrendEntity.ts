@@ -1,6 +1,5 @@
 export type TrendData = {
   _id?: string;
-  createdById: string;
   hashtag: string;
   counter?: number;
   createdAt?: Date;
@@ -13,14 +12,12 @@ export type TrendPaginated = {
 };
 
 export class TrendEntity {
-  createdById: string;
   hashtag: string;
   createdAt?: Date;
   updatedAt?: Date;
   counter?: number;
 
   constructor(data: TrendData) {
-    this.createdById = data.createdById;
     this.hashtag = data.hashtag;
     this.createdAt = new Date();
     this.updatedAt = new Date();

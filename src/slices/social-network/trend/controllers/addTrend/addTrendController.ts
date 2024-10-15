@@ -23,7 +23,6 @@ export class AddTrendController extends Controller {
     }
     const trendCreated = await this.addTrend({
       ...httpRequest?.body,
-      createdById: httpRequest?.userId,
     });
     return ok(trendCreated);
   }

@@ -3,7 +3,6 @@ import MockDate from "mockdate";
 
 export const fakeTrendEntity = {
   _id: "123",
-  createdById: "123",
   hashtag: "fakeTrendEntity",
   createdAt: new Date(),
   updatedAt: new Date(),

@@ -17,7 +17,6 @@ describe("UpdateTrendController", () => {
     updateTrend = jest.fn();
     updateTrend.mockResolvedValue({
       ...fakeTrendEntity,
-      createdById: fakeUserEntity?._id,
     });
     validationQuery = mock();
     validationQuery.validate.mockResolvedValue([] as never);
@@ -52,14 +51,12 @@ describe("UpdateTrendController", () => {
     expect(result).toEqual(
       ok({
         ...fakeTrendEntity,
-        createdById: fakeUserEntity?._id,
       })
     );
     expect(updateTrend).toHaveBeenCalledWith(
       {
         fields: {
           ...fakeTrendEntity,
-          createdById: fakeUserEntity?._id,
         },
         options: {},
       },
