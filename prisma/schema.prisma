@@ -569,6 +569,9 @@ model users {
   cpf                                           String?        @db.VarChar(255)
   phone                                         String?        @db.VarChar(255)
   slug                                          String?        @db.VarChar(255)
+  bio                                           String?        @db.VarChar(255)
+  cover                                         String?        @db.VarChar(255)
+  link                                          String?        @db.VarChar(255)
   coord                                         Json?
   distance                                      Decimal?       @db.Decimal
   appointmentsTotal                             Int?           @default(0)
@@ -629,8 +632,21 @@ model users {
   other_users_users_createdByIdTousers          users[]        @relation("users_createdByIdTousers")
   users_users_myOwnerIdTousers                  users?         @relation("users_myOwnerIdTousers", fields: [myOwnerId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   other_users_users_myOwnerIdTousers            users[]        @relation("users_myOwnerIdTousers")
+  tweet                                         tweet[]
 
   @@index([createdById], map: "idx_users_createdbyid")
   @@index([myOwnerId], map: "idx_users_myownerid")
   @@index([ownerId], map: "idx_users_ownerid")
+}
+
+model tweet {
+  id          String   @id @default(dbgenerated("uuid_generate_v4()")) @map("_id") @db.Uuid
+  createdById String?  @db.Uuid
+  users       users?   @relation(fields: [usersId], references: [id])
+  usersId     String?  @db.Uuid
+  userSlug    String
+  body        String
+  image       String?
+  answerOf    Int      @default(0)
+  createdAt   DateTime @default(now()) @db.Timestamp(6)
 }
