@@ -2,9 +2,10 @@ import { idSchema } from "@/application/types/id";
 
 const bodyAddTweetlikeJsonSchema = {
   type: "object",
-  required: ["userSlug"],
+  required: ["userSlug", "tweetId"],
   properties: {
     userSlug: { type: "string" },
+    tweetId: { type: "string" },
   },
 };
 const headersJsonSchema = {
@@ -22,6 +23,7 @@ const addTweetlikeResponse = {
     active: { type: "boolean" },
     createdById: { type: "string" },
     createdAt: { type: "string" },
+    tweetId: { type: "string" },
   },
 };
 export const addTweetlikePostSchema = {
@@ -47,6 +49,7 @@ const loadTweetlikeResponse = {
     active: { type: "boolean" },
     createdById: { type: "string" },
     createdAt: { type: "string" },
+    tweetId: { type: "string" },
   },
 };
 export const loadTweetlikeGetSchema = {
@@ -88,12 +91,14 @@ const updateTweetlikeResponse = {
     _id: idSchema,
     userSlug: { type: "string" },
     createdById: { type: "string" },
+    tweetId: { type: "string" },
   },
 };
 const updateTweetlikeBody = {
   type: "object",
   properties: {
     userSlug: { type: "string" },
+    tweetId: { type: "string" },
   },
 };
 export const updateTweetlikeSchema = {
@@ -129,6 +134,7 @@ const loadTweetlikeByPageResponse = {
           active: { type: "boolean" },
           createdById: { type: "string" },
           createdAt: { type: "string" },
+          tweetId: { type: "string" },
         },
       },
     },

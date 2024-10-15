@@ -7,6 +7,7 @@ export const fakeTweetlikeEntity = {
   userSlug: "fakeTweetlikeEntity",
   createdAt: new Date(),
   updatedAt: new Date(),
+  tweetId: "123",
 };
 export const fakeTweetlikePaginated = {
   total: 11,

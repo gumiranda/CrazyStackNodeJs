@@ -1,9 +1,11 @@
 @apiurl = http://127.0.0.1:3333/api
 
 @token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI5YWYxNGJmMS00YmM0LTQzZTEtYTdjOC01NmExOTFlNTE5M2IiLCJpYXQiOjE3MjkwMjEwNDQsImV4cCI6MTczNDIwNTA0NH0.FtbUSy7sS7YjBjYSvesWPYkWiTkWp4MgT6HCApszKK4
-@entityId=1e498528-c1ad-4abe-b461-f7526b89c6de
+@entityId=99c818aa-c2ec-44ee-b6be-c68b99b3566e
 
 @entityType=tweetlike
+
+@tweetId=af0498c4-f7e4-4d31-a546-3293a083707d
 
 ### POST add
 POST {{apiurl}}/{{entityType}}/add  HTTP/1.1
@@ -12,9 +14,7 @@ Authorization: Bearer {{token}}
 
 {
   "userSlug": "devdoido",
-  "body": "Tweet massa",
-  "answerOf":0,
-  "image":"ssdsd"
+  "tweetId": "af0498c4-f7e4-4d31-a546-3293a083707d"
 }
 
 ### GET loadById
@@ -34,7 +34,7 @@ Content-Type: application/json
 Authorization: Bearer {{token}}
 
 {
-  "name": "categoria top"
+  "userSlug": "devlouco"
 }
 
 ### DELETE delete

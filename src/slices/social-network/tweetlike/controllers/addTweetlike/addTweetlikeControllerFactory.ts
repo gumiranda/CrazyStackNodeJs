@@ -5,7 +5,7 @@ import { makeAddTweetlikeFactory } from "@/slices/social-network/tweetlike/useCa
 import { AddTweetlikeController } from "@/slices/social-network/tweetlike/controllers";
 
 export const makeAddTweetlikeController = (): Controller => {
-  const requiredFields = ["userSlug"];
+  const requiredFields = ["userSlug", "tweetId"];
   return makeLogController(
     "addTweetlike",
     new AddTweetlikeController(
