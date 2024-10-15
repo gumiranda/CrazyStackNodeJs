@@ -12,7 +12,7 @@ describe("LoadTrendByPage", () => {
   beforeAll(async () => {
     MockDate.set(new Date());
     loadTrendByPageRepository = mock();
-    fakeQuery = { fields: { name: "123" }, options: {} };
+    fakeQuery = { fields: { hashtag: "123" }, options: {} };
     loadTrendByPageRepository.loadTrendByPage.mockResolvedValue(fakeTrendPaginated);
   });
   beforeEach(() => {

@@ -12,7 +12,7 @@ describe("LoadFollowByPage", () => {
   beforeAll(async () => {
     MockDate.set(new Date());
     loadFollowByPageRepository = mock();
-    fakeQuery = { fields: { name: "123" }, options: {} };
+    fakeQuery = { fields: { user1Slug: "123" }, options: {} };
     loadFollowByPageRepository.loadFollowByPage.mockResolvedValue(fakeFollowPaginated);
   });
   beforeEach(() => {

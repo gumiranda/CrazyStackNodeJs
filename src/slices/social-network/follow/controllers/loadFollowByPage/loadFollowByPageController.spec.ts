@@ -29,7 +29,7 @@ describe("LoadFollowByPageController", () => {
   });
   beforeEach(() => {
     fakeQueryParams = { _id: fakeFollowEntity._id };
-    fakeRestQuery = { page: 1, sortBy: "name", typeSort: "asc" };
+    fakeRestQuery = { page: 1, sortBy: "user1Slug", typeSort: "asc" };
     fakeQuery = { ...fakeQueryParams, ...fakeRestQuery };
     testInstance = new LoadFollowByPageController(validation, loadFollowByPage);
   });

@@ -12,7 +12,7 @@ describe("UpdateTrend", () => {
   beforeAll(async () => {
     MockDate.set(new Date());
     updateTrendRepository = mock();
-    fakeQuery = { fields: { name: "123" }, options: {} };
+    fakeQuery = { fields: { hashtag: "123" }, options: {} };
     updateTrendRepository.updateTrend.mockResolvedValue(fakeTrendEntity);
   });
   beforeEach(() => {

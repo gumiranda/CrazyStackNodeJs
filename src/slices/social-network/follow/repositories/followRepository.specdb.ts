@@ -13,7 +13,7 @@ describe("Follow Mongo Repository", () => {
   let testInstance: FollowRepository;
   let repository: MockProxy<Repository>;
   beforeAll(async () => {
-    fakeQuery = { fields: { name: "123" }, options: {} };
+    fakeQuery = { fields: { user1Slug: "123" }, options: {} };
     MockDate.set(new Date());
     repository = mock<Repository>();
     repository.add.mockResolvedValue(fakeFollowEntity);

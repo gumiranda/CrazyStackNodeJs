@@ -61,8 +61,8 @@ describe("AddTrendController", () => {
     await expect(result).rejects.toThrow(new Error("error"));
   });
   test("should return bad request if i dont pass any required field", async () => {
-    validation.validate.mockReturnValueOnce([new MissingParamError("name")]);
+    validation.validate.mockReturnValueOnce([new MissingParamError("hashtag")]);
     const httpResponse = await testInstance.execute({ body: fakeTrendEntity });
-    expect(httpResponse).toEqual(badRequest([new MissingParamError("name")]));
+    expect(httpResponse).toEqual(badRequest([new MissingParamError("hashtag")]));
   });
 });

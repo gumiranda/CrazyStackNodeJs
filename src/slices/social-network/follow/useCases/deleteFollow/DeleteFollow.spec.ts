@@ -14,7 +14,7 @@ describe("deleteFollow", () => {
   beforeAll(async () => {
     MockDate.set(new Date());
     deleteFollowRepository = mock();
-    fakeQuery = { fields: { name: "123" }, options: {} };
+    fakeQuery = { fields: { user1Slug: "123" }, options: {} };
     deleteFollowRepository.deleteFollow.mockResolvedValue(fakeFollowEntity);
   });
   beforeEach(() => {

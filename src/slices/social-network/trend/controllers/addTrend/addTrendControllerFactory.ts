@@ -5,7 +5,7 @@ import { makeAddTrendFactory } from "@/slices/social-network/trend/useCases";
 import { AddTrendController } from "@/slices/social-network/trend/controllers";
 
 export const makeAddTrendController = (): Controller => {
-  const requiredFields = ["name"];
+  const requiredFields = ["hashtag"];
   return makeLogController(
     "addTrend",
     new AddTrendController(makeValidationComposite(requiredFields), makeAddTrendFactory())

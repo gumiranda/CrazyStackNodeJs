@@ -1,28 +1,25 @@
 export type TrendData = {
-    _id?: string;
-    createdById: string;
-    name: string;
-    active?: boolean;
-    createdAt?: Date;
-    updatedAt?: Date;
+  _id?: string;
+  createdById: string;
+  hashtag: string;
+  createdAt?: Date;
+  updatedAt?: Date;
 };
 
 export type TrendPaginated = {
-    trends: TrendData[];
-    total: number;
+  trends: TrendData[];
+  total: number;
 };
 
 export class TrendEntity {
-    createdById: string;
-    name: string;
-    active?: boolean;
-    createdAt?: Date;
-    updatedAt?: Date;
-    constructor(data: TrendData) {
-        this.createdById = data.createdById;
-        this.name = data.name;
-        this.active = false;
-        this.createdAt = new Date();
-        this.updatedAt = new Date();
-    }
+  createdById: string;
+  hashtag: string;
+  createdAt?: Date;
+  updatedAt?: Date;
+  constructor(data: TrendData) {
+    this.createdById = data.createdById;
+    this.hashtag = data.hashtag;
+    this.createdAt = new Date();
+    this.updatedAt = new Date();
+  }
 }

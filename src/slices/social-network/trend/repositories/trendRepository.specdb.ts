@@ -13,7 +13,7 @@ describe("Trend Mongo Repository", () => {
   let testInstance: TrendRepository;
   let repository: MockProxy<Repository>;
   beforeAll(async () => {
-    fakeQuery = { fields: { name: "123" }, options: {} };
+    fakeQuery = { fields: { hashtag: "123" }, options: {} };
     MockDate.set(new Date());
     repository = mock<Repository>();
     repository.add.mockResolvedValue(fakeTrendEntity);

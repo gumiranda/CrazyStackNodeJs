@@ -29,7 +29,7 @@ describe("LoadTrendByPageController", () => {
   });
   beforeEach(() => {
     fakeQueryParams = { _id: fakeTrendEntity._id };
-    fakeRestQuery = { page: 1, sortBy: "name", typeSort: "asc" };
+    fakeRestQuery = { page: 1, sortBy: "hashtag", typeSort: "asc" };
     fakeQuery = { ...fakeQueryParams, ...fakeRestQuery };
     testInstance = new LoadTrendByPageController(validation, loadTrendByPage);
   });

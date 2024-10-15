@@ -14,7 +14,7 @@ describe("deleteTrend", () => {
   beforeAll(async () => {
     MockDate.set(new Date());
     deleteTrendRepository = mock();
-    fakeQuery = { fields: { name: "123" }, options: {} };
+    fakeQuery = { fields: { hashtag: "123" }, options: {} };
     deleteTrendRepository.deleteTrend.mockResolvedValue(fakeTrendEntity);
   });
   beforeEach(() => {

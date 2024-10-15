@@ -80,13 +80,13 @@ describe("UpdateFollowController", () => {
     await expect(result).rejects.toThrow(new Error("error"));
   });
   test("should return bad request if i dont pass any required field in body", async () => {
-    validationBody.validate.mockReturnValueOnce([new MissingParamError("name")]);
+    validationBody.validate.mockReturnValueOnce([new MissingParamError("user1Slug")]);
     const httpResponse = await testInstance.execute({ body: fakeFollowEntity });
-    expect(httpResponse).toEqual(badRequest([new MissingParamError("name")]));
+    expect(httpResponse).toEqual(badRequest([new MissingParamError("user1Slug")]));
   });
   test("should return bad request if i dont pass any required field in query", async () => {
-    validationQuery.validate.mockReturnValueOnce([new MissingParamError("name")]);
+    validationQuery.validate.mockReturnValueOnce([new MissingParamError("user1Slug")]);
     const httpResponse = await testInstance.execute({ query: fakeFollowEntity });
-    expect(httpResponse).toEqual(badRequest([new MissingParamError("name")]));
+    expect(httpResponse).toEqual(badRequest([new MissingParamError("user1Slug")]));
   });
 });
