@@ -1,13 +1,10 @@
 import { idSchema } from "@/application/types/id";
 
-const bodyAddTweetJsonSchema = {
+const bodyAddTweetlikeJsonSchema = {
   type: "object",
-  required: ["userSlug", "body"],
+  required: ["userSlug"],
   properties: {
     userSlug: { type: "string" },
-    body: { type: "string" },
-    image: { type: "string" },
-    answerOf: { type: "integer", default: 0 },
   },
 };
 const headersJsonSchema = {
@@ -17,111 +14,99 @@ const headersJsonSchema = {
   },
   required: ["authorization"],
 };
-const addTweetResponse = {
+const addTweetlikeResponse = {
   type: "object",
   properties: {
     _id: idSchema,
     userSlug: { type: "string" },
-    body: { type: "string" },
-    image: { type: "string" },
-    answerOf: { type: "integer" },
     active: { type: "boolean" },
     createdById: { type: "string" },
     createdAt: { type: "string" },
   },
 };
-export const addTweetPostSchema = {
+export const addTweetlikePostSchema = {
   schema: {
-    body: bodyAddTweetJsonSchema,
-    response: { 200: addTweetResponse },
+    body: bodyAddTweetlikeJsonSchema,
+    response: { 200: addTweetlikeResponse },
     headers: headersJsonSchema,
   },
 };
 
-const queryStringJsonLoadTweetSchema = {
+const queryStringJsonLoadTweetlikeSchema = {
   type: "object",
   properties: {
     _id: idSchema,
   },
   required: ["_id"],
 };
-const loadTweetResponse = {
+const loadTweetlikeResponse = {
   type: "object",
   properties: {
     _id: idSchema,
     userSlug: { type: "string" },
-    body: { type: "string" },
-    image: { type: "string" },
-    answerOf: { type: "integer" },
     active: { type: "boolean" },
     createdById: { type: "string" },
     createdAt: { type: "string" },
   },
 };
-export const loadTweetGetSchema = {
+export const loadTweetlikeGetSchema = {
   schema: {
     headers: headersJsonSchema,
-    querystring: queryStringJsonLoadTweetSchema,
+    querystring: queryStringJsonLoadTweetlikeSchema,
     response: {
-      200: loadTweetResponse,
+      200: loadTweetlikeResponse,
     },
   },
 };
-const deleteTweetResponse = { type: "boolean" };
-const queryStringJsonDeleteTweetSchema = {
+const deleteTweetlikeResponse = { type: "boolean" };
+const queryStringJsonDeleteTweetlikeSchema = {
   type: "object",
   properties: {
     _id: idSchema,
   },
   required: ["_id"],
 };
-export const deleteTweetSchema = {
+export const deleteTweetlikeSchema = {
   schema: {
     headers: headersJsonSchema,
-    querystring: queryStringJsonDeleteTweetSchema,
+    querystring: queryStringJsonDeleteTweetlikeSchema,
     response: {
-      200: deleteTweetResponse,
+      200: deleteTweetlikeResponse,
     },
   },
 };
-const queryStringJsonUpdateTweetSchema = {
+const queryStringJsonUpdateTweetlikeSchema = {
   type: "object",
   properties: {
     _id: idSchema,
   },
   required: ["_id"],
 };
-const updateTweetResponse = {
+const updateTweetlikeResponse = {
   type: "object",
   properties: {
     _id: idSchema,
     userSlug: { type: "string" },
-    body: { type: "string" },
-    image: { type: "string" },
-    answerOf: { type: "integer" },
     createdById: { type: "string" },
   },
 };
-const updateTweetBody = {
+const updateTweetlikeBody = {
   type: "object",
   properties: {
     userSlug: { type: "string" },
-    body: { type: "string" },
-    image: { type: "string" },
-    answerOf: { type: "integer" },
   },
 };
-export const updateTweetSchema = {
+export const updateTweetlikeSchema = {
   schema: {
     headers: headersJsonSchema,
-    querystring: queryStringJsonUpdateTweetSchema,
-    body: updateTweetBody,
+    querystring: queryStringJsonUpdateTweetlikeSchema,
+    body: updateTweetlikeBody,
     response: {
-      200: updateTweetResponse,
+      200: updateTweetlikeResponse,
     },
   },
 };
-const queryStringJsonLoadTweetByPageSchema = {
+const queryStringJsonLoadTweetlikeByPageSchema = {
   type: "object",
   properties: {
     page: { type: "integer", minimum: 1 },
@@ -130,10 +115,10 @@ const queryStringJsonLoadTweetByPageSchema = {
   },
   required: ["page"],
 };
-const loadTweetByPageResponse = {
+const loadTweetlikeByPageResponse = {
   type: "object",
   properties: {
-    tweets: {
+    tweetlikes: {
       type: "array",
       maxItems: 10,
       items: {
@@ -141,9 +126,6 @@ const loadTweetByPageResponse = {
         properties: {
           _id: idSchema,
           userSlug: { type: "string" },
-          body: { type: "string" },
-          image: { type: "string" },
-          answerOf: { type: "integer" },
           active: { type: "boolean" },
           createdById: { type: "string" },
           createdAt: { type: "string" },
@@ -153,12 +135,12 @@ const loadTweetByPageResponse = {
     total: { type: "integer" },
   },
 };
-export const loadTweetByPageGetSchema = {
+export const loadTweetlikeByPageGetSchema = {
   schema: {
     headers: headersJsonSchema,
-    querystring: queryStringJsonLoadTweetByPageSchema,
+    querystring: queryStringJsonLoadTweetlikeByPageSchema,
     response: {
-      200: loadTweetByPageResponse,
+      200: loadTweetlikeByPageResponse,
     },
   },
 };

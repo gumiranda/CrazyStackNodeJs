@@ -3,6 +3,7 @@ import { auth } from "./auth";
 import { account } from "./account";
 import { category } from "./category";
 // IMPORT MODULE FILES
+import { tweetlike } from "./tweetlike";
 import { tweet } from "./tweet";
 import { photo } from "./photo";
 import { transaction } from "./transaction";
@@ -34,6 +35,7 @@ const routes = [
   account,
   category,
   // ADD FUNCTION IMPORTS
+tweetlike,
 tweet,
   photo,
   transaction,
