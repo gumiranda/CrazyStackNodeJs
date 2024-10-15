@@ -13,7 +13,7 @@ describe("Tweetlike Mongo Repository", () => {
   let testInstance: TweetlikeRepository;
   let repository: MockProxy<Repository>;
   beforeAll(async () => {
-    fakeQuery = { fields: { name: "123" }, options: {} };
+    fakeQuery = { fields: { userSlug: "123" }, options: {} };
     MockDate.set(new Date());
     repository = mock<Repository>();
     repository.add.mockResolvedValue(fakeTweetlikeEntity);

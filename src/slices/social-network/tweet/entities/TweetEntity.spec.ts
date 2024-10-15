@@ -5,7 +5,6 @@ export const fakeTweetEntity = {
   _id: "123",
   createdById: "123",
   userSlug: "fakeTweetEntity",
-  active: true,
   createdAt: new Date(),
   updatedAt: new Date(),
   body: "fakeTweetEntity",
@@ -42,7 +41,6 @@ describe("Tweet", () => {
     expect(obj).toEqual({
       ...fakeTweetEntity,
       _id: undefined,
-      active: false,
       createdAt: new Date(),
       updatedAt: new Date(),
     });

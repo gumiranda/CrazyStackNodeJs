@@ -12,7 +12,7 @@ describe("LoadTweet", () => {
   beforeAll(async () => {
     MockDate.set(new Date());
     loadTweetRepository = mock();
-    fakeQuery = { fields: { name: "123" }, options: {} };
+    fakeQuery = { fields: { userSlug: "123" }, options: {} };
     loadTweetRepository.loadTweet.mockResolvedValue(fakeTweetEntity);
   });
   beforeEach(() => {

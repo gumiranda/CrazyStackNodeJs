@@ -61,8 +61,8 @@ describe("AddTweetlikeController", () => {
     await expect(result).rejects.toThrow(new Error("error"));
   });
   test("should return bad request if i dont pass any required field", async () => {
-    validation.validate.mockReturnValueOnce([new MissingParamError("name")]);
+    validation.validate.mockReturnValueOnce([new MissingParamError("userSlug")]);
     const httpResponse = await testInstance.execute({ body: fakeTweetlikeEntity });
-    expect(httpResponse).toEqual(badRequest([new MissingParamError("name")]));
+    expect(httpResponse).toEqual(badRequest([new MissingParamError("userSlug")]));
   });
 });

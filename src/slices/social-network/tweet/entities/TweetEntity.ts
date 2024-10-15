@@ -5,7 +5,6 @@ export type TweetData = {
   body: string;
   image?: string;
   answerOf: number;
-  active?: boolean;
   createdAt?: Date;
   updatedAt?: Date;
 };
@@ -18,7 +17,6 @@ export type TweetPaginated = {
 export class TweetEntity {
   createdById: string;
   userSlug: string;
-  active?: boolean;
   createdAt?: Date;
   updatedAt?: Date;
   body: string;
@@ -27,7 +25,6 @@ export class TweetEntity {
   constructor(data: TweetData) {
     this.createdById = data.createdById;
     this.userSlug = data.userSlug;
-    this.active = false;
     this.createdAt = new Date();
     this.updatedAt = new Date();
     this.body = data.body;

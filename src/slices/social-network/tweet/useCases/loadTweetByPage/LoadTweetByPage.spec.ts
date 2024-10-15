@@ -12,7 +12,7 @@ describe("LoadTweetByPage", () => {
   beforeAll(async () => {
     MockDate.set(new Date());
     loadTweetByPageRepository = mock();
-    fakeQuery = { fields: { name: "123" }, options: {} };
+    fakeQuery = { fields: { userSlug: "123" }, options: {} };
     loadTweetByPageRepository.loadTweetByPage.mockResolvedValue(fakeTweetPaginated);
   });
   beforeEach(() => {

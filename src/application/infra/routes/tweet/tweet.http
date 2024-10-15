@@ -3,7 +3,7 @@
 @token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI5YWYxNGJmMS00YmM0LTQzZTEtYTdjOC01NmExOTFlNTE5M2IiLCJpYXQiOjE3MjkwMjEwNDQsImV4cCI6MTczNDIwNTA0NH0.FtbUSy7sS7YjBjYSvesWPYkWiTkWp4MgT6HCApszKK4
 @entityId=1e498528-c1ad-4abe-b461-f7526b89c6de
 
-@entityType=category
+@entityType=tweet
 
 ### POST add
 POST {{apiurl}}/{{entityType}}/add  HTTP/1.1
@@ -11,7 +11,10 @@ Content-Type: application/json
 Authorization: Bearer {{token}}
 
 {
-  "name": "Categoria legal"
+  "userSlug": "devdoido",
+  "body": "Tweet massa",
+  "answerOf":0,
+  "image":"ssdsd"
 }
 
 ### GET loadById

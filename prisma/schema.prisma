@@ -650,23 +650,26 @@ model tweet {
   answerOf    Int         @default(0)
   createdAt   DateTime    @default(now()) @db.Timestamp(6)
   likes       tweetlike[]
+  updatedAt   DateTime?   @default(now()) @db.Timestamp(6)
 }
 
 model tweetlike {
-  id          String   @id @default(dbgenerated("uuid_generate_v4()")) @map("_id") @db.Uuid
-  createdById String?  @db.Uuid
-  tweetId     String?  @db.Uuid
+  id          String    @id @default(dbgenerated("uuid_generate_v4()")) @map("_id") @db.Uuid
+  createdById String?   @db.Uuid
+  tweetId     String?   @db.Uuid
   userSlug    String
-  createdAt   DateTime @default(now()) @db.Timestamp(6)
-  user        users?   @relation(fields: [createdById], references: [id])
-  tweet       tweet?   @relation(fields: [tweetId], references: [id])
+  createdAt   DateTime  @default(now()) @db.Timestamp(6)
+  user        users?    @relation(fields: [createdById], references: [id])
+  tweet       tweet?    @relation(fields: [tweetId], references: [id])
+  updatedAt   DateTime? @default(now()) @db.Timestamp(6)
 }
 
 model follow {
-  id        String   @id @default(dbgenerated("uuid_generate_v4()")) @map("_id") @db.Uuid
+  id        String    @id @default(dbgenerated("uuid_generate_v4()")) @map("_id") @db.Uuid
   user1Slug String
   user2Slug String
-  createdAt DateTime @default(now()) @db.Timestamp(6)
+  createdAt DateTime  @default(now()) @db.Timestamp(6)
+  updatedAt DateTime? @default(now()) @db.Timestamp(6)
 }
 
 model trend {

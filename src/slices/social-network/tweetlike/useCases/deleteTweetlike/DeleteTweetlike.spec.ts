@@ -14,7 +14,7 @@ describe("deleteTweetlike", () => {
   beforeAll(async () => {
     MockDate.set(new Date());
     deleteTweetlikeRepository = mock();
-    fakeQuery = { fields: { name: "123" }, options: {} };
+    fakeQuery = { fields: { userSlug: "123" }, options: {} };
     deleteTweetlikeRepository.deleteTweetlike.mockResolvedValue(fakeTweetlikeEntity);
   });
   beforeEach(() => {

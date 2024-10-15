@@ -25,7 +25,6 @@ const addTweetResponse = {
     body: { type: "string" },
     image: { type: "string" },
     answerOf: { type: "integer" },
-    active: { type: "boolean" },
     createdById: { type: "string" },
     createdAt: { type: "string" },
   },
@@ -53,7 +52,6 @@ const loadTweetResponse = {
     body: { type: "string" },
     image: { type: "string" },
     answerOf: { type: "integer" },
-    active: { type: "boolean" },
     createdById: { type: "string" },
     createdAt: { type: "string" },
   },
@@ -105,7 +103,6 @@ const updateTweetResponse = {
 const updateTweetBody = {
   type: "object",
   properties: {
-    userSlug: { type: "string" },
     body: { type: "string" },
     image: { type: "string" },
     answerOf: { type: "integer" },
@@ -144,7 +141,6 @@ const loadTweetByPageResponse = {
           body: { type: "string" },
           image: { type: "string" },
           answerOf: { type: "integer" },
-          active: { type: "boolean" },
           createdById: { type: "string" },
           createdAt: { type: "string" },
         },
