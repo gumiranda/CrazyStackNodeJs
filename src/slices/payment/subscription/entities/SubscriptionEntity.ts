@@ -11,7 +11,7 @@ export type SubscriptionData = {
   value: string;
   comment: string;
   additionalInfo: any[];
-  dayGenerateCharge: string;
+  dayGenerateCharge: any;
   globalID: string;
   gatewayDetails?: any;
   priceId?: string;
@@ -33,7 +33,7 @@ export class SubscriptionEntity {
   value: string;
   comment: string;
   additionalInfo: any[];
-  dayGenerateCharge: string;
+  dayGenerateCharge: any;
   globalID: string;
   gatewayDetails?: any;
   priceId?: string;

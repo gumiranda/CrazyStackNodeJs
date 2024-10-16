@@ -1,5 +1,5 @@
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
-
+CREATE EXTENSION IF NOT EXISTS postgis;
 -- CreateTable
 CREATE TABLE "account" (
     "_id" UUID NOT NULL DEFAULT uuid_generate_v4(),
@@ -256,15 +256,6 @@ CREATE TABLE "photo" (
 );
 
 -- CreateTable
-CREATE TABLE "playing_with_neon" (
-    "id" SERIAL NOT NULL,
-    "name" TEXT NOT NULL,
-    "value" REAL,
-
-    CONSTRAINT "playing_with_neon_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
 CREATE TABLE "product" (
     "_id" UUID NOT NULL DEFAULT uuid_generate_v4(),
     "createdById" UUID NOT NULL,
@@ -454,7 +445,7 @@ CREATE TABLE "subscription" (
     "value" DECIMAL,
     "comment" TEXT,
     "additionalInfo" JSONB,
-    "dayGenerateCharge" VARCHAR(10),
+    "dayGenerateCharge" INTEGER,
     "globalID" VARCHAR(255),
     "gatewayDetails" JSONB,
     "priceId" UUID,
@@ -497,6 +488,10 @@ CREATE TABLE "users" (
     "photoUrl" VARCHAR(255),
     "cpf" VARCHAR(255),
     "phone" VARCHAR(255),
+    "slug" VARCHAR(255),
+    "bio" VARCHAR(255),
+    "cover" VARCHAR(255),
+    "link" VARCHAR(255),
     "coord" JSONB,
     "distance" DECIMAL,
     "appointmentsTotal" INTEGER DEFAULT 0,
@@ -691,6 +686,9 @@ CREATE INDEX "idx_transaction_createdbyid" ON "transaction"("createdById");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "users_email_key" ON "users"("email");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "users_slug_key" ON "users"("slug");
 
 -- CreateIndex
 CREATE INDEX "idx_users_createdbyid" ON "users"("createdById");

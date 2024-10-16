@@ -4,14 +4,7 @@ const bodyAddRatingJsonSchema = {
   type: "object",
   required: ["ratingType", "ratings"],
   properties: {
-    ratings: {
-      type: "array",
-      maxItems: 10,
-      items: {
-        type: "object",
-        properties: {},
-      },
-    },
+    ratings: {},
     ratingType: { type: "string" },
   },
 };
@@ -110,14 +103,7 @@ const updateRatingResponse = {
   type: "object",
   properties: {
     _id: idSchema,
-    ratings: {
-      type: "array",
-      maxItems: 10,
-      items: {
-        type: "object",
-        properties: {},
-      },
-    },
+    ratings: {},
     ratingType: { type: "string" },
     createdById: { type: "string" },
   },
@@ -125,14 +111,7 @@ const updateRatingResponse = {
 const updateRatingBody = {
   type: "object",
   properties: {
-    ratings: {
-      type: "array",
-      maxItems: 10,
-      items: {
-        type: "object",
-        properties: {},
-      },
-    },
+    ratings: {},
     ratingType: { type: "string" },
   },
 };

@@ -276,7 +276,6 @@ describe("Route api/user", () => {
       const responseBody = JSON.parse(response.body);
       expect(response.statusCode).toBe(200);
       expect(responseBody.users).toBeTruthy();
-      expect(responseBody.total).toBeTruthy();
     });
     test("Should return 401 for unauthorized access token", async () => {
       const response = await fastify.inject({

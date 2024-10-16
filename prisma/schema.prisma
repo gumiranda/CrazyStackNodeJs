@@ -304,12 +304,6 @@ model photo {
   @@index([createdById], map: "idx_photo_createdbyid")
 }
 
-model playing_with_neon {
-  id    Int    @id @default(autoincrement())
-  name  String
-  value Float? @db.Real
-}
-
 model product {
   id          String    @id @default(dbgenerated("uuid_generate_v4()")) @map("_id") @db.Uuid
   createdById String    @db.Uuid
@@ -520,15 +514,6 @@ model service {
   @@index([createdById], map: "idx_service_createdbyid")
 }
 
-/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
-model spatial_ref_sys {
-  srid      Int     @id
-  auth_name String? @db.VarChar(256)
-  auth_srid Int?
-  srtext    String? @db.VarChar(2048)
-  proj4text String? @db.VarChar(2048)
-}
-
 model subscription {
   id                  String    @id @default(dbgenerated("uuid_generate_v4()")) @map("_id") @db.Uuid
   createdById         String    @db.Uuid
@@ -540,7 +525,7 @@ model subscription {
   value               Decimal?  @db.Decimal
   comment             String?
   additionalInfo      Json?
-  dayGenerateCharge   String?   @db.VarChar(10)
+  dayGenerateCharge   Int?
   globalID            String?   @db.VarChar(255)
   gatewayDetails      Json?
   priceId             String?   @db.Uuid
@@ -583,7 +568,10 @@ model users {
   photoUrl                                      String?        @db.VarChar(255)
   cpf                                           String?        @db.VarChar(255)
   phone                                         String?        @db.VarChar(255)
-  slug                                          String?        @db.VarChar(255)
+  slug                                          String?        @unique @db.VarChar(255)
+  bio                                           String?        @db.VarChar(255)
+  cover                                         String?        @db.VarChar(255)
+  link                                          String?        @db.VarChar(255)
   coord                                         Json?
   distance                                      Decimal?       @db.Decimal
   appointmentsTotal                             Int?           @default(0)
@@ -639,11 +627,11 @@ model users {
   service                                       service[]
   subscription                                  subscription[]
   transaction                                   transaction[]
-  owner_users_ownerIdToowner                    owner?         @relation("users_ownerIdToowner", fields: [ownerId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_ownerid")
-  users_users_createdByIdTousers                users?         @relation("users_createdByIdTousers", fields: [createdById], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  other_users_users_createdByIdTousers          users[]        @relation("users_createdByIdTousers")
-  users_users_myOwnerIdTousers                  users?         @relation("users_myOwnerIdTousers", fields: [myOwnerId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  other_users_users_myOwnerIdTousers            users[]        @relation("users_myOwnerIdTousers")
+  owners                                        owner?         @relation("users_ownerIdToowner", fields: [ownerId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_ownerid")
+  professional                                  users?         @relation("users_createdByIdTousers", fields: [createdById], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  professionals                                 users[]        @relation("users_createdByIdTousers")
+  myOwner                                       users?         @relation("users_myOwnerIdTousers", fields: [myOwnerId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  myOwners                                      users[]        @relation("users_myOwnerIdTousers")
 
   @@index([createdById], map: "idx_users_createdbyid")
   @@index([myOwnerId], map: "idx_users_myownerid")

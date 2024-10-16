@@ -43,6 +43,9 @@ export type UserData = {
   serviceIds?: string[];
   serviceOptions?: any[];
   globalID?: string;
+  bio?: string;
+  cover?: string;
+  link?: string;
 };
 
 export type UserPaginated = {
@@ -93,6 +96,9 @@ export class UserEntity {
   globalID?: string;
   customerID?: string;
   slug?: string;
+  bio?: string;
+  cover?: string;
+  link?: string;
   constructor(data: UserData) {
     this.createdById = data.createdById;
     this.name = data.name;
@@ -136,5 +142,8 @@ export class UserEntity {
     this.globalID = data.globalID;
     this.customerID = data.customerID;
     this.slug = data.slug;
+    this.bio = data.bio;
+    this.cover = data.cover;
+    this.link = data.link;
   }
 }
