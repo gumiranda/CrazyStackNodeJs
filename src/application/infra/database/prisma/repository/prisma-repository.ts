@@ -3,12 +3,15 @@ import { prisma } from "../prisma";
 
 export class PrismaRepository extends Repository {
   private tableName: any;
+
   constructor(tableName: string) {
     super();
-    this.tableName = (prisma as any)[tableName];
+    this.tableName = (prisma as any)[tableName]; // Conecta a tabela do Prisma
   }
+
+  // Função auxiliar para mapear _id para id nas queries
   private mapId(query: any) {
-    if (query?._id) {
+    if (query && query._id) {
       query.id = query._id;
       delete query._id;
     }
@@ -20,6 +23,7 @@ export class PrismaRepository extends Repository {
       return acc;
     }, {});
   }
+  // Função auxiliar para mapear id de volta para _id nos retornos
   private mapReturnId(record: any) {
     if (record && record.id) {
       record._id = record.id;
@@ -27,22 +31,41 @@ export class PrismaRepository extends Repository {
     }
     return record;
   }
+
+  // Função auxiliar para mapear id de volta para _id em listas de retornos
   private mapReturnIds(records: any[]) {
     return records?.map?.((record) => this.mapReturnId(record));
   }
+
   async add(data: any): Promise<any> {
-    const inserted = await this.insertOne({ data });
+    const inserted = (await this.insertOne(data)) || {};
     return this.mapReturnId(inserted);
   }
+
   async insertOne(data: any): Promise<any> {
-    const inserted = await this.tableName.create({ data });
+    const inserted = await this.tableName.create({
+      data,
+    });
     return inserted;
   }
-  async update(query: any, data: any): Promise<any> {
+
+  async incrementOne(query: any, data: any): Promise<any> {
     query = this.mapId(query);
-    const updated = await this.tableName.updateMany({ where: query, data });
-    return this.mapReturnIds(updated);
+    const incremented = await this.tableName.update({
+      where: query,
+      data: {
+        ...Object.keys(data).reduce(
+          (acc: { [key: string]: any }, key) => {
+            acc[key] = { increment: data[key] };
+            return acc;
+          },
+          {} as { [key: string]: any }
+        ),
+      },
+    });
+    return this.mapReturnId(incremented);
   }
+
   async updateOne(_id: any, data: any): Promise<any> {
     const query = this.mapId({ _id });
     const updated = await this.tableName.update({
@@ -51,6 +74,16 @@ export class PrismaRepository extends Repository {
     });
     return this.mapReturnId(updated);
   }
+
+  async update(query: any, data: any): Promise<any> {
+    query = this.mapId(query);
+    const updated = await this.tableName.updateMany({
+      where: query,
+      data,
+    });
+    return this.mapReturnIds(updated);
+  }
+
   async upsertAndPush(query: any, data: any, pushData: any): Promise<any> {
     query = this.mapId(query);
     const keyToPush = Object.keys(pushData)[0];
@@ -70,22 +103,7 @@ export class PrismaRepository extends Repository {
     });
     return this.mapReturnId(result);
   }
-  async incrementOne(query: any, data: any): Promise<any> {
-    query = this.mapId(query);
-    const incremented = await this.tableName.update({
-      where: query,
-      data: {
-        ...Object.keys(data).reduce(
-          (acc: { [key: string]: any }, key) => {
-            acc[key] = { increment: data[key] };
-            return acc;
-          },
-          {} as { [key: string]: any }
-        ),
-      },
-    });
-    return this.mapReturnId(incremented);
-  }
+
   async increment(query: any, data: any): Promise<any> {
     query = this.mapId(query);
     const incremented = await this.tableName.updateMany({
@@ -100,9 +118,9 @@ export class PrismaRepository extends Repository {
         ),
       },
     });
-    //return this.mapReturnId(incremented);
     return incremented.count;
   }
+
   async deleteMany(query: any): Promise<any> {
     query = this.mapId(query);
     const deleted = await this.tableName.deleteMany({
@@ -114,6 +132,7 @@ export class PrismaRepository extends Repository {
   async deleteOne(fields: any): Promise<any> {
     return this.deleteMany(fields);
   }
+
   async getOne(query: any): Promise<any> {
     query = this.mapId(query);
     const record = await this.tableName.findFirst({
@@ -126,28 +145,37 @@ export class PrismaRepository extends Repository {
     const records = await this.tableName.findMany();
     return this.mapReturnIds(records);
   }
+
   async getPaginate(
-    page: number,
+    page = 0,
     fields: any,
     sort: any,
-    limit: number,
-    projection: any
-  ): Promise<any> {
+    limit = 10,
+    projection: any = {}
+  ): Promise<any[]> {
     const skip = (page - 1) * limit;
     fields = this.mapId(fields);
     const query = { where: fields, orderBy: this.mapSortOrder(sort), take: limit, skip };
     const queryFinal =
-      Object.keys(projection).length === 0 ? query : { ...query, select: projection };
+      Object.keys(projection).length === 0
+        ? query
+        : {
+            ...query,
+            select: projection,
+          };
+
     const records = await this.tableName.findMany(queryFinal);
     return this.mapReturnIds(records);
   }
-  async getCount(query: any): Promise<any> {
+
+  async getCount(query: any): Promise<number> {
     query = this.mapId(query);
     const count = await this.tableName.count({
       where: query,
     });
     return count;
   }
+
   async aggregate(query: any): Promise<any> {
     query = this.mapId(query);
     const result = await this.tableName.aggregate(query);
