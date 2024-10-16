@@ -274,7 +274,6 @@ describe("Route api/user", () => {
         headers: { authorization: `Bearer ${token}` },
       });
       const responseBody = JSON.parse(response.body);
-      console.log(responseBody);
       expect(response.statusCode).toBe(200);
       expect(responseBody.users).toBeTruthy();
     });

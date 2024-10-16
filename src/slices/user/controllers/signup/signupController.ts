@@ -17,7 +17,6 @@ import { EmailInUseError, InvalidParamError } from "@/application/errors";
 import emailValidator from "deep-email-validator";
 import { sendMessage } from "@/application/infra/messaging";
 import slug from "slug";
-
 export class SignupController extends Controller {
   constructor(
     private readonly validation: Validation,
@@ -44,7 +43,15 @@ export class SignupController extends Controller {
       smtp = null,
       mx = null,
     } = validators || {};
-
+    if (
+      !regex?.valid ||
+      !typo?.valid ||
+      !disposable?.valid ||
+      (!smtp?.valid && smtp?.reason !== "Timeout") ||
+      !mx?.valid
+    ) {
+      return badRequest([new InvalidParamError("email")]);
+    }
     // }
     const userValidation = [
       this.loadUser({
@@ -83,7 +90,7 @@ export class SignupController extends Controller {
         options: { projection: { password: 0 } },
       });
       if (hasSlug) {
-        const slugSuffix = Math.floor(Math.random() * 999999).toString();
+        const slugSuffix = Math.floor(Math.random() * 9999999).toString();
         userSlug = slug(`${httpRequest?.body?.name} ${slugSuffix}`);
       } else {
         genSlug = false;
