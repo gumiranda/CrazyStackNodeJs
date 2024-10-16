@@ -1,4 +1,5 @@
 import { idSchema } from "@/application/types/id";
+import { ownerFields } from "../owner/ownerSchema";
 
 const bodyAddUserJsonSchema = {
   type: "object",
@@ -73,6 +74,8 @@ const loadUserResponse = {
     payDay: { type: "string" },
     photo: {},
     createdAt: { type: "string" },
+    owner: { type: "object", properties: ownerFields },
+    ...ownerFields,
   },
 };
 export const loadUserGetSchema = {

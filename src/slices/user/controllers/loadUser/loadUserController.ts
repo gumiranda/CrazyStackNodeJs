@@ -23,7 +23,9 @@ export class LoadUserController extends Controller {
     }
     const userLoaded = await this.loadUser({
       fields: httpRequest?.query,
-      options: {},
+      options: {
+        include: { owner: true },
+      },
     });
     return ok(userLoaded);
   }

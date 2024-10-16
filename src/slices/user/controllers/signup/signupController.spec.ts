@@ -115,7 +115,7 @@ describe("SignUpController", () => {
   test("should call loadUser with correct params", async () => {
     await testInstance.execute({ body: fakeUserEntity });
 
-    expect(loadUser).toHaveBeenCalledTimes(3);
+    expect(loadUser).toHaveBeenCalledTimes(4);
   });
   test("should call auth of authentication with correct params", async () => {
     await testInstance.execute({ body: fakeUserEntity });

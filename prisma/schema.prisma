@@ -627,7 +627,7 @@ model users {
   service                                       service[]
   subscription                                  subscription[]
   transaction                                   transaction[]
-  owners                                        owner?         @relation("users_ownerIdToowner", fields: [ownerId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_ownerid")
+  owner                                         owner?         @relation("users_ownerIdToowner", fields: [ownerId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_ownerid")
   professional                                  users?         @relation("users_createdByIdTousers", fields: [createdById], references: [id], onDelete: NoAction, onUpdate: NoAction)
   professionals                                 users[]        @relation("users_createdByIdTousers")
   myOwner                                       users?         @relation("users_myOwnerIdTousers", fields: [myOwnerId], references: [id], onDelete: NoAction, onUpdate: NoAction)
