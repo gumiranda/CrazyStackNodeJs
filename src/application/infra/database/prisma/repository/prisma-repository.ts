@@ -134,45 +134,46 @@ export class PrismaRepository extends Repository {
   async deleteOne(fields: any): Promise<any> {
     return this.deleteMany(fields);
   }
-
+  exclude<T extends Record<string, any>, Key extends keyof T>(
+    object: T,
+    keys: Key[]
+  ): Omit<T, Key> {
+    return Object.fromEntries(
+      Object.entries(object).filter(([key]) => !keys.includes(key as Key))
+    ) as Omit<T, Key>;
+  }
   async getOne(query: any, options: any): Promise<any> {
     query = this.mapId(query);
     query = {
       where: query,
     };
 
-    // Lógica de projeção (select)
     if (options?.projection) {
-      const projection = options.projection;
-      const excludedFields = Object.keys(projection).filter(
-        (key) => projection[key] === 0
+      // Verifica se existem campos a serem excluídos (valores 0)
+      const includedFields = Object.keys(options?.projection).filter(
+        (key) => options?.projection[key] === 1
       );
 
-      if (excludedFields.length > 0) {
+      if (includedFields.length > 0) {
         query.select = {};
-        Object.keys(this.tableName._scalarFields).forEach((field) => {
-          if (!excludedFields.includes(field)) {
-            query.select[field] = true;
-          }
-        });
-      } else {
-        query.select = {};
-        Object.keys(projection).forEach((key) => {
-          if (projection[key] === 1) {
-            query.select[key] = true;
-          }
+        Object.keys(options?.projection).forEach((key) => {
+          query.select[key] = options?.projection[key] === 1; // Incluir campo se for 1
         });
       }
     }
-
-    // Lógica de inclusão (include) no Prisma
     if (options?.include) {
-      query.include = options.include; // Prisma cuida automaticamente do include
+      query.include = options.include;
     }
-
     const record = await this.tableName.findFirst(query);
+    if (options?.projection && record?.id) {
+      const excludedFields = Object.keys(options?.projection).filter(
+        (key) => options?.projection[key] === 0
+      );
+      return this.mapReturnId(this.exclude(record, excludedFields));
+    }
     return this.mapReturnId(record);
   }
+
   async getAll(): Promise<any[]> {
     const records = await this.tableName.findMany();
     return this.mapReturnIds(records);

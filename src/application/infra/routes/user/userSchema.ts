@@ -74,6 +74,7 @@ const loadUserResponse = {
     payDay: { type: "string" },
     photo: {},
     createdAt: { type: "string" },
+    owner: { type: "object", properties: ownerFields },
     ...ownerFields,
   },
 };
