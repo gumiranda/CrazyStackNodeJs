@@ -54,6 +54,11 @@ const loadTweetResponse = {
     answerOf: { type: "integer" },
     createdById: { type: "string" },
     createdAt: { type: "string" },
+    usersId: {},
+    tweetlikeId: {},
+    slug: { type: "string" },
+    photoId: {},
+    name: { type: "string" },
   },
 };
 export const loadTweetGetSchema = {

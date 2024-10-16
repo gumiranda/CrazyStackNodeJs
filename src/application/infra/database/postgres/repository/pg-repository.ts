@@ -158,8 +158,10 @@ export class PostgresRepository extends Repository {
     `,
       [tableName]
     );
-
-    return result.rows.map((row: any) => row.column_name);
+    if (result?.rows === 0) {
+      return [];
+    }
+    return result?.rows?.map?.((row: any) => row.column_name);
   }
   async getOne(query: any, options: any): Promise<any> {
     const client = await connect();
@@ -208,14 +210,17 @@ export class PostgresRepository extends Repository {
             const relatedTable = relation;
 
             // Adiciona o JOIN na consulta
-            joinClause += ` LEFT JOIN "${relatedTable}" ON "${this.tableName}"."${relationField}" = "${relatedTable}"."_id"`;
 
             // Inclui os campos da tabela relacionada no SELECT
             const relatedFields = await this.getTableFields(relatedTable, client);
-            selectClause += `, ${relatedFields
-              .filter((field) => field !== "_id")
-              .map((field) => `"${relatedTable}"."${field}"`)
-              .join(", ")}`;
+            if (relatedFields.length > 0) {
+              joinClause += ` LEFT JOIN "${relatedTable}" ON "${this.tableName}"."${relationField}" = "${relatedTable}"."_id"`;
+
+              selectClause += `, ${relatedFields
+                .filter((field) => field !== "_id")
+                .map((field) => `"${relatedTable}"."${field}"`)
+                .join(", ")}`;
+            }
           }
         }
       }
