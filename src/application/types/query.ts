@@ -10,5 +10,6 @@ export type QueryOptions = {
   limit?: number;
   userLoggedId?: string;
   indexToCreate?: any;
+  include?: any;
   limitPerPage?: number;
 };

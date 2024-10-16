@@ -9,7 +9,7 @@ export class PostgresRepository extends Repository {
   }
   buildWhereClause(query: any): { whereClause: string; values: any[] } {
     const whereClause = Object.keys(query)
-      .map((key, idx) => `"${key}" = $${idx + 1}`)
+      .map((key, idx) => `"${this.tableName}"."${key}" = $${idx + 1}`)
       .join(" AND ");
     const values = Object.values(query);
     return { whereClause, values };
@@ -148,12 +148,80 @@ export class PostgresRepository extends Repository {
   async deleteOne(fields: any): Promise<any> {
     return this.deleteMany(fields);
   }
-  async getOne(query: any): Promise<any> {
+  async getTableFields(tableName: string, client: any): Promise<string[]> {
+    // Consulta para obter os nomes das colunas da tabela
+    const result = await client.query(
+      `
+      SELECT column_name
+      FROM information_schema.columns
+      WHERE table_name = $1
+    `,
+      [tableName]
+    );
+
+    return result.rows.map((row: any) => row.column_name);
+  }
+  async getOne(query: any, options: any): Promise<any> {
     const client = await connect();
     try {
       const { whereClause, values } = this.buildWhereClause(query);
 
-      const queryText = `SELECT * FROM "${this.tableName}" WHERE ${whereClause} LIMIT 1`;
+      // Padrão para selecionar todos os campos da tabela principal
+      let selectClause = `"${this.tableName}".*`;
+      let joinClause = ""; // Aqui acumulamos os JOINs dinâmicos
+
+      if (options?.projection) {
+        const projection = options.projection;
+
+        // Identifica campos a serem excluídos (0)
+        const excludedFields = Object.keys(projection).filter(
+          (key) => projection[key] === 0
+        );
+        const includedFields = Object.keys(projection).filter(
+          (key) => projection[key] === 1
+        );
+
+        if (excludedFields.length > 0) {
+          const allFields = await this.getTableFields(this.tableName, client);
+          const selectedFields = allFields.filter(
+            (field) => !excludedFields.includes(field)
+          );
+          selectClause = selectedFields
+            .map((field) => `"${this.tableName}"."${field}"`)
+            .join(", ");
+        } else if (includedFields.length > 0) {
+          selectClause = includedFields
+            .map((field) => `"${this.tableName}".${field}`)
+            .join(", ");
+        }
+      }
+
+      // Implementa o `include` usando JOINs dinâmicos no PostgreSQL
+      if (options?.include) {
+        const includes = options.include;
+
+        // Itera sobre os relacionamentos especificados em `include`
+        for (const relation of Object.keys(includes)) {
+          if (includes[relation]) {
+            // Assumimos que a relação segue o padrão FK nomeado com a tabela + "Id"
+            const relationField = `${relation}Id`;
+            const relatedTable = relation;
+
+            // Adiciona o JOIN na consulta
+            joinClause += ` LEFT JOIN "${relatedTable}" ON "${this.tableName}"."${relationField}" = "${relatedTable}"."_id"`;
+
+            // Inclui os campos da tabela relacionada no SELECT
+            const relatedFields = await this.getTableFields(relatedTable, client);
+            selectClause += `, ${relatedFields
+              .filter((field) => field !== "_id")
+              .map((field) => `"${relatedTable}"."${field}"`)
+              .join(", ")}`;
+          }
+        }
+      }
+
+      // Monta a query com SELECT e JOINs dinâmicos
+      const queryText = `SELECT ${selectClause} FROM "${this.tableName}" ${joinClause} WHERE ${whereClause} LIMIT 1`;
       const result = await client.query(queryText, values);
 
       return result.rows.length ? result.rows[0] : null;

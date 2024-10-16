@@ -135,14 +135,44 @@ export class PrismaRepository extends Repository {
     return this.deleteMany(fields);
   }
 
-  async getOne(query: any): Promise<any> {
+  async getOne(query: any, options: any): Promise<any> {
     query = this.mapId(query);
-    const record = await this.tableName.findFirst({
+    query = {
       where: query,
-    });
+    };
+
+    // Lógica de projeção (select)
+    if (options?.projection) {
+      const projection = options.projection;
+      const excludedFields = Object.keys(projection).filter(
+        (key) => projection[key] === 0
+      );
+
+      if (excludedFields.length > 0) {
+        query.select = {};
+        Object.keys(this.tableName._scalarFields).forEach((field) => {
+          if (!excludedFields.includes(field)) {
+            query.select[field] = true;
+          }
+        });
+      } else {
+        query.select = {};
+        Object.keys(projection).forEach((key) => {
+          if (projection[key] === 1) {
+            query.select[key] = true;
+          }
+        });
+      }
+    }
+
+    // Lógica de inclusão (include) no Prisma
+    if (options?.include) {
+      query.include = options.include; // Prisma cuida automaticamente do include
+    }
+
+    const record = await this.tableName.findFirst(query);
     return this.mapReturnId(record);
   }
-
   async getAll(): Promise<any[]> {
     const records = await this.tableName.findMany();
     return this.mapReturnIds(records);
