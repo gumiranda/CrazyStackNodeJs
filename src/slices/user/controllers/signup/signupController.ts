@@ -16,7 +16,7 @@ import { AddAccount } from "@/slices/account/useCases";
 import { EmailInUseError, InvalidParamError } from "@/application/errors";
 import emailValidator from "deep-email-validator";
 import { sendMessage } from "@/application/infra/messaging";
-
+import slug from "slug";
 export class SignupController extends Controller {
   constructor(
     private readonly validation: Validation,
@@ -82,7 +82,21 @@ export class SignupController extends Controller {
       }
     }
     delete httpRequest?.body?.passwordConfirmation;
-    const userCreated = await this.addUser(httpRequest?.body);
+    let genSlug = true;
+    let userSlug = slug(httpRequest?.body?.name);
+    while (genSlug) {
+      const hasSlug = await this.loadUser({
+        fields: { slug: userSlug },
+        options: { projection: { password: 0 } },
+      });
+      if (hasSlug) {
+        const slugSuffix = Math.floor(Math.random() * 9999999).toString();
+        userSlug = slug(`${httpRequest?.body?.name} ${slugSuffix}`);
+      } else {
+        genSlug = false;
+      }
+    }
+    const userCreated = await this.addUser({ ...httpRequest?.body, slug: userSlug });
     const { accessToken = null, refreshToken = null } =
       (await this.authentication.auth(email, password)) || {};
     if (!accessToken || !refreshToken) {

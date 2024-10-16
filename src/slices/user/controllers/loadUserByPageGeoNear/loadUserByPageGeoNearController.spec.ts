@@ -24,8 +24,8 @@ describe("LoadUserByPageGeoNearController", () => {
     MockDate.reset();
   });
   beforeEach(() => {
-    fakeQueryParams = { _id: fakeUserEntity._id };
-    fakeRestQuery = { page: 1, sortBy: "name", typeSort: "asc" };
+    fakeQueryParams = { _id: fakeUserEntity._id, lat: undefined, lng: undefined };
+    fakeRestQuery = { page: 1, sortBy: "name", typeSort: "asc", limitPerPage: 10 };
     fakeQuery = { ...fakeQueryParams, ...fakeRestQuery };
     testInstance = new LoadUserByPageGeoNearController(validation, loadUserByPageGeoNear);
   });
@@ -46,6 +46,7 @@ describe("LoadUserByPageGeoNearController", () => {
     expect(loadUserByPageGeoNear).toHaveBeenCalledWith({
       fields: fakeQueryParams,
       options: {
+        limitPerPage: fakeRestQuery.limitPerPage,
         sort: { [fakeRestQuery?.sortBy]: 1 },
         page: fakeRestQuery?.page,
         userLoggedId: fakeUserEntity?._id,
@@ -62,6 +63,7 @@ describe("LoadUserByPageGeoNearController", () => {
     expect(loadUserByPageGeoNear).toHaveBeenCalledWith({
       fields: fakeQueryParams,
       options: {
+        limitPerPage: fakeRestQuery.limitPerPage,
         sort: { [fakeRestQuery?.sortBy]: -1 },
         page: fakeRestQuery?.page,
         userLoggedId: fakeUserEntity?._id,

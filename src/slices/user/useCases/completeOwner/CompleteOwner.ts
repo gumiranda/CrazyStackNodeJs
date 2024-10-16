@@ -136,7 +136,7 @@ export const completeOwner: CompleteOwnerSignature =
       value: whiteLabel.valueMonth,
       comment: "",
       additionalInfo: [],
-      dayGenerateCharge: String(new Date().getDate()),
+      dayGenerateCharge: Number(new Date().getDate()),
       globalID: uuidv4(),
     });
     const professional = new UserEntity({

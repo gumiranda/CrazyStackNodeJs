@@ -28,7 +28,10 @@ describe("LoadPhotoByPageController", () => {
     MockDate.reset();
   });
   beforeEach(() => {
-    fakeQueryParams = { _id: fakePhotoEntity._id };
+    fakeQueryParams = {
+      _id: fakePhotoEntity._id,
+      createdById: fakePhotoEntity.createdById,
+    };
     fakeRestQuery = { page: 1, sortBy: "name", typeSort: "asc" };
     fakeQuery = { ...fakeQueryParams, ...fakeRestQuery };
     testInstance = new LoadPhotoByPageController(validation, loadPhotoByPage);
@@ -61,7 +64,10 @@ describe("LoadPhotoByPageController", () => {
     expect(result).toEqual(ok(fakePhotoPaginated));
     expect(loadPhotoByPage).toHaveBeenCalledWith({
       fields: fakeQueryParams,
-      options: { sort: { [fakeRestQuery?.sortBy]: -1 }, page: fakeRestQuery?.page },
+      options: {
+        sort: { [fakeRestQuery?.sortBy]: -1 },
+        page: fakeRestQuery?.page,
+      },
     });
     expect(loadPhotoByPage).toHaveBeenCalledTimes(1);
   });
