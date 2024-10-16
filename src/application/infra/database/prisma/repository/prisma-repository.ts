@@ -3,10 +3,12 @@ import { prisma } from "../prisma";
 
 export class PrismaRepository extends Repository {
   private tableName: any;
+  private name: any;
 
   constructor(tableName: string) {
     super();
     this.tableName = (prisma as any)[tableName]; // Conecta a tabela do Prisma
+    this.name = tableName;
   }
 
   // Função auxiliar para mapear _id para id nas queries
@@ -77,11 +79,11 @@ export class PrismaRepository extends Repository {
 
   async update(query: any, data: any): Promise<any> {
     query = this.mapId(query);
-    const updated = await this.tableName.updateMany({
+    const updated = await this.tableName.update({
       where: query,
       data,
     });
-    return this.mapReturnIds(updated);
+    return this.mapReturnId(updated);
   }
 
   async upsertAndPush(query: any, data: any, pushData: any): Promise<any> {
