@@ -1,9 +1,12 @@
 @apiurl = http://127.0.0.1:3333/api
 
-@token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI0NDAwN2Q4ZS1hZjdmLTRiZDMtOTZmOC04NGJmM2ZlNTg2ZGUiLCJpYXQiOjE3MjkxNzM5NjgsImV4cCI6MTczNDM1Nzk2OH0.3f1AZq82PGtwm3lJWZMhh6nxSnv-Z6B3rIYm8shjHf8
-@entityId=2d911a20-305b-4c00-b14d-b3be3ec5f8f0
-@tweetresponsta=1fc7061f-dc6c-41ad-8b22-b359d5912e07
-@tweetresponsta2=c90c24a1-f64a-4b9a-8d10-e8d61e3d9c51
+@token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2ZWZiYzY2Ny03Yjc1LTQ2NzgtOTc5My1jZmVlNGE3NWI5NzQiLCJpYXQiOjE3MjkxOTU0MTMsImV4cCI6MTczNDM3OTQxM30.44KtfN_j8SjehHil0eaaG8VTTajU6BrV5FA6vOXjFJ8
+
+
+
+@entityId=41886001-28d3-4829-98a6-3a4b760ab0c9
+@tweetresponsta=f014183c-3771-4bb5-82c4-0d2a3d3df5cf
+@tweetresponsta2=f014183c-3771-4bb5-82c4-0d2a3d3df5cf
 @entityType=tweet
 
 ### POST add
@@ -14,23 +17,23 @@ Authorization: Bearer {{token}}
 {
   "userSlug": "devdoido2",
   "body": "RESPOSTA 2 eai mano #somostodosotarios #bom #dia #pas #santosfc",
-  "tweetId":"2d911a20-305b-4c00-b14d-b3be3ec5f8f0",
+
   "image":"ssdsd"
 }
 
 ### GET loadById
-GET {{apiurl}}/{{entityType}}/load?_id={{tweetresponsta}} HTTP/1.1
+GET {{apiurl}}/{{entityType}}/load?_id={{entityId}} HTTP/1.1
 Content-Type: application/json
 Authorization: Bearer {{token}}
 
 
 ### GET loadByPage
-GET {{apiurl}}/{{entityType}}/loadByPage?page=1&tweetId={{tweetresponsta}} HTTP/1.1
+GET {{apiurl}}/{{entityType}}/loadByPage?page=1 HTTP/1.1
 Content-Type: application/json
 Authorization: Bearer {{token}}
 
 ### PATCH update
-PATCH {{apiurl}}/{{entityType}}/update?_id={{tweetresponsta2}} HTTP/1.1
+PATCH {{apiurl}}/{{entityType}}/update?_id={{entityId}} HTTP/1.1
 Content-Type: application/json
 Authorization: Bearer {{token}}
 
@@ -40,7 +43,7 @@ Authorization: Bearer {{token}}
 }
 
 ### DELETE delete
-DELETE {{apiurl}}/{{entityType}}/delete?_id={{tweetresponsta2}}	 HTTP/1.1
+DELETE {{apiurl}}/{{entityType}}/delete?_id={{entityId}}	 HTTP/1.1
 Content-Type: application/json
 Authorization: Bearer {{token}}
 

@@ -32,9 +32,9 @@ export class PrismaRepository extends Repository {
       record._id = record.id;
       delete record.id;
     }
-    if (record?.password) {
-      delete record.password;
-    }
+    // if (record?.password) {
+    //   delete record.password;
+    // }
     if (record?.user?.password) {
       delete record.user.password;
     }

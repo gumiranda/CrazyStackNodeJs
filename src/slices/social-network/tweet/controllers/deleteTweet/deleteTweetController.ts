@@ -38,7 +38,6 @@ export class DeleteTweetController extends Controller {
     const hashtags = currentTweet?.body.match(/#[a-zA-Z0-9_]+/g) || [];
 
     await Promise.all(hashtags.map((hashtag) => this.removeTrend({ hashtag })));
-    await this.deleteTweet(httpRequest?.params.id);
     return ok(tweetDeleted);
   }
 }

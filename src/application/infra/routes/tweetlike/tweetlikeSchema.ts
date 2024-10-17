@@ -1,6 +1,6 @@
 import { idSchema } from "@/application/types/id";
 
-const bodyAddTweetlikeJsonSchema = {
+const bodyToggleTweetlikeJsonSchema = {
   type: "object",
   required: ["userSlug", "tweetId"],
   properties: {
@@ -15,7 +15,7 @@ const headersJsonSchema = {
   },
   required: ["authorization"],
 };
-const addTweetlikeResponse = {
+const toggleTweetlikeResponse = {
   type: "object",
   properties: {
     _id: idSchema,
@@ -26,10 +26,10 @@ const addTweetlikeResponse = {
     tweetId: { type: "string" },
   },
 };
-export const addTweetlikePostSchema = {
+export const toggleTweetlikePostSchema = {
   schema: {
-    body: bodyAddTweetlikeJsonSchema,
-    response: { 200: addTweetlikeResponse },
+    body: bodyToggleTweetlikeJsonSchema,
+    response: { 200: toggleTweetlikeResponse },
     headers: headersJsonSchema,
   },
 };

@@ -69,11 +69,11 @@ Content-Type: application/json
 
 
 {
-  "email": "fodase@gmail.com",
+  "email": "teste91sasa1@gmail.com",
   "password": "123456",
   "passwordConfirmation": "123456",
   "name": "John Doe",
-  "cpf": "09355838077",
+  "cpf": "72863412000",
   "phone": "12345678900",
   "role": "owner",
   "coord":  {"coordinates": [-46.6333, -23.5405] }
