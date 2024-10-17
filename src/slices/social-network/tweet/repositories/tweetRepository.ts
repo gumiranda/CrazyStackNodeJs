@@ -35,7 +35,7 @@ export class TweetRepository
     return { tweets, total };
   }
   async loadTweet(query: Query): Promise<TweetData | null> {
-    return this.repository.getOne(query?.fields ?? {}, query?.options ?? {});
+    return this.repository.getOne(query?.fields ?? {}, query?.options ?? {}, false);
   }
   async updateTweet(query: Query, data: TweetData): Promise<TweetData | null> {
     return this.repository.update(query?.fields ?? {}, data);

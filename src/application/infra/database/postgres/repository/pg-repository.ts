@@ -163,7 +163,7 @@ export class PostgresRepository extends Repository {
     }
     return result?.rows?.map?.((row: any) => row.column_name);
   }
-  async getOne(query: any, options: any): Promise<any> {
+  async getOne(query: any, options: any, returnOneRegister = true): Promise<any> {
     let currentTableFields: any;
     const client = await connect();
     try {
@@ -211,6 +211,7 @@ export class PostgresRepository extends Repository {
             // Assumimos que a relação segue o padrão FK nomeado com a tabela + "Id"
             const relationField = `${relation}Id`;
             const relatedTable = relation === "createdBy" ? "users" : relation;
+            const relatedAlias = `${relatedTable}_alias`; // Adiciona um alias único para cada tabela
 
             // Adiciona o JOIN na consulta
 
@@ -221,21 +222,22 @@ export class PostgresRepository extends Repository {
               relatedFields?.length > 0 &&
               currentTableFields?.includes?.(relationField)
             ) {
-              joinClause += ` LEFT JOIN "${relatedTable}" ON "${this.tableName}"."${relationField}" = "${relatedTable}"."_id"`;
+              joinClause += ` LEFT JOIN "${relatedTable}" AS "${relatedAlias}" ON "${this.tableName}"."${relationField}" = "${relatedAlias}"."_id"`;
 
               selectClause += `, ${relatedFields
                 .filter((field) => field !== "_id")
-                .map((field) => `"${relatedTable}"."${field}"`)
+                .map((field) => `"${relatedAlias}"."${field}"`)
                 .join(", ")}`;
             } else {
               //relacionamentos 1:n
               const joinTable = `${this.tableName}${relatedTable}`;
+              const joinAlias = `${joinTable}_alias`; // Adiciona um alias único para cada tabela
               const joinTableFields = await this.getTableFields(joinTable, client);
               if (joinTableFields?.length > 0) {
-                joinClause += ` LEFT JOIN "${joinTable}" ON "${this.tableName}"."_id" = "${joinTable}"."${this.tableName}Id"`;
+                joinClause += ` LEFT JOIN "${joinTable}" AS "${joinAlias}" ON "${this.tableName}"."_id" = "${joinAlias}"."${this.tableName}Id"`;
                 selectClause += `, ${joinTableFields
                   .filter((field) => field !== "_id")
-                  .map((field) => `"${joinTable}"."${field}"`)
+                  .map((field) => `"${joinAlias}"."${field}"`)
                   .join(", ")}`;
               }
             }
@@ -244,14 +246,15 @@ export class PostgresRepository extends Repository {
       }
 
       // Monta a query com SELECT e JOINs dinâmicos
-      const queryText = `SELECT ${selectClause} FROM "${this.tableName}" ${joinClause} WHERE ${whereClause} LIMIT 1`;
+      const queryText = `SELECT ${selectClause} FROM "${this.tableName}" ${joinClause} WHERE ${whereClause}`;
       const result = await client.query(queryText, values);
 
-      return result.rows.length ? result.rows[0] : null;
+      return returnOneRegister ? result?.rows?.[0] : result?.rows;
     } finally {
       client.release();
     }
   }
+
   async getAll() {
     const client = await connect();
     try {

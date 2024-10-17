@@ -21,7 +21,7 @@ export class LoadTweetController extends Controller {
     if (errors?.length > 0) {
       return badRequest(errors);
     }
-    const tweetLoaded = await this.loadTweet({
+    const tweetLoaded: any = await this.loadTweet({
       fields: httpRequest?.query,
       options: {
         include: {
@@ -33,6 +33,17 @@ export class LoadTweetController extends Controller {
         },
       },
     });
+    if (Array.isArray(tweetLoaded) && tweetLoaded?.[0]) {
+      const tweetWithLikes = {
+        ...tweetLoaded?.[0],
+        tweetlikes: tweetLoaded?.map?.(({ tweetlikeId, userId }: any) => ({
+          userId,
+          tweetlikeId,
+        })),
+      };
+      delete tweetWithLikes?.tweetlikeId;
+      return ok(tweetWithLikes);
+    }
     return ok(tweetLoaded);
   }
 }

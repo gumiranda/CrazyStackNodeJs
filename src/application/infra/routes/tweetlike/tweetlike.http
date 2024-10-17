@@ -17,7 +17,7 @@ Content-Type: application/json
 Authorization: Bearer {{token}}
 
 {
-  "userSlug": "devdoido",
+  "userSlug": "devdoido2",
   "tweetId": "2d911a20-305b-4c00-b14d-b3be3ec5f8f0"
 }
 
