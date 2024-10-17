@@ -57,9 +57,15 @@ const loadTweetResponse = {
     createdBy: {},
     tweetlike: {},
     tweet: {},
-    slug: { type: "string" },
-    photoId: {},
-    name: { type: "string" },
+    users: {
+      type: "object",
+      properties: {
+        _id: { type: "string" },
+        slug: { type: "string" },
+        photoId: {},
+        name: { type: "string" },
+      },
+    },
   },
 };
 export const loadTweetGetSchema = {

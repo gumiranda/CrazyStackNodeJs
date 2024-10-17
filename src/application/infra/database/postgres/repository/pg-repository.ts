@@ -229,24 +229,31 @@ export class PostgresRepository extends Repository {
             ) {
               joinClause += ` LEFT JOIN "${relatedTable}" AS "${relatedAlias}" ON "${this.tableName}"."${relationField}" = "${relatedAlias}"."_id"`;
 
-              selectClause += isSameTable
-                ? ""
-                : `, ${relatedFields
-                    .filter((field) => field !== "_id")
-                    .map((field) => `"${relatedAlias}"."${field}"`)
-                    .join(", ")}`;
+              selectClause +=
+                //  isSameTable
+                //   ? ""
+                //   :
+                `, ${relatedFields
+                  .filter((field) => field !== "_id")
+                  .map(
+                    (field) =>
+                      `("${relatedAlias}"."${field}") AS "${relatedTable}${field}"`
+                  )
+                  .join(", ")}`;
             } else {
               //relacionamentos 1:n
               const joinTable = `${this.tableName}${relatedTable}`;
               const joinAlias = `${joinTable}_alias`; // Adiciona um alias único para cada tabela
               const joinTableFields = await this.getTableFields(joinTable, client);
               if (joinTableFields?.length > 0) {
-                joinClause += ` FULL OUTER JOIN "${joinTable}" AS "${joinAlias}" ON "${this.tableName}"."_id" = "${joinAlias}"."${this.tableName}Id"`;
+                joinClause += ` LEFT JOIN "${joinTable}" AS "${joinAlias}" ON "${this.tableName}"."_id" = "${joinAlias}"."${this.tableName}Id"`;
                 selectClause += isSameTable
                   ? ""
                   : `, ${joinTableFields
                       .filter((field) => field !== "_id")
-                      .map((field) => `"${joinAlias}"."${field}"`)
+                      .map(
+                        (field) => `("${joinAlias}"."${field}") AS "${joinTable}${field}"`
+                      )
                       .join(", ")}`;
               }
             }
