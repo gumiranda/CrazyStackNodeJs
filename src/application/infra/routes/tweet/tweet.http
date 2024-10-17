@@ -4,7 +4,7 @@
 
 
 
-@entityId=41886001-28d3-4829-98a6-3a4b760ab0c9
+@entityId=1baa8b85-c8a2-48ee-8606-e16871d54f52
 @tweetresponsta=f014183c-3771-4bb5-82c4-0d2a3d3df5cf
 @tweetresponsta2=f014183c-3771-4bb5-82c4-0d2a3d3df5cf
 @entityType=tweet
@@ -16,6 +16,7 @@ Authorization: Bearer {{token}}
 
 {
   "userSlug": "devdoido2",
+  "tweetId": "2c09228e-f86a-410a-8515-0ca432fd247d",
   "body": "RESPOSTA 2 eai mano #somostodosotarios #bom #dia #pas #santosfc",
 
   "image":"ssdsd"
