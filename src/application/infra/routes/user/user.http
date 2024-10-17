@@ -1,10 +1,10 @@
 @apiurl = http://127.0.0.1:3333/api
 
-@token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI4MWQ3MWJlNy05NjFlLTRlMGYtYTFkNC04NDMwYTI5MDg4NmEiLCJpYXQiOjE3MjkxMDIzNTgsImV4cCI6MTczNDI4NjM1OH0.hNAc7XBAlF0GzZesTDGMiXHtboz8qR4g-z5rioQH_m4
+@token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiIxMjVlNTAxYi1hZTU5LTQ1ZDctOGI0Zi1iMjJmZjU0M2EwNjUiLCJpYXQiOjE3MjkxNjgwMzAsImV4cCI6MTczNDM1MjAzMH0.nrskBqeuAj6J3MDDHUxqYunIbtWaYjmJ1AXEAPLOFsg
 @tokenGeolocalizado=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiIxYjZjNTg2OS05MTc2LTQzZmEtYjg3Yy03MDdhZjY0ZDljNjQiLCJpYXQiOjE3MTgzMTA4MzEsImV4cCI6MTcyMzQ5NDgzMX0.QUpfzYZtMxiG82cEQi6fD7XFvdxudElaiofuMw0DPYs
 
 
-@entityId=81d71be7-961e-4e0f-a1d4-8430a290886a
+@entityId=125e501b-ae59-45d7-8b4f-b22ff543a065
 
 @myOwnerId=54b7a8a4-4a79-457e-b8f0-20dad19fe048
 
@@ -36,9 +36,8 @@ Authorization: Bearer {{token}}
 {
   "name": "John Doe3",
   "active":false,
-  "photoId":"50e85f33-bec3-4cc5-91e7-73f08ed3edb4",
-  "password":"",
-  "createdById": null
+  "ownerId":"1716a5dc-7dcf-43d3-ba9a-f49c8f2bdfa2",
+  "password":""
 }
 
 ### DELETE delete user
