@@ -1,8 +1,12 @@
 import { makeLogController } from "@/application/decorators/logControllerFactory";
 import { makeValidationComposite } from "@/application/factories";
 import { Controller } from "@/application/infra/contracts";
-import { makeDeleteTweetFactory } from "@/slices/social-network/tweet/useCases";
+import {
+  makeDeleteTweetFactory,
+  makeLoadTweetFactory,
+} from "@/slices/social-network/tweet/useCases";
 import { DeleteTweetController } from "@/slices/social-network/tweet/controllers";
+import { makeRemoveTrendFactory } from "@/slices/social-network/trend/useCases";
 
 export const makeDeleteTweetController = (): Controller => {
   const requiredFields = ["_id"];
@@ -10,7 +14,9 @@ export const makeDeleteTweetController = (): Controller => {
     "deleteTweet",
     new DeleteTweetController(
       makeValidationComposite(requiredFields),
-      makeDeleteTweetFactory()
+      makeDeleteTweetFactory(),
+      makeLoadTweetFactory(),
+      makeRemoveTrendFactory()
     )
   );
 };

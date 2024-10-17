@@ -10,10 +10,12 @@ import { fakeUserEntity } from "@/slices/user/entities/UserEntity.spec";
 describe("AddTweetController", () => {
   let testInstance: AddTweetController;
   let addTweet: jest.Mock;
+  let upsertTrend: jest.Mock;
   let validation: MockProxy<Validation>;
   beforeAll(async () => {
     MockDate.set(new Date());
     addTweet = jest.fn();
+    upsertTrend = jest.fn();
     addTweet.mockResolvedValue({
       ...fakeTweetEntity,
       createdById: fakeUserEntity?._id,
@@ -25,7 +27,7 @@ describe("AddTweetController", () => {
     MockDate.reset();
   });
   beforeEach(() => {
-    testInstance = new AddTweetController(validation, addTweet);
+    testInstance = new AddTweetController(validation, addTweet, upsertTrend);
   });
   it("should extends class Controller", async () => {
     expect(testInstance).toBeInstanceOf(Controller);

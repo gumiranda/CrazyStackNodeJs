@@ -7,12 +7,15 @@ import {
   ok,
 } from "@/application/helpers";
 import { Controller } from "@/application/infra/contracts";
-import { DeleteTweet } from "@/slices/social-network/tweet/useCases";
+import type { RemoveTrend } from "@/slices/social-network/trend/useCases";
+import { DeleteTweet, type LoadTweet } from "@/slices/social-network/tweet/useCases";
 
 export class DeleteTweetController extends Controller {
   constructor(
     private readonly validation: Validation,
-    private readonly deleteTweet: DeleteTweet
+    private readonly deleteTweet: DeleteTweet,
+    private readonly loadTweet: LoadTweet,
+    private readonly removeTrend: RemoveTrend
   ) {
     super();
   }
@@ -21,10 +24,21 @@ export class DeleteTweetController extends Controller {
     if (errors?.length > 0) {
       return badRequest(errors);
     }
-    const tweetDeleteed = await this.deleteTweet({
+    const currentTweet = await this.loadTweet({
       fields: { ...httpRequest?.query, createdById: httpRequest?.userId },
       options: {},
     });
-    return ok(tweetDeleteed);
+    if (!currentTweet) {
+      return badRequest("Tweet not found");
+    }
+    const tweetDeleted = await this.deleteTweet({
+      fields: { ...httpRequest?.query, createdById: httpRequest?.userId },
+      options: {},
+    });
+    const hashtags = currentTweet?.body.match(/#[a-zA-Z0-9_]+/g) || [];
+
+    await Promise.all(hashtags.map((hashtag) => this.removeTrend({ hashtag })));
+    await this.deleteTweet(httpRequest?.params.id);
+    return ok(tweetDeleted);
   }
 }
