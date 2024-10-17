@@ -19,7 +19,7 @@ Authorization: Bearer {{token}}
 }
 
 ### GET loadById
-GET {{apiurl}}/{{entityType}}/load?_id={{tweetresponsta}} HTTP/1.1
+GET {{apiurl}}/{{entityType}}/load?_id={{entityId}} HTTP/1.1
 Content-Type: application/json
 Authorization: Bearer {{token}}
 

@@ -54,7 +54,15 @@ const loadTweetResponse = {
     tweetId: { type: "string" },
     createdById: { type: "string" },
     createdAt: { type: "string" },
-    createdBy: {},
+    createdBy: {
+      type: "object",
+      properties: {
+        _id: { type: "string" },
+        slug: { type: "string" },
+        photoId: {},
+        name: { type: "string" },
+      },
+    },
     tweetlike: {},
     tweet: {},
     users: {
