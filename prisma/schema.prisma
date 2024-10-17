@@ -586,18 +586,19 @@ model users {
 }
 
 model tweet {
-  id          String      @id @default(dbgenerated("uuid_generate_v4()")) @map("_id") @db.Uuid
-  createdById String?     @db.Uuid
-  createdBy   users?      @relation(fields: [createdById], references: [id])
-  tweet       tweet?      @relation("TweetRelation", fields: [tweetId], references: [id])
-  userSlug    String
-  body        String
-  image       String?
-  tweetId     String?     @db.Uuid
-  createdAt   DateTime    @default(now()) @db.Timestamp(6)
-  tweetlike   tweetlike[]
-  updatedAt   DateTime?   @default(now()) @db.Timestamp(6)
-  tweets      tweet[]     @relation("TweetRelation")
+  id          String  @id @default(dbgenerated("uuid_generate_v4()")) @map("_id") @db.Uuid
+  createdById String? @db.Uuid
+  createdBy   users?  @relation(fields: [createdById], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  tweet       tweet?  @relation("TweetRelation", fields: [tweetId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  userSlug  String
+  body      String
+  image     String?
+  tweetId   String?     @db.Uuid
+  createdAt DateTime    @default(now()) @db.Timestamp(6)
+  tweetlike tweetlike[]
+  updatedAt DateTime?   @default(now()) @db.Timestamp(6)
+  tweets    tweet[]     @relation("TweetRelation")
 }
 
 model tweetlike {
@@ -606,9 +607,9 @@ model tweetlike {
   tweetId     String?   @db.Uuid
   userSlug    String
   createdAt   DateTime  @default(now()) @db.Timestamp(6)
-  user        users?    @relation(fields: [createdById], references: [id])
+  user        users?    @relation(fields: [createdById], references: [id], onDelete: NoAction, onUpdate: NoAction)
   updatedAt   DateTime? @default(now()) @db.Timestamp(6)
-  tweet       tweet?    @relation(fields: [tweetId], references: [id])
+  tweet       tweet?    @relation(fields: [tweetId], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
 
 model follow {
@@ -616,7 +617,7 @@ model follow {
   user1Slug   String
   user2Slug   String
   createdById String?   @db.Uuid
-  user        users?    @relation(fields: [createdById], references: [id])
+  user        users?    @relation(fields: [createdById], references: [id], onDelete: NoAction, onUpdate: NoAction)
   createdAt   DateTime  @default(now()) @db.Timestamp(6)
   updatedAt   DateTime? @default(now()) @db.Timestamp(6)
 }

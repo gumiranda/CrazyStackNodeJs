@@ -8,10 +8,13 @@ export const removeTrend: RemoveTrendSignature =
     const queryHashtag = { fields: { hashtag: data.hashtag } };
     const currentHashtag = await upsertTrendRepository.loadTrend(queryHashtag);
     if (currentHashtag?.counter && currentHashtag.counter > 1) {
-      return upsertTrendRepository.updateTrend(queryHashtag, {
-        counter: currentHashtag.counter - 1,
-        hashtag: currentHashtag.hashtag,
-      });
+      return upsertTrendRepository.updateTrend(
+        { fields: { _id: currentHashtag?._id } },
+        {
+          counter: currentHashtag.counter - 1,
+          hashtag: currentHashtag.hashtag,
+        }
+      );
     }
     // Remove the trend if counter drops to 0
     return upsertTrendRepository.deleteTrend(queryHashtag);

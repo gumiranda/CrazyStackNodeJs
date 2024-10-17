@@ -8,10 +8,13 @@ export const upsertTrend: UpsertTrendSignature =
     const queryHashtag = { fields: { hashtag: data.hashtag } };
     const currentHashtag = await upsertTrendRepository.loadTrend(queryHashtag);
     if (currentHashtag?.counter) {
-      return upsertTrendRepository.updateTrend(queryHashtag, {
-        counter: currentHashtag.counter + 1,
-        hashtag: currentHashtag.hashtag,
-      });
+      return upsertTrendRepository.updateTrend(
+        { fields: { _id: currentHashtag?._id } },
+        {
+          counter: currentHashtag.counter + 1,
+          hashtag: currentHashtag.hashtag,
+        }
+      );
     }
     return upsertTrendRepository.addTrend(new TrendEntity(data));
   };

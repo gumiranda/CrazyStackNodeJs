@@ -3,7 +3,7 @@
 @token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI0NDAwN2Q4ZS1hZjdmLTRiZDMtOTZmOC04NGJmM2ZlNTg2ZGUiLCJpYXQiOjE3MjkxNzM5NjgsImV4cCI6MTczNDM1Nzk2OH0.3f1AZq82PGtwm3lJWZMhh6nxSnv-Z6B3rIYm8shjHf8
 @entityId=2d911a20-305b-4c00-b14d-b3be3ec5f8f0
 @tweetresponsta=1fc7061f-dc6c-41ad-8b22-b359d5912e07
-@tweetresponsta2=aabe26aa-fd10-4b5c-994b-e26505956e5b
+@tweetresponsta2=c90c24a1-f64a-4b9a-8d10-e8d61e3d9c51
 @entityType=tweet
 
 ### POST add
@@ -13,7 +13,7 @@ Authorization: Bearer {{token}}
 
 {
   "userSlug": "devdoido2",
-  "body": "RESPOSTA 2",
+  "body": "RESPOSTA 2 eai mano #somostodosotarios #bom #dia #pas #santosfc",
   "tweetId":"2d911a20-305b-4c00-b14d-b3be3ec5f8f0",
   "image":"ssdsd"
 }
@@ -30,17 +30,17 @@ Content-Type: application/json
 Authorization: Bearer {{token}}
 
 ### PATCH update
-PATCH {{apiurl}}/{{entityType}}/update?_id={{entityId}} HTTP/1.1
+PATCH {{apiurl}}/{{entityType}}/update?_id={{tweetresponsta2}} HTTP/1.1
 Content-Type: application/json
 Authorization: Bearer {{token}}
 
 {
   "userSlug": "devtop",
-  "body": "Tweet massa2"
+  "body": "Tweet #dahora #porra #porra massa2 RESPOSTA 2 eai mano #somostodosotarios"
 }
 
 ### DELETE delete
-DELETE {{apiurl}}/{{entityType}}/delete?_id={{entityId}}	 HTTP/1.1
+DELETE {{apiurl}}/{{entityType}}/delete?_id={{tweetresponsta2}}	 HTTP/1.1
 Content-Type: application/json
 Authorization: Bearer {{token}}
 
