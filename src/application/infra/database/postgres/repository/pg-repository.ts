@@ -171,13 +171,14 @@ export class PostgresRepository extends Repository {
     try {
       const { whereClause, values } = this.buildWhereClause(query);
 
-      // Seleciona todos os campos da tabela principal
+      // Padrão para selecionar todos os campos da tabela principal
       let selectClause = `"${this.tableName}".*`;
-      let joinClause = ""; // Armazena os JOINs dinâmicos
+      let joinClause = ""; // Aqui acumulamos os JOINs dinâmicos
 
-      // Gerenciamento de projeção
       if (options?.projection) {
         const projection = options.projection;
+
+        // Identifica campos a serem excluídos (0)
         const excludedFields = Object.keys(projection).filter(
           (key) => projection[key] === 0
         );
@@ -200,56 +201,60 @@ export class PostgresRepository extends Repository {
         }
       }
 
-      // Implementa o `include` utilizando JOINs dinâmicos no PostgreSQL
+      // Implementa o `include` usando JOINs dinâmicos no PostgreSQL
       if (options?.include) {
         const includes = options.include;
         if (!currentTableFields) {
           currentTableFields = await this.getTableFields(this.tableName, client);
         }
-
+        // Itera sobre os relacionamentos especificados em `include`
         for (const relation of Object.keys(includes)) {
           if (includes[relation]) {
-            // Identificação da relação (1:1 ou 1:N)
+            // Assumimos que a relação segue o padrão FK nomeado com a tabela + "Id"
             const relationField = `${relation}Id`;
             const relatedTable = relation === "createdBy" ? "users" : relation;
-            const relatedAlias = `${relatedTable}_alias`;
+            const relatedAlias = `${relatedTable}_alias`; // Adiciona um alias único para cada tabela
+            const isSameTable = relatedTable === this.tableName;
+            // Adiciona o JOIN na consulta
 
+            // Inclui os campos da tabela relacionada no SELECT
             const fieldsRelated = await this.getTableFields(relatedTable, client);
-            const relatedFields = fieldsRelated?.filter(
+            const relatedFields = fieldsRelated?.filter?.(
               (field) => field !== relationField
             );
-
-            // Verifica se é uma relação 1:1 (baseada em FK)
+            //relacionamentos 1:1
             if (
               relatedFields?.length > 0 &&
               currentTableFields?.includes?.(relationField)
             ) {
               joinClause += ` LEFT JOIN "${relatedTable}" AS "${relatedAlias}" ON "${this.tableName}"."${relationField}" = "${relatedAlias}"."_id"`;
 
-              selectClause += `, ${relatedFields
-                .filter((field) => field !== "_id")
-                .map((field) => `"${relatedAlias}"."${field}"`)
-                .join(", ")}`;
+              selectClause += isSameTable
+                ? ""
+                : `, ${relatedFields
+                    .filter((field) => field !== "_id")
+                    .map((field) => `"${relatedAlias}"."${field}"`)
+                    .join(", ")}`;
             } else {
-              // Trata relações 1:N
+              //relacionamentos 1:n
               const joinTable = `${this.tableName}${relatedTable}`;
-              const joinAlias = `${joinTable}_alias`;
+              const joinAlias = `${joinTable}_alias`; // Adiciona um alias único para cada tabela
               const joinTableFields = await this.getTableFields(joinTable, client);
-
               if (joinTableFields?.length > 0) {
                 joinClause += ` FULL OUTER JOIN "${joinTable}" AS "${joinAlias}" ON "${this.tableName}"."_id" = "${joinAlias}"."${this.tableName}Id"`;
-
-                selectClause += `, ${joinTableFields
-                  .filter((field) => field !== "_id")
-                  .map((field) => `"${joinAlias}"."${field}"`)
-                  .join(", ")}`;
+                selectClause += isSameTable
+                  ? ""
+                  : `, ${joinTableFields
+                      .filter((field) => field !== "_id")
+                      .map((field) => `"${joinAlias}"."${field}"`)
+                      .join(", ")}`;
               }
             }
           }
         }
       }
 
-      // Monta a query final com SELECT e JOINs dinâmicos
+      // Monta a query com SELECT e JOINs dinâmicos
       const queryText = `SELECT ${selectClause} FROM "${this.tableName}" ${joinClause} WHERE ${whereClause}`;
       const result = await client.query(queryText, values);
 

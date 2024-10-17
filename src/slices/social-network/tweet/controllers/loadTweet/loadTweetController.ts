@@ -25,9 +25,9 @@ export class LoadTweetController extends Controller {
       fields: httpRequest?.query,
       options: {
         include: {
-          tweetlike: true, //pg
           createdBy: true, //pg
           tweet: true, //pg
+          tweetlike: true, //pg
         },
       },
     });
