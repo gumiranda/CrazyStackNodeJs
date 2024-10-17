@@ -161,7 +161,9 @@ export class PostgresRepository extends Repository {
     if (result?.rows === 0) {
       return [];
     }
-    return result?.rows?.map?.((row: any) => row.column_name);
+    return result?.rows
+      ?.map?.((row: any) => row.column_name)
+      ?.filter?.((field: any) => field !== "password");
   }
   async getOne(query: any, options: any, returnOneRegister = true): Promise<any> {
     let currentTableFields: any;
@@ -216,7 +218,10 @@ export class PostgresRepository extends Repository {
             // Adiciona o JOIN na consulta
 
             // Inclui os campos da tabela relacionada no SELECT
-            const relatedFields = await this.getTableFields(relatedTable, client);
+            const fieldsRelated = await this.getTableFields(relatedTable, client);
+            const relatedFields = fieldsRelated?.filter?.(
+              (field) => field !== relationField
+            );
             //relacionamentos 1:1
             if (
               relatedFields?.length > 0 &&
@@ -234,7 +239,7 @@ export class PostgresRepository extends Repository {
               const joinAlias = `${joinTable}_alias`; // Adiciona um alias único para cada tabela
               const joinTableFields = await this.getTableFields(joinTable, client);
               if (joinTableFields?.length > 0) {
-                joinClause += ` LEFT JOIN "${joinTable}" AS "${joinAlias}" ON "${this.tableName}"."_id" = "${joinAlias}"."${this.tableName}Id"`;
+                joinClause += ` FULL OUTER JOIN "${joinTable}" AS "${joinAlias}" ON "${this.tableName}"."_id" = "${joinAlias}"."${this.tableName}Id"`;
                 selectClause += `, ${joinTableFields
                   .filter((field) => field !== "_id")
                   .map((field) => `"${joinAlias}"."${field}"`)

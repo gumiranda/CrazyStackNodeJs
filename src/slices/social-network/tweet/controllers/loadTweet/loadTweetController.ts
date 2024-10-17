@@ -28,18 +28,19 @@ export class LoadTweetController extends Controller {
           tweetlike: true, //pg
           createdBy: true, //pg
           tweet: true, //pg
-          tweetlikes: true, //prisma
-          user: true, //prisma
         },
       },
     });
     if (Array.isArray(tweetLoaded) && tweetLoaded?.[0]) {
       const tweetWithLikes = {
         ...tweetLoaded?.[0],
-        tweetlikes: tweetLoaded?.map?.(({ tweetlikeId, userId }: any) => ({
-          userId,
-          tweetlikeId,
-        })),
+        tweetlike:
+          tweetLoaded?.[0]?.tweetlikeId?.length > 0
+            ? tweetLoaded?.map?.(({ tweetlikeId, userId }: any) => ({
+                userId,
+                tweetlikeId,
+              }))
+            : null,
       };
       delete tweetWithLikes?.tweetlikeId;
       return ok(tweetWithLikes);

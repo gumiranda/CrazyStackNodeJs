@@ -1,9 +1,8 @@
 @apiurl = http://127.0.0.1:3333/api
 
-@token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiIxMjVlNTAxYi1hZTU5LTQ1ZDctOGI0Zi1iMjJmZjU0M2EwNjUiLCJpYXQiOjE3MjkxNjgwMzAsImV4cCI6MTczNDM1MjAzMH0.nrskBqeuAj6J3MDDHUxqYunIbtWaYjmJ1AXEAPLOFsg
-
+@token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI0NDAwN2Q4ZS1hZjdmLTRiZDMtOTZmOC04NGJmM2ZlNTg2ZGUiLCJpYXQiOjE3MjkxNzM5NjgsImV4cCI6MTczNDM1Nzk2OH0.3f1AZq82PGtwm3lJWZMhh6nxSnv-Z6B3rIYm8shjHf8
 @entityId=2d911a20-305b-4c00-b14d-b3be3ec5f8f0
-
+@tweetresponsta=1fc7061f-dc6c-41ad-8b22-b359d5912e07
 @entityType=tweet
 
 ### POST add
@@ -12,8 +11,9 @@ Content-Type: application/json
 Authorization: Bearer {{token}}
 
 {
-  "userSlug": "devdoido",
-  "body": "Tweet massa",
+  "userSlug": "devdoido2",
+  "body": "Tweet massa ein, to respondendo",
+  "tweetId":"2d911a20-305b-4c00-b14d-b3be3ec5f8f0",
   "image":"ssdsd"
 }
 
