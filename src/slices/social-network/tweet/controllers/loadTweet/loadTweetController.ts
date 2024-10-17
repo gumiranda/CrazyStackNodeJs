@@ -24,7 +24,13 @@ export class LoadTweetController extends Controller {
     const tweetLoaded = await this.loadTweet({
       fields: httpRequest?.query,
       options: {
-        include: { createdBy: true, tweet: true, tweetlike: true },
+        include: {
+          tweetlike: true, //pg
+          createdBy: true, //pg
+          tweet: true, //pg
+          tweetlikes: true, //prisma
+          user: true, //prisma
+        },
       },
     });
     return ok(tweetLoaded);

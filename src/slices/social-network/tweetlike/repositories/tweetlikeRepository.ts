@@ -11,6 +11,7 @@ import {
   UpdateTweetlikeRepository,
 } from "./contracts";
 import { Query } from "@/application/types";
+import { whiteLabel } from "@/application/infra/config/whiteLabel";
 export class TweetlikeRepository
   implements
     AddTweetlikeRepository,
@@ -21,11 +22,15 @@ export class TweetlikeRepository
 {
   constructor(
     private readonly repository: Repository,
-    private readonly tweettweetlikeRepository: Repository
+    private readonly tweettweetlikeRepository?: Repository
   ) {}
   async addTweetlike(data: TweetlikeData): Promise<TweetlikeData | null> {
     const tweetlike = await this.repository.add(data);
-    if (tweetlike?._id) {
+    if (
+      tweetlike?._id &&
+      whiteLabel.database === "postgres" &&
+      this.tweettweetlikeRepository
+    ) {
       const tweettweetlike = await this.tweettweetlikeRepository.add({
         tweetlikeId: tweetlike._id,
         userId: tweetlike.createdById,

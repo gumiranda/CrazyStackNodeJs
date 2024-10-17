@@ -210,7 +210,7 @@ export class PostgresRepository extends Repository {
           if (includes[relation]) {
             // Assumimos que a relação segue o padrão FK nomeado com a tabela + "Id"
             const relationField = `${relation}Id`;
-            const relatedTable = relation;
+            const relatedTable = relation === "createdBy" ? "users" : relation;
 
             // Adiciona o JOIN na consulta
 
