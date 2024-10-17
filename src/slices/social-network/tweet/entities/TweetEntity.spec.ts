@@ -9,7 +9,7 @@ export const fakeTweetEntity = {
   updatedAt: new Date(),
   body: "fakeTweetEntity",
   image: "fakeTweetEntity",
-  answerOf: 123,
+  tweetId: "123",
 };
 export const fakeTweetPaginated = {
   total: 11,

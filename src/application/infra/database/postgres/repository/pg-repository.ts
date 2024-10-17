@@ -164,6 +164,7 @@ export class PostgresRepository extends Repository {
     return result?.rows?.map?.((row: any) => row.column_name);
   }
   async getOne(query: any, options: any): Promise<any> {
+    let currentTableFields: any;
     const client = await connect();
     try {
       const { whereClause, values } = this.buildWhereClause(query);
@@ -184,12 +185,12 @@ export class PostgresRepository extends Repository {
         );
 
         if (excludedFields.length > 0) {
-          const allFields = await this.getTableFields(this.tableName, client);
-          const selectedFields = allFields.filter(
-            (field) => !excludedFields.includes(field)
+          currentTableFields = await this.getTableFields(this.tableName, client);
+          const selectedFields = currentTableFields.filter(
+            (field: any) => !excludedFields.includes(field)
           );
           selectClause = selectedFields
-            .map((field) => `"${this.tableName}"."${field}"`)
+            .map((field: any) => `"${this.tableName}"."${field}"`)
             .join(", ");
         } else if (includedFields.length > 0) {
           selectClause = includedFields
@@ -201,7 +202,9 @@ export class PostgresRepository extends Repository {
       // Implementa o `include` usando JOINs dinâmicos no PostgreSQL
       if (options?.include) {
         const includes = options.include;
-
+        if (!currentTableFields) {
+          currentTableFields = await this.getTableFields(this.tableName, client);
+        }
         // Itera sobre os relacionamentos especificados em `include`
         for (const relation of Object.keys(includes)) {
           if (includes[relation]) {
@@ -213,13 +216,28 @@ export class PostgresRepository extends Repository {
 
             // Inclui os campos da tabela relacionada no SELECT
             const relatedFields = await this.getTableFields(relatedTable, client);
-            if (relatedFields.length > 0) {
+            //relacionamentos 1:1
+            if (
+              relatedFields?.length > 0 &&
+              currentTableFields?.includes?.(relationField)
+            ) {
               joinClause += ` LEFT JOIN "${relatedTable}" ON "${this.tableName}"."${relationField}" = "${relatedTable}"."_id"`;
 
               selectClause += `, ${relatedFields
                 .filter((field) => field !== "_id")
                 .map((field) => `"${relatedTable}"."${field}"`)
                 .join(", ")}`;
+            } else {
+              //relacionamentos 1:n
+              const joinTable = `${this.tableName}${relatedTable}`;
+              const joinTableFields = await this.getTableFields(joinTable, client);
+              if (joinTableFields?.length > 0) {
+                joinClause += ` LEFT JOIN "${joinTable}" ON "${this.tableName}"."_id" = "${joinTable}"."${this.tableName}Id"`;
+                selectClause += `, ${joinTableFields
+                  .filter((field) => field !== "_id")
+                  .map((field) => `"${joinTable}"."${field}"`)
+                  .join(", ")}`;
+              }
             }
           }
         }

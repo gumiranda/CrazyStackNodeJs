@@ -4,7 +4,7 @@ export type TweetData = {
   userSlug: string;
   body: string;
   image?: string;
-  answerOf: number;
+  tweetId?: string;
   createdAt?: Date;
   updatedAt?: Date;
 };
@@ -21,7 +21,7 @@ export class TweetEntity {
   updatedAt?: Date;
   body: string;
   image?: string;
-  answerOf: number;
+  tweetId?: string;
   constructor(data: TweetData) {
     this.createdById = data.createdById;
     this.userSlug = data.userSlug;
@@ -29,6 +29,6 @@ export class TweetEntity {
     this.updatedAt = new Date();
     this.body = data.body;
     this.image = data.image;
-    this.answerOf = data.answerOf;
+    this.tweetId = data.tweetId;
   }
 }

@@ -576,9 +576,9 @@ model users {
   ratingResult      ratingResult[]
   owner             owner?         @relation("users_ownerIdToowner", fields: [ownerId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_ownerid")
 
-  tweets     tweet[]
   likes      tweetlike[]
   followings follow[]
+  tweetId    tweet[]
 
   @@index([createdById], map: "idx_users_createdbyid")
   @@index([myOwnerId], map: "idx_users_myownerid")
@@ -588,14 +588,16 @@ model users {
 model tweet {
   id          String      @id @default(dbgenerated("uuid_generate_v4()")) @map("_id") @db.Uuid
   createdById String?     @db.Uuid
-  usersId     users?      @relation(fields: [createdById], references: [id])
+  createdBy   users?      @relation(fields: [createdById], references: [id])
+  tweet       tweet?      @relation("TweetRelation", fields: [tweetId], references: [id])
   userSlug    String
   body        String
   image       String?
-  answerOf    Int         @default(0)
+  tweetId     String?     @db.Uuid
   createdAt   DateTime    @default(now()) @db.Timestamp(6)
-  tweetlikeId tweetlike[]
+  tweetlike   tweetlike[]
   updatedAt   DateTime?   @default(now()) @db.Timestamp(6)
+  tweets      tweet[]     @relation("TweetRelation")
 }
 
 model tweetlike {
@@ -605,8 +607,8 @@ model tweetlike {
   userSlug    String
   createdAt   DateTime  @default(now()) @db.Timestamp(6)
   user        users?    @relation(fields: [createdById], references: [id])
-  tweet       tweet?    @relation(fields: [tweetId], references: [id])
   updatedAt   DateTime? @default(now()) @db.Timestamp(6)
+  tweet       tweet?    @relation(fields: [tweetId], references: [id])
 }
 
 model follow {

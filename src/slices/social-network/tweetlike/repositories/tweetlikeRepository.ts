@@ -19,9 +19,24 @@ export class TweetlikeRepository
     LoadTweetlikeRepository,
     UpdateTweetlikeRepository
 {
-  constructor(private readonly repository: Repository) {}
-  async addTweetlike(tweetlike: TweetlikeData): Promise<TweetlikeData | null> {
-    return this.repository.add(tweetlike);
+  constructor(
+    private readonly repository: Repository,
+    private readonly tweettweetlikeRepository: Repository
+  ) {}
+  async addTweetlike(data: TweetlikeData): Promise<TweetlikeData | null> {
+    const tweetlike = await this.repository.add(data);
+    if (tweetlike?._id) {
+      const tweettweetlike = await this.tweettweetlikeRepository.add({
+        tweetlikeId: tweetlike._id,
+        userId: tweetlike.createdById,
+        tweetId: tweetlike.tweetId,
+      });
+      if (!tweettweetlike?._id) {
+        await this.repository.deleteOne({ _id: tweetlike._id });
+        return null;
+      }
+    }
+    return tweetlike;
   }
   async deleteTweetlike(query: Query): Promise<TweetlikeData | null> {
     return this.repository.deleteOne(query?.fields);

@@ -13,7 +13,6 @@ Authorization: Bearer {{token}}
 {
   "userSlug": "devdoido",
   "body": "Tweet massa",
-  "answerOf":0,
   "image":"ssdsd"
 }
 

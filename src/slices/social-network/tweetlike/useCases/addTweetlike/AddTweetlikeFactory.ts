@@ -5,7 +5,8 @@ import { addTweetlike, AddTweetlike } from "@/slices/social-network/tweetlike/us
 
 export const makeAddTweetlikeFactory = (): AddTweetlike => {
   const repository = new TweetlikeRepository(
-    makeDatabaseInstance(whiteLabel.database, "tweetlike")
+    makeDatabaseInstance(whiteLabel.database, "tweetlike"),
+    makeDatabaseInstance(whiteLabel.database, "tweettweetlike")
   );
   return addTweetlike(repository);
 };

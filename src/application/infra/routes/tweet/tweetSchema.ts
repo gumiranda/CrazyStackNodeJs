@@ -7,7 +7,7 @@ const bodyAddTweetJsonSchema = {
     userSlug: { type: "string" },
     body: { type: "string" },
     image: { type: "string" },
-    answerOf: { type: "integer", default: 0 },
+    tweetId: { type: "string" },
   },
 };
 const headersJsonSchema = {
@@ -24,7 +24,7 @@ const addTweetResponse = {
     userSlug: { type: "string" },
     body: { type: "string" },
     image: { type: "string" },
-    answerOf: { type: "integer" },
+    tweetId: { type: "string" },
     createdById: { type: "string" },
     createdAt: { type: "string" },
   },
@@ -51,7 +51,7 @@ const loadTweetResponse = {
     userSlug: { type: "string" },
     body: { type: "string" },
     image: { type: "string" },
-    answerOf: { type: "integer" },
+    tweetId: { type: "string" },
     createdById: { type: "string" },
     createdAt: { type: "string" },
     usersId: {},
@@ -101,7 +101,7 @@ const updateTweetResponse = {
     userSlug: { type: "string" },
     body: { type: "string" },
     image: { type: "string" },
-    answerOf: { type: "integer" },
+    tweetId: { type: "string" },
     createdById: { type: "string" },
   },
 };
@@ -110,7 +110,7 @@ const updateTweetBody = {
   properties: {
     body: { type: "string" },
     image: { type: "string" },
-    answerOf: { type: "integer" },
+    tweetId: { type: "string" },
   },
 };
 export const updateTweetSchema = {
@@ -145,7 +145,7 @@ const loadTweetByPageResponse = {
           userSlug: { type: "string" },
           body: { type: "string" },
           image: { type: "string" },
-          answerOf: { type: "integer" },
+          tweetId: { type: "string" },
           createdById: { type: "string" },
           createdAt: { type: "string" },
         },
