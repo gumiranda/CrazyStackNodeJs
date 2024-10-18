@@ -1,10 +1,9 @@
 @apiurl = http://127.0.0.1:3333/api
 
-@token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI5YjM2ZWNjMS04ZTgwLTRmMGYtYTIxNy0yNWY2ZTAxNTgyYTAiLCJpYXQiOjE3MjkyNTY3MDcsImV4cCI6MTczNDQ0MDcwN30.FD5vQfS0m6eBojyEdbzMioKpjPTa3NvCimLEuM1Wdw0
+@token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzEyOGZkNWU0MmE1ODZiNTZjOWU5N2UiLCJpYXQiOjE3MjkyNjk3MTcsImV4cCI6MTczNDQ1MzcxN30.BNwoAKfbCSJ_5f84c1fsnO8nSHdl17Sllc4PIOYtAgQ
 
 
-
-@entityId=d49765d4-24a2-49b6-8c5f-136de57ebd14
+@entityId=671290d03c52cff2d5a797f5
 @tweetresponsta=6013687c-d471-4ac0-9879-e0123709982d
 @tweetresponsta2=f014183c-3771-4bb5-82c4-0d2a3d3df5cf
 @entityType=tweet
@@ -16,7 +15,7 @@ Authorization: Bearer {{token}}
 
 {
   "userSlug": "devdoido2",
-  "tweetId": "6594eb7a-8ad1-40aa-b837-8b27d519c997",
+  "tweetId":"6712900ce42a586b56c9e980",
   "body": "#opa eai 6594eb7a-8ad1-40aa-b837-8b27d519c997",
   "image":"ssdsd"
 }

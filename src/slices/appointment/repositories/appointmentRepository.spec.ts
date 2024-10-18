@@ -18,7 +18,7 @@ describe("Appointment Mongo Repository", () => {
   let testInstance: AppointmentRepository;
   let repository: MockProxy<Repository>;
   beforeAll(async () => {
-    fakeId = new ObjectId().toString();
+    fakeId = ObjectId.createFromTime(new Date().getTime()).toString();
     fakeQuery = { fields: { name: "123" }, options: {} };
     fakeInvoice = {
       appointments: [

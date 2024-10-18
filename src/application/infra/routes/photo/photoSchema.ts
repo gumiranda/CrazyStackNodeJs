@@ -36,6 +36,7 @@ export const addPhotoPostSchema = {
     body: bodyAddPhotoJsonSchema,
     response: { 200: addPhotoResponse },
     headers: headersJsonSchema,
+    security: [{ bearerAuth: [] }],
   },
 };
 
@@ -62,6 +63,7 @@ const loadPhotoResponse = {
 export const loadPhotoGetSchema = {
   schema: {
     headers: headersJsonSchema,
+    security: [{ bearerAuth: [] }],
     querystring: queryStringJsonLoadPhotoSchema,
     response: {
       200: loadPhotoResponse,
@@ -79,6 +81,7 @@ const queryStringJsonDeletePhotoSchema = {
 export const deletePhotoSchema = {
   schema: {
     headers: headersJsonSchema,
+    security: [{ bearerAuth: [] }],
     querystring: queryStringJsonDeletePhotoSchema,
     response: {
       200: deletePhotoResponse,
@@ -120,6 +123,7 @@ const loadPhotoByPageResponse = {
 export const loadPhotoByPageGetSchema = {
   schema: {
     headers: headersJsonSchema,
+    security: [{ bearerAuth: [] }],
     querystring: queryStringJsonLoadPhotoByPageSchema,
     response: {
       200: loadPhotoByPageResponse,

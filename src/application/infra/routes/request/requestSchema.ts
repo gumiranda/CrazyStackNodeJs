@@ -81,6 +81,7 @@ export const addRequestPostSchema = {
     body: bodyAddRequestJsonSchema,
     response: { 200: addRequestResponse },
     headers: headersJsonSchema,
+    security: [{ bearerAuth: [] }],
   },
 };
 
@@ -122,6 +123,7 @@ const loadRequestResponse = {
 export const loadRequestGetSchema = {
   schema: {
     headers: headersJsonSchema,
+    security: [{ bearerAuth: [] }],
     querystring: queryStringJsonLoadRequestSchema,
     response: {
       200: loadRequestResponse,
@@ -139,6 +141,7 @@ const queryStringJsonDeleteRequestSchema = {
 export const deleteRequestSchema = {
   schema: {
     headers: headersJsonSchema,
+    security: [{ bearerAuth: [] }],
     querystring: queryStringJsonDeleteRequestSchema,
     response: {
       200: deleteRequestResponse,
@@ -205,6 +208,7 @@ const updateRequestBody = {
 export const updateRequestSchema = {
   schema: {
     headers: headersJsonSchema,
+    security: [{ bearerAuth: [] }],
     querystring: queryStringJsonUpdateRequestSchema,
     body: updateRequestBody,
     response: {
@@ -262,6 +266,7 @@ const loadRequestByPageResponse = {
 export const loadRequestByPageGetSchema = {
   schema: {
     headers: headersJsonSchema,
+    security: [{ bearerAuth: [] }],
     querystring: queryStringJsonLoadRequestByPageSchema,
     response: {
       200: loadRequestByPageResponse,

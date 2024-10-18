@@ -29,6 +29,7 @@ export const addProductPostSchema = {
     body: bodyAddProductJsonSchema,
     response: { 200: addProductResponse },
     headers: headersJsonSchema,
+    security: [{ bearerAuth: [] }],
   },
 };
 
@@ -52,6 +53,7 @@ const loadProductResponse = {
 export const loadProductGetSchema = {
   schema: {
     headers: headersJsonSchema,
+    security: [{ bearerAuth: [] }],
     querystring: queryStringJsonLoadProductSchema,
     response: {
       200: loadProductResponse,
@@ -69,6 +71,7 @@ const queryStringJsonDeleteProductSchema = {
 export const deleteProductSchema = {
   schema: {
     headers: headersJsonSchema,
+    security: [{ bearerAuth: [] }],
     querystring: queryStringJsonDeleteProductSchema,
     response: {
       200: deleteProductResponse,
@@ -99,6 +102,7 @@ const updateProductBody = {
 export const updateProductSchema = {
   schema: {
     headers: headersJsonSchema,
+    security: [{ bearerAuth: [] }],
     querystring: queryStringJsonUpdateProductSchema,
     body: updateProductBody,
     response: {
@@ -138,6 +142,7 @@ const loadProductByPageResponse = {
 export const loadProductByPageGetSchema = {
   schema: {
     headers: headersJsonSchema,
+    security: [{ bearerAuth: [] }],
     querystring: queryStringJsonLoadProductByPageSchema,
     response: {
       200: loadProductByPageResponse,

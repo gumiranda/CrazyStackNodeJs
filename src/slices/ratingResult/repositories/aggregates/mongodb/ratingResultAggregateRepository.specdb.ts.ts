@@ -7,8 +7,8 @@ import { RatingResultAggregateRepository } from "./ratingResultAggregateReposito
 import { MongoRepository } from "@/application/infra";
 const fakeRatingQuery: any = {
   fields: {
-    ratingId: new ObjectId().toString(),
-    ratingForId: new ObjectId().toString(),
+    ratingId: ObjectId.createFromTime(new Date().getTime()).toString(),
+    ratingForId: ObjectId.createFromTime(new Date().getTime()).toString(),
   },
   options: {},
 };

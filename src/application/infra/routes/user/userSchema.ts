@@ -47,6 +47,7 @@ export const addUserPostSchema = {
     body: bodyAddUserJsonSchema,
     response: { 200: addUserResponse },
     headers: headersJsonSchema,
+    security: [{ bearerAuth: [] }],
   },
 };
 
@@ -84,6 +85,7 @@ const loadUserResponse = {
 export const loadUserGetSchema = {
   schema: {
     headers: headersJsonSchema,
+    security: [{ bearerAuth: [] }],
     querystring: queryStringJsonLoadUserSchema,
     response: {
       200: loadUserResponse,
@@ -101,6 +103,7 @@ const queryStringJsonDeleteUserSchema = {
 export const deleteUserSchema = {
   schema: {
     headers: headersJsonSchema,
+    security: [{ bearerAuth: [] }],
     querystring: queryStringJsonDeleteUserSchema,
     response: {
       200: deleteUserResponse,
@@ -144,6 +147,7 @@ const updateUserBody = {
 export const updateUserSchema = {
   schema: {
     headers: headersJsonSchema,
+    security: [{ bearerAuth: [] }],
     querystring: queryStringJsonUpdateUserSchema,
     body: updateUserBody,
     response: {
@@ -193,6 +197,7 @@ const loadUserByPageResponse = {
 export const loadUserByPageGetSchema = {
   schema: {
     headers: headersJsonSchema,
+    security: [{ bearerAuth: [] }],
     querystring: queryStringJsonLoadUserByPageSchema,
     response: {
       200: loadUserByPageResponse,
@@ -241,6 +246,7 @@ const queryStringJsonLoadUserGeoNearSchema = {
 export const loadUserByGeoNearSchema = {
   schema: {
     headers: headersJsonSchema,
+    security: [{ bearerAuth: [] }],
     querystring: queryStringJsonLoadUserGeoNearSchema,
     response: {
       200: loadUserGeoNearResponse,

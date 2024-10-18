@@ -30,6 +30,7 @@ export const addCategoryPostSchema = {
     body: bodyAddCategoryJsonSchema,
     response: { 200: addCategoryResponse },
     headers: headersJsonSchema,
+    security: [{ bearerAuth: [] }],
   },
 };
 
@@ -53,6 +54,7 @@ const loadCategoryResponse = {
 export const loadCategoryGetSchema = {
   schema: {
     headers: headersJsonSchema,
+    security: [{ bearerAuth: [] }],
     querystring: queryStringJsonLoadCategorySchema,
     response: {
       200: loadCategoryResponse,
@@ -70,6 +72,7 @@ const queryStringJsonDeleteCategorySchema = {
 export const deleteCategorySchema = {
   schema: {
     headers: headersJsonSchema,
+    security: [{ bearerAuth: [] }],
     querystring: queryStringJsonDeleteCategorySchema,
     response: {
       200: deleteCategoryResponse,
@@ -102,6 +105,7 @@ const updateCategoryBody = {
 export const updateCategorySchema = {
   schema: {
     headers: headersJsonSchema,
+    security: [{ bearerAuth: [] }],
     querystring: queryStringJsonUpdateCategorySchema,
     body: updateCategoryBody,
     response: {
@@ -141,6 +145,7 @@ const loadCategoryByPageResponse = {
 export const loadCategoryByPageGetSchema = {
   schema: {
     headers: headersJsonSchema,
+    security: [{ bearerAuth: [] }],
     querystring: queryStringJsonLoadCategoryByPageSchema,
     response: {
       200: loadCategoryByPageResponse,

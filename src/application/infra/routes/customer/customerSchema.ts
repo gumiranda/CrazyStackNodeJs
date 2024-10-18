@@ -74,6 +74,7 @@ export const addCustomerPostSchema = {
     body: bodyAddCustomerJsonSchema,
     response: { 200: addCustomerResponse },
     headers: headersJsonSchema,
+    security: [{ bearerAuth: [] }],
   },
 };
 
@@ -103,6 +104,7 @@ const loadCustomerResponse = {
 export const loadCustomerGetSchema = {
   schema: {
     headers: headersJsonSchema,
+    security: [{ bearerAuth: [] }],
     querystring: queryStringJsonLoadCustomerSchema,
     response: {
       200: loadCustomerResponse,
@@ -120,6 +122,7 @@ const queryStringJsonDeleteCustomerSchema = {
 export const deleteCustomerSchema = {
   schema: {
     headers: headersJsonSchema,
+    security: [{ bearerAuth: [] }],
     querystring: queryStringJsonDeleteCustomerSchema,
     response: {
       200: deleteCustomerResponse,
@@ -154,6 +157,7 @@ const updateCustomerBody = {
 export const updateCustomerSchema = {
   schema: {
     headers: headersJsonSchema,
+    security: [{ bearerAuth: [] }],
     querystring: queryStringJsonUpdateCustomerSchema,
     body: updateCustomerBody,
     response: {
@@ -199,6 +203,7 @@ const loadCustomerByPageResponse = {
 export const loadCustomerByPageGetSchema = {
   schema: {
     headers: headersJsonSchema,
+    security: [{ bearerAuth: [] }],
     querystring: queryStringJsonLoadCustomerByPageSchema,
     response: {
       200: loadCustomerByPageResponse,

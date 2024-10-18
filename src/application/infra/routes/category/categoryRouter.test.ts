@@ -107,7 +107,7 @@ describe("Route api/category", () => {
     test("Should return 401 for unauthorized access token", async () => {
       const response = await fastify.inject({
         method: "GET",
-        url: `/api/category/load?_id=${new ObjectId().toString()}`,
+        url: `/api/category/load?_id=${ObjectId.createFromTime(new Date().getTime()).toString()}`,
         headers: { authorization: "Bearer invalid_token" },
       });
       expect(response.statusCode).toBe(401);
@@ -188,7 +188,7 @@ describe("Route api/category", () => {
     test("Should return 401 for unauthorized access token", async () => {
       const response = await fastify.inject({
         method: "DELETE",
-        url: `/api/category/delete?_id=${new ObjectId().toString()}`,
+        url: `/api/category/delete?_id=${ObjectId.createFromTime(new Date().getTime()).toString()}`,
         headers: { authorization: "Bearer invalid_token" },
       });
       expect(response.statusCode).toBe(401);
@@ -230,7 +230,7 @@ describe("Route api/category", () => {
     test("Should return 401 for unauthorized access token", async () => {
       const response = await fastify.inject({
         method: "PATCH",
-        url: `/api/category/update?_id=${new ObjectId().toString()}`,
+        url: `/api/category/update?_id=${ObjectId.createFromTime(new Date().getTime()).toString()}`,
         headers: { authorization: "Bearer invalid_token" },
         body: { name: "new name" },
       });

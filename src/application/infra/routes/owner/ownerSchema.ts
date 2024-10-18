@@ -197,6 +197,7 @@ export const addOwnerPostSchema = {
     body: bodyAddOwnerJsonSchema,
     response: { 200: addOwnerResponse },
     headers: headersJsonSchema,
+    security: [{ bearerAuth: [] }],
   },
 };
 
@@ -298,6 +299,7 @@ const loadOwnerResponse = {
 export const loadOwnerGetSchema = {
   schema: {
     headers: headersJsonSchema,
+    security: [{ bearerAuth: [] }],
     querystring: queryStringJsonLoadOwnerSchema,
     response: {
       200: loadOwnerResponse,
@@ -315,6 +317,7 @@ const queryStringJsonDeleteOwnerSchema = {
 export const deleteOwnerSchema = {
   schema: {
     headers: headersJsonSchema,
+    security: [{ bearerAuth: [] }],
     querystring: queryStringJsonDeleteOwnerSchema,
     response: {
       200: deleteOwnerResponse,
@@ -507,6 +510,7 @@ const updateOwnerBody = {
 export const updateOwnerSchema = {
   schema: {
     headers: headersJsonSchema,
+    security: [{ bearerAuth: [] }],
     querystring: queryStringJsonUpdateOwnerSchema,
     body: updateOwnerBody,
     response: {
@@ -626,6 +630,7 @@ const loadOwnerByPageResponse = {
 export const loadOwnerByPageGetSchema = {
   schema: {
     headers: headersJsonSchema,
+    security: [{ bearerAuth: [] }],
     querystring: queryStringJsonLoadOwnerByPageSchema,
     response: {
       200: loadOwnerByPageResponse,

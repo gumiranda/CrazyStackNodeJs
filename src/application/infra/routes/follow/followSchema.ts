@@ -28,6 +28,7 @@ export const addFollowPostSchema = {
     body: bodyAddFollowJsonSchema,
     response: { 200: addFollowResponse },
     headers: headersJsonSchema,
+    security: [{ bearerAuth: [] }],
   },
 };
 
@@ -54,6 +55,7 @@ const loadFollowResponse = {
 export const loadFollowGetSchema = {
   schema: {
     headers: headersJsonSchema,
+    security: [{ bearerAuth: [] }],
     querystring: queryStringJsonLoadFollowSchema,
     response: {
       200: loadFollowResponse,
@@ -71,6 +73,7 @@ const queryStringJsonDeleteFollowSchema = {
 export const deleteFollowSchema = {
   schema: {
     headers: headersJsonSchema,
+    security: [{ bearerAuth: [] }],
     querystring: queryStringJsonDeleteFollowSchema,
     response: {
       200: deleteFollowResponse,
@@ -101,6 +104,7 @@ const updateFollowBody = {
 export const updateFollowSchema = {
   schema: {
     headers: headersJsonSchema,
+    security: [{ bearerAuth: [] }],
     querystring: queryStringJsonUpdateFollowSchema,
     body: updateFollowBody,
     response: {
@@ -143,6 +147,7 @@ const loadFollowByPageResponse = {
 export const loadFollowByPageGetSchema = {
   schema: {
     headers: headersJsonSchema,
+    security: [{ bearerAuth: [] }],
     querystring: queryStringJsonLoadFollowByPageSchema,
     response: {
       200: loadFollowByPageResponse,

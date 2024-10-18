@@ -29,6 +29,7 @@ export const addRidePostSchema = {
     body: bodyAddRideJsonSchema,
     response: { 200: addRideResponse },
     headers: headersJsonSchema,
+    security: [{ bearerAuth: [] }],
   },
 };
 
@@ -52,6 +53,7 @@ const loadRideResponse = {
 export const loadRideGetSchema = {
   schema: {
     headers: headersJsonSchema,
+    security: [{ bearerAuth: [] }],
     querystring: queryStringJsonLoadRideSchema,
     response: {
       200: loadRideResponse,
@@ -69,6 +71,7 @@ const queryStringJsonDeleteRideSchema = {
 export const deleteRideSchema = {
   schema: {
     headers: headersJsonSchema,
+    security: [{ bearerAuth: [] }],
     querystring: queryStringJsonDeleteRideSchema,
     response: {
       200: deleteRideResponse,
@@ -99,6 +102,7 @@ const updateRideBody = {
 export const updateRideSchema = {
   schema: {
     headers: headersJsonSchema,
+    security: [{ bearerAuth: [] }],
     querystring: queryStringJsonUpdateRideSchema,
     body: updateRideBody,
     response: {
@@ -138,6 +142,7 @@ const loadRideByPageResponse = {
 export const loadRideByPageGetSchema = {
   schema: {
     headers: headersJsonSchema,
+    security: [{ bearerAuth: [] }],
     querystring: queryStringJsonLoadRideByPageSchema,
     response: {
       200: loadRideByPageResponse,

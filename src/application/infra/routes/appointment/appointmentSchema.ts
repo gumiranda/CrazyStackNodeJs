@@ -76,6 +76,7 @@ export const addAppointmentPostSchema = {
     body: bodyAddAppointmentJsonSchema,
     response: { 200: addAppointmentResponse },
     headers: headersJsonSchema,
+    security: [{ bearerAuth: [] }],
   },
 };
 
@@ -114,6 +115,7 @@ const loadAppointmentResponse = {
 export const loadAppointmentGetSchema = {
   schema: {
     headers: headersJsonSchema,
+    security: [{ bearerAuth: [] }],
     querystring: queryStringJsonLoadAppointmentSchema,
     response: {
       200: loadAppointmentResponse,
@@ -142,6 +144,7 @@ const loadAvailableTimesResponse = {
 export const loadAvailableTimesSchema = {
   schema: {
     headers: headersJsonSchema,
+    security: [{ bearerAuth: [] }],
     querystring: queryStringJsonloadAvailableTimesSchema,
     response: {
       200: loadAvailableTimesResponse,
@@ -159,6 +162,7 @@ const queryStringJsonDeleteAppointmentSchema = {
 export const deleteAppointmentSchema = {
   schema: {
     headers: headersJsonSchema,
+    security: [{ bearerAuth: [] }],
     querystring: queryStringJsonDeleteAppointmentSchema,
     response: {
       200: deleteAppointmentResponse,
@@ -219,6 +223,7 @@ const updateAppointmentBody = {
 export const updateAppointmentSchema = {
   schema: {
     headers: headersJsonSchema,
+    security: [{ bearerAuth: [] }],
     querystring: queryStringJsonUpdateAppointmentSchema,
     body: updateAppointmentBody,
     response: {
@@ -238,6 +243,7 @@ const queryStringJsonLoadAppointmentByPageSchema = {
 export const loadInvoiceSchema = {
   schema: {
     headers: headersJsonSchema,
+    security: [{ bearerAuth: [] }],
     querystring: {
       type: "object",
       properties: {
@@ -303,6 +309,7 @@ const loadAppointmentByPageResponse = {
 export const loadAppointmentByPageGetSchema = {
   schema: {
     headers: headersJsonSchema,
+    security: [{ bearerAuth: [] }],
     querystring: queryStringJsonLoadAppointmentByPageSchema,
     response: {
       200: loadAppointmentByPageResponse,

@@ -61,6 +61,7 @@ export const addMapRoutePostSchema = {
     body: bodyAddMapRouteJsonSchema,
     response: { 200: addMapRouteResponse },
     headers: headersJsonSchema,
+    security: [{ bearerAuth: [] }],
   },
 };
 
@@ -114,6 +115,7 @@ const loadMapRouteResponse = {
 export const loadMapRouteGetSchema = {
   schema: {
     headers: headersJsonSchema,
+    security: [{ bearerAuth: [] }],
     querystring: queryStringJsonLoadMapRouteSchema,
     response: {
       200: loadMapRouteResponse,
@@ -131,6 +133,7 @@ const queryStringJsonLoadDirectionsSchema = {
 export const loadDirectionsGetSchema = {
   schema: {
     headers: headersJsonSchema,
+    security: [{ bearerAuth: [] }],
     querystring: queryStringJsonLoadDirectionsSchema,
   },
 };
@@ -144,6 +147,7 @@ const queryStringJsonLoadPlacesSchema = {
 export const loadPlacesGetSchema = {
   schema: {
     headers: headersJsonSchema,
+    security: [{ bearerAuth: [] }],
     querystring: queryStringJsonLoadPlacesSchema,
   },
 };
@@ -158,6 +162,7 @@ const queryStringJsonDeleteMapRouteSchema = {
 export const deleteMapRouteSchema = {
   schema: {
     headers: headersJsonSchema,
+    security: [{ bearerAuth: [] }],
     querystring: queryStringJsonDeleteMapRouteSchema,
     response: {
       200: deleteMapRouteResponse,
@@ -223,6 +228,7 @@ const updateMapRouteBody = {
 export const updateMapRouteSchema = {
   schema: {
     headers: headersJsonSchema,
+    security: [{ bearerAuth: [] }],
     querystring: queryStringJsonUpdateMapRouteSchema,
     body: updateMapRouteBody,
     response: {
@@ -292,6 +298,7 @@ const loadMapRouteByPageResponse = {
 export const loadMapRouteByPageGetSchema = {
   schema: {
     headers: headersJsonSchema,
+    security: [{ bearerAuth: [] }],
     querystring: queryStringJsonLoadMapRouteByPageSchema,
     response: {
       200: loadMapRouteByPageResponse,

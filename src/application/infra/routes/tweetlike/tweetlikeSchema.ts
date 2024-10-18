@@ -31,6 +31,7 @@ export const toggleTweetlikePostSchema = {
     body: bodyToggleTweetlikeJsonSchema,
     response: { 200: toggleTweetlikeResponse },
     headers: headersJsonSchema,
+    security: [{ bearerAuth: [] }],
   },
 };
 
@@ -55,6 +56,7 @@ const loadTweetlikeResponse = {
 export const loadTweetlikeGetSchema = {
   schema: {
     headers: headersJsonSchema,
+    security: [{ bearerAuth: [] }],
     querystring: queryStringJsonLoadTweetlikeSchema,
     response: {
       200: loadTweetlikeResponse,
@@ -72,6 +74,7 @@ const queryStringJsonDeleteTweetlikeSchema = {
 export const deleteTweetlikeSchema = {
   schema: {
     headers: headersJsonSchema,
+    security: [{ bearerAuth: [] }],
     querystring: queryStringJsonDeleteTweetlikeSchema,
     response: {
       200: deleteTweetlikeResponse,
@@ -104,6 +107,7 @@ const updateTweetlikeBody = {
 export const updateTweetlikeSchema = {
   schema: {
     headers: headersJsonSchema,
+    security: [{ bearerAuth: [] }],
     querystring: queryStringJsonUpdateTweetlikeSchema,
     body: updateTweetlikeBody,
     response: {
@@ -144,6 +148,7 @@ const loadTweetlikeByPageResponse = {
 export const loadTweetlikeByPageGetSchema = {
   schema: {
     headers: headersJsonSchema,
+    security: [{ bearerAuth: [] }],
     querystring: queryStringJsonLoadTweetlikeByPageSchema,
     response: {
       200: loadTweetlikeByPageResponse,

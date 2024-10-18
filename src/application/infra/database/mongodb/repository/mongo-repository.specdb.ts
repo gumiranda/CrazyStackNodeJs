@@ -47,7 +47,9 @@ describe("Mongo Repository tests", () => {
   });
   test("Should delete user fails", async () => {
     const sut = makeSut();
-    const userDeleted = await sut.deleteOne({ _id: new ObjectId() });
+    const userDeleted = await sut.deleteOne({
+      _id: ObjectId.createFromTime(new Date().getTime()),
+    });
     expect(userDeleted).toBeFalsy();
   });
   test("Should deleteMany user with success", async () => {
@@ -63,7 +65,9 @@ describe("Mongo Repository tests", () => {
   });
   test("Should deleteMany user fails", async () => {
     const sut = makeSut();
-    const userDeleted = await sut.deleteMany({ _id: new ObjectId() });
+    const userDeleted = await sut.deleteMany({
+      _id: ObjectId.createFromTime(new Date().getTime()),
+    });
     expect(userDeleted).toBeFalsy();
   });
   test("Should return an user add success", async () => {

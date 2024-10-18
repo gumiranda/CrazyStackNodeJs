@@ -29,6 +29,7 @@ export const addRecurrencePostSchema = {
     body: bodyAddRecurrenceJsonSchema,
     response: { 200: addRecurrenceResponse },
     headers: headersJsonSchema,
+    security: [{ bearerAuth: [] }],
   },
 };
 
@@ -52,6 +53,7 @@ const loadRecurrenceResponse = {
 export const loadRecurrenceGetSchema = {
   schema: {
     headers: headersJsonSchema,
+    security: [{ bearerAuth: [] }],
     querystring: queryStringJsonLoadRecurrenceSchema,
     response: {
       200: loadRecurrenceResponse,
@@ -69,6 +71,7 @@ const queryStringJsonDeleteRecurrenceSchema = {
 export const deleteRecurrenceSchema = {
   schema: {
     headers: headersJsonSchema,
+    security: [{ bearerAuth: [] }],
     querystring: queryStringJsonDeleteRecurrenceSchema,
     response: {
       200: deleteRecurrenceResponse,
@@ -99,6 +102,7 @@ const updateRecurrenceBody = {
 export const updateRecurrenceSchema = {
   schema: {
     headers: headersJsonSchema,
+    security: [{ bearerAuth: [] }],
     querystring: queryStringJsonUpdateRecurrenceSchema,
     body: updateRecurrenceBody,
     response: {
@@ -138,6 +142,7 @@ const loadRecurrenceByPageResponse = {
 export const loadRecurrenceByPageGetSchema = {
   schema: {
     headers: headersJsonSchema,
+    security: [{ bearerAuth: [] }],
     querystring: queryStringJsonLoadRecurrenceByPageSchema,
     response: {
       200: loadRecurrenceByPageResponse,

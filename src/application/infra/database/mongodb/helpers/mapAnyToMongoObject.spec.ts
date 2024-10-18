@@ -2,7 +2,7 @@ import { ObjectId } from "mongodb";
 import { mapAnyToMongoObject } from "./mapAnyToMongoObject";
 describe("mapAnyToMongoObject", () => {
   test("mapAnyToMongoObject when id is object", () => {
-    const fakeId = new ObjectId().toString();
+    const fakeId = ObjectId.createFromTime(new Date().getTime()).toString();
     const objectMapped = mapAnyToMongoObject({
       userId: fakeId,
       anyField: "anyValue",
@@ -13,7 +13,10 @@ describe("mapAnyToMongoObject", () => {
     });
   });
   test("mapAnyToMongoObject when id is array", () => {
-    const fakeIds = [new ObjectId().toString(), new ObjectId().toString()];
+    const fakeIds = [
+      ObjectId.createFromTime(new Date().getTime()).toString(),
+      ObjectId.createFromTime(new Date().getTime()).toString(),
+    ];
     const objectMapped = mapAnyToMongoObject({
       userIds: fakeIds,
       anyField: "anyValue",

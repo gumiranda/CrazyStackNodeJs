@@ -34,6 +34,7 @@ export const addTweetPostSchema = {
     body: bodyAddTweetJsonSchema,
     response: { 200: addTweetResponse },
     headers: headersJsonSchema,
+    security: [{ bearerAuth: [] }],
   },
 };
 
@@ -89,6 +90,7 @@ const loadTweetResponse = {
 export const loadTweetGetSchema = {
   schema: {
     headers: headersJsonSchema,
+    security: [{ bearerAuth: [] }],
     querystring: queryStringJsonLoadTweetSchema,
     response: {
       200: loadTweetResponse,
@@ -106,6 +108,7 @@ const queryStringJsonDeleteTweetSchema = {
 export const deleteTweetSchema = {
   schema: {
     headers: headersJsonSchema,
+    security: [{ bearerAuth: [] }],
     querystring: queryStringJsonDeleteTweetSchema,
     response: {
       200: deleteTweetResponse,
@@ -141,6 +144,7 @@ const updateTweetBody = {
 export const updateTweetSchema = {
   schema: {
     headers: headersJsonSchema,
+    security: [{ bearerAuth: [] }],
     querystring: queryStringJsonUpdateTweetSchema,
     body: updateTweetBody,
     response: {
@@ -182,6 +186,7 @@ const loadTweetByPageResponse = {
 export const loadTweetByPageGetSchema = {
   schema: {
     headers: headersJsonSchema,
+    security: [{ bearerAuth: [] }],
     querystring: queryStringJsonLoadTweetByPageSchema,
     response: {
       200: loadTweetByPageResponse,

@@ -5,7 +5,7 @@ import MockDate from "mockdate";
 import { mock, MockProxy } from "jest-mock-extended";
 import { UserRepository } from "./userRepository";
 import { ObjectId } from "mongodb";
-const fakeId = new ObjectId();
+const fakeId = ObjectId.createFromTime(new Date().getTime());
 describe("User Mongo Repository", () => {
   let fakeQuery: Query;
   let testInstance: UserRepository;
