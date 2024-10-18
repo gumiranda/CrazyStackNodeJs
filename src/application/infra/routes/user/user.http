@@ -1,7 +1,6 @@
 @apiurl = http://127.0.0.1:3333/api
 
-@token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzEyOGZkNWU0MmE1ODZiNTZjOWU5N2UiLCJpYXQiOjE3MjkyNjk3MTcsImV4cCI6MTczNDQ1MzcxN30.BNwoAKfbCSJ_5f84c1fsnO8nSHdl17Sllc4PIOYtAgQ
-
+@token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiIxOGU2MmExMi0yYzQwLTQ2ZjQtOTM1Ny05Y2U3NmU2ODczNGMiLCJpYXQiOjE3MjkyNzk1NTAsImV4cCI6MTczNDQ2MzU1MH0.WW8lL6eGpAUIps2wvRw5tNcbF0olmljJ6hja6kQkFKo
 
 @tokenGeolocalizado=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzEyOGZkNWU0MmE1ODZiNTZjOWU5N2UiLCJpYXQiOjE3MjkyNjk3MTcsImV4cCI6MTczNDQ1MzcxN30.BNwoAKfbCSJ_5f84c1fsnO8nSHdl17Sllc4PIOYtAgQ
 
@@ -9,7 +8,7 @@
 
 
 
-@entityId=67128fd5e42a586b56c9e97e
+@entityId=18e62a12-2c40-46f4-9357-9ce76e68734c
 
 @myOwnerId=54b7a8a4-4a79-457e-b8f0-20dad19fe048
 
@@ -89,7 +88,7 @@ Content-Type: application/json
 
 
 {
-  "email": "teste9@gmail.com",
+  "email": "teste7@gmail.com",
   "password": "123456",
   "passwordConfirmation": "123456"
 }
