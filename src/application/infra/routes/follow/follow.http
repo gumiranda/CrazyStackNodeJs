@@ -1,19 +1,22 @@
 @apiurl = http://127.0.0.1:3333/api
-@token2=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI5YjM2ZWNjMS04ZTgwLTRmMGYtYTIxNy0yNWY2ZTAxNTgyYTAiLCJpYXQiOjE3MjkyNTA2NTYsImV4cCI6MTczNDQzNDY1Nn0.mK76MkkJ1t3YyDSVdBn90X31_ZrNdoAmZJb_Z6V7qUE
-@token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI5YjM2ZWNjMS04ZTgwLTRmMGYtYTIxNy0yNWY2ZTAxNTgyYTAiLCJpYXQiOjE3MjkyNTY0MzgsImV4cCI6MTczNDQ0MDQzOH0.jET7V1decgU-TfCkrgNivRXiSCW0B32L8jkE-K01NKE
+@token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI5YjM2ZWNjMS04ZTgwLTRmMGYtYTIxNy0yNWY2ZTAxNTgyYTAiLCJpYXQiOjE3MjkyNTY3MDcsImV4cCI6MTczNDQ0MDcwN30.FD5vQfS0m6eBojyEdbzMioKpjPTa3NvCimLEuM1Wdw0
+
+
+@token2=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI0MjFkOTdhNC00MmI2LTQ5NjEtYTEyNi0wYjNlY2JlOTI5ZGUiLCJpYXQiOjE3MjkyNTY5OTYsImV4cCI6MTczNDQ0MDk5Nn0.6B-Yzb2FRGWZ5mrX1EPpbg5tGDjqDnMGkuY6zhI5VPE
+
 @entityId=399d1487-3396-450e-85e8-8232f1e7fb71
 
 @entityType=follow
 
-@userId=2f41abd8-9d68-48bf-b19b-675fe73563b9
+@userId=421d97a4-42b6-4961-a126-0b3ecbe929de
 
 ### POST add
 POST {{apiurl}}/{{entityType}}/add  HTTP/1.1
 Content-Type: application/json
-Authorization: Bearer {{token2}}
+Authorization: Bearer {{token}}
 
 {
-  "userId": "2f41abd8-9d68-48bf-b19b-675fe73563b9"
+  "userId": "421d97a4-42b6-4961-a126-0b3ecbe929de"
 }
 
 ### GET loadById
@@ -27,14 +30,7 @@ GET {{apiurl}}/{{entityType}}/loadByPage?page=1&userId={{userId}} HTTP/1.1
 Content-Type: application/json
 Authorization: Bearer {{token}}
 
-### PATCH update
-PATCH {{apiurl}}/{{entityType}}/update?_id={{entityId}} HTTP/1.1
-Content-Type: application/json
-Authorization: Bearer {{token}}
 
-{
-  "user1Slug": "devlouco"
-}
 
 ### DELETE delete
 DELETE {{apiurl}}/{{entityType}}/delete?_id={{entityId}}	 HTTP/1.1

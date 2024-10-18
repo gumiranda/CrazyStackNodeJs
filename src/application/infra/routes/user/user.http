@@ -68,23 +68,22 @@ Content-Type: application/json
 
 
 {
-  "email": "teste91sasa122@gmail.com",
+  "email": "teste9@gmail.com",
   "password": "123456",
   "passwordConfirmation": "123456",
   "name": "John Doe",
-  "cpf": "12969186020",
+  "cpf": "55724019000",
   "phone": "12345678900",
   "role": "owner",
   "coord":  {"coordinates": [-46.6333, -23.5405] }
 }
-
 ### POST LOGIN geolocalizado
 POST {{apiurl}}/auth/login HTTP/1.1
 Content-Type: application/json
 
 
 {
-  "email": "teste91sasa122@gmail.com",
+  "email": "teste9@gmail.com",
   "password": "123456",
   "passwordConfirmation": "123456"
 }
