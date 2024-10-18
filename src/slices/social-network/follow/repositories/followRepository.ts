@@ -29,7 +29,8 @@ export class FollowRepository
       query?.fields ?? {},
       query?.options?.sort ?? { createdAt: -1 },
       10,
-      query?.options?.projection ?? {}
+      query?.options?.projection ?? {},
+      { users: true }
     );
     const total = await this.repository.getCount(query?.fields ?? {});
     return { follows, total };

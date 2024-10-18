@@ -15,7 +15,8 @@ export abstract class Repository {
     query: any,
     sort: any,
     limit: number,
-    projection: any
+    projection: any,
+    populate?: any
   ): Promise<any>;
   abstract getCount(query: any): Promise<any>;
   abstract aggregate(query: any): Promise<any>;
