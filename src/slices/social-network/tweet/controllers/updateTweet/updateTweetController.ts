@@ -30,11 +30,12 @@ export class UpdateTweetController extends Controller {
     if (errorsQuery?.length > 0) {
       return badRequest(errorsQuery);
     }
-    const oldTweet = await this.loadTweet({
+    const oldTweet: any = await this.loadTweet({
       fields: { ...httpRequest?.query, createdById: httpRequest?.userId },
       options: {},
     });
-    if (!oldTweet) {
+    const oldTweetBody = oldTweet?.body ?? oldTweet?.[0]?.body;
+    if (!oldTweetBody) {
       return badRequest("Tweet not found");
     }
     const newTweet = await this.updateTweet(
@@ -47,7 +48,7 @@ export class UpdateTweetController extends Controller {
       },
       httpRequest?.body
     );
-    const oldHashtags: string[] = oldTweet?.body.match(/#[a-zA-Z0-9_]+/g) || [];
+    const oldHashtags: string[] = oldTweetBody.match(/#[a-zA-Z0-9_]+/g) || [];
     const newHashtags: string[] = newTweet?.body.match(/#[a-zA-Z0-9_]+/g) || [];
 
     // Process hashtags removed or added

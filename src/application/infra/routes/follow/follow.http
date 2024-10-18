@@ -1,11 +1,11 @@
 @apiurl = http://127.0.0.1:3333/api
 
-@token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI5YWYxNGJmMS00YmM0LTQzZTEtYTdjOC01NmExOTFlNTE5M2IiLCJpYXQiOjE3MjkwMjEwNDQsImV4cCI6MTczNDIwNTA0NH0.FtbUSy7sS7YjBjYSvesWPYkWiTkWp4MgT6HCApszKK4
+@token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiIyMjNhYzg2NS03ZjA1LTRiYjctYTFmMS0zNmYyZWJkNjg5ZWYiLCJpYXQiOjE3MjkyNDkyMjQsImV4cCI6MTczNDQzMzIyNH0.5g2X-H_PxVzrXmIHR-_QSyEbUQVkT2MeKYgU84hkOj8
 @entityId=399d1487-3396-450e-85e8-8232f1e7fb71
 
 @entityType=follow
 
-@tweetId=af0498c4-f7e4-4d31-a546-3293a083707d
+@userId=2f41abd8-9d68-48bf-b19b-675fe73563b9
 
 ### POST add
 POST {{apiurl}}/{{entityType}}/add  HTTP/1.1
@@ -13,7 +13,7 @@ Content-Type: application/json
 Authorization: Bearer {{token}}
 
 {
-  "userId": "devdoido"
+  "userId": "2f41abd8-9d68-48bf-b19b-675fe73563b9"
 }
 
 ### GET loadById

@@ -9,7 +9,7 @@ import {
 import { AddFollowController } from "@/slices/social-network/follow/controllers";
 
 export const makeAddFollowController = (): Controller => {
-  const requiredFields = ["user1Slug", "user2Slug"];
+  const requiredFields = ["userId"];
   return makeLogController(
     "addFollow",
     new AddFollowController(
