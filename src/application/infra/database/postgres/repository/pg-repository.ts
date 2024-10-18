@@ -187,7 +187,7 @@ export class PostgresRepository extends Repository {
           (key) => projection[key] === 1
         );
 
-        if (excludedFields.length > 0) {
+        if (excludedFields.length > 0 && this.tableName !== "users") {
           currentTableFields = await this.getTableFields(this.tableName, client);
           const selectedFields = currentTableFields.filter(
             (field: any) => !excludedFields.includes(field)
@@ -195,7 +195,7 @@ export class PostgresRepository extends Repository {
           selectClause = selectedFields
             .map((field: any) => `"${this.tableName}"."${field}"`)
             .join(", ");
-        } else if (includedFields.length > 0) {
+        } else if (includedFields.length > 0 && this.tableName !== "users") {
           selectClause = includedFields
             .map((field) => `"${this.tableName}".${field}`)
             .join(", ");
@@ -267,6 +267,9 @@ export class PostgresRepository extends Repository {
       const result = await client.query(queryText, values);
 
       return returnOneRegister ? result?.rows?.[0] : result?.rows;
+    } catch (error: any) {
+      console.log(error);
+      throw new Error(error);
     } finally {
       client.release();
     }
