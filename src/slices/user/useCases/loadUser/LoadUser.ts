@@ -2,71 +2,19 @@ import { LoadUserRepository } from "@/slices/user/repositories";
 import { UserData } from "@/slices/user/entities";
 import { Query } from "@/application/types";
 import { LoadPhoto } from "@/slices/photo/useCases";
-import type { GetCountFollowRepository } from "@/slices/social-network/follow/repositories";
-import type { GetCountTweetRepository } from "@/slices/social-network/tweet/repositories";
 
-// Definir o tipo correto para photo, para evitar o uso de `any`
-interface PhotoData {
-  _id: string;
-  url: string;
-  name: string;
-  type: string;
-  size: number;
-}
-
-export type LoadUser = (query: Query) => Promise<
-  | (UserData & {
-      followings: number;
-      followers: number;
-      tweets: number;
-      createdById: string;
-      photo?: PhotoData; // Usar o tipo correto aqui
-    })
-  | null
->;
-
+export type LoadUser = (query: Query) => Promise<UserData | null>;
 export type LoadUserSignature = (
   loadUser: LoadUserRepository,
-  loadPhoto: LoadPhoto,
-  followRepository: GetCountFollowRepository,
-  tweetRepository: GetCountTweetRepository
+  loadPhoto: LoadPhoto
 ) => LoadUser;
-
 export const loadUser: LoadUserSignature =
-  (
-    loadUserRepository: LoadUserRepository,
-    loadPhoto: LoadPhoto,
-    followRepository: GetCountFollowRepository,
-    tweetRepository: GetCountTweetRepository
-  ) =>
+  (loadUserRepository: LoadUserRepository, loadPhoto: LoadPhoto) =>
   async (query: Query) => {
-    const [user, followingsResult, followersResult, tweetsResult] = await Promise.all([
-      loadUserRepository.loadUser(query),
-      followRepository.getCountFollow({ fields: { createdById: query?.fields?._id } }),
-      followRepository.getCountFollow({ fields: { userId: query?.fields?._id } }),
-      tweetRepository.getCountTweet({ fields: { userId: query?.fields?._id } }),
-    ]);
-
-    const followings = followingsResult ?? 0;
-    const followers = followersResult ?? 0;
-    const tweets = tweetsResult ?? 0;
-
-    if (!user) {
-      return null;
+    const user = await loadUserRepository.loadUser(query);
+    if (user?.photoId) {
+      const photo = await loadPhoto({ fields: { _id: user.photoId } });
+      return { ...user, photo };
     }
-
-    // Tipagem explícita do retorno de `loadPhoto`
-    let photo: PhotoData | undefined;
-    if (user.photoId) {
-      photo = (await loadPhoto({ fields: { _id: user.photoId } })) as unknown as PhotoData;
-    }
-
-    // Retornar o usuário com os dados corretos
-    return {
-      ...user,
-      followings,
-      followers,
-      tweets,
-      photo, // Garantir que `photo` seja do tipo correto ou undefined
-    };
+    return user;
   };

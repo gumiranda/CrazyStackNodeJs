@@ -1,11 +1,9 @@
 @apiurl = http://127.0.0.1:3333/api
 
-@token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiIyMjNhYzg2NS03ZjA1LTRiYjctYTFmMS0zNmYyZWJkNjg5ZWYiLCJpYXQiOjE3MjkyNDkyMjQsImV4cCI6MTczNDQzMzIyNH0.5g2X-H_PxVzrXmIHR-_QSyEbUQVkT2MeKYgU84hkOj8
+@token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI5YjM2ZWNjMS04ZTgwLTRmMGYtYTIxNy0yNWY2ZTAxNTgyYTAiLCJpYXQiOjE3MjkyNTY3MDcsImV4cCI6MTczNDQ0MDcwN30.FD5vQfS0m6eBojyEdbzMioKpjPTa3NvCimLEuM1Wdw0
+@tokenGeolocalizado=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI5YjM2ZWNjMS04ZTgwLTRmMGYtYTIxNy0yNWY2ZTAxNTgyYTAiLCJpYXQiOjE3MjkyNTY3MDcsImV4cCI6MTczNDQ0MDcwN30.FD5vQfS0m6eBojyEdbzMioKpjPTa3NvCimLEuM1Wdw0
 
-@tokenGeolocalizado=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiIxYjZjNTg2OS05MTc2LTQzZmEtYjg3Yy03MDdhZjY0ZDljNjQiLCJpYXQiOjE3MTgzMTA4MzEsImV4cCI6MTcyMzQ5NDgzMX0.QUpfzYZtMxiG82cEQi6fD7XFvdxudElaiofuMw0DPYs
-
-
-@entityId=125e501b-ae59-45d7-8b4f-b22ff543a065
+@entityId=9b36ecc1-8e80-4f0f-a217-25f6e01582a0
 
 @myOwnerId=54b7a8a4-4a79-457e-b8f0-20dad19fe048
 
@@ -86,7 +84,7 @@ Content-Type: application/json
 
 
 {
-  "email": "fodase@gmail.com",
+  "email": "teste91sasa122@gmail.com",
   "password": "123456",
   "passwordConfirmation": "123456"
 }
