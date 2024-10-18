@@ -1,11 +1,11 @@
 @apiurl = http://127.0.0.1:3333/api
 
-@token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2ZWZiYzY2Ny03Yjc1LTQ2NzgtOTc5My1jZmVlNGE3NWI5NzQiLCJpYXQiOjE3MjkxOTU0MTMsImV4cCI6MTczNDM3OTQxM30.44KtfN_j8SjehHil0eaaG8VTTajU6BrV5FA6vOXjFJ8
+@token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzEyOGZkNWU0MmE1ODZiNTZjOWU5N2UiLCJpYXQiOjE3MjkyNjk3MTcsImV4cCI6MTczNDQ1MzcxN30.BNwoAKfbCSJ_5f84c1fsnO8nSHdl17Sllc4PIOYtAgQ
 
 
 
 
-@entityId=99c818aa-c2ec-44ee-b6be-c68b99b3566e
+@entityId=671290d03c52cff2d5a797f5
 
 @entityType=tweetlike
 
@@ -18,7 +18,7 @@ Authorization: Bearer {{token}}
 
 {
   "userSlug": "devdoido2",
-  "tweetId": "1baa8b85-c8a2-48ee-8606-e16871d54f52"
+  "tweetId": "671290d03c52cff2d5a797f5"
 }
 
 ### GET loadById

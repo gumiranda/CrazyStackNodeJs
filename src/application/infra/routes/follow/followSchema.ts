@@ -136,6 +136,16 @@ const loadFollowByPageResponse = {
           usersslug: { type: "string" },
           usersphotoUrl: { type: "string" },
           usersphotoId: { type: "string" },
+          users: {
+            type: "object",
+            properties: {
+              _id: idSchema,
+              name: { type: "string" },
+              slug: { type: "string" },
+              photoId: { type: "string" },
+              photoUrl: { type: "string" },
+            },
+          },
           createdById: { type: "string" },
           createdAt: { type: "string" },
         },

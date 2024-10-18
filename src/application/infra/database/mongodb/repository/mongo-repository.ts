@@ -203,10 +203,12 @@ export class MongoRepository extends Repository {
       pipeline.push({ $project: projection });
     }
 
+    const queryMongo = mapQueryParamsToQueryMongo(query) ?? {};
+    pipeline.push({ $match: queryMongo });
     if (populate) {
       for (const relation of Object.keys(populate)) {
         if (populate[relation]) {
-          const localField = `${relation}Id`;
+          const localField = `${relation === "users" ? "user" : relation}Id`;
           const relatedCollection = relation === "createdBy" ? "users" : relation;
 
           pipeline.push({
@@ -227,9 +229,6 @@ export class MongoRepository extends Repository {
         }
       }
     }
-
-    pipeline.push({ $match: mapQueryParamsToQueryMongo(query) });
-
     if (sort) {
       pipeline.push({ $sort: sort });
     }

@@ -3,7 +3,6 @@
 @token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzEyOGZkNWU0MmE1ODZiNTZjOWU5N2UiLCJpYXQiOjE3MjkyNjk3MTcsImV4cCI6MTczNDQ1MzcxN30.BNwoAKfbCSJ_5f84c1fsnO8nSHdl17Sllc4PIOYtAgQ
 
 
-
 @tokenGeolocalizado=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzEyOGZkNWU0MmE1ODZiNTZjOWU5N2UiLCJpYXQiOjE3MjkyNjk3MTcsImV4cCI6MTczNDQ1MzcxN30.BNwoAKfbCSJ_5f84c1fsnO8nSHdl17Sllc4PIOYtAgQ
 
 
@@ -75,11 +74,11 @@ Content-Type: application/json
 
 
 {
-  "email": "teste2d49@gmail.com",
+  "email": "ssasasadssad@gmail.com",
   "password": "123456",
   "passwordConfirmation": "123456",
   "name": "John Doe",
-  "cpf": "73544938057",
+  "cpf": "17496023000",
   "phone": "12345678900",
   "role": "owner",
   "coord":  { "type": "Point","coordinates": ["-46.6333", "-23.5405"] }
