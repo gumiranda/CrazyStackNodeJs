@@ -5,23 +5,34 @@ import { LoadPhoto } from "@/slices/photo/useCases";
 import type { GetCountFollowRepository } from "@/slices/social-network/follow/repositories";
 import type { GetCountTweetRepository } from "@/slices/social-network/tweet/repositories";
 
+// Definir o tipo correto para photo, para evitar o uso de `any`
+interface PhotoData {
+  _id: string;
+  url: string;
+  name: string;
+  type: string;
+  size: number;
+}
+
 export type LoadUser = (query: Query) => Promise<
   | (UserData & {
       followings: number;
       followers: number;
       tweets: number;
       createdById: string;
-      photo?: { _id: string; url: string; name: string; type: string; size: number };
+      photo?: PhotoData; // Usar o tipo correto aqui
     })
   | null
 >;
+
 export type LoadUserSignature = (
   loadUser: LoadUserRepository,
   loadPhoto: LoadPhoto,
   followRepository: GetCountFollowRepository,
   tweetRepository: GetCountTweetRepository
 ) => LoadUser;
-export const loadUser: any =
+
+export const loadUser: LoadUserSignature =
   (
     loadUserRepository: LoadUserRepository,
     loadPhoto: LoadPhoto,
@@ -39,9 +50,23 @@ export const loadUser: any =
     const followings = followingsResult ?? 0;
     const followers = followersResult ?? 0;
     const tweets = tweetsResult ?? 0;
-    if (user?.photoId) {
-      const photo: any = await loadPhoto({ fields: { _id: user.photoId } });
-      return { ...user, photo, followings, followers, tweets };
+
+    if (!user) {
+      return null;
     }
-    return { ...user, followings, followers, tweets };
+
+    // Tipagem explícita do retorno de `loadPhoto`
+    let photo: PhotoData | undefined;
+    if (user.photoId) {
+      photo = (await loadPhoto({ fields: { _id: user.photoId } })) as unknown as PhotoData;
+    }
+
+    // Retornar o usuário com os dados corretos
+    return {
+      ...user,
+      followings,
+      followers,
+      tweets,
+      photo, // Garantir que `photo` seja do tipo correto ou undefined
+    };
   };

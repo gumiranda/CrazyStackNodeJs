@@ -44,6 +44,9 @@ const loadFollowResponse = {
     _id: idSchema,
     userId: { type: "string" },
     usersname: { type: "string" },
+    usersslug: { type: "string" },
+    usersphotoId: { type: "string" },
+    usersphotoUrl: { type: "string" },
     createdById: { type: "string" },
     createdAt: { type: "string" },
   },
@@ -86,15 +89,13 @@ const updateFollowResponse = {
   properties: {
     _id: idSchema,
     userId: { type: "string" },
-    usersname: { type: "string" },
-    usersslug: { type: "string" },
     createdById: { type: "string" },
   },
 };
 const updateFollowBody = {
   type: "object",
   properties: {
-    userId: { snamepe: "string" },
+    userId: { type: "string" },
   },
 };
 export const updateFollowSchema = {
