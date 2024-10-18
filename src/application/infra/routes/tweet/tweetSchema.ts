@@ -64,7 +64,17 @@ const loadTweetResponse = {
       },
     },
     tweetlike: {},
-    tweet: {},
+    tweet: {
+      type: "object",
+      properties: {
+        createdById: { type: "string" },
+        createdAt: { type: "string" },
+        updatedAt: { type: "string" },
+        userSlug: { type: "string" },
+        body: { type: "string" },
+        image: { type: "string" },
+      },
+    },
     users: {
       type: "object",
       properties: {
