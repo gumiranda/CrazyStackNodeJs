@@ -2,10 +2,9 @@ import { idSchema } from "@/application/types/id";
 
 const bodyAddFollowJsonSchema = {
   type: "object",
-  required: ["user1Slug", "user2Slug"],
+  required: ["userId"],
   properties: {
-    user1Slug: { type: "string" },
-    user2Slug: { type: "string" },
+    userId: { type: "string" },
   },
 };
 const headersJsonSchema = {
@@ -19,8 +18,7 @@ const addFollowResponse = {
   type: "object",
   properties: {
     _id: idSchema,
-    user1Slug: { type: "string" },
-    user2Slug: { type: "string" },
+    userId: { type: "string" },
     createdById: { type: "string" },
     createdAt: { type: "string" },
   },
@@ -44,8 +42,7 @@ const loadFollowResponse = {
   type: "object",
   properties: {
     _id: idSchema,
-    user1Slug: { type: "string" },
-    user2Slug: { type: "string" },
+    userId: { type: "string" },
     createdById: { type: "string" },
     createdAt: { type: "string" },
   },
@@ -87,16 +84,14 @@ const updateFollowResponse = {
   type: "object",
   properties: {
     _id: idSchema,
-    user1Slug: { type: "string" },
-    user2Slug: { type: "string" },
+    userId: { type: "string" },
     createdById: { type: "string" },
   },
 };
 const updateFollowBody = {
   type: "object",
   properties: {
-    user1Slug: { type: "string" },
-    user2Slug: { type: "string" },
+    userId: { type: "string" },
   },
 };
 export const updateFollowSchema = {
@@ -128,8 +123,7 @@ const loadFollowByPageResponse = {
         type: "object",
         properties: {
           _id: idSchema,
-          user1Slug: { type: "string" },
-          user2Slug: { type: "string" },
+          userId: { type: "string" },
           createdById: { type: "string" },
           createdAt: { type: "string" },
         },

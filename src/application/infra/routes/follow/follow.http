@@ -13,8 +13,7 @@ Content-Type: application/json
 Authorization: Bearer {{token}}
 
 {
-  "user1Slug": "devdoido",
-  "user2Slug": "manobrown"
+  "userId": "devdoido"
 }
 
 ### GET loadById

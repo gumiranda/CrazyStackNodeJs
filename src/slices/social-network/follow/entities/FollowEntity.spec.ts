@@ -4,8 +4,7 @@ import MockDate from "mockdate";
 export const fakeFollowEntity = {
   _id: "123",
   createdById: "123",
-  user1Slug: "fakeFollowEntity",
-  user2Slug: "fakeFollowEntity",
+  userId: "1234",
   createdAt: new Date(),
   updatedAt: new Date(),
 };

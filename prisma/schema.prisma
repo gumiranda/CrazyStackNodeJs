@@ -614,10 +614,9 @@ model tweetlike {
 
 model follow {
   id          String    @id @default(dbgenerated("uuid_generate_v4()")) @map("_id") @db.Uuid
-  user1Slug   String
-  user2Slug   String
-  createdById String?   @db.Uuid
-  user        users?    @relation(fields: [createdById], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  userId      String    @db.Uuid
+  createdById String    @db.Uuid
+  user        users     @relation(fields: [createdById], references: [id], onDelete: NoAction, onUpdate: NoAction)
   createdAt   DateTime  @default(now()) @db.Timestamp(6)
   updatedAt   DateTime? @default(now()) @db.Timestamp(6)
 }

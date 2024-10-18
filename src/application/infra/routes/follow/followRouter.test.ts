@@ -18,8 +18,7 @@ const userBody = {
   coord: { type: "Point", coordinates: [-46.693419, -23.568704] },
 };
 const followBody = {
-  user1Slug: "test",
-  user2Slug: "test",
+  userId: "test",
 };
 const makeAccessToken = async (role: string, password: string): Promise<any> => {
   const result = await userCollection.insertOne({
