@@ -1,5 +1,5 @@
 @apiurl = http://127.0.0.1:3333/api
-
+@token2=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI5YjM2ZWNjMS04ZTgwLTRmMGYtYTIxNy0yNWY2ZTAxNTgyYTAiLCJpYXQiOjE3MjkyNTA2NTYsImV4cCI6MTczNDQzNDY1Nn0.mK76MkkJ1t3YyDSVdBn90X31_ZrNdoAmZJb_Z6V7qUE
 @token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiIyMjNhYzg2NS03ZjA1LTRiYjctYTFmMS0zNmYyZWJkNjg5ZWYiLCJpYXQiOjE3MjkyNDkyMjQsImV4cCI6MTczNDQzMzIyNH0.5g2X-H_PxVzrXmIHR-_QSyEbUQVkT2MeKYgU84hkOj8
 @entityId=399d1487-3396-450e-85e8-8232f1e7fb71
 
@@ -10,7 +10,7 @@
 ### POST add
 POST {{apiurl}}/{{entityType}}/add  HTTP/1.1
 Content-Type: application/json
-Authorization: Bearer {{token}}
+Authorization: Bearer {{token2}}
 
 {
   "userId": "2f41abd8-9d68-48bf-b19b-675fe73563b9"
@@ -23,7 +23,7 @@ Authorization: Bearer {{token}}
 
 
 ### GET loadByPage
-GET {{apiurl}}/{{entityType}}/loadByPage?page=1 HTTP/1.1
+GET {{apiurl}}/{{entityType}}/loadByPage?page=1&userId={{userId}} HTTP/1.1
 Content-Type: application/json
 Authorization: Bearer {{token}}
 
