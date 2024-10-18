@@ -63,7 +63,7 @@ describe("Route api/follow", () => {
     });
     test("Should return 400 for bad requests", async () => {
       const { token } = await makeAccessToken("admin", "password");
-      const followWrongBody = { ...followBody, user1Slug: null };
+      const followWrongBody = { ...followBody, userId: null };
       const responseAdd = await fastify.inject({
         method: "POST",
         url: "/api/follow/add",
@@ -229,18 +229,18 @@ describe("Route api/follow", () => {
         method: "PATCH",
         url: `/api/follow/update?_id=${insertedId.toString()}`,
         headers: { authorization: `Bearer ${token}` },
-        body: { user1Slug: "new user1Slug" },
+        body: { userId: "new userId" },
       });
       const responseBody = JSON.parse(response.body);
       expect(response.statusCode).toBe(200);
-      expect(responseBody.user1Slug).toEqual("new user1Slug");
+      expect(responseBody.userId).toEqual("new userId");
     });
     test("Should return 401 for unauthorized access token", async () => {
       const response = await fastify.inject({
         method: "PATCH",
         url: `/api/follow/update?_id=${ObjectId.createFromTime(new Date().getTime()).toString()}`,
         headers: { authorization: "Bearer invalid_token" },
-        body: { user1Slug: "new user1Slug" },
+        body: { userId: "new userId" },
       });
       expect(response.statusCode).toBe(401);
     });
