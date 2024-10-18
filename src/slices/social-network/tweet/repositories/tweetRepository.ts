@@ -6,6 +6,7 @@ import {
   LoadTweetByPageRepository,
   LoadTweetRepository,
   UpdateTweetRepository,
+  type GetCountTweetRepository,
 } from "./contracts";
 import { Query } from "@/application/types";
 export class TweetRepository
@@ -14,7 +15,8 @@ export class TweetRepository
     DeleteTweetRepository,
     LoadTweetByPageRepository,
     LoadTweetRepository,
-    UpdateTweetRepository
+    UpdateTweetRepository,
+    GetCountTweetRepository
 {
   constructor(private readonly repository: Repository) {}
   async addTweet(tweet: TweetData): Promise<TweetData | null> {
@@ -39,5 +41,8 @@ export class TweetRepository
   }
   async updateTweet(query: Query, data: TweetData): Promise<TweetData | null> {
     return this.repository.update(query?.fields ?? {}, data);
+  }
+  async getCountTweet(query: Query): Promise<number | null> {
+    return this.repository.getCount(query?.fields ?? {});
   }
 }

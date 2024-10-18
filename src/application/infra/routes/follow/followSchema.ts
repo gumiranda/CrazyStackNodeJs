@@ -43,6 +43,7 @@ const loadFollowResponse = {
   properties: {
     _id: idSchema,
     userId: { type: "string" },
+    usersname: { type: "string" },
     createdById: { type: "string" },
     createdAt: { type: "string" },
   },
@@ -85,13 +86,15 @@ const updateFollowResponse = {
   properties: {
     _id: idSchema,
     userId: { type: "string" },
+    usersname: { type: "string" },
+    usersslug: { type: "string" },
     createdById: { type: "string" },
   },
 };
 const updateFollowBody = {
   type: "object",
   properties: {
-    userId: { type: "string" },
+    userId: { snamepe: "string" },
   },
 };
 export const updateFollowSchema = {
@@ -124,6 +127,10 @@ const loadFollowByPageResponse = {
         properties: {
           _id: idSchema,
           userId: { type: "string" },
+          usersname: { type: "string" },
+          usersslug: { type: "string" },
+          usersphotoUrl: { type: "string" },
+          usersphotoId: { type: "string" },
           createdById: { type: "string" },
           createdAt: { type: "string" },
         },

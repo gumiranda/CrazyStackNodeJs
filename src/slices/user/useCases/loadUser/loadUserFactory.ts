@@ -1,12 +1,19 @@
 import { makeDatabaseInstance } from "@/application/infra";
 import { UserRepository } from "@/slices/user/repositories";
-import { loadUser, LoadUser } from "@/slices/user/useCases";
+import { loadUser } from "@/slices/user/useCases";
 import { whiteLabel } from "@/application/infra/config/whiteLabel";
 import { makeLoadPhotoFactory } from "@/slices/photo/useCases";
+import { FollowRepository } from "@/slices/social-network/follow/repositories";
 
-export const makeLoadUserFactory = (): LoadUser => {
+export const makeLoadUserFactory = () => {
   const repository = new UserRepository(
     makeDatabaseInstance(whiteLabel.database, "users")
   );
-  return loadUser(repository, makeLoadPhotoFactory());
+  const repositoryFollow = new FollowRepository(
+    makeDatabaseInstance(whiteLabel.database, "follow")
+  );
+  const repositoryTweet = new FollowRepository(
+    makeDatabaseInstance(whiteLabel.database, "tweet")
+  );
+  return loadUser(repository, makeLoadPhotoFactory(), repositoryFollow, repositoryTweet);
 };

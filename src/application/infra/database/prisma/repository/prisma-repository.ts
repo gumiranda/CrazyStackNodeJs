@@ -214,11 +214,30 @@ export class PrismaRepository extends Repository {
     fields: any,
     sort: any,
     limit = 10,
-    projection: any = {}
+    projection: any = {},
+    populate = null
   ): Promise<any[]> {
     const skip = (page - 1) * limit;
     fields = this.mapId(fields);
-    const query = { where: fields, orderBy: this.mapSortOrder(sort), take: limit, skip };
+
+    const query: any = {
+      where: fields,
+      orderBy: this.mapSortOrder(sort),
+      take: limit,
+      skip,
+      include: {},
+    };
+    if (populate) {
+      const validIncludeFields = this.getValidIncludeFields(this.tableName.$name);
+
+      Object.keys(populate).forEach((key) => {
+        if (validIncludeFields.includes(key)) {
+          query.include[key] = populate[key];
+        }
+      });
+    } else {
+      delete query.include;
+    }
     const queryFinal =
       Object.keys(projection).length === 0
         ? query

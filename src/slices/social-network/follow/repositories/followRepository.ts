@@ -6,6 +6,7 @@ import {
   LoadFollowByPageRepository,
   LoadFollowRepository,
   UpdateFollowRepository,
+  type GetCountFollowRepository,
 } from "./contracts";
 import { Query } from "@/application/types";
 export class FollowRepository
@@ -14,7 +15,8 @@ export class FollowRepository
     DeleteFollowRepository,
     LoadFollowByPageRepository,
     LoadFollowRepository,
-    UpdateFollowRepository
+    UpdateFollowRepository,
+    GetCountFollowRepository
 {
   constructor(private readonly repository: Repository) {}
   async addFollow(follow: FollowData): Promise<FollowData | null> {
@@ -40,5 +42,8 @@ export class FollowRepository
   }
   async updateFollow(query: Query, data: FollowData): Promise<FollowData | null> {
     return this.repository.update(query?.fields ?? {}, data);
+  }
+  async getCountFollow(query: Query): Promise<number | null> {
+    return this.repository.getCount(query?.fields ?? {});
   }
 }
