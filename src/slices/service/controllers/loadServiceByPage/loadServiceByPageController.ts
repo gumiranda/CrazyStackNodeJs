@@ -28,6 +28,7 @@ export class LoadServiceByPageController extends Controller {
       ...rest
     } = httpRequest?.query || {};
     const fields =
+      !httpRequest?.userLogged?.role ||
       httpRequest?.userLogged?.role === "admin" ||
       httpRequest?.userLogged?.role === "client"
         ? rest

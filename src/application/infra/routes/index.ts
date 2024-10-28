@@ -28,6 +28,7 @@ import { user } from "./user";
 import { service } from "./service";
 import { product } from "./product";
 import { webhooks } from "./webhooks";
+import { publica } from "./public";
 import { uploadRoutes } from "./photo/uploadPhotoRouter";
 
 const routes = [
@@ -37,10 +38,10 @@ const routes = [
   account,
   category,
   // ADD FUNCTION IMPORTS
-trend,
-follow,
-tweetlike,
-tweet,
+  trend,
+  follow,
+  tweetlike,
+  tweet,
   photo,
   transaction,
   charge,
@@ -62,6 +63,7 @@ tweet,
   service,
   product,
   uploadRoutes,
+  publica,
 ];
 
 export { routes };
