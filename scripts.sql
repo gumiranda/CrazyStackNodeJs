@@ -637,3 +637,18 @@ CREATE TABLE tweettweetlike (
     CONSTRAINT "fk_tweetId_tweetlike" FOREIGN KEY ("tweetId") REFERENCES tweet("_id"),
     CONSTRAINT "fk_tweetlikeId_tweetlike" FOREIGN KEY ("tweetlikeId") REFERENCES tweetlike("_id")
 );
+
+-- AddForeignKey
+ALTER TABLE "tweet" ADD CONSTRAINT "tweet_createdById_fkey" FOREIGN KEY ("createdById") REFERENCES "users"("_id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "tweet" ADD CONSTRAINT "tweet_tweetId_fkey" FOREIGN KEY ("tweetId") REFERENCES "tweet"("_id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "tweetlike" ADD CONSTRAINT "tweetlike_createdById_fkey" FOREIGN KEY ("createdById") REFERENCES "users"("_id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "tweetlike" ADD CONSTRAINT "tweetlike_tweetId_fkey" FOREIGN KEY ("tweetId") REFERENCES "tweet"("_id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "follow" ADD CONSTRAINT "follow_createdById_fkey" FOREIGN KEY ("createdById") REFERENCES "users"("_id") ON DELETE SET NULL ON UPDATE CASCADE;
