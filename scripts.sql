@@ -577,4 +577,63 @@ CREATE TABLE photo (
 );
 
 CREATE INDEX idx_photo_createdById ON photo("createdById");
+-- CreateTable
+CREATE TABLE "tweet" (
+    "_id" UUID NOT NULL DEFAULT uuid_generate_v4(),
+    "createdById" UUID,
+    "userSlug" TEXT NOT NULL,
+    "body" TEXT NOT NULL,
+    "image" TEXT,
+    "tweetId" UUID,
+    "createdAt" TIMESTAMP(6) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(6) DEFAULT CURRENT_TIMESTAMP,
 
+    CONSTRAINT "tweet_pkey" PRIMARY KEY ("_id")
+);
+
+-- CreateTable
+CREATE TABLE "tweetlike" (
+    "_id" UUID NOT NULL DEFAULT uuid_generate_v4(),
+    "createdById" UUID,
+    "tweetId" UUID,
+    "userSlug" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(6) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(6) DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "tweetlike_pkey" PRIMARY KEY ("_id")
+);
+
+-- CreateTable
+CREATE TABLE "follow" (
+    "_id" UUID NOT NULL DEFAULT uuid_generate_v4(),
+    "user1Slug" TEXT NOT NULL,
+    "user2Slug" TEXT NOT NULL,
+    "createdById" UUID,
+    "createdAt" TIMESTAMP(6) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(6) DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "follow_pkey" PRIMARY KEY ("_id")
+);
+
+-- CreateTable
+CREATE TABLE "trend" (
+    "_id" UUID NOT NULL DEFAULT uuid_generate_v4(),
+    "hashtag" TEXT NOT NULL,
+    "counter" INTEGER NOT NULL DEFAULT 1,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "trend_pkey" PRIMARY KEY ("_id")
+);
+
+CREATE TABLE tweettweetlike (
+    "_id" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    "userId" UUID NOT NULL,
+    "tweetId" UUID NOT NULL,
+    "tweetlikeId" UUID NOT NULL,
+    "createdAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT "fk_createdById_fidelity" FOREIGN KEY ("userId") REFERENCES users("_id"),
+    CONSTRAINT "fk_tweetId_tweetlike" FOREIGN KEY ("tweetId") REFERENCES tweet("_id"),
+    CONSTRAINT "fk_tweetlikeId_tweetlike" FOREIGN KEY ("tweetlikeId") REFERENCES tweetlike("_id")
+);
