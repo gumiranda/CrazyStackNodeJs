@@ -522,6 +522,55 @@ CREATE TABLE "users" (
     CONSTRAINT "users_pkey" PRIMARY KEY ("_id")
 );
 
+-- CreateTable
+CREATE TABLE "tweet" (
+    "_id" UUID NOT NULL DEFAULT uuid_generate_v4(),
+    "createdById" UUID,
+    "userSlug" TEXT NOT NULL,
+    "body" TEXT NOT NULL,
+    "image" TEXT,
+    "tweetId" UUID,
+    "createdAt" TIMESTAMP(6) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(6) DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "tweet_pkey" PRIMARY KEY ("_id")
+);
+
+-- CreateTable
+CREATE TABLE "tweetlike" (
+    "_id" UUID NOT NULL DEFAULT uuid_generate_v4(),
+    "createdById" UUID,
+    "tweetId" UUID,
+    "userSlug" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(6) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(6) DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "tweetlike_pkey" PRIMARY KEY ("_id")
+);
+
+-- CreateTable
+CREATE TABLE "follow" (
+    "_id" UUID NOT NULL DEFAULT uuid_generate_v4(),
+    "user1Slug" TEXT NOT NULL,
+    "user2Slug" TEXT NOT NULL,
+    "createdById" UUID,
+    "createdAt" TIMESTAMP(6) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(6) DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "follow_pkey" PRIMARY KEY ("_id")
+);
+
+-- CreateTable
+CREATE TABLE "trend" (
+    "_id" UUID NOT NULL DEFAULT uuid_generate_v4(),
+    "hashtag" TEXT NOT NULL,
+    "counter" INTEGER NOT NULL DEFAULT 1,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "trend_pkey" PRIMARY KEY ("_id")
+);
+
 -- CreateIndex
 CREATE INDEX "idx_account_createdbyid" ON "account"("createdById");
 
@@ -700,79 +749,31 @@ CREATE INDEX "idx_users_myownerid" ON "users"("myOwnerId");
 CREATE INDEX "idx_users_ownerid" ON "users"("ownerId");
 
 -- AddForeignKey
-ALTER TABLE "account" ADD CONSTRAINT "fk_createdById" FOREIGN KEY ("createdById") REFERENCES "users"("_id") ON DELETE NO ACTION ON UPDATE NO ACTION;
-
--- AddForeignKey
-ALTER TABLE "appointment" ADD CONSTRAINT "fk_cancelledById_appointment" FOREIGN KEY ("cancelledById") REFERENCES "users"("_id") ON DELETE NO ACTION ON UPDATE NO ACTION;
-
--- AddForeignKey
 ALTER TABLE "appointment" ADD CONSTRAINT "fk_clientId_appointment" FOREIGN KEY ("clientId") REFERENCES "client"("_id") ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 -- AddForeignKey
 ALTER TABLE "appointment" ADD CONSTRAINT "fk_ownerId_appointment" FOREIGN KEY ("ownerId") REFERENCES "owner"("_id") ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 -- AddForeignKey
-ALTER TABLE "appointment" ADD CONSTRAINT "fk_professionalId_appointment" FOREIGN KEY ("professionalId") REFERENCES "users"("_id") ON DELETE NO ACTION ON UPDATE NO ACTION;
-
--- AddForeignKey
 ALTER TABLE "appointment" ADD CONSTRAINT "fk_requestId_appointment" FOREIGN KEY ("requestId") REFERENCES "request"("_id") ON DELETE NO ACTION ON UPDATE NO ACTION;
-
--- AddForeignKey
-ALTER TABLE "category" ADD CONSTRAINT "fk_createdById_category" FOREIGN KEY ("createdById") REFERENCES "users"("_id") ON DELETE NO ACTION ON UPDATE NO ACTION;
-
--- AddForeignKey
-ALTER TABLE "charge" ADD CONSTRAINT "fk_createdById_charge" FOREIGN KEY ("createdById") REFERENCES "users"("_id") ON DELETE NO ACTION ON UPDATE NO ACTION;
-
--- AddForeignKey
-ALTER TABLE "client" ADD CONSTRAINT "client_createdById_fkey" FOREIGN KEY ("createdById") REFERENCES "users"("_id") ON DELETE NO ACTION ON UPDATE NO ACTION;
-
--- AddForeignKey
-ALTER TABLE "client" ADD CONSTRAINT "client_myOwnerId_fkey" FOREIGN KEY ("myOwnerId") REFERENCES "users"("_id") ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 -- AddForeignKey
 ALTER TABLE "client" ADD CONSTRAINT "client_ownerId_fkey" FOREIGN KEY ("ownerId") REFERENCES "owner"("_id") ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 -- AddForeignKey
-ALTER TABLE "client" ADD CONSTRAINT "client_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("_id") ON DELETE NO ACTION ON UPDATE NO ACTION;
-
--- AddForeignKey
-ALTER TABLE "customer" ADD CONSTRAINT "fk_createdById_customer" FOREIGN KEY ("createdById") REFERENCES "users"("_id") ON DELETE NO ACTION ON UPDATE NO ACTION;
-
--- AddForeignKey
 ALTER TABLE "fidelity" ADD CONSTRAINT "fk_clientId_fidelity" FOREIGN KEY ("clientId") REFERENCES "client"("_id") ON DELETE NO ACTION ON UPDATE NO ACTION;
-
--- AddForeignKey
-ALTER TABLE "fidelity" ADD CONSTRAINT "fk_createdById_fidelity" FOREIGN KEY ("createdById") REFERENCES "users"("_id") ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 -- AddForeignKey
 ALTER TABLE "fidelity" ADD CONSTRAINT "fk_ownerId_fidelity" FOREIGN KEY ("ownerId") REFERENCES "owner"("_id") ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 -- AddForeignKey
-ALTER TABLE "mapRoute" ADD CONSTRAINT "fk_createdById_maproute" FOREIGN KEY ("createdById") REFERENCES "users"("_id") ON DELETE NO ACTION ON UPDATE NO ACTION;
-
--- AddForeignKey
 ALTER TABLE "order" ADD CONSTRAINT "fk_clientId_order" FOREIGN KEY ("clientId") REFERENCES "client"("_id") ON DELETE NO ACTION ON UPDATE NO ACTION;
-
--- AddForeignKey
-ALTER TABLE "order" ADD CONSTRAINT "fk_createdById_order" FOREIGN KEY ("createdById") REFERENCES "users"("_id") ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 -- AddForeignKey
 ALTER TABLE "order" ADD CONSTRAINT "fk_ownerId_order" FOREIGN KEY ("ownerId") REFERENCES "owner"("_id") ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 -- AddForeignKey
-ALTER TABLE "order" ADD CONSTRAINT "fk_professionalId_order" FOREIGN KEY ("professionalId") REFERENCES "users"("_id") ON DELETE NO ACTION ON UPDATE NO ACTION;
-
--- AddForeignKey
-ALTER TABLE "owner" ADD CONSTRAINT "fk_createdById_owner" FOREIGN KEY ("createdById") REFERENCES "users"("_id") ON DELETE NO ACTION ON UPDATE NO ACTION;
-
--- AddForeignKey
 ALTER TABLE "photo" ADD CONSTRAINT "fk_createdById_fidelity" FOREIGN KEY ("createdById") REFERENCES "users"("_id") ON DELETE NO ACTION ON UPDATE NO ACTION;
-
--- AddForeignKey
-ALTER TABLE "product" ADD CONSTRAINT "fk_createdById_product" FOREIGN KEY ("createdById") REFERENCES "users"("_id") ON DELETE NO ACTION ON UPDATE NO ACTION;
-
--- AddForeignKey
-ALTER TABLE "rating" ADD CONSTRAINT "fk_createdById" FOREIGN KEY ("createdById") REFERENCES "users"("_id") ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 -- AddForeignKey
 ALTER TABLE "ratingResult" ADD CONSTRAINT "fk_createdById" FOREIGN KEY ("createdById") REFERENCES "users"("_id") ON DELETE NO ACTION ON UPDATE NO ACTION;
@@ -781,13 +782,7 @@ ALTER TABLE "ratingResult" ADD CONSTRAINT "fk_createdById" FOREIGN KEY ("created
 ALTER TABLE "recurrence" ADD CONSTRAINT "fk_clientId_recurrence" FOREIGN KEY ("clientId") REFERENCES "client"("_id") ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 -- AddForeignKey
-ALTER TABLE "recurrence" ADD CONSTRAINT "fk_createdById_recurrence" FOREIGN KEY ("createdById") REFERENCES "users"("_id") ON DELETE NO ACTION ON UPDATE NO ACTION;
-
--- AddForeignKey
 ALTER TABLE "recurrence" ADD CONSTRAINT "fk_ownerId_recurrence" FOREIGN KEY ("ownerId") REFERENCES "owner"("_id") ON DELETE NO ACTION ON UPDATE NO ACTION;
-
--- AddForeignKey
-ALTER TABLE "recurrence" ADD CONSTRAINT "fk_professionalId_recurrence" FOREIGN KEY ("professionalId") REFERENCES "users"("_id") ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 -- AddForeignKey
 ALTER TABLE "recurrence" ADD CONSTRAINT "fk_serviceId_recurrence" FOREIGN KEY ("serviceId") REFERENCES "service"("_id") ON DELETE NO ACTION ON UPDATE NO ACTION;
@@ -796,46 +791,28 @@ ALTER TABLE "recurrence" ADD CONSTRAINT "fk_serviceId_recurrence" FOREIGN KEY ("
 ALTER TABLE "request" ADD CONSTRAINT "fk_clientId_request" FOREIGN KEY ("clientId") REFERENCES "client"("_id") ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 -- AddForeignKey
-ALTER TABLE "request" ADD CONSTRAINT "fk_clientUserId_request" FOREIGN KEY ("clientUserId") REFERENCES "users"("_id") ON DELETE NO ACTION ON UPDATE NO ACTION;
-
--- AddForeignKey
-ALTER TABLE "request" ADD CONSTRAINT "fk_createdForId_request" FOREIGN KEY ("createdForId") REFERENCES "users"("_id") ON DELETE NO ACTION ON UPDATE NO ACTION;
-
--- AddForeignKey
 ALTER TABLE "request" ADD CONSTRAINT "fk_ownerId_request" FOREIGN KEY ("ownerId") REFERENCES "owner"("_id") ON DELETE NO ACTION ON UPDATE NO ACTION;
-
--- AddForeignKey
-ALTER TABLE "request" ADD CONSTRAINT "fk_professionalId_request" FOREIGN KEY ("professionalId") REFERENCES "users"("_id") ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 -- AddForeignKey
 ALTER TABLE "request" ADD CONSTRAINT "fk_serviceId_request" FOREIGN KEY ("serviceId") REFERENCES "service"("_id") ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 -- AddForeignKey
-ALTER TABLE "request" ADD CONSTRAINT "fk_updatedById_request" FOREIGN KEY ("updatedById") REFERENCES "users"("_id") ON DELETE NO ACTION ON UPDATE NO ACTION;
-
--- AddForeignKey
-ALTER TABLE "ride" ADD CONSTRAINT "fk_createdById_ride" FOREIGN KEY ("createdById") REFERENCES "users"("_id") ON DELETE NO ACTION ON UPDATE NO ACTION;
-
--- AddForeignKey
-ALTER TABLE "routeDriver" ADD CONSTRAINT "fk_createdById_routeDriver" FOREIGN KEY ("createdById") REFERENCES "users"("_id") ON DELETE NO ACTION ON UPDATE NO ACTION;
-
--- AddForeignKey
 ALTER TABLE "service" ADD CONSTRAINT "fk_categoryId" FOREIGN KEY ("categoryId") REFERENCES "category"("_id") ON DELETE NO ACTION ON UPDATE NO ACTION;
-
--- AddForeignKey
-ALTER TABLE "service" ADD CONSTRAINT "fk_createdById_service" FOREIGN KEY ("createdById") REFERENCES "users"("_id") ON DELETE NO ACTION ON UPDATE NO ACTION;
-
--- AddForeignKey
-ALTER TABLE "subscription" ADD CONSTRAINT "fk_createdById_subscription" FOREIGN KEY ("createdById") REFERENCES "users"("_id") ON DELETE NO ACTION ON UPDATE NO ACTION;
-
--- AddForeignKey
-ALTER TABLE "transaction" ADD CONSTRAINT "fk_createdById_transaction" FOREIGN KEY ("createdById") REFERENCES "users"("_id") ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 -- AddForeignKey
 ALTER TABLE "users" ADD CONSTRAINT "fk_ownerid" FOREIGN KEY ("ownerId") REFERENCES "owner"("_id") ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 -- AddForeignKey
-ALTER TABLE "users" ADD CONSTRAINT "users_createdById_fkey" FOREIGN KEY ("createdById") REFERENCES "users"("_id") ON DELETE NO ACTION ON UPDATE NO ACTION;
+ALTER TABLE "tweet" ADD CONSTRAINT "tweet_createdById_fkey" FOREIGN KEY ("createdById") REFERENCES "users"("_id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "users" ADD CONSTRAINT "users_myOwnerId_fkey" FOREIGN KEY ("myOwnerId") REFERENCES "users"("_id") ON DELETE NO ACTION ON UPDATE NO ACTION;
+ALTER TABLE "tweet" ADD CONSTRAINT "tweet_tweetId_fkey" FOREIGN KEY ("tweetId") REFERENCES "tweet"("_id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "tweetlike" ADD CONSTRAINT "tweetlike_createdById_fkey" FOREIGN KEY ("createdById") REFERENCES "users"("_id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "tweetlike" ADD CONSTRAINT "tweetlike_tweetId_fkey" FOREIGN KEY ("tweetId") REFERENCES "tweet"("_id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "follow" ADD CONSTRAINT "follow_createdById_fkey" FOREIGN KEY ("createdById") REFERENCES "users"("_id") ON DELETE SET NULL ON UPDATE CASCADE;
