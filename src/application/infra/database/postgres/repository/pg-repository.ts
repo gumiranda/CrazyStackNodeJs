@@ -216,6 +216,9 @@ export class PostgresRepository extends Repository {
             const relatedTable = relation === "createdBy" ? "users" : relation;
             const relatedAlias = `${relatedTable}_alias`; // Adiciona um alias único para cada tabela
             const isSameTable = relatedTable === this.tableName;
+            // Adiciona o JOIN na consulta
+
+            // Inclui os campos da tabela relacionada no SELECT
             const fieldsRelated = await this.getTableFields(relatedTable, client);
             const relatedFields = fieldsRelated?.filter?.(
               (field) => field !== relationField
@@ -260,10 +263,10 @@ export class PostgresRepository extends Repository {
       }
 
       // Monta a query com SELECT e JOINs dinâmicos
-      const queryText = `SELECT ${selectClause} FROM "${this.tableName}" ${joinClause} WHERE ${whereClause} LIMIT 1`;
+      const queryText = `SELECT ${selectClause} FROM "${this.tableName}" ${joinClause} WHERE ${whereClause}`;
       const result = await client.query(queryText, values);
 
-      return result.rows.length ? result.rows[0] : null;
+      return returnOneRegister ? result?.rows?.[0] : result?.rows;
     } finally {
       client.release();
     }
