@@ -282,18 +282,76 @@ export class PostgresRepository extends Repository {
     }
   }
 
-  async getPaginate(page = 0, fields: any, sort: any, limit = 10, projection: any) {
+  async getPaginate(
+    page = 0,
+    fields: any,
+    sort: any,
+    limit = 10,
+    projection: any,
+    populate = null
+  ) {
     const client = await connect();
     try {
+      let currentTableFields = await this.getTableFields(this.tableName, client);
+
       // Handle projection
-      let columns = "*";
-      if (Object.keys(projection).length > 0) {
-        columns = Object.keys(projection)
-          .filter((key) => projection[key])
-          .map((key) => `"${key}"`)
-          .join(", ");
+      let columns = `"${this.tableName}".*`;
+      let joinClause = ""; // Para armazenar os JOINs
+      if (projection && Object.keys(projection).length > 0) {
+        const excludedFields = Object.keys(projection).filter(
+          (key) => projection[key] === 0
+        );
+        const includedFields = Object.keys(projection).filter(
+          (key) => projection[key] === 1
+        );
+
+        if (excludedFields.length > 0) {
+          const selectedFields = currentTableFields.filter(
+            (field: any) => !excludedFields.includes(field)
+          );
+          columns = selectedFields
+            .map((field: any) => `"${this.tableName}"."${field}"`)
+            .join(", ");
+        } else if (includedFields.length > 0) {
+          columns = includedFields
+            .map((field) => `"${this.tableName}".${field}`)
+            .join(", ");
+        }
       }
 
+      // Implementação do `populate` para adicionar JOINs dinâmicos
+      if (populate) {
+        for (const relation of Object.keys(populate)) {
+          if (populate[relation]) {
+            const relationField = `${relation === "users" ? "user" : relation}Id`;
+            const relatedTable = relation === "createdBy" ? "users" : relation;
+            const relatedAlias = `${relatedTable}_alias`; // Alias para tabelas relacionadas
+
+            const isSameTable = relatedTable === this.tableName;
+            const fieldsRelated = await this.getTableFields(relatedTable, client);
+            const relatedFields = fieldsRelated?.filter?.(
+              (field) => field !== relationField
+            );
+
+            if (
+              !isSameTable &&
+              relatedFields?.length > 0 &&
+              currentTableFields?.includes?.(relationField)
+            ) {
+              // Relacionamento 1:1
+              joinClause += ` INNER JOIN "${relatedTable}" AS "${relatedAlias}" ON "${this.tableName}"."${relationField}" = "${relatedAlias}"."_id"`;
+              columns += `, ${relatedFields
+                .filter((field) => field !== "_id")
+                .map(
+                  (field) => `"${relatedAlias}"."${field}" AS "${relatedTable}${field}"`
+                )
+                .join(", ")}`;
+            }
+          }
+        }
+      }
+
+      // Handle filtering
       let whereClause = "";
       const filterConditions: string[] = [];
       const filterValues: any[] = [];
@@ -310,7 +368,7 @@ export class PostgresRepository extends Repository {
           filterValues.push(value);
         } else {
           filterConditions.push(`"${key}" LIKE '%' || $${filterValues.length + 1} || '%'`);
-          filterValues.push(value); // Adjust this accordingly if you're sanitizing your inputs
+          filterValues.push(value);
         }
       });
       if (filterConditions.length > 0) {
@@ -326,7 +384,7 @@ export class PostgresRepository extends Repository {
       const offset = (page - 1) * limit;
 
       // Construct query
-      const queryText = `SELECT ${columns} FROM "${this.tableName}" ${whereClause} ORDER BY ${orderBy} LIMIT $${filterValues.length + 1} OFFSET $${filterValues.length + 2}`;
+      const queryText = `SELECT ${columns} FROM "${this.tableName}" ${joinClause} ${whereClause} ORDER BY ${orderBy} LIMIT $${filterValues.length + 1} OFFSET $${filterValues.length + 2}`;
       const queryValues = filterValues.concat([limit, offset]);
       const result = await client.query(queryText, queryValues);
       return result.rows;
