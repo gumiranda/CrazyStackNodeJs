@@ -148,6 +148,7 @@ export class PostgresRepository extends Repository {
   async deleteOne(fields: any): Promise<any> {
     return this.deleteMany(fields);
   }
+
   async getTableFields(tableName: string, client: any): Promise<string[]> {
     // Consulta para obter os nomes das colunas da tabela
     const result = await client.query(
@@ -158,12 +159,11 @@ export class PostgresRepository extends Repository {
     `,
       [tableName]
     );
-    if (result.rows.length === 0) {
+    if (result?.rows === 0) {
       return [];
     }
-
     return result?.rows
-      ?.map?.((row: any) => row?.column_name)
+      ?.map?.((row: any) => row.column_name)
       ?.filter?.((field: any) => field !== "password");
   }
   async getOne(query: any, options: any, returnOneRegister = true): Promise<any> {
