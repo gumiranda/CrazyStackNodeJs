@@ -158,10 +158,16 @@ export class PostgresRepository extends Repository {
     `,
       [tableName]
     );
+    if (result.rows.length === 0) {
+      return [];
+    }
 
-    return result.rows.map((row: any) => row.column_name);
+    return result?.rows
+      ?.map?.((row: any) => row?.column_name)
+      ?.filter?.((field: any) => field !== "password");
   }
-  async getOne(query: any, options: any): Promise<any> {
+  async getOne(query: any, options: any, returnOneRegister = true): Promise<any> {
+    let currentTableFields: any;
     const client = await connect();
     try {
       const { whereClause, values } = this.buildWhereClause(query);
@@ -182,12 +188,12 @@ export class PostgresRepository extends Repository {
         );
 
         if (excludedFields.length > 0) {
-          const allFields = await this.getTableFields(this.tableName, client);
-          const selectedFields = allFields.filter(
-            (field) => !excludedFields.includes(field)
+          currentTableFields = await this.getTableFields(this.tableName, client);
+          const selectedFields = currentTableFields.filter(
+            (field: any) => !excludedFields.includes(field)
           );
           selectClause = selectedFields
-            .map((field) => `"${this.tableName}"."${field}"`)
+            .map((field: any) => `"${this.tableName}"."${field}"`)
             .join(", ");
         } else if (includedFields.length > 0) {
           selectClause = includedFields
@@ -199,23 +205,56 @@ export class PostgresRepository extends Repository {
       // Implementa o `include` usando JOINs dinâmicos no PostgreSQL
       if (options?.include) {
         const includes = options.include;
-
+        if (!currentTableFields) {
+          currentTableFields = await this.getTableFields(this.tableName, client);
+        }
         // Itera sobre os relacionamentos especificados em `include`
         for (const relation of Object.keys(includes)) {
           if (includes[relation]) {
             // Assumimos que a relação segue o padrão FK nomeado com a tabela + "Id"
             const relationField = `${relation}Id`;
-            const relatedTable = relation;
+            const relatedTable = relation === "createdBy" ? "users" : relation;
+            const relatedAlias = `${relatedTable}_alias`; // Adiciona um alias único para cada tabela
+            const isSameTable = relatedTable === this.tableName;
+            const fieldsRelated = await this.getTableFields(relatedTable, client);
+            const relatedFields = fieldsRelated?.filter?.(
+              (field) => field !== relationField
+            );
+            //relacionamentos 1:1
+            if (
+              relatedFields?.length > 0 &&
+              currentTableFields?.includes?.(relationField)
+            ) {
+              joinClause += ` LEFT JOIN "${relatedTable}" AS "${relatedAlias}" ON "${this.tableName}"."${relationField}" = "${relatedAlias}"."_id"`;
 
-            // Adiciona o JOIN na consulta
-            joinClause += ` LEFT JOIN "${relatedTable}" ON "${this.tableName}"."${relationField}" = "${relatedTable}"."_id"`;
-
-            // Inclui os campos da tabela relacionada no SELECT
-            const relatedFields = await this.getTableFields(relatedTable, client);
-            selectClause += `, ${relatedFields
-              .filter((field) => field !== "_id")
-              .map((field) => `"${relatedTable}"."${field}"`)
-              .join(", ")}`;
+              selectClause +=
+                //  isSameTable
+                //   ? ""
+                //   :
+                `, ${relatedFields
+                  .filter((field) => field !== "_id")
+                  .map(
+                    (field) =>
+                      `("${relatedAlias}"."${field}") AS "${relatedTable}${field}"`
+                  )
+                  .join(", ")}`;
+            } else {
+              //relacionamentos 1:n
+              const joinTable = `${this.tableName}${relatedTable}`;
+              const joinAlias = `${joinTable}_alias`; // Adiciona um alias único para cada tabela
+              const joinTableFields = await this.getTableFields(joinTable, client);
+              if (joinTableFields?.length > 0) {
+                joinClause += ` LEFT JOIN "${joinTable}" AS "${joinAlias}" ON "${this.tableName}"."_id" = "${joinAlias}"."${this.tableName}Id"`;
+                selectClause += isSameTable
+                  ? ""
+                  : `, ${joinTableFields
+                      .filter((field) => field !== "_id")
+                      .map(
+                        (field) => `("${joinAlias}"."${field}") AS "${joinTable}${field}"`
+                      )
+                      .join(", ")}`;
+              }
+            }
           }
         }
       }
