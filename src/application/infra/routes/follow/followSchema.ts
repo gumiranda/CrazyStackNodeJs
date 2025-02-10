@@ -2,9 +2,9 @@ import { idSchema } from "@/application/types/id";
 
 const bodyAddFollowJsonSchema = {
   type: "object",
-  required: ["name"],
+  required: ["userId"],
   properties: {
-    name: { type: "string" },
+    userId: { type: "string" },
   },
 };
 const headersJsonSchema = {
@@ -18,8 +18,7 @@ const addFollowResponse = {
   type: "object",
   properties: {
     _id: idSchema,
-    name: { type: "string" },
-    active: { type: "boolean" },
+    userId: { type: "string" },
     createdById: { type: "string" },
     createdAt: { type: "string" },
   },
@@ -43,8 +42,11 @@ const loadFollowResponse = {
   type: "object",
   properties: {
     _id: idSchema,
-    name: { type: "string" },
-    active: { type: "boolean" },
+    userId: { type: "string" },
+    usersname: { type: "string" },
+    usersslug: { type: "string" },
+    usersphotoId: { type: "string" },
+    usersphotoUrl: { type: "string" },
     createdById: { type: "string" },
     createdAt: { type: "string" },
   },
@@ -86,14 +88,14 @@ const updateFollowResponse = {
   type: "object",
   properties: {
     _id: idSchema,
-    name: { type: "string" },
+    userId: { type: "string" },
     createdById: { type: "string" },
   },
 };
 const updateFollowBody = {
   type: "object",
   properties: {
-    name: { type: "string" },
+    userId: { type: "string" },
   },
 };
 export const updateFollowSchema = {
@@ -125,8 +127,11 @@ const loadFollowByPageResponse = {
         type: "object",
         properties: {
           _id: idSchema,
-          name: { type: "string" },
-          active: { type: "boolean" },
+          userId: { type: "string" },
+          usersname: { type: "string" },
+          usersslug: { type: "string" },
+          usersphotoUrl: { type: "string" },
+          usersphotoId: { type: "string" },
           createdById: { type: "string" },
           createdAt: { type: "string" },
         },
