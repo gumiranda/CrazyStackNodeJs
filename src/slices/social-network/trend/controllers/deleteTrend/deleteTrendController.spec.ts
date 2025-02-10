@@ -2,7 +2,7 @@ import MockDate from "mockdate";
 import { badRequest, ok, Validation } from "@/application/helpers";
 import { MockProxy, mock } from "jest-mock-extended";
 import { DeleteTrendController } from "./deleteTrendController";
-import { fakeTrendEntity } from "@/slices/trend/entities/TrendEntity.spec";
+import { fakeTrendEntity } from "@/slices/social-network/trend/entities/TrendEntity.spec";
 import { Controller } from "@/application/infra/contracts";
 import { MissingParamError } from "@/application/errors";
 import { fakeUserEntity } from "@/slices/user/entities/UserEntity.spec";
@@ -41,7 +41,7 @@ describe("DeleteTrendController", () => {
     });
     expect(result).toEqual(ok(true));
     expect(deleteTrend).toHaveBeenCalledWith({
-      fields: { ...fakeQuery, createdById: fakeUserEntity?._id },
+      fields: { ...fakeQuery },
       options: {},
     });
     expect(deleteTrend).toHaveBeenCalledTimes(1);

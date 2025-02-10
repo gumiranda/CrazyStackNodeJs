@@ -4,9 +4,9 @@ import { account } from "./account";
 import { category } from "./category";
 // IMPORT MODULE FILES
 import { trend } from "./trend";
+import { follow } from "./follow";
 import { tweetlike } from "./tweetlike";
 import { tweet } from "./tweet";
-import { follow } from "./follow";
 import { photo } from "./photo";
 import { transaction } from "./transaction";
 import { charge } from "./charge";
@@ -38,9 +38,9 @@ const routes = [
   category,
   // ADD FUNCTION IMPORTS
 trend,
+follow,
 tweetlike,
 tweet,
-follow,
   photo,
   transaction,
   charge,

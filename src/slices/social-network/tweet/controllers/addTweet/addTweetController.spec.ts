@@ -2,7 +2,7 @@ import MockDate from "mockdate";
 import { badRequest, ok, Validation } from "@/application/helpers";
 import { MockProxy, mock } from "jest-mock-extended";
 import { AddTweetController } from "./addTweetController";
-import { fakeTweetEntity } from "@/slices/tweet/entities/TweetEntity.spec";
+import { fakeTweetEntity } from "@/slices/social-network/tweet/entities/TweetEntity.spec";
 import { Controller } from "@/application/infra/contracts";
 import { MissingParamError } from "@/application/errors";
 import { fakeUserEntity } from "@/slices/user/entities/UserEntity.spec";
@@ -10,10 +10,12 @@ import { fakeUserEntity } from "@/slices/user/entities/UserEntity.spec";
 describe("AddTweetController", () => {
   let testInstance: AddTweetController;
   let addTweet: jest.Mock;
+  let upsertTrend: jest.Mock;
   let validation: MockProxy<Validation>;
   beforeAll(async () => {
     MockDate.set(new Date());
     addTweet = jest.fn();
+    upsertTrend = jest.fn();
     addTweet.mockResolvedValue({
       ...fakeTweetEntity,
       createdById: fakeUserEntity?._id,
@@ -25,7 +27,7 @@ describe("AddTweetController", () => {
     MockDate.reset();
   });
   beforeEach(() => {
-    testInstance = new AddTweetController(validation, addTweet);
+    testInstance = new AddTweetController(validation, addTweet, upsertTrend);
   });
   it("should extends class Controller", async () => {
     expect(testInstance).toBeInstanceOf(Controller);
@@ -61,8 +63,8 @@ describe("AddTweetController", () => {
     await expect(result).rejects.toThrow(new Error("error"));
   });
   test("should return bad request if i dont pass any required field", async () => {
-    validation.validate.mockReturnValueOnce([new MissingParamError("name")]);
+    validation.validate.mockReturnValueOnce([new MissingParamError("userSlug")]);
     const httpResponse = await testInstance.execute({ body: fakeTweetEntity });
-    expect(httpResponse).toEqual(badRequest([new MissingParamError("name")]));
+    expect(httpResponse).toEqual(badRequest([new MissingParamError("userSlug")]));
   });
 });

@@ -18,10 +18,16 @@ const userBody = {
   coord: { type: "Point", coordinates: [-46.693419, -23.568704] },
 };
 const tweetlikeBody = {
-  name: "test",
+  userSlug: "test",
+  tweetId: "test",
 };
 const makeAccessToken = async (role: string, password: string): Promise<any> => {
-  const result = await userCollection.insertOne({ ...userBody, password,payDay: addDays(new Date(), 30), role });
+  const result = await userCollection.insertOne({
+    ...userBody,
+    password,
+    payDay: addDays(new Date(), 30),
+    role,
+  });
   const _id = result?.insertedId;
   return { _id, token: sign({ _id }, env.jwtSecret) };
 };
@@ -58,7 +64,7 @@ describe("Route api/tweetlike", () => {
     });
     test("Should return 400 for bad requests", async () => {
       const { token } = await makeAccessToken("admin", "password");
-      const tweetlikeWrongBody = { ...tweetlikeBody, name: null };
+      const tweetlikeWrongBody = { ...tweetlikeBody, userSlug: null };
       const responseAdd = await fastify.inject({
         method: "POST",
         url: "/api/tweetlike/add",
@@ -224,18 +230,18 @@ describe("Route api/tweetlike", () => {
         method: "PATCH",
         url: `/api/tweetlike/update?_id=${insertedId.toString()}`,
         headers: { authorization: `Bearer ${token}` },
-        body: { name: "new name" },
+        body: { userSlug: "new userSlug" },
       });
       const responseBody = JSON.parse(response.body);
       expect(response.statusCode).toBe(200);
-      expect(responseBody.name).toEqual("new name");
+      expect(responseBody.userSlug).toEqual("new userSlug");
     });
     test("Should return 401 for unauthorized access token", async () => {
       const response = await fastify.inject({
         method: "PATCH",
         url: `/api/tweetlike/update?_id=${new ObjectId().toString()}`,
         headers: { authorization: "Bearer invalid_token" },
-        body: { name: "new name" },
+        body: { userSlug: "new userSlug" },
       });
       expect(response.statusCode).toBe(401);
     });

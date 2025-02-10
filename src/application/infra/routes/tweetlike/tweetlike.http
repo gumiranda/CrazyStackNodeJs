@@ -1,0 +1,48 @@
+@apiurl = http://127.0.0.1:3333/api
+
+@token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2ZWZiYzY2Ny03Yjc1LTQ2NzgtOTc5My1jZmVlNGE3NWI5NzQiLCJpYXQiOjE3MjkxOTU0MTMsImV4cCI6MTczNDM3OTQxM30.44KtfN_j8SjehHil0eaaG8VTTajU6BrV5FA6vOXjFJ8
+
+
+
+
+@entityId=99c818aa-c2ec-44ee-b6be-c68b99b3566e
+
+@entityType=tweetlike
+
+@tweetId=1baa8b85-c8a2-48ee-8606-e16871d54f52
+
+### POST add
+POST {{apiurl}}/{{entityType}}/toggleLike  HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "userSlug": "devdoido2",
+  "tweetId": "1baa8b85-c8a2-48ee-8606-e16871d54f52"
+}
+
+### GET loadById
+GET {{apiurl}}/{{entityType}}/load?_id={{entityId}} HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+
+### GET loadByPage
+GET {{apiurl}}/{{entityType}}/loadByPage?page=1 HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+### PATCH update
+PATCH {{apiurl}}/{{entityType}}/update?_id={{entityId}} HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "userSlug": "devlouco"
+}
+
+### DELETE delete
+DELETE {{apiurl}}/{{entityType}}/delete?_id={{entityId}}	 HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{token}}
+

@@ -7,7 +7,7 @@ import {
   ok,
 } from "@/application/helpers";
 import { Controller } from "@/application/infra/contracts";
-import { LoadTrend } from "@/slices/trend/useCases";
+import { LoadTrend } from "@/slices/social-network/trend/useCases";
 
 export class LoadTrendController extends Controller {
   constructor(

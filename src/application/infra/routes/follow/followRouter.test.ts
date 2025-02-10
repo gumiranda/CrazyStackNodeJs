@@ -18,10 +18,15 @@ const userBody = {
   coord: { type: "Point", coordinates: [-46.693419, -23.568704] },
 };
 const followBody = {
-  name: "test",
+  userId: "test",
 };
 const makeAccessToken = async (role: string, password: string): Promise<any> => {
-  const result = await userCollection.insertOne({ ...userBody, password,payDay: addDays(new Date(), 30), role });
+  const result = await userCollection.insertOne({
+    ...userBody,
+    password,
+    payDay: addDays(new Date(), 30),
+    role,
+  });
   const _id = result?.insertedId;
   return { _id, token: sign({ _id }, env.jwtSecret) };
 };
@@ -58,7 +63,7 @@ describe("Route api/follow", () => {
     });
     test("Should return 400 for bad requests", async () => {
       const { token } = await makeAccessToken("admin", "password");
-      const followWrongBody = { ...followBody, name: null };
+      const followWrongBody = { ...followBody, user1Slug: null };
       const responseAdd = await fastify.inject({
         method: "POST",
         url: "/api/follow/add",
@@ -224,18 +229,18 @@ describe("Route api/follow", () => {
         method: "PATCH",
         url: `/api/follow/update?_id=${insertedId.toString()}`,
         headers: { authorization: `Bearer ${token}` },
-        body: { name: "new name" },
+        body: { user1Slug: "new user1Slug" },
       });
       const responseBody = JSON.parse(response.body);
       expect(response.statusCode).toBe(200);
-      expect(responseBody.name).toEqual("new name");
+      expect(responseBody.user1Slug).toEqual("new user1Slug");
     });
     test("Should return 401 for unauthorized access token", async () => {
       const response = await fastify.inject({
         method: "PATCH",
         url: `/api/follow/update?_id=${new ObjectId().toString()}`,
         headers: { authorization: "Bearer invalid_token" },
-        body: { name: "new name" },
+        body: { user1Slug: "new user1Slug" },
       });
       expect(response.statusCode).toBe(401);
     });

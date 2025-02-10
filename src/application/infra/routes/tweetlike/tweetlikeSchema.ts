@@ -1,10 +1,11 @@
 import { idSchema } from "@/application/types/id";
 
-const bodyAddTweetlikeJsonSchema = {
+const bodyToggleTweetlikeJsonSchema = {
   type: "object",
-  required: ["name"],
+  required: ["userSlug", "tweetId"],
   properties: {
-    name: { type: "string" },
+    userSlug: { type: "string" },
+    tweetId: { type: "string" },
   },
 };
 const headersJsonSchema = {
@@ -14,20 +15,21 @@ const headersJsonSchema = {
   },
   required: ["authorization"],
 };
-const addTweetlikeResponse = {
+const toggleTweetlikeResponse = {
   type: "object",
   properties: {
     _id: idSchema,
-    name: { type: "string" },
+    userSlug: { type: "string" },
     active: { type: "boolean" },
     createdById: { type: "string" },
     createdAt: { type: "string" },
+    tweetId: { type: "string" },
   },
 };
-export const addTweetlikePostSchema = {
+export const toggleTweetlikePostSchema = {
   schema: {
-    body: bodyAddTweetlikeJsonSchema,
-    response: { 200: addTweetlikeResponse },
+    body: bodyToggleTweetlikeJsonSchema,
+    response: { 200: toggleTweetlikeResponse },
     headers: headersJsonSchema,
   },
 };
@@ -43,10 +45,11 @@ const loadTweetlikeResponse = {
   type: "object",
   properties: {
     _id: idSchema,
-    name: { type: "string" },
+    userSlug: { type: "string" },
     active: { type: "boolean" },
     createdById: { type: "string" },
     createdAt: { type: "string" },
+    tweetId: { type: "string" },
   },
 };
 export const loadTweetlikeGetSchema = {
@@ -86,14 +89,16 @@ const updateTweetlikeResponse = {
   type: "object",
   properties: {
     _id: idSchema,
-    name: { type: "string" },
+    userSlug: { type: "string" },
     createdById: { type: "string" },
+    tweetId: { type: "string" },
   },
 };
 const updateTweetlikeBody = {
   type: "object",
   properties: {
-    name: { type: "string" },
+    userSlug: { type: "string" },
+    tweetId: { type: "string" },
   },
 };
 export const updateTweetlikeSchema = {
@@ -125,10 +130,11 @@ const loadTweetlikeByPageResponse = {
         type: "object",
         properties: {
           _id: idSchema,
-          name: { type: "string" },
+          userSlug: { type: "string" },
           active: { type: "boolean" },
           createdById: { type: "string" },
           createdAt: { type: "string" },
+          tweetId: { type: "string" },
         },
       },
     },

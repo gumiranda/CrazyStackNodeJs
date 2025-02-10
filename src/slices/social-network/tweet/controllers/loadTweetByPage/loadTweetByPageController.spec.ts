@@ -5,7 +5,7 @@ import { LoadTweetByPageController } from "./loadTweetByPageController";
 import {
   fakeTweetEntity,
   fakeTweetPaginated,
-} from "@/slices/tweet/entities/TweetEntity.spec";
+} from "@/slices/social-network/tweet/entities/TweetEntity.spec";
 import { Controller } from "@/application/infra/contracts";
 import { MissingParamError } from "@/application/errors";
 import { fakeUserEntity } from "@/slices/user/entities/UserEntity.spec";
@@ -29,7 +29,7 @@ describe("LoadTweetByPageController", () => {
   });
   beforeEach(() => {
     fakeQueryParams = { _id: fakeTweetEntity._id };
-    fakeRestQuery = { page: 1, sortBy: "name", typeSort: "asc" };
+    fakeRestQuery = { page: 1, sortBy: "userSlug", typeSort: "asc" };
     fakeQuery = { ...fakeQueryParams, ...fakeRestQuery };
     testInstance = new LoadTweetByPageController(validation, loadTweetByPage);
   });

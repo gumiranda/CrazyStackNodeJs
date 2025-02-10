@@ -1,0 +1,43 @@
+@apiurl = http://127.0.0.1:3333/api
+
+@token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI5YWYxNGJmMS00YmM0LTQzZTEtYTdjOC01NmExOTFlNTE5M2IiLCJpYXQiOjE3MjkwMjEwNDQsImV4cCI6MTczNDIwNTA0NH0.FtbUSy7sS7YjBjYSvesWPYkWiTkWp4MgT6HCApszKK4
+@entityId=438bc05b-e1bb-4bd5-8da2-7f4a6cd5cd7e
+
+@entityType=trend
+
+@tweetId=af0498c4-f7e4-4d31-a546-3293a083707d
+
+### POST add
+POST {{apiurl}}/{{entityType}}/add  HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "hashtag": "devdoido"
+}
+
+### GET loadById
+GET {{apiurl}}/{{entityType}}/load?_id={{entityId}} HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+
+### GET loadByPage
+GET {{apiurl}}/{{entityType}}/loadByPage?page=1 HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+### PATCH update
+PATCH {{apiurl}}/{{entityType}}/update?_id={{entityId}} HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "hashtag": "devlouco"
+}
+
+### DELETE delete
+DELETE {{apiurl}}/{{entityType}}/delete?_id={{entityId}}	 HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{token}}
+

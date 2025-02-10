@@ -7,7 +7,7 @@ import {
   ok,
 } from "@/application/helpers";
 import { Controller } from "@/application/infra/contracts";
-import { UpdateTweetlike } from "@/slices/tweetlike/useCases";
+import { UpdateTweetlike } from "@/slices/social-network/tweetlike/useCases";
 
 export class UpdateTweetlikeController extends Controller {
   constructor(

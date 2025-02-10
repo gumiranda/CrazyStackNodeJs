@@ -7,7 +7,7 @@ import {
   ok,
 } from "@/application/helpers";
 import { Controller } from "@/application/infra/contracts";
-import { DeleteFollow } from "@/slices/follow/useCases";
+import { DeleteFollow } from "@/slices/social-network/follow/useCases";
 
 export class DeleteFollowController extends Controller {
   constructor(

@@ -578,3 +578,14 @@ CREATE TABLE photo (
 
 CREATE INDEX idx_photo_createdById ON photo("createdById");
 
+CREATE TABLE tweettweetlike (
+    "_id" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    "userId" UUID NOT NULL,
+    "tweetId" UUID NOT NULL,
+    "tweetlikeId" UUID NOT NULL,
+    "createdAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT "fk_createdById_fidelity" FOREIGN KEY ("userId") REFERENCES users("_id"),
+    CONSTRAINT "fk_tweetId_tweetlike" FOREIGN KEY ("tweetId") REFERENCES tweet("_id"),
+    CONSTRAINT "fk_tweetlikeId_tweetlike" FOREIGN KEY ("tweetlikeId") REFERENCES tweetlike("_id")
+);

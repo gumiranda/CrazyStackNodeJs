@@ -1,8 +1,8 @@
 import { makeLogController } from "@/application/decorators/logControllerFactory";
 import { makeValidationComposite } from "@/application/factories";
 import { Controller } from "@/application/infra/contracts";
-import { makeUpdateTrendFactory } from "@/slices/trend/useCases";
-import { UpdateTrendController } from "@/slices/trend/controllers";
+import { makeUpdateTrendFactory } from "@/slices/social-network/trend/useCases";
+import { UpdateTrendController } from "@/slices/social-network/trend/controllers";
 
 export const makeUpdateTrendController = (): Controller => {
   const requiredFieldsQuery = ["_id"];

@@ -1,4 +1,4 @@
-export * from "./addTweetlike";
+export * from "./toggleTweetlike";
 export * from "./loadTweetlike";
 export * from "./deleteTweetlike";
 export * from "./updateTweetlike";
