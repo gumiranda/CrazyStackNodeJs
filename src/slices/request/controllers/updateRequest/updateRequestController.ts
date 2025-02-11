@@ -45,6 +45,15 @@ export class UpdateRequestController extends Controller {
     if (!appointmentIsValid && confirmedStatusArray?.includes?.(newStatus)) {
       newStatus = 4;
     }
+    const requestToUpdate = httpRequest?.body;
+    delete requestToUpdate.date;
+    delete requestToUpdate.value;
+    delete requestToUpdate.statusLabel;
+    delete requestToUpdate.initDateFormatted;
+    delete requestToUpdate.endDateFormatted;
+    delete requestToUpdate.datePickerSelected;
+    delete requestToUpdate.endHour;
+    delete requestToUpdate.initHour;
     const requestUpdated = await this.updateRequest.updateRequestById(
       httpRequest?.query?._id,
       {
