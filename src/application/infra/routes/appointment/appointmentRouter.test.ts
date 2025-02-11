@@ -282,7 +282,7 @@ describe("Route api/appointment", () => {
     test("Should return 401 for unauthorized access token", async () => {
       const response = await fastify.inject({
         method: "GET",
-        url: `/api/appointment/load?_id=${new ObjectId().toString()}&requestId=${
+        url: `/api/appointment/load?_id=${ObjectId.createFromTime(new Date().getTime()).toString()}&requestId=${
           appointmentBody.requestId
         }`,
         headers: { authorization: "Bearer invalid_token" },
@@ -367,7 +367,7 @@ describe("Route api/appointment", () => {
     test("Should return 401 for unauthorized access token", async () => {
       const response = await fastify.inject({
         method: "DELETE",
-        url: `/api/appointment/delete?_id=${new ObjectId().toString()}&requestId=${
+        url: `/api/appointment/delete?_id=${ObjectId.createFromTime(new Date().getTime()).toString()}&requestId=${
           appointmentBody.requestId
         }`,
         headers: { authorization: "Bearer invalid_token" },
@@ -413,7 +413,7 @@ describe("Route api/appointment", () => {
     test("Should return 401 for unauthorized access token", async () => {
       const response = await fastify.inject({
         method: "PATCH",
-        url: `/api/appointment/update?_id=${new ObjectId().toString()}&requestId=${
+        url: `/api/appointment/update?_id=${ObjectId.createFromTime(new Date().getTime()).toString()}&requestId=${
           appointmentBody.requestId
         }`,
         headers: { authorization: "Bearer invalid_token" },

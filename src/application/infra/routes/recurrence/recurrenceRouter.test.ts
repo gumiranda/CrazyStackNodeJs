@@ -107,7 +107,7 @@ describe("Route api/recurrence", () => {
     test("Should return 401 for unauthorized access token", async () => {
       const response = await fastify.inject({
         method: "GET",
-        url: `/api/recurrence/load?_id=${new ObjectId().toString()}`,
+        url: `/api/recurrence/load?_id=${ObjectId.createFromTime(new Date().getTime()).toString()}`,
         headers: { authorization: "Bearer invalid_token" },
       });
       expect(response.statusCode).toBe(401);
@@ -188,7 +188,7 @@ describe("Route api/recurrence", () => {
     test("Should return 401 for unauthorized access token", async () => {
       const response = await fastify.inject({
         method: "DELETE",
-        url: `/api/recurrence/delete?_id=${new ObjectId().toString()}`,
+        url: `/api/recurrence/delete?_id=${ObjectId.createFromTime(new Date().getTime()).toString()}`,
         headers: { authorization: "Bearer invalid_token" },
       });
       expect(response.statusCode).toBe(401);
@@ -230,7 +230,7 @@ describe("Route api/recurrence", () => {
     test("Should return 401 for unauthorized access token", async () => {
       const response = await fastify.inject({
         method: "PATCH",
-        url: `/api/recurrence/update?_id=${new ObjectId().toString()}`,
+        url: `/api/recurrence/update?_id=${ObjectId.createFromTime(new Date().getTime()).toString()}`,
         headers: { authorization: "Bearer invalid_token" },
         body: { name: "new name" },
       });

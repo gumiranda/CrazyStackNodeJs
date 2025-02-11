@@ -12,7 +12,7 @@ let routeDriverCollection: Collection;
 const routeDriverBody = {
   name: "test",
   status: "initialized",
-  routeId: new ObjectId().toString(),
+  routeId: ObjectId.createFromTime(new Date().getTime()).toString(),
   points: [],
 };
 const makeAccessToken = async (role: string, password: string): Promise<any> => {
@@ -115,7 +115,7 @@ describe("Route api/routeDriver", () => {
     test("Should return 401 for unauthorized access token", async () => {
       const response = await fastify.inject({
         method: "GET",
-        url: `/api/routeDriver/load?_id=${new ObjectId().toString()}`,
+        url: `/api/routeDriver/load?_id=${ObjectId.createFromTime(new Date().getTime()).toString()}`,
         headers: { authorization: "Bearer invalid_token" },
       });
       expect(response.statusCode).toBe(401);
@@ -196,7 +196,7 @@ describe("Route api/routeDriver", () => {
     test("Should return 401 for unauthorized access token", async () => {
       const response = await fastify.inject({
         method: "DELETE",
-        url: `/api/routeDriver/delete?_id=${new ObjectId().toString()}`,
+        url: `/api/routeDriver/delete?_id=${ObjectId.createFromTime(new Date().getTime()).toString()}`,
         headers: { authorization: "Bearer invalid_token" },
       });
       expect(response.statusCode).toBe(401);
@@ -255,7 +255,7 @@ describe("Route api/routeDriver", () => {
     test("Should return 401 for unauthorized access token", async () => {
       const response = await fastify.inject({
         method: "PATCH",
-        url: `/api/routeDriver/update?_id=${new ObjectId().toString()}&routeId=${new ObjectId().toString()}lat=-33.8689604&lng=151.2092021`,
+        url: `/api/routeDriver/update?_id=${ObjectId.createFromTime(new Date().getTime()).toString()}&routeId=${ObjectId.createFromTime(new Date().getTime()).toString()}lat=-33.8689604&lng=151.2092021`,
         headers: { authorization: "Bearer invalid_token" },
         body: { name: "new name" },
       });
