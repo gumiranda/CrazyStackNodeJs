@@ -25,9 +25,11 @@ export class LoadServiceByPageController extends Controller {
       page,
       sortBy = "createdAt",
       typeSort = "asc",
+      limitPerPage = 10,
       ...rest
     } = httpRequest?.query || {};
     const fields =
+      !httpRequest?.userLogged?.role ||
       httpRequest?.userLogged?.role === "admin" ||
       httpRequest?.userLogged?.role === "client"
         ? rest
@@ -36,7 +38,7 @@ export class LoadServiceByPageController extends Controller {
             createdById: httpRequest?.userId,
           };
     const sort = { [sortBy]: typeSort === "asc" ? 1 : -1 };
-    const options = { sort, page };
+    const options = { sort, page, limitPerPage };
     const serviceLoaded = await this.loadServiceByPage({
       fields,
       options,
