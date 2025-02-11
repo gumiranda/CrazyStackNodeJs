@@ -27,7 +27,7 @@ describe("LoadOwnerController", () => {
   });
   beforeEach(() => {
     fakeQuery = { _id: fakeOwnerEntity._id };
-    testInstance = new LoadOwnerController(validation, loadOwner);
+    testInstance = new LoadOwnerController(validation, loadOwner, null as any);
   });
   it("should extends class Controller", async () => {
     expect(testInstance).toBeInstanceOf(Controller);
