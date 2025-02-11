@@ -7,7 +7,7 @@ const bodyAddTweetJsonSchema = {
     userSlug: { type: "string" },
     body: { type: "string" },
     image: { type: "string" },
-    tweetId: { type: "string" },
+    tweetId: { type: "string", nullable: true },
   },
 };
 const headersJsonSchema = {
@@ -24,7 +24,7 @@ const addTweetResponse = {
     userSlug: { type: "string" },
     body: { type: "string" },
     image: { type: "string" },
-    tweetId: { type: "string" },
+    tweetId: { type: "string", nullable: true },
     createdById: { type: "string" },
     createdAt: { type: "string" },
   },
@@ -34,6 +34,7 @@ export const addTweetPostSchema = {
     body: bodyAddTweetJsonSchema,
     response: { 200: addTweetResponse },
     headers: headersJsonSchema,
+    security: [{ bearerAuth: [] }],
   },
 };
 
@@ -51,9 +52,10 @@ const loadTweetResponse = {
     userSlug: { type: "string" },
     body: { type: "string" },
     image: { type: "string" },
-    tweetId: { type: "string" },
+    tweetId: { type: "string", nullable: true },
     createdById: { type: "string" },
     createdAt: { type: "string" },
+    retweets: { type: "number", nullable: true },
     createdBy: {
       type: "object",
       properties: {
@@ -89,6 +91,7 @@ const loadTweetResponse = {
 export const loadTweetGetSchema = {
   schema: {
     headers: headersJsonSchema,
+    security: [{ bearerAuth: [] }],
     querystring: queryStringJsonLoadTweetSchema,
     response: {
       200: loadTweetResponse,
@@ -106,6 +109,7 @@ const queryStringJsonDeleteTweetSchema = {
 export const deleteTweetSchema = {
   schema: {
     headers: headersJsonSchema,
+    security: [{ bearerAuth: [] }],
     querystring: queryStringJsonDeleteTweetSchema,
     response: {
       200: deleteTweetResponse,
@@ -126,7 +130,7 @@ const updateTweetResponse = {
     userSlug: { type: "string" },
     body: { type: "string" },
     image: { type: "string" },
-    tweetId: { type: "string" },
+    tweetId: { type: "string", nullable: true },
     createdById: { type: "string" },
   },
 };
@@ -135,12 +139,13 @@ const updateTweetBody = {
   properties: {
     body: { type: "string" },
     image: { type: "string" },
-    tweetId: { type: "string" },
+    tweetId: { type: "string", nullable: true },
   },
 };
 export const updateTweetSchema = {
   schema: {
     headers: headersJsonSchema,
+    security: [{ bearerAuth: [] }],
     querystring: queryStringJsonUpdateTweetSchema,
     body: updateTweetBody,
     response: {
@@ -154,6 +159,7 @@ const queryStringJsonLoadTweetByPageSchema = {
     page: { type: "integer", minimum: 1 },
     sortBy: { type: "string" },
     typeSort: { type: "string" },
+    tweetId: { type: "string", nullable: true },
   },
   required: ["page"],
 };
@@ -169,10 +175,22 @@ const loadTweetByPageResponse = {
           _id: idSchema,
           userSlug: { type: "string" },
           body: { type: "string" },
-          image: { type: "string" },
-          tweetId: { type: "string" },
+          image: {},
+          tweetId: { type: "string", nullable: true },
           createdById: { type: "string" },
           createdAt: { type: "string" },
+          retweets: { type: "number", nullable: true },
+          createdBy: {
+            type: "object",
+            properties: {
+              _id: { type: "string" },
+              slug: { type: "string" },
+              photoId: {},
+              photo: {},
+              name: { type: "string" },
+            },
+          },
+          tweetlike: {},
         },
       },
     },
@@ -182,6 +200,7 @@ const loadTweetByPageResponse = {
 export const loadTweetByPageGetSchema = {
   schema: {
     headers: headersJsonSchema,
+    security: [{ bearerAuth: [] }],
     querystring: queryStringJsonLoadTweetByPageSchema,
     response: {
       200: loadTweetByPageResponse,
