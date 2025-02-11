@@ -2,7 +2,7 @@ import MockDate from "mockdate";
 import { badRequest, ok, Validation } from "@/application/helpers";
 import { MockProxy, mock } from "jest-mock-extended";
 import { UpdateTweetlikeController } from "./updateTweetlikeController";
-import { fakeTweetlikeEntity } from "@/slices/tweetlike/entities/TweetlikeEntity.spec";
+import { fakeTweetlikeEntity } from "@/slices/social-network/tweetlike/entities/TweetlikeEntity.spec";
 import { Controller } from "@/application/infra/contracts";
 import { MissingParamError } from "@/application/errors";
 import { fakeUserEntity } from "@/slices/user/entities/UserEntity.spec";
@@ -60,9 +60,9 @@ describe("UpdateTweetlikeController", () => {
       })
     );
     expect(updateTweetlike).toHaveBeenCalledWith(
-       {
+      {
         fields: {
-         ...fakeTweetlikeEntity,
+          ...fakeTweetlikeEntity,
           createdById: fakeUserEntity?._id,
         },
         options: {},
@@ -80,13 +80,13 @@ describe("UpdateTweetlikeController", () => {
     await expect(result).rejects.toThrow(new Error("error"));
   });
   test("should return bad request if i dont pass any required field in body", async () => {
-    validationBody.validate.mockReturnValueOnce([new MissingParamError("name")]);
+    validationBody.validate.mockReturnValueOnce([new MissingParamError("userSlug")]);
     const httpResponse = await testInstance.execute({ body: fakeTweetlikeEntity });
-    expect(httpResponse).toEqual(badRequest([new MissingParamError("name")]));
+    expect(httpResponse).toEqual(badRequest([new MissingParamError("userSlug")]));
   });
   test("should return bad request if i dont pass any required field in query", async () => {
-    validationQuery.validate.mockReturnValueOnce([new MissingParamError("name")]);
+    validationQuery.validate.mockReturnValueOnce([new MissingParamError("userSlug")]);
     const httpResponse = await testInstance.execute({ query: fakeTweetlikeEntity });
-    expect(httpResponse).toEqual(badRequest([new MissingParamError("name")]));
+    expect(httpResponse).toEqual(badRequest([new MissingParamError("userSlug")]));
   });
 });

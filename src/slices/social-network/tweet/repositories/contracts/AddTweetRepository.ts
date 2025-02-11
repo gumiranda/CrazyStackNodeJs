@@ -1,5 +1,5 @@
-import { TweetData } from "@/slices/tweet/entities";
+import { TweetData } from "@/slices/social-network/tweet/entities";
 
 export interface AddTweetRepository {
-    addTweet(tweet: TweetData): Promise<TweetData | null>;
+  addTweet(tweet: TweetData): Promise<TweetData | null>;
 }

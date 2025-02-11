@@ -1,10 +1,9 @@
 @apiurl = http://127.0.0.1:3333/api
 
-@token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI4MWQ3MWJlNy05NjFlLTRlMGYtYTFkNC04NDMwYTI5MDg4NmEiLCJpYXQiOjE3MjkxMDMyMDAsImV4cCI6MTczNDI4NzIwMH0.FoZ6Xul1j-3h_lHgDNfRRQucXckaY-4JSfFapaDMz-c
-@tokenGeolocalizado=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiIxYjZjNTg2OS05MTc2LTQzZmEtYjg3Yy03MDdhZjY0ZDljNjQiLCJpYXQiOjE3MTgzMTA4MzEsImV4cCI6MTcyMzQ5NDgzMX0.QUpfzYZtMxiG82cEQi6fD7XFvdxudElaiofuMw0DPYs
+@token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI5YjM2ZWNjMS04ZTgwLTRmMGYtYTIxNy0yNWY2ZTAxNTgyYTAiLCJpYXQiOjE3MjkyNTY3MDcsImV4cCI6MTczNDQ0MDcwN30.FD5vQfS0m6eBojyEdbzMioKpjPTa3NvCimLEuM1Wdw0
+@tokenGeolocalizado=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI5YjM2ZWNjMS04ZTgwLTRmMGYtYTIxNy0yNWY2ZTAxNTgyYTAiLCJpYXQiOjE3MjkyNTY3MDcsImV4cCI6MTczNDQ0MDcwN30.FD5vQfS0m6eBojyEdbzMioKpjPTa3NvCimLEuM1Wdw0
 
-
-@entityId=81d71be7-961e-4e0f-a1d4-8430a290886a
+@entityId=9b36ecc1-8e80-4f0f-a217-25f6e01582a0
 
 @myOwnerId=54b7a8a4-4a79-457e-b8f0-20dad19fe048
 
@@ -36,9 +35,8 @@ Authorization: Bearer {{token}}
 {
   "name": "John Doe3",
   "active":false,
-  "photoId":"50e85f33-bec3-4cc5-91e7-73f08ed3edb4",
-  "password":"",
-  "createdById": null
+  "ownerId":"1716a5dc-7dcf-43d3-ba9a-f49c8f2bdfa2",
+  "password":""
 }
 
 ### DELETE delete user
@@ -70,23 +68,22 @@ Content-Type: application/json
 
 
 {
-  "email": "teste7@gmail.com",
+  "email": "teste9@gmail.com",
   "password": "123456",
   "passwordConfirmation": "123456",
   "name": "John Doe",
-  "cpf": "68687139080",
+  "cpf": "55724019000",
   "phone": "12345678900",
   "role": "owner",
   "coord":  {"coordinates": [-46.6333, -23.5405] }
 }
-
 ### POST LOGIN geolocalizado
 POST {{apiurl}}/auth/login HTTP/1.1
 Content-Type: application/json
 
 
 {
-  "email": "teste7@gmail.com",
+  "email": "teste9@gmail.com",
   "password": "123456",
   "passwordConfirmation": "123456"
 }

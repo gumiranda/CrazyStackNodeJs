@@ -5,7 +5,7 @@ import { LoadTrendByPageController } from "./loadTrendByPageController";
 import {
   fakeTrendEntity,
   fakeTrendPaginated,
-} from "@/slices/trend/entities/TrendEntity.spec";
+} from "@/slices/social-network/trend/entities/TrendEntity.spec";
 import { Controller } from "@/application/infra/contracts";
 import { MissingParamError } from "@/application/errors";
 import { fakeUserEntity } from "@/slices/user/entities/UserEntity.spec";
@@ -29,7 +29,7 @@ describe("LoadTrendByPageController", () => {
   });
   beforeEach(() => {
     fakeQueryParams = { _id: fakeTrendEntity._id };
-    fakeRestQuery = { page: 1, sortBy: "name", typeSort: "asc" };
+    fakeRestQuery = { page: 1, sortBy: "hashtag", typeSort: "asc" };
     fakeQuery = { ...fakeQueryParams, ...fakeRestQuery };
     testInstance = new LoadTrendByPageController(validation, loadTrendByPage);
   });

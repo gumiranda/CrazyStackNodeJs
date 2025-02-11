@@ -7,7 +7,7 @@ import {
   ok,
 } from "@/application/helpers";
 import { Controller } from "@/application/infra/contracts";
-import { DeleteTrend } from "@/slices/trend/useCases";
+import { DeleteTrend } from "@/slices/social-network/trend/useCases";
 
 export class DeleteTrendController extends Controller {
   constructor(
@@ -22,7 +22,7 @@ export class DeleteTrendController extends Controller {
       return badRequest(errors);
     }
     const trendDeleteed = await this.deleteTrend({
-      fields: { ...httpRequest?.query, createdById: httpRequest?.userId },
+      fields: { ...httpRequest?.query },
       options: {},
     });
     return ok(trendDeleteed);

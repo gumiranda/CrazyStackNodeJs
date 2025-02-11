@@ -16,5 +16,6 @@ export const removeTrend: RemoveTrendSignature =
         }
       );
     }
+    // Remove the trend if counter drops to 0
     return upsertTrendRepository.deleteTrend(queryHashtag);
   };

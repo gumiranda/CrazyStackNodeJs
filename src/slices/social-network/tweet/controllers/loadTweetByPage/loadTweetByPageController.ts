@@ -7,7 +7,7 @@ import {
   ok,
 } from "@/application/helpers";
 import { Controller } from "@/application/infra/contracts";
-import { LoadTweetByPage } from "@/slices/tweet/useCases";
+import { LoadTweetByPage } from "@/slices/social-network/tweet/useCases";
 
 export class LoadTweetByPageController extends Controller {
   constructor(
@@ -21,7 +21,12 @@ export class LoadTweetByPageController extends Controller {
     if (errors?.length > 0) {
       return badRequest(errors);
     }
-    const { page, sortBy = "createdAt", typeSort = "asc", ...rest } = httpRequest?.query || {};
+    const {
+      page,
+      sortBy = "createdAt",
+      typeSort = "asc",
+      ...rest
+    } = httpRequest?.query || {};
     const fields = rest;
     const sort = { [sortBy]: typeSort === "asc" ? 1 : -1 };
     const options = { sort, page };

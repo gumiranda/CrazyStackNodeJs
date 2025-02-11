@@ -38,7 +38,6 @@ export class UpdateTweetController extends Controller {
     if (!oldTweetBody) {
       return badRequest("Tweet not found");
     }
-
     const newTweet = await this.updateTweet(
       {
         fields: {
@@ -51,8 +50,11 @@ export class UpdateTweetController extends Controller {
     );
     const oldHashtags: string[] = oldTweetBody.match(/#[a-zA-Z0-9_]+/g) || [];
     const newHashtags: string[] = newTweet?.body.match(/#[a-zA-Z0-9_]+/g) || [];
+
+    // Process hashtags removed or added
     const removedHashtags = oldHashtags.filter((ht) => !newHashtags.includes(ht));
     const addedHashtags = newHashtags.filter((ht) => !oldHashtags.includes(ht));
+
     // for (const hashtag of removedHashtags) {
     //   await this.removeTrend({ hashtag });
     // }

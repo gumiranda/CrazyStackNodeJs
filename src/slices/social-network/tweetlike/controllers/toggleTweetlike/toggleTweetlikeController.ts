@@ -23,7 +23,7 @@ export class ToggleTweetlikeController extends Controller {
     super();
   }
   async execute(httpRequest: HttpRequest<any>): Promise<HttpResponse<any>> {
-    const errors = this.validation.validate(httpRequest?.query);
+    const errors = this.validation.validate(httpRequest?.body);
     if (errors?.length > 0) {
       return badRequest(errors);
     }

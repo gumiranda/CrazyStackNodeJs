@@ -1,6 +1,6 @@
 import { Query } from "@/application/types";
-import { TweetData } from "@/slices/tweet/entities";
+import { TweetData } from "@/slices/social-network/tweet/entities";
 
 export interface DeleteTweetRepository {
-    deleteTweet(query: Query): Promise<TweetData | null>;
+  deleteTweet(query: Query): Promise<TweetData | null>;
 }

@@ -5,7 +5,7 @@ import { LoadFollowByPageController } from "./loadFollowByPageController";
 import {
   fakeFollowEntity,
   fakeFollowPaginated,
-} from "@/slices/follow/entities/FollowEntity.spec";
+} from "@/slices/social-network/follow/entities/FollowEntity.spec";
 import { Controller } from "@/application/infra/contracts";
 import { MissingParamError } from "@/application/errors";
 import { fakeUserEntity } from "@/slices/user/entities/UserEntity.spec";
@@ -29,7 +29,7 @@ describe("LoadFollowByPageController", () => {
   });
   beforeEach(() => {
     fakeQueryParams = { _id: fakeFollowEntity._id };
-    fakeRestQuery = { page: 1, sortBy: "name", typeSort: "asc" };
+    fakeRestQuery = { page: 1, sortBy: "user1Slug", typeSort: "asc" };
     fakeQuery = { ...fakeQueryParams, ...fakeRestQuery };
     testInstance = new LoadFollowByPageController(validation, loadFollowByPage);
   });

@@ -7,7 +7,7 @@ import {
   ok,
 } from "@/application/helpers";
 import { Controller } from "@/application/infra/contracts";
-import { UpdateTrend } from "@/slices/trend/useCases";
+import { UpdateTrend } from "@/slices/social-network/trend/useCases";
 
 export class UpdateTrendController extends Controller {
   constructor(
@@ -30,7 +30,6 @@ export class UpdateTrendController extends Controller {
       {
         fields: {
           ...httpRequest?.query,
-          createdById: httpRequest?.userId,
         },
         options: {},
       },

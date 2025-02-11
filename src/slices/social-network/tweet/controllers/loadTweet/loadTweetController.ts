@@ -1,3 +1,4 @@
+/* eslint-disable no-prototype-builtins */
 /* eslint-disable no-unsafe-optional-chaining */
 import {
   HttpRequest,
@@ -22,13 +23,13 @@ export class LoadTweetController extends Controller {
     if (errors?.length > 0) {
       return badRequest(errors);
     }
-    const tweetLoaded = await this.loadTweet({
+    const tweetLoaded: any = await this.loadTweet({
       fields: httpRequest?.query,
       options: {
         include: {
-          createdBy: true,
-          tweet: true,
-          tweetlike: true,
+          createdBy: true, //pg
+          tweet: true, //pg
+          tweetlike: true, //pg
         },
       },
     });

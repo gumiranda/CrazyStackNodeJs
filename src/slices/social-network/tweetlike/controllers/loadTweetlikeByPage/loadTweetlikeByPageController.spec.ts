@@ -5,7 +5,7 @@ import { LoadTweetlikeByPageController } from "./loadTweetlikeByPageController";
 import {
   fakeTweetlikeEntity,
   fakeTweetlikePaginated,
-} from "@/slices/tweetlike/entities/TweetlikeEntity.spec";
+} from "@/slices/social-network/tweetlike/entities/TweetlikeEntity.spec";
 import { Controller } from "@/application/infra/contracts";
 import { MissingParamError } from "@/application/errors";
 import { fakeUserEntity } from "@/slices/user/entities/UserEntity.spec";
@@ -29,7 +29,7 @@ describe("LoadTweetlikeByPageController", () => {
   });
   beforeEach(() => {
     fakeQueryParams = { _id: fakeTweetlikeEntity._id };
-    fakeRestQuery = { page: 1, sortBy: "name", typeSort: "asc" };
+    fakeRestQuery = { page: 1, sortBy: "userSlug", typeSort: "asc" };
     fakeQuery = { ...fakeQueryParams, ...fakeRestQuery };
     testInstance = new LoadTweetlikeByPageController(validation, loadTweetlikeByPage);
   });

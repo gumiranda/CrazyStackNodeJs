@@ -7,7 +7,7 @@ import {
   ok,
 } from "@/application/helpers";
 import { Controller } from "@/application/infra/contracts";
-import { AddTrend } from "@/slices/trend/useCases";
+import { AddTrend } from "@/slices/social-network/trend/useCases";
 
 export class AddTrendController extends Controller {
   constructor(
@@ -23,7 +23,6 @@ export class AddTrendController extends Controller {
     }
     const trendCreated = await this.addTrend({
       ...httpRequest?.body,
-      createdById: httpRequest?.userId,
     });
     return ok(trendCreated);
   }
