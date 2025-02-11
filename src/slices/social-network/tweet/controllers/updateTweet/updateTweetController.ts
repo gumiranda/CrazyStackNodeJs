@@ -30,7 +30,16 @@ export class UpdateTweetController extends Controller {
     if (errorsQuery?.length > 0) {
       return badRequest(errorsQuery);
     }
-    const tweetUpdated = await this.updateTweet(
+    const oldTweet: any = await this.loadTweet({
+      fields: { ...httpRequest?.query, createdById: httpRequest?.userId },
+      options: {},
+    });
+    const oldTweetBody = oldTweet?.body ?? oldTweet?.[0]?.body;
+    if (!oldTweetBody) {
+      return badRequest("Tweet not found");
+    }
+
+    const newTweet = await this.updateTweet(
       {
         fields: {
           ...httpRequest?.query,
@@ -40,6 +49,21 @@ export class UpdateTweetController extends Controller {
       },
       httpRequest?.body
     );
-    return ok(tweetUpdated);
+    const oldHashtags: string[] = oldTweetBody.match(/#[a-zA-Z0-9_]+/g) || [];
+    const newHashtags: string[] = newTweet?.body.match(/#[a-zA-Z0-9_]+/g) || [];
+    const removedHashtags = oldHashtags.filter((ht) => !newHashtags.includes(ht));
+    const addedHashtags = newHashtags.filter((ht) => !oldHashtags.includes(ht));
+    // for (const hashtag of removedHashtags) {
+    //   await this.removeTrend({ hashtag });
+    // }
+
+    // for (const hashtag of addedHashtags) {
+    //   await this.upsertTrend({ hashtag });
+    // }
+    await Promise.all([
+      ...removedHashtags.map((hashtag) => this.removeTrend({ hashtag })),
+      ...addedHashtags.map((hashtag) => this.upsertTrend({ hashtag })),
+    ]);
+    return ok(newTweet);
   }
 }
