@@ -2,7 +2,7 @@ import MockDate from "mockdate";
 import { badRequest, ok, Validation } from "@/application/helpers";
 import { MockProxy, mock } from "jest-mock-extended";
 import { LoadFollowController } from "./loadFollowController";
-import { fakeFollowEntity } from "@/slices/follow/entities/FollowEntity.spec";
+import { fakeFollowEntity } from "@/slices/social-network/follow/entities/FollowEntity.spec";
 import { Controller } from "@/application/infra/contracts";
 import { MissingParamError } from "@/application/errors";
 import { fakeUserEntity } from "@/slices/user/entities/UserEntity.spec";

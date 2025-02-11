@@ -42,20 +42,25 @@ export const loadUserDetailed: LoadUserDetailedSignature =
   async (query: Query) => {
     const [user, followingsResult, followersResult, tweetsResult] = await Promise.all([
       loadUserRepository.loadUser(query),
-      followRepository.getCountFollow({ fields: { createdById: query.fields._id } }),
-      followRepository.getCountFollow({ fields: { userId: query.fields._id } }),
-      tweetRepository.getCountTweet({ fields: { createdById: query.fields._id } }),
+      followRepository.getCountFollow({ fields: { createdById: query?.fields?._id } }),
+      followRepository.getCountFollow({ fields: { userId: query?.fields?._id } }),
+      tweetRepository.getCountTweet({ fields: { createdById: query?.fields?._id } }),
     ]);
+
     const followings = followingsResult ?? 0;
     const followers = followersResult ?? 0;
     const tweets = tweetsResult ?? 0;
+
     if (!user) {
       return null;
     }
+
+    // Tipagem explícita do retorno de `loadPhoto`
     let photo: PhotoData | undefined;
-    if (user?.photoId) {
+    if (user.photoId) {
       photo = (await loadPhoto({ fields: { _id: user.photoId } })) as unknown as PhotoData;
     }
+
     // Retornar o usuário com os dados corretos
     return {
       ...user,
