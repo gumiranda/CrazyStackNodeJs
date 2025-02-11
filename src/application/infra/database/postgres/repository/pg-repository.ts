@@ -187,7 +187,7 @@ export class PostgresRepository extends Repository {
           (key) => projection[key] === 1
         );
 
-        if (excludedFields.length > 0) {
+        if (excludedFields.length > 0 && this.tableName !== "users") {
           currentTableFields = await this.getTableFields(this.tableName, client);
           const selectedFields = currentTableFields.filter(
             (field: any) => !excludedFields.includes(field)
@@ -195,7 +195,7 @@ export class PostgresRepository extends Repository {
           selectClause = selectedFields
             .map((field: any) => `"${this.tableName}"."${field}"`)
             .join(", ");
-        } else if (includedFields.length > 0) {
+        } else if (includedFields.length > 0 && this.tableName !== "users") {
           selectClause = includedFields
             .map((field) => `"${this.tableName}".${field}`)
             .join(", ");
@@ -357,7 +357,9 @@ export class PostgresRepository extends Repository {
       const filterValues: any[] = [];
       Object.keys(fields).forEach((key) => {
         const value = fields[key];
-        if (key.includes("initDate")) {
+        if (value === "null") {
+          filterConditions.push(`"${key}" IS NULL`);
+        } else if (key.includes("initDate")) {
           filterConditions.push(`"${key}" > $${filterValues.length + 1}`);
           filterValues.push(value);
         } else if (key.includes("endDate")) {
@@ -401,7 +403,9 @@ export class PostgresRepository extends Repository {
       const filterValues: any[] = [];
       Object.keys(query).forEach((key) => {
         const value = query[key];
-        if (key.includes("initDate")) {
+        if (value === "null") {
+          filterConditions.push(`"${key}" IS NULL`);
+        } else if (key.includes("initDate")) {
           filterConditions.push(`"${key}" > $${filterValues.length + 1}`);
           filterValues.push(value);
         } else if (key.includes("endDate")) {
