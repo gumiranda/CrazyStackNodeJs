@@ -1,11 +1,20 @@
-import { UpsertTrendRepository } from "@/slices/trend/repositories";
-import { TrendData } from "@/slices/trend/entities";
-import { Query } from "@/application/types";
+import { TrendEntity, TrendData } from "@/slices/social-network/trend/entities";
+import type { TrendRepository } from "../../repositories";
 
-export type UpsertTrend = (query: Query, data: TrendData) => Promise<TrendData | null>;
-export type UpsertTrendSignature = (upsertTrend: UpsertTrendRepository) => UpsertTrend;
+export type UpsertTrend = (data: TrendData) => Promise<TrendEntity | null>;
+export type UpsertTrendSignature = (upsertTrend: TrendRepository) => UpsertTrend;
 export const upsertTrend: UpsertTrendSignature =
-  (upsertTrendRepository: UpsertTrendRepository) =>
-  async (query: Query, data: TrendData) => {
-    return upsertTrendRepository.upsertTrend(query, data);
+  (upsertTrendRepository: TrendRepository) => async (data: TrendData) => {
+    const queryHashtag = { fields: { hashtag: data.hashtag } };
+    const currentHashtag = await upsertTrendRepository.loadTrend(queryHashtag);
+    if (currentHashtag?.counter) {
+      return upsertTrendRepository.updateTrend(
+        { fields: { _id: currentHashtag?._id } },
+        {
+          counter: currentHashtag.counter + 1,
+          hashtag: currentHashtag.hashtag,
+        }
+      );
+    }
+    return upsertTrendRepository.addTrend(new TrendEntity(data));
   };
