@@ -1,13 +1,13 @@
 import { adaptRoute } from "@/application/adapters";
 import {
-  makeAddTweetlikeController,
   makeLoadTweetlikeController,
   makeDeleteTweetlikeController,
   makeUpdateTweetlikeController,
   makeLoadTweetlikeByPageController,
-} from "@/slices/tweetlike/controllers";
+  makeToggleTweetlikeController,
+} from "@/slices/social-network/tweetlike/controllers";
 
-export const addTweetlikeAdapter = () => adaptRoute(makeAddTweetlikeController());
+export const toggleTweetlikeAdapter = () => adaptRoute(makeToggleTweetlikeController());
 export const loadTweetlikeAdapter = () => adaptRoute(makeLoadTweetlikeController());
 export const loadTweetlikeByPageAdapter = () =>
   adaptRoute(makeLoadTweetlikeByPageController());
