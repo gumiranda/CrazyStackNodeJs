@@ -2,9 +2,12 @@ import { idSchema } from "@/application/types/id";
 
 const bodyAddTweetJsonSchema = {
   type: "object",
-  required: ["name"],
+  required: ["userSlug", "body"],
   properties: {
-    name: { type: "string" },
+    userSlug: { type: "string" },
+    body: { type: "string" },
+    image: { type: "string" },
+    tweetId: { type: "string" },
   },
 };
 const headersJsonSchema = {
@@ -18,8 +21,10 @@ const addTweetResponse = {
   type: "object",
   properties: {
     _id: idSchema,
-    name: { type: "string" },
-    active: { type: "boolean" },
+    userSlug: { type: "string" },
+    body: { type: "string" },
+    image: { type: "string" },
+    tweetId: { type: "string" },
     createdById: { type: "string" },
     createdAt: { type: "string" },
   },
@@ -43,10 +48,42 @@ const loadTweetResponse = {
   type: "object",
   properties: {
     _id: idSchema,
-    name: { type: "string" },
-    active: { type: "boolean" },
+    userSlug: { type: "string" },
+    body: { type: "string" },
+    image: { type: "string" },
+    tweetId: { type: "string" },
     createdById: { type: "string" },
     createdAt: { type: "string" },
+    createdBy: {
+      type: "object",
+      properties: {
+        _id: { type: "string" },
+        slug: { type: "string" },
+        photoId: {},
+        name: { type: "string" },
+      },
+    },
+    tweetlike: {},
+    tweet: {
+      type: "object",
+      properties: {
+        createdById: { type: "string" },
+        createdAt: { type: "string" },
+        updatedAt: { type: "string" },
+        userSlug: { type: "string" },
+        body: { type: "string" },
+        image: { type: "string" },
+      },
+    },
+    users: {
+      type: "object",
+      properties: {
+        _id: { type: "string" },
+        slug: { type: "string" },
+        photoId: {},
+        name: { type: "string" },
+      },
+    },
   },
 };
 export const loadTweetGetSchema = {
@@ -86,14 +123,19 @@ const updateTweetResponse = {
   type: "object",
   properties: {
     _id: idSchema,
-    name: { type: "string" },
+    userSlug: { type: "string" },
+    body: { type: "string" },
+    image: { type: "string" },
+    tweetId: { type: "string" },
     createdById: { type: "string" },
   },
 };
 const updateTweetBody = {
   type: "object",
   properties: {
-    name: { type: "string" },
+    body: { type: "string" },
+    image: { type: "string" },
+    tweetId: { type: "string" },
   },
 };
 export const updateTweetSchema = {
@@ -125,8 +167,10 @@ const loadTweetByPageResponse = {
         type: "object",
         properties: {
           _id: idSchema,
-          name: { type: "string" },
-          active: { type: "boolean" },
+          userSlug: { type: "string" },
+          body: { type: "string" },
+          image: { type: "string" },
+          tweetId: { type: "string" },
           createdById: { type: "string" },
           createdAt: { type: "string" },
         },

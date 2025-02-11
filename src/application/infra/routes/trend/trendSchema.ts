@@ -2,9 +2,9 @@ import { idSchema } from "@/application/types/id";
 
 const bodyAddTrendJsonSchema = {
   type: "object",
-  required: ["name"],
+  required: ["hashtag"],
   properties: {
-    name: { type: "string" },
+    hashtag: { type: "string" },
   },
 };
 const headersJsonSchema = {
@@ -18,8 +18,7 @@ const addTrendResponse = {
   type: "object",
   properties: {
     _id: idSchema,
-    name: { type: "string" },
-    active: { type: "boolean" },
+    hashtag: { type: "string" },
     createdById: { type: "string" },
     createdAt: { type: "string" },
   },
@@ -43,8 +42,7 @@ const loadTrendResponse = {
   type: "object",
   properties: {
     _id: idSchema,
-    name: { type: "string" },
-    active: { type: "boolean" },
+    hashtag: { type: "string" },
     createdById: { type: "string" },
     createdAt: { type: "string" },
   },
@@ -86,14 +84,14 @@ const updateTrendResponse = {
   type: "object",
   properties: {
     _id: idSchema,
-    name: { type: "string" },
+    hashtag: { type: "string" },
     createdById: { type: "string" },
   },
 };
 const updateTrendBody = {
   type: "object",
   properties: {
-    name: { type: "string" },
+    hashtag: { type: "string" },
   },
 };
 export const updateTrendSchema = {
@@ -125,8 +123,7 @@ const loadTrendByPageResponse = {
         type: "object",
         properties: {
           _id: idSchema,
-          name: { type: "string" },
-          active: { type: "boolean" },
+          hashtag: { type: "string" },
           createdById: { type: "string" },
           createdAt: { type: "string" },
         },
