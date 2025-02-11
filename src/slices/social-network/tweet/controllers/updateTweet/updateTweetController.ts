@@ -7,13 +7,17 @@ import {
   ok,
 } from "@/application/helpers";
 import { Controller } from "@/application/infra/contracts";
-import { UpdateTweet } from "@/slices/tweet/useCases";
+import type { RemoveTrend, UpsertTrend } from "@/slices/social-network/trend/useCases";
+import { UpdateTweet, type LoadTweet } from "@/slices/social-network/tweet/useCases";
 
 export class UpdateTweetController extends Controller {
   constructor(
     private readonly validationQuery: Validation,
     private readonly validationBody: Validation,
-    private readonly updateTweet: UpdateTweet
+    private readonly updateTweet: UpdateTweet,
+    private readonly loadTweet: LoadTweet,
+    private readonly upsertTrend: UpsertTrend,
+    private readonly removeTrend: RemoveTrend
   ) {
     super();
   }
