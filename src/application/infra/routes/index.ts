@@ -6,7 +6,7 @@ import { category } from "./category";
 import { trend } from "./trend";
 import { follow } from "./follow";
 import { tweetlike } from "./tweetlike";
-import { tweet } from "./tweet";
+import { tweet, publictweet } from "./tweet";
 import { photo } from "./photo";
 import { transaction } from "./transaction";
 import { charge } from "./charge";
@@ -28,6 +28,7 @@ import { user } from "./user";
 import { service } from "./service";
 import { product } from "./product";
 import { webhooks } from "./webhooks";
+import { publica } from "./public";
 import { uploadRoutes } from "./photo/uploadPhotoRouter";
 
 const routes = [
@@ -62,6 +63,8 @@ const routes = [
   service,
   product,
   uploadRoutes,
+  publica,
+  publictweet,
 ];
 
 export { routes };
