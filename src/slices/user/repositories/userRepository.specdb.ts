@@ -4,8 +4,6 @@ import { Query } from "@/application/types";
 import MockDate from "mockdate";
 import { mock, MockProxy } from "jest-mock-extended";
 import { UserRepository } from "./userRepository";
-import { ObjectId } from "mongodb";
-const fakeId = new ObjectId();
 describe("User Mongo Repository", () => {
   let fakeQuery: Query;
   let testInstance: UserRepository;
@@ -187,6 +185,7 @@ describe("User Mongo Repository", () => {
     const result = testInstance.incrementAppointmentsTotal(fakeQuery);
     await expect(result).rejects.toThrow("Error");
   });
+  //const fakeId = ObjectId.createFromTime(new Date().getTime());
   // test("should return null if i dont pass the userLoggedId", async () => {
   //   repository.getOne.mockResolvedValueOnce({
   //     ...fakeUserEntity,
