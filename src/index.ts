@@ -13,6 +13,8 @@ import {
 import { newOwnerConsumer } from "./application/infra/messaging/consumers/OwnerConsumer";
 import { closePool } from "./application/infra/database/postgres";
 import { consumeMessage } from "./application/infra/messaging";
+import fastifySwagger from "@fastify/swagger";
+import fastifySwaggerUI from "@fastify/swagger-ui";
 
 export const makeFastifyInstance = async (externalMongoClient: any) => {
   const fastify: FastifyInstance = Fastify({ logger: true });
@@ -36,6 +38,7 @@ export const makeFastifyInstance = async (externalMongoClient: any) => {
     await fastify.register(import("@fastify/rate-limit"), {
       max: 1000,
       timeWindow: "10 minutes",
+      global: false,
     });
     await fastify.register(cors, {
       origin: "*",
@@ -63,6 +66,29 @@ export const makeFastifyInstance = async (externalMongoClient: any) => {
     await fastify.register(require("@fastify/mongodb"), {
       forceClose: true,
       client,
+    });
+    fastify.register(fastifySwagger, {
+      openapi: {
+        openapi: "3.0.0",
+        info: {
+          title: "CrazyStack Node.js",
+          description: "Testing the Fastify swagger API",
+          version: "0.1.0",
+        },
+        components: {
+          securitySchemes: {
+            bearerAuth: {
+              type: "http",
+              scheme: "bearer",
+              bearerFormat: "JWT",
+            },
+          },
+        },
+      },
+    });
+
+    fastify.register(fastifySwaggerUI, {
+      routePrefix: "/docs",
     });
     for (const route of routes) {
       fastify.register(route, { prefix: "/api" });
@@ -107,6 +133,7 @@ const start = async () => {
     await fastifyInstance.listen({ port, host: "0.0.0.0" });
     fastifyInstance.log.info(`server listening on ${port}`);
     gracefulServer.setReady();
+    fastifyInstance.swagger();
     brokerMessagingAdapter = await consumeMessage({ consumers: brokerMessagingConsumers });
   } catch (err) {
     await closePool();

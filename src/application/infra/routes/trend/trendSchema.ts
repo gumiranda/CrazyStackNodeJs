@@ -28,6 +28,7 @@ export const addTrendPostSchema = {
     body: bodyAddTrendJsonSchema,
     response: { 200: addTrendResponse },
     headers: headersJsonSchema,
+    security: [{ bearerAuth: [] }],
   },
 };
 
@@ -50,6 +51,7 @@ const loadTrendResponse = {
 export const loadTrendGetSchema = {
   schema: {
     headers: headersJsonSchema,
+    security: [{ bearerAuth: [] }],
     querystring: queryStringJsonLoadTrendSchema,
     response: {
       200: loadTrendResponse,
@@ -67,6 +69,7 @@ const queryStringJsonDeleteTrendSchema = {
 export const deleteTrendSchema = {
   schema: {
     headers: headersJsonSchema,
+    security: [{ bearerAuth: [] }],
     querystring: queryStringJsonDeleteTrendSchema,
     response: {
       200: deleteTrendResponse,
@@ -97,6 +100,7 @@ const updateTrendBody = {
 export const updateTrendSchema = {
   schema: {
     headers: headersJsonSchema,
+    security: [{ bearerAuth: [] }],
     querystring: queryStringJsonUpdateTrendSchema,
     body: updateTrendBody,
     response: {
@@ -135,6 +139,7 @@ const loadTrendByPageResponse = {
 export const loadTrendByPageGetSchema = {
   schema: {
     headers: headersJsonSchema,
+    security: [{ bearerAuth: [] }],
     querystring: queryStringJsonLoadTrendByPageSchema,
     response: {
       200: loadTrendByPageResponse,

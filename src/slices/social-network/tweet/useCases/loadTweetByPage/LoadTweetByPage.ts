@@ -15,12 +15,14 @@ export type LoadTweetByPageSignature = (
 export const loadTweetByPage: LoadTweetByPageSignature =
   (loadTweetByPageRepository, loadPhoto, loadUser, loadTweetlikeByPage) =>
   async (query: Query) => {
-    const tweetPaginated = await loadTweetByPageRepository.loadTweetByPage(query);
-    if (!tweetPaginated?.tweets) {
-      return tweetPaginated;
+    const tweetsPaginated = await loadTweetByPageRepository.loadTweetByPage(query);
+
+    if (!tweetsPaginated?.tweets) {
+      return tweetsPaginated;
     }
+
     const enrichedData = await Promise.all(
-      tweetPaginated.tweets.map(async (tweet) => {
+      tweetsPaginated.tweets.map(async (tweet) => {
         const sort = { createdAt: -1 };
         const options = { sort, page: 1 };
         const [photo, user, likes] = await Promise.all([
@@ -33,7 +35,12 @@ export const loadTweetByPage: LoadTweetByPageSignature =
                 options: { projection: { password: 0 } },
               })
             : Promise.resolve(null),
-          loadTweetlikeByPage({ fields: { tweetId: tweet._id }, options }),
+          loadTweetlikeByPage({
+            fields: {
+              tweetId: tweet._id,
+            },
+            options,
+          }),
         ]);
         const photoUser = (user as any)?.photo?.url ?? null;
         return {
@@ -45,5 +52,9 @@ export const loadTweetByPage: LoadTweetByPageSignature =
         };
       })
     );
-    return { ...tweetPaginated, tweets: enrichedData };
+
+    return {
+      ...tweetsPaginated,
+      tweets: enrichedData,
+    };
   };

@@ -197,6 +197,7 @@ export const addOwnerPostSchema = {
     body: bodyAddOwnerJsonSchema,
     response: { 200: addOwnerResponse },
     headers: headersJsonSchema,
+    security: [{ bearerAuth: [] }],
   },
 };
 
@@ -293,14 +294,24 @@ const loadOwnerResponse = {
     active: { type: "boolean", nullable: true },
     createdById: { type: "string" },
     createdAt: { type: "string" },
+    services: {},
+    address: {},
+    imageUrl: {},
   },
 };
 export const loadOwnerGetSchema = {
   schema: {
     headers: headersJsonSchema,
+    security: [{ bearerAuth: [] }],
     querystring: queryStringJsonLoadOwnerSchema,
     response: {
       200: loadOwnerResponse,
+    },
+  },
+  config: {
+    rateLimit: {
+      max: 300,
+      timeWindow: "10 minutes",
     },
   },
 };
@@ -315,6 +326,7 @@ const queryStringJsonDeleteOwnerSchema = {
 export const deleteOwnerSchema = {
   schema: {
     headers: headersJsonSchema,
+    security: [{ bearerAuth: [] }],
     querystring: queryStringJsonDeleteOwnerSchema,
     response: {
       200: deleteOwnerResponse,
@@ -507,6 +519,7 @@ const updateOwnerBody = {
 export const updateOwnerSchema = {
   schema: {
     headers: headersJsonSchema,
+    security: [{ bearerAuth: [] }],
     querystring: queryStringJsonUpdateOwnerSchema,
     body: updateOwnerBody,
     response: {
@@ -626,9 +639,16 @@ const loadOwnerByPageResponse = {
 export const loadOwnerByPageGetSchema = {
   schema: {
     headers: headersJsonSchema,
+    security: [{ bearerAuth: [] }],
     querystring: queryStringJsonLoadOwnerByPageSchema,
     response: {
       200: loadOwnerByPageResponse,
+    },
+  },
+  config: {
+    rateLimit: {
+      max: 300,
+      timeWindow: "1 minute",
     },
   },
 };

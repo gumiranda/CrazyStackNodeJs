@@ -27,17 +27,17 @@ export class LoadOwnerController extends Controller {
       fields: httpRequest?.query,
       options: {},
     });
-    const defaultValues = {
-      page: 1,
-      sortBy: "createdAt",
-      typeSort: "asc",
-    };
+    const defaultValues = { page: 1, sortBy: "createdAt", typeSort: "asc" };
     const { page, sortBy, typeSort } = defaultValues;
-
-    const fields = { createdById: ownerLoaded?.createdById };
+    const fields = {
+      createdById: ownerLoaded?.createdById,
+    };
     const sort = { [sortBy]: typeSort === "asc" ? 1 : -1 };
     const options = { sort, page, limitPerPage: 100 };
-    const services = await this.loadServiceByPage({ fields, options });
+    const services = await this.loadServiceByPage({
+      fields,
+      options,
+    });
     return ok({ ...ownerLoaded, services });
   }
 }

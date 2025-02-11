@@ -51,6 +51,7 @@ export const addServicePostSchema = {
     body: bodyAddServiceJsonSchema,
     response: { 200: addServiceResponse },
     headers: headersJsonSchema,
+    security: [{ bearerAuth: [] }],
   },
 };
 
@@ -85,6 +86,7 @@ const loadServiceResponse = {
 export const loadServiceGetSchema = {
   schema: {
     headers: headersJsonSchema,
+    security: [{ bearerAuth: [] }],
     querystring: queryStringJsonLoadServiceSchema,
     response: {
       200: loadServiceResponse,
@@ -102,6 +104,7 @@ const queryStringJsonDeleteServiceSchema = {
 export const deleteServiceSchema = {
   schema: {
     headers: headersJsonSchema,
+    security: [{ bearerAuth: [] }],
     querystring: queryStringJsonDeleteServiceSchema,
     response: {
       200: deleteServiceResponse,
@@ -154,6 +157,7 @@ const updateServiceBody = {
 export const updateServiceSchema = {
   schema: {
     headers: headersJsonSchema,
+    security: [{ bearerAuth: [] }],
     querystring: queryStringJsonUpdateServiceSchema,
     body: updateServiceBody,
     response: {
@@ -204,9 +208,16 @@ const loadServiceByPageResponse = {
 export const loadServiceByPageGetSchema = {
   schema: {
     headers: headersJsonSchema,
+    security: [{ bearerAuth: [] }],
     querystring: queryStringJsonLoadServiceByPageSchema,
     response: {
       200: loadServiceByPageResponse,
+    },
+  },
+  config: {
+    rateLimit: {
+      max: 300,
+      timeWindow: "10 minutes",
     },
   },
 };

@@ -39,6 +39,7 @@ export const addRatingResultPostSchema = {
     body: bodyAddRatingResultJsonSchema,
     response: { 200: addRatingResultResponse },
     headers: headersJsonSchema,
+    security: [{ bearerAuth: [] }],
   },
 };
 
@@ -67,6 +68,7 @@ const loadRatingResultResponse = {
 export const loadRatingResultGetSchema = {
   schema: {
     headers: headersJsonSchema,
+    security: [{ bearerAuth: [] }],
     querystring: queryStringJsonLoadRatingResultSchema,
     response: {
       200: loadRatingResultResponse,
@@ -84,6 +86,7 @@ const queryStringJsonDeleteRatingResultSchema = {
 export const deleteRatingResultSchema = {
   schema: {
     headers: headersJsonSchema,
+    security: [{ bearerAuth: [] }],
     querystring: queryStringJsonDeleteRatingResultSchema,
     response: {
       200: deleteRatingResultResponse,
@@ -124,6 +127,7 @@ const updateRatingResultBody = {
 export const updateRatingResultSchema = {
   schema: {
     headers: headersJsonSchema,
+    security: [{ bearerAuth: [] }],
     querystring: queryStringJsonUpdateRatingResultSchema,
     body: updateRatingResultBody,
     response: {
@@ -168,6 +172,7 @@ const loadRatingResultByPageResponse = {
 export const loadRatingResultByPageGetSchema = {
   schema: {
     headers: headersJsonSchema,
+    security: [{ bearerAuth: [] }],
     querystring: queryStringJsonLoadRatingResultByPageSchema,
     response: {
       200: loadRatingResultByPageResponse,

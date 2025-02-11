@@ -30,6 +30,7 @@ export const addTransactionPostSchema = {
     body: bodyAddTransactionJsonSchema,
     response: { 200: addTransactionResponse },
     headers: headersJsonSchema,
+    security: [{ bearerAuth: [] }],
   },
 };
 
@@ -43,6 +44,7 @@ const queryStringJsonLoadTransactionSchema = {
 export const loadTransactionGetSchema = {
   schema: {
     headers: headersJsonSchema,
+    security: [{ bearerAuth: [] }],
     querystring: queryStringJsonLoadTransactionSchema,
     response: {
       200: webHookBody,
@@ -60,6 +62,7 @@ const queryStringJsonDeleteTransactionSchema = {
 export const deleteTransactionSchema = {
   schema: {
     headers: headersJsonSchema,
+    security: [{ bearerAuth: [] }],
     querystring: queryStringJsonDeleteTransactionSchema,
     response: {
       200: deleteTransactionResponse,
@@ -90,6 +93,7 @@ const updateTransactionBody = {
 export const updateTransactionSchema = {
   schema: {
     headers: headersJsonSchema,
+    security: [{ bearerAuth: [] }],
     querystring: queryStringJsonUpdateTransactionSchema,
     body: updateTransactionBody,
     response: {
@@ -120,6 +124,7 @@ const loadTransactionByPageResponse = {
 export const loadTransactionByPageGetSchema = {
   schema: {
     headers: headersJsonSchema,
+    security: [{ bearerAuth: [] }],
     querystring: queryStringJsonLoadTransactionByPageSchema,
     response: {
       200: loadTransactionByPageResponse,

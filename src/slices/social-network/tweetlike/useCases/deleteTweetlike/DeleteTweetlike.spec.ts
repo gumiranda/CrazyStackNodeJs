@@ -1,4 +1,5 @@
 import { fakeTweetlikeEntity } from "@/slices/social-network/tweetlike/entities/TweetlikeEntity.spec";
+import { TweetlikeEntity } from "@/slices/social-network/tweetlike/entities";
 import { DeleteTweetlikeRepository } from "@/slices/social-network/tweetlike/repositories/contracts";
 import MockDate from "mockdate";
 
