@@ -76,6 +76,9 @@ const loadUserResponse = {
     createdAt: { type: "string" },
     owner: { type: "object", properties: ownerFields },
     ...ownerFields,
+    tweets: {},
+    followings: {},
+    followers: {},
   },
 };
 export const loadUserGetSchema = {
