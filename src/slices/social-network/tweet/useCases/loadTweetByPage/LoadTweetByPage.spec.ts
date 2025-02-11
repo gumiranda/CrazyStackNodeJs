@@ -16,7 +16,7 @@ describe("LoadTweetByPage", () => {
     loadTweetByPageRepository.loadTweetByPage.mockResolvedValue(fakeTweetPaginated);
   });
   beforeEach(() => {
-    testInstance = loadTweetByPage(loadTweetByPageRepository);
+    testInstance = loadTweetByPage(loadTweetByPageRepository, mock(), mock(), mock());
   });
   afterAll(async () => {
     MockDate.reset();
