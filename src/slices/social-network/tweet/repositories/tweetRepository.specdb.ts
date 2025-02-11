@@ -97,7 +97,11 @@ describe("Tweet Mongo Repository", () => {
   });
   test("should call load of loadTweet with correct values", async () => {
     await testInstance.loadTweet(fakeQuery);
-    expect(repository.getOne).toHaveBeenCalledWith(fakeQuery?.fields, fakeQuery?.options);
+    expect(repository.getOne).toHaveBeenCalledWith(
+      fakeQuery?.fields,
+      fakeQuery?.options,
+      false
+    );
     expect(repository.getOne).toHaveBeenCalledTimes(1);
   });
   test("should return a tweet when loadTweet loaded it", async () => {

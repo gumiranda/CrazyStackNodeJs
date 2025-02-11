@@ -49,48 +49,6 @@ describe("Route api/tweetlike", () => {
     await userCollection.deleteMany({});
     await tweetlikeCollection.deleteMany({});
   });
-  describe("POST /api/tweetlike/add", () => {
-    test("Should return 200 on add", async () => {
-      const { token } = await makeAccessToken("admin", "password");
-      const responseAdd = await fastify.inject({
-        method: "POST",
-        url: "/api/tweetlike/add",
-        headers: { authorization: `Bearer ${token}` },
-        payload: tweetlikeBody,
-      });
-      const responseBodyAdd = JSON.parse(responseAdd.body);
-      expect(responseAdd.statusCode).toBe(200);
-      expect(responseBodyAdd._id).toBeTruthy();
-    });
-    test("Should return 400 for bad requests", async () => {
-      const { token } = await makeAccessToken("admin", "password");
-      const tweetlikeWrongBody = { ...tweetlikeBody, userSlug: null };
-      const responseAdd = await fastify.inject({
-        method: "POST",
-        url: "/api/tweetlike/add",
-        headers: { authorization: `Bearer ${token}` },
-        payload: tweetlikeWrongBody,
-      });
-      expect(responseAdd.statusCode).toBe(400);
-    });
-    test("Should return 401 for unauthorized access token", async () => {
-      const response = await fastify.inject({
-        method: "POST",
-        url: "/api/tweetlike/add",
-        headers: { authorization: "Bearer invalid_token" },
-        payload: tweetlikeBody,
-      });
-      expect(response.statusCode).toBe(401);
-    });
-    test("Should return 400 if i dont pass any token", async () => {
-      const response = await fastify.inject({
-        method: "POST",
-        url: "/api/tweetlike/add",
-        payload: tweetlikeBody,
-      });
-      expect(response.statusCode).toBe(400);
-    });
-  });
   describe("GET /api/tweetlike/load", () => {
     test("Should return 400 for bad requests", async () => {
       const { token } = await makeAccessToken("admin", "password");

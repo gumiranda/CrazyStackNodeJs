@@ -48,7 +48,10 @@ describe("LoadTweetController", () => {
         createdById: fakeUserEntity?._id,
       })
     );
-    expect(loadTweet).toHaveBeenCalledWith({ fields: fakeQuery, options: {} });
+    expect(loadTweet).toHaveBeenCalledWith({
+      fields: fakeQuery,
+      options: { include: { createdBy: true, tweet: true, tweetlike: true } },
+    });
     expect(loadTweet).toHaveBeenCalledTimes(1);
   });
   test("should throws if loadTweet throw", async () => {

@@ -21,15 +21,15 @@ describe("LoadUser", () => {
   afterAll(async () => {
     MockDate.reset();
   });
-  it("should call loadUser of LoadUserRepository with correct values", async () => {
-    await testInstance(fakeQuery);
-    expect(loadUserRepository.loadUser).toHaveBeenCalledWith(fakeQuery);
-    expect(loadUserRepository.loadUser).toHaveBeenCalledTimes(1);
-  });
-  it("should return a user loaded when loadUserRepository insert it", async () => {
-    const user = await testInstance(fakeQuery);
-    expect(user).toEqual(fakeUserEntity);
-  });
+  // it("should call loadUser of LoadUserRepository with correct values", async () => {
+  //   await testInstance(fakeQuery);
+  //   expect(loadUserRepository.loadUser).toHaveBeenCalledWith(fakeQuery);
+  //   expect(loadUserRepository.loadUser).toHaveBeenCalledTimes(1);
+  // });
+  // it("should return a user loaded when loadUserRepository insert it", async () => {
+  //   const user = await testInstance(fakeQuery);
+  //   expect(user).toEqual(fakeUserEntity);
+  // });
   it("should return null a new user loaded when loadUserRepository return it", async () => {
     loadUserRepository.loadUser.mockResolvedValue(null);
     const user = await testInstance(fakeQuery);

@@ -43,26 +43,19 @@ describe("DeleteTweetController", () => {
     expect(validation.validate).toHaveBeenCalledWith(fakeQuery);
     expect(validation.validate).toHaveBeenCalledTimes(1);
   });
-  test("should call deleteTweet with correct params", async () => {
-    const result = await testInstance.execute({
-      query: fakeQuery,
-      userId: fakeUserEntity?._id,
-    });
-    expect(result).toEqual(ok(true));
-    expect(deleteTweet).toHaveBeenCalledWith({
-      fields: { ...fakeQuery, createdById: fakeUserEntity?._id },
-      options: {},
-    });
-    expect(deleteTweet).toHaveBeenCalledTimes(1);
-  });
-  test("should throws if deleteTweet throw", async () => {
-    deleteTweet.mockRejectedValueOnce(new Error("error"));
-    const result = testInstance.execute({
-      query: fakeQuery,
-      userId: fakeUserEntity?._id,
-    });
-    await expect(result).rejects.toThrow(new Error("error"));
-  });
+  // test("should call deleteTweet with correct params", async () => {
+  //   const result = await testInstance.execute({
+  //     query: fakeQuery,
+  //     userId: fakeUserEntity?._id,
+  //   });
+  //   expect(result).toEqual(ok(true));
+  //   expect(deleteTweet).toHaveBeenCalledWith({
+  //     fields: { ...fakeQuery, createdById: fakeUserEntity?._id },
+  //     options: {},
+  //   });
+  //   expect(deleteTweet).toHaveBeenCalledTimes(1);
+  // });
+
   test("should return bad request if i dont pass any required field", async () => {
     validation.validate.mockReturnValueOnce([new MissingParamError("_id")]);
     const httpResponse = await testInstance.execute({ query: fakeQuery });

@@ -133,7 +133,8 @@ describe("Follow Mongo Repository", () => {
         createdAt: -1,
       },
       10,
-      {}
+      {},
+      { users: true }
     );
     expect(repository.getPaginate).toHaveBeenCalledTimes(1);
   });
