@@ -1,9 +1,9 @@
-import amqp, { Connection, Channel } from "amqplib";
+import amqp from "amqplib";
 import { env } from "@/application/infra";
 import type { ConsumerInput, SendMessageInput } from "../protocols/message.types";
 export class RabbitMQAdapter {
-  private connection: Connection | null = null;
-  private channel: Channel | null = null;
+  private connection: any | null = null;
+  private channel: any | null = null;
 
   constructor(private brokerUrl: string) {}
 
@@ -30,7 +30,7 @@ export class RabbitMQAdapter {
   async consumeMessages(topic: string, callback: (message: string) => Promise<void>) {
     if (!this.channel) throw new Error("Channel is not initialized");
     await this.channel.assertQueue(topic, { durable: true });
-    this.channel.consume(topic, async (msg) => {
+    this.channel.consume(topic, async (msg: any) => {
       if (msg !== null) {
         await callback(msg.content.toString());
         this.channel!.ack(msg);
