@@ -10,7 +10,7 @@ export class StripePaymentGateway extends PaymentGateway {
   constructor(paymentKey: string) {
     super();
     this.stripe = new Stripe(paymentKey, {
-      apiVersion: "2025-01-27.acacia",
+      apiVersion: "2025-02-24.acacia",
       typescript: true,
     });
   }
