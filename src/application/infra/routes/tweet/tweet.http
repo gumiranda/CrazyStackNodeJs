@@ -1,0 +1,47 @@
+@apiurl = http://127.0.0.1:3333/api
+
+@token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiIxOGU2MmExMi0yYzQwLTQ2ZjQtOTM1Ny05Y2U3NmU2ODczNGMiLCJpYXQiOjE3MjkyNzkyNDksImV4cCI6MTczNDQ2MzI0OX0.WT73Jh0Yb1xnzTQvu8Trzyb77HO55QouujCq6ZWAvnk
+
+@entityId=671290d03c52cff2d5a797f5
+@tweetresponsta=6013687c-d471-4ac0-9879-e0123709982d
+@tweetresponsta2=f014183c-3771-4bb5-82c4-0d2a3d3df5cf
+@entityType=tweet
+
+### POST add
+POST {{apiurl}}/{{entityType}}/add  HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "userSlug": "devdoido2",
+  "tweetId":"6712900ce42a586b56c9e980",
+  "body": "#opa eai 6594eb7a-8ad1-40aa-b837-8b27d519c997",
+  "image":"ssdsd"
+}
+
+### GET loadById
+GET {{apiurl}}/{{entityType}}/load?_id={{entityId}} HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+
+### GET loadByPage
+GET {{apiurl}}/{{entityType}}/loadByPage?page=1 HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+### PATCH update
+PATCH {{apiurl}}/{{entityType}}/update?_id={{entityId}} HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "userSlug": "devtop",
+  "body": "Tweet #dahora #porra #porra massa2 RESPOSTA 2 eai mano #somostodosotarios"
+}
+
+### DELETE delete
+DELETE {{apiurl}}/{{entityType}}/delete?_id={{entityId}}	 HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{token}}
+

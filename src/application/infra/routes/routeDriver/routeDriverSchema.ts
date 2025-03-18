@@ -35,6 +35,7 @@ export const addRouteDriverPostSchema = {
     body: bodyAddRouteDriverJsonSchema,
     response: { 200: addRouteDriverResponse },
     headers: headersJsonSchema,
+    security: [{ bearerAuth: [] }],
   },
 };
 
@@ -61,6 +62,7 @@ const loadRouteDriverResponse = {
 export const loadRouteDriverGetSchema = {
   schema: {
     headers: headersJsonSchema,
+    security: [{ bearerAuth: [] }],
     querystring: queryStringJsonLoadRouteDriverSchema,
     response: {
       200: loadRouteDriverResponse,
@@ -78,6 +80,7 @@ const queryStringJsonDeleteRouteDriverSchema = {
 export const deleteRouteDriverSchema = {
   schema: {
     headers: headersJsonSchema,
+    security: [{ bearerAuth: [] }],
     querystring: queryStringJsonDeleteRouteDriverSchema,
     response: {
       200: deleteRouteDriverResponse,
@@ -103,6 +106,7 @@ const updateRouteDriverBody = {
 export const updateRouteDriverSchema = {
   schema: {
     headers: headersJsonSchema,
+    security: [{ bearerAuth: [] }],
     querystring: queryStringJsonUpdateRouteDriverSchema,
     body: updateRouteDriverBody,
     // response: {
@@ -144,6 +148,7 @@ const loadRouteDriverByPageResponse = {
 export const loadRouteDriverByPageGetSchema = {
   schema: {
     headers: headersJsonSchema,
+    security: [{ bearerAuth: [] }],
     querystring: queryStringJsonLoadRouteDriverByPageSchema,
     response: {
       200: loadRouteDriverByPageResponse,

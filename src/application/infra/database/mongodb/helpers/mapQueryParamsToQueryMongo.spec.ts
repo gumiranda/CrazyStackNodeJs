@@ -14,9 +14,9 @@ describe("mapQueryParamsToQueryMongo", () => {
     MockDate.reset();
   });
   test("mapQueryParamsToQueryMongo with array of string ids", () => {
-    const fakeId1 = new ObjectId().toString();
-    const fakeId2 = new ObjectId().toString();
-    const fakeId3 = new ObjectId().toString();
+    const fakeId1 = ObjectId.createFromTime(new Date().getTime()).toString();
+    const fakeId2 = ObjectId.createFromTime(new Date().getTime()).toString();
+    const fakeId3 = ObjectId.createFromTime(new Date().getTime()).toString();
     const objectMapped = mapQueryParamsToQueryMongo({
       userIds: `${fakeId1},${fakeId2}`,
       userId: fakeId3,
@@ -35,9 +35,9 @@ describe("mapQueryParamsToQueryMongo", () => {
     });
   });
   test("mapQueryParamsToQueryMongo with dates will generate date in future", () => {
-    const fakeId1 = new ObjectId().toString();
-    const fakeId2 = new ObjectId().toString();
-    const fakeId3 = new ObjectId().toString();
+    const fakeId1 = ObjectId.createFromTime(new Date().getTime()).toString();
+    const fakeId2 = ObjectId.createFromTime(new Date().getTime()).toString();
+    const fakeId3 = ObjectId.createFromTime(new Date().getTime()).toString();
     const objectMapped = mapQueryParamsToQueryMongo({
       userIds: `${fakeId1},${fakeId2}`,
       userId: fakeId3,
@@ -54,9 +54,9 @@ describe("mapQueryParamsToQueryMongo", () => {
     });
   });
   test("mapQueryParamsToQueryMongo with dates will generate date in past", () => {
-    const fakeId1 = new ObjectId().toString();
-    const fakeId2 = new ObjectId().toString();
-    const fakeId3 = new ObjectId().toString();
+    const fakeId1 = ObjectId.createFromTime(new Date().getTime()).toString();
+    const fakeId2 = ObjectId.createFromTime(new Date().getTime()).toString();
+    const fakeId3 = ObjectId.createFromTime(new Date().getTime()).toString();
     const objectMapped = mapQueryParamsToQueryMongo({
       userIds: `${fakeId1},${fakeId2}`,
       userId: fakeId3,
@@ -73,9 +73,9 @@ describe("mapQueryParamsToQueryMongo", () => {
     });
   });
   test("mapQueryParamsToQueryMongo with 2 dates will generate query between dates", () => {
-    const fakeId1 = new ObjectId().toString();
-    const fakeId2 = new ObjectId().toString();
-    const fakeId3 = new ObjectId().toString();
+    const fakeId1 = ObjectId.createFromTime(new Date().getTime()).toString();
+    const fakeId2 = ObjectId.createFromTime(new Date().getTime()).toString();
+    const fakeId3 = ObjectId.createFromTime(new Date().getTime()).toString();
     const fakeDate = new Date().toISOString();
     const objectMapped = mapQueryParamsToQueryMongo({
       userIds: `${fakeId1},${fakeId2}`,
@@ -94,9 +94,9 @@ describe("mapQueryParamsToQueryMongo", () => {
     });
   });
   test("mapQueryParamsToQueryMongo with string will generate regex when necessary", () => {
-    const fakeId1 = new ObjectId().toString();
-    const fakeId2 = new ObjectId().toString();
-    const fakeId3 = new ObjectId().toString();
+    const fakeId1 = ObjectId.createFromTime(new Date().getTime()).toString();
+    const fakeId2 = ObjectId.createFromTime(new Date().getTime()).toString();
+    const fakeId3 = ObjectId.createFromTime(new Date().getTime()).toString();
     const objectMapped = mapQueryParamsToQueryMongo({
       userIds: `${fakeId1},${fakeId2}`,
       userId: fakeId3,
@@ -113,9 +113,9 @@ describe("mapQueryParamsToQueryMongo", () => {
     });
   });
   test("mapQueryParamsToQueryMongo with string will generate query when necessary", () => {
-    const fakeId1 = new ObjectId().toString();
-    const fakeId2 = new ObjectId().toString();
-    const fakeId3 = new ObjectId().toString();
+    const fakeId1 = ObjectId.createFromTime(new Date().getTime()).toString();
+    const fakeId2 = ObjectId.createFromTime(new Date().getTime()).toString();
+    const fakeId3 = ObjectId.createFromTime(new Date().getTime()).toString();
     const objectMapped = mapQueryParamsToQueryMongo({
       userIds: `${fakeId1},${fakeId2}`,
       userId: fakeId3,

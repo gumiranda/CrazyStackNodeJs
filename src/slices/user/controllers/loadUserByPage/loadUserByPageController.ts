@@ -25,18 +25,21 @@ export class LoadUserByPageController extends Controller {
       page,
       sortBy = "createdAt",
       typeSort = "asc",
+      limitPerPage = 10,
       ...rest
     } = httpRequest?.query || {};
-    const fields =
-      httpRequest?.userLogged?.role === "admin" ||
-      httpRequest?.userLogged?.role === "client"
-        ? rest
-        : {
-            ...rest,
-            createdById: httpRequest?.userId,
-          };
+    // const fields =
+    //   !httpRequest?.userLogged?.role ||
+    //   httpRequest?.userLogged?.role === "admin" ||
+    //   httpRequest?.userLogged?.role === "client"
+    //     ? rest
+    //     : {
+    //         ...rest,
+    //         createdById: httpRequest?.userId,
+    //       };
+    const fields = rest;
     const sort = { [sortBy]: typeSort === "asc" ? 1 : -1 };
-    const options = { sort, page };
+    const options = { sort, page, limitPerPage };
     const userLoaded = await this.loadUserByPage({
       fields,
       options,

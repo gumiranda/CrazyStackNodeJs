@@ -129,7 +129,7 @@ describe("Route api/rating", () => {
     test("Should return 401 for unauthorized access token", async () => {
       const response = await fastify.inject({
         method: "GET",
-        url: `/api/rating/load?_id=${new ObjectId().toString()}`,
+        url: `/api/rating/load?_id=${ObjectId.createFromTime(new Date().getTime()).toString()}`,
         headers: { authorization: "Bearer invalid_token" },
       });
       expect(response.statusCode).toBe(401);
@@ -210,7 +210,7 @@ describe("Route api/rating", () => {
     test("Should return 401 for unauthorized access token", async () => {
       const response = await fastify.inject({
         method: "DELETE",
-        url: `/api/rating/delete?_id=${new ObjectId().toString()}`,
+        url: `/api/rating/delete?_id=${ObjectId.createFromTime(new Date().getTime()).toString()}`,
         headers: { authorization: "Bearer invalid_token" },
       });
       expect(response.statusCode).toBe(401);
@@ -296,7 +296,7 @@ describe("Route api/rating", () => {
     test("Should return 401 for unauthorized access token", async () => {
       const response = await fastify.inject({
         method: "PATCH",
-        url: `/api/rating/update?_id=${new ObjectId().toString()}`,
+        url: `/api/rating/update?_id=${ObjectId.createFromTime(new Date().getTime()).toString()}`,
         headers: { authorization: "Bearer invalid_token" },
         body: {
           ratings: [

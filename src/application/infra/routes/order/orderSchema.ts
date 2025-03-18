@@ -29,6 +29,7 @@ export const addOrderPostSchema = {
     body: bodyAddOrderJsonSchema,
     response: { 200: addOrderResponse },
     headers: headersJsonSchema,
+    security: [{ bearerAuth: [] }],
   },
 };
 
@@ -52,6 +53,7 @@ const loadOrderResponse = {
 export const loadOrderGetSchema = {
   schema: {
     headers: headersJsonSchema,
+    security: [{ bearerAuth: [] }],
     querystring: queryStringJsonLoadOrderSchema,
     response: {
       200: loadOrderResponse,
@@ -69,6 +71,7 @@ const queryStringJsonDeleteOrderSchema = {
 export const deleteOrderSchema = {
   schema: {
     headers: headersJsonSchema,
+    security: [{ bearerAuth: [] }],
     querystring: queryStringJsonDeleteOrderSchema,
     response: {
       200: deleteOrderResponse,
@@ -99,6 +102,7 @@ const updateOrderBody = {
 export const updateOrderSchema = {
   schema: {
     headers: headersJsonSchema,
+    security: [{ bearerAuth: [] }],
     querystring: queryStringJsonUpdateOrderSchema,
     body: updateOrderBody,
     response: {
@@ -138,6 +142,7 @@ const loadOrderByPageResponse = {
 export const loadOrderByPageGetSchema = {
   schema: {
     headers: headersJsonSchema,
+    security: [{ bearerAuth: [] }],
     querystring: queryStringJsonLoadOrderByPageSchema,
     response: {
       200: loadOrderByPageResponse,

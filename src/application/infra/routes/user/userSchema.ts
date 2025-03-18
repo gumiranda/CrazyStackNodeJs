@@ -1,4 +1,5 @@
 import { idSchema } from "@/application/types/id";
+import { ownerFields } from "../owner/ownerSchema";
 
 const bodyAddUserJsonSchema = {
   type: "object",
@@ -39,6 +40,7 @@ const addUserResponse = {
     active: { type: "boolean" },
     createdById: { type: "string" },
     createdAt: { type: "string" },
+    slug: { type: "string" },
   },
 };
 export const addUserPostSchema = {
@@ -46,6 +48,7 @@ export const addUserPostSchema = {
     body: bodyAddUserJsonSchema,
     response: { 200: addUserResponse },
     headers: headersJsonSchema,
+    security: [{ bearerAuth: [] }],
   },
 };
 
@@ -73,11 +76,18 @@ const loadUserResponse = {
     payDay: { type: "string" },
     photo: {},
     createdAt: { type: "string" },
+    owner: { type: "object", properties: ownerFields },
+    ...ownerFields,
+    tweets: {},
+    followings: {},
+    followers: {},
+    slug: { type: "string" },
   },
 };
 export const loadUserGetSchema = {
   schema: {
     headers: headersJsonSchema,
+    security: [{ bearerAuth: [] }],
     querystring: queryStringJsonLoadUserSchema,
     response: {
       200: loadUserResponse,
@@ -95,6 +105,7 @@ const queryStringJsonDeleteUserSchema = {
 export const deleteUserSchema = {
   schema: {
     headers: headersJsonSchema,
+    security: [{ bearerAuth: [] }],
     querystring: queryStringJsonDeleteUserSchema,
     response: {
       200: deleteUserResponse,
@@ -138,6 +149,7 @@ const updateUserBody = {
 export const updateUserSchema = {
   schema: {
     headers: headersJsonSchema,
+    security: [{ bearerAuth: [] }],
     querystring: queryStringJsonUpdateUserSchema,
     body: updateUserBody,
     response: {
@@ -178,6 +190,7 @@ const loadUserByPageResponse = {
           createdById: { type: "string" },
           createdAt: { type: "string" },
           photoId: idSchema,
+          slug: { type: "string" },
         },
       },
     },
@@ -187,9 +200,16 @@ const loadUserByPageResponse = {
 export const loadUserByPageGetSchema = {
   schema: {
     headers: headersJsonSchema,
+    security: [{ bearerAuth: [] }],
     querystring: queryStringJsonLoadUserByPageSchema,
     response: {
       200: loadUserByPageResponse,
+    },
+  },
+  config: {
+    rateLimit: {
+      max: 300,
+      timeWindow: "10 minutes",
     },
   },
 };
@@ -216,6 +236,7 @@ const loadUserGeoNearResponse = {
           },
           createdAt: { type: "string" },
           photoId: idSchema,
+          slug: { type: "string" },
         },
       },
     },
@@ -235,6 +256,7 @@ const queryStringJsonLoadUserGeoNearSchema = {
 export const loadUserByGeoNearSchema = {
   schema: {
     headers: headersJsonSchema,
+    security: [{ bearerAuth: [] }],
     querystring: queryStringJsonLoadUserGeoNearSchema,
     response: {
       200: loadUserGeoNearResponse,

@@ -1,13 +1,14 @@
 import { Pool } from "pg";
 import { env } from "../../config";
-const { PGHOST, PGUSER, PGPASSWORD, PGDATABASE, PGPORT } = env;
+//const { PGHOST, PGUSER, PGPASSWORD, PGDATABASE, PGPORT } = env;
 
 export const pool = new Pool({
-  host: PGHOST,
-  database: PGDATABASE,
-  user: PGUSER,
-  password: PGPASSWORD,
-  port: Number(PGPORT),
+  // host: PGHOST,
+  // database: PGDATABASE,
+  // user: PGUSER,
+  // password: PGPASSWORD,
+  // port: Number(PGPORT),
+  connectionString: env.databaseUrl,
   ssl: true,
 });
 

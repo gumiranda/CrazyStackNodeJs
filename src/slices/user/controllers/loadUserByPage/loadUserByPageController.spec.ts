@@ -48,7 +48,11 @@ describe("LoadUserByPageController", () => {
     expect(result).toEqual(ok(fakeUserPaginated));
     expect(loadUserByPage).toHaveBeenCalledWith({
       fields: fakeQueryParams,
-      options: { sort: { [fakeRestQuery?.sortBy]: 1 }, page: fakeRestQuery?.page },
+      options: {
+        sort: { [fakeRestQuery?.sortBy]: 1 },
+        page: fakeRestQuery?.page,
+        limitPerPage: 10,
+      },
     });
     expect(loadUserByPage).toHaveBeenCalledTimes(1);
   });
@@ -60,7 +64,11 @@ describe("LoadUserByPageController", () => {
     expect(result).toEqual(ok(fakeUserPaginated));
     expect(loadUserByPage).toHaveBeenCalledWith({
       fields: fakeQueryParams,
-      options: { sort: { [fakeRestQuery?.sortBy]: -1 }, page: fakeRestQuery?.page },
+      options: {
+        sort: { [fakeRestQuery?.sortBy]: -1 },
+        page: fakeRestQuery?.page,
+        limitPerPage: 10,
+      },
     });
     expect(loadUserByPage).toHaveBeenCalledTimes(1);
   });

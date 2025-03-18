@@ -28,7 +28,7 @@ export const add{{pascalCase name}}PostSchema = {
   schema: {
     body: bodyAdd{{pascalCase name}}JsonSchema,
     response: { 200: add{{pascalCase name}}Response },
-    headers: headersJsonSchema,
+    headers: headersJsonSchema,security: [{ bearerAuth: [] }],
   },
 };
 
@@ -51,7 +51,7 @@ const load{{pascalCase name}}Response = {
 };
 export const load{{pascalCase name}}GetSchema = {
   schema: {
-    headers: headersJsonSchema,
+    headers: headersJsonSchema,security: [{ bearerAuth: [] }],
     querystring: queryStringJsonLoad{{pascalCase name}}Schema,
     response: {
       200: load{{pascalCase name}}Response,
@@ -68,7 +68,7 @@ const queryStringJsonDelete{{pascalCase name}}Schema = {
 };
 export const delete{{pascalCase name}}Schema = {
   schema: {
-    headers: headersJsonSchema,
+    headers: headersJsonSchema,security: [{ bearerAuth: [] }],
     querystring: queryStringJsonDelete{{pascalCase name}}Schema,
     response: {
       200: delete{{pascalCase name}}Response,
@@ -98,7 +98,7 @@ const update{{pascalCase name}}Body = {
 };
 export const update{{pascalCase name}}Schema = {
   schema: {
-    headers: headersJsonSchema,
+    headers: headersJsonSchema,security: [{ bearerAuth: [] }],
     querystring: queryStringJsonUpdate{{pascalCase name}}Schema,
     body: update{{pascalCase name}}Body,
     response: {
@@ -137,7 +137,7 @@ const load{{pascalCase name}}ByPageResponse = {
 };
 export const load{{pascalCase name}}ByPageGetSchema = {
   schema: {
-    headers: headersJsonSchema,
+    headers: headersJsonSchema,security: [{ bearerAuth: [] }],
     querystring: queryStringJsonLoad{{pascalCase name}}ByPageSchema,
     response: {
       200: load{{pascalCase name}}ByPageResponse,

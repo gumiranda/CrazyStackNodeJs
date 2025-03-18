@@ -9,7 +9,7 @@ export class PostgresRepository extends Repository {
   }
   buildWhereClause(query: any): { whereClause: string; values: any[] } {
     const whereClause = Object.keys(query)
-      .map((key, idx) => `"${key}" = $${idx + 1}`)
+      .map((key, idx) => `"${this.tableName}"."${key}" = $${idx + 1}`)
       .join(" AND ");
     const values = Object.values(query);
     return { whereClause, values };
@@ -148,15 +148,125 @@ export class PostgresRepository extends Repository {
   async deleteOne(fields: any): Promise<any> {
     return this.deleteMany(fields);
   }
-  async getOne(query: any): Promise<any> {
+
+  async getTableFields(tableName: string, client: any): Promise<string[]> {
+    // Consulta para obter os nomes das colunas da tabela
+    const result = await client.query(
+      `
+      SELECT column_name
+      FROM information_schema.columns
+      WHERE table_name = $1
+    `,
+      [tableName]
+    );
+    if (result?.rows === 0) {
+      return [];
+    }
+    return result?.rows
+      ?.map?.((row: any) => row.column_name)
+      ?.filter?.((field: any) => field !== "password");
+  }
+  async getOne(query: any, options: any, returnOneRegister = true): Promise<any> {
+    let currentTableFields: any;
     const client = await connect();
     try {
       const { whereClause, values } = this.buildWhereClause(query);
 
-      const queryText = `SELECT * FROM "${this.tableName}" WHERE ${whereClause} LIMIT 1`;
+      // Padrão para selecionar todos os campos da tabela principal
+      let selectClause = `"${this.tableName}".*`;
+      let joinClause = ""; // Aqui acumulamos os JOINs dinâmicos
+
+      if (options?.projection) {
+        const projection = options.projection;
+
+        // Identifica campos a serem excluídos (0)
+        const excludedFields = Object.keys(projection).filter(
+          (key) => projection[key] === 0
+        );
+        const includedFields = Object.keys(projection).filter(
+          (key) => projection[key] === 1
+        );
+
+        if (excludedFields.length > 0 && this.tableName !== "users") {
+          currentTableFields = await this.getTableFields(this.tableName, client);
+          const selectedFields = currentTableFields.filter(
+            (field: any) => !excludedFields.includes(field)
+          );
+          selectClause = selectedFields
+            .map((field: any) => `"${this.tableName}"."${field}"`)
+            .join(", ");
+        } else if (includedFields.length > 0 && this.tableName !== "users") {
+          selectClause = includedFields
+            .map((field) => `"${this.tableName}".${field}`)
+            .join(", ");
+        }
+      }
+
+      // Implementa o `include` usando JOINs dinâmicos no PostgreSQL
+      if (options?.include) {
+        const includes = options.include;
+        if (!currentTableFields) {
+          currentTableFields = await this.getTableFields(this.tableName, client);
+        }
+        // Itera sobre os relacionamentos especificados em `include`
+        for (const relation of Object.keys(includes)) {
+          if (includes[relation]) {
+            // Assumimos que a relação segue o padrão FK nomeado com a tabela + "Id"
+            const relationField = `${relation}Id`;
+            const relatedTable = relation === "createdBy" ? "users" : relation;
+            const relatedAlias = `${relatedTable}_alias`; // Adiciona um alias único para cada tabela
+            const isSameTable = relatedTable === this.tableName;
+            // Adiciona o JOIN na consulta
+
+            // Inclui os campos da tabela relacionada no SELECT
+            const fieldsRelated = await this.getTableFields(relatedTable, client);
+            const relatedFields = fieldsRelated?.filter?.(
+              (field) => field !== relationField
+            );
+            //relacionamentos 1:1
+            if (
+              relatedFields?.length > 0 &&
+              currentTableFields?.includes?.(relationField)
+            ) {
+              joinClause += ` LEFT JOIN "${relatedTable}" AS "${relatedAlias}" ON "${this.tableName}"."${relationField}" = "${relatedAlias}"."_id"`;
+
+              selectClause +=
+                //  isSameTable
+                //   ? ""
+                //   :
+                `, ${relatedFields
+                  .filter((field) => field !== "_id")
+                  .map(
+                    (field) =>
+                      `("${relatedAlias}"."${field}") AS "${relatedTable}${field}"`
+                  )
+                  .join(", ")}`;
+            } else {
+              //relacionamentos 1:n
+              const joinTable = `${this.tableName}${relatedTable}`;
+              const joinAlias = `${joinTable}_alias`; // Adiciona um alias único para cada tabela
+              const joinTableFields = await this.getTableFields(joinTable, client);
+              if (joinTableFields?.length > 0) {
+                joinClause += ` LEFT JOIN "${joinTable}" AS "${joinAlias}" ON "${this.tableName}"."_id" = "${joinAlias}"."${this.tableName}Id"`;
+                selectClause += isSameTable
+                  ? ""
+                  : `, ${joinTableFields
+                      .filter((field) => field !== "_id")
+                      .map(
+                        (field) => `("${joinAlias}"."${field}") AS "${joinTable}${field}"`
+                      )
+                      .join(", ")}`;
+              }
+            }
+          }
+        }
+      }
+
+      // Monta a query com SELECT e JOINs dinâmicos
+      const queryText = `SELECT ${selectClause} FROM "${this.tableName}" ${joinClause} WHERE ${whereClause}`;
       const result = await client.query(queryText, values);
 
-      return result.rows.length ? result.rows[0] : null;
+      return returnOneRegister ? result?.rows?.[0] : result?.rows;
     } finally {
       client.release();
     }
@@ -172,24 +282,84 @@ export class PostgresRepository extends Repository {
     }
   }
 
-  async getPaginate(page = 0, fields: any, sort: any, limit = 10, projection: any) {
+  async getPaginate(
+    page = 0,
+    fields: any,
+    sort: any,
+    limit = 10,
+    projection: any,
+    populate = null
+  ) {
     const client = await connect();
     try {
+      let currentTableFields = await this.getTableFields(this.tableName, client);
+
       // Handle projection
-      let columns = "*";
-      if (Object.keys(projection).length > 0) {
-        columns = Object.keys(projection)
-          .filter((key) => projection[key])
-          .map((key) => `"${key}"`)
-          .join(", ");
+      let columns = `"${this.tableName}".*`;
+      let joinClause = ""; // Para armazenar os JOINs
+      if (projection && Object.keys(projection).length > 0) {
+        const excludedFields = Object.keys(projection).filter(
+          (key) => projection[key] === 0
+        );
+        const includedFields = Object.keys(projection).filter(
+          (key) => projection[key] === 1
+        );
+
+        if (excludedFields.length > 0) {
+          const selectedFields = currentTableFields.filter(
+            (field: any) => !excludedFields.includes(field)
+          );
+          columns = selectedFields
+            .map((field: any) => `"${this.tableName}"."${field}"`)
+            .join(", ");
+        } else if (includedFields.length > 0) {
+          columns = includedFields
+            .map((field) => `"${this.tableName}".${field}`)
+            .join(", ");
+        }
       }
 
+      // Implementação do `populate` para adicionar JOINs dinâmicos
+      if (populate) {
+        for (const relation of Object.keys(populate)) {
+          if (populate[relation]) {
+            const relationField = `${relation === "users" ? "user" : relation}Id`;
+            const relatedTable = relation === "createdBy" ? "users" : relation;
+            const relatedAlias = `${relatedTable}_alias`; // Alias para tabelas relacionadas
+
+            const isSameTable = relatedTable === this.tableName;
+            const fieldsRelated = await this.getTableFields(relatedTable, client);
+            const relatedFields = fieldsRelated?.filter?.(
+              (field) => field !== relationField
+            );
+
+            if (
+              !isSameTable &&
+              relatedFields?.length > 0 &&
+              currentTableFields?.includes?.(relationField)
+            ) {
+              // Relacionamento 1:1
+              joinClause += ` INNER JOIN "${relatedTable}" AS "${relatedAlias}" ON "${this.tableName}"."${relationField}" = "${relatedAlias}"."_id"`;
+              columns += `, ${relatedFields
+                .filter((field) => field !== "_id")
+                .map(
+                  (field) => `"${relatedAlias}"."${field}" AS "${relatedTable}${field}"`
+                )
+                .join(", ")}`;
+            }
+          }
+        }
+      }
+
+      // Handle filtering
       let whereClause = "";
       const filterConditions: string[] = [];
       const filterValues: any[] = [];
       Object.keys(fields).forEach((key) => {
         const value = fields[key];
-        if (key.includes("initDate")) {
+        if (value === "null") {
+          filterConditions.push(`"${key}" IS NULL`);
+        } else if (key.includes("initDate")) {
           filterConditions.push(`"${key}" > $${filterValues.length + 1}`);
           filterValues.push(value);
         } else if (key.includes("endDate")) {
@@ -200,7 +370,7 @@ export class PostgresRepository extends Repository {
           filterValues.push(value);
         } else {
           filterConditions.push(`"${key}" LIKE '%' || $${filterValues.length + 1} || '%'`);
-          filterValues.push(value); // Adjust this accordingly if you're sanitizing your inputs
+          filterValues.push(value);
         }
       });
       if (filterConditions.length > 0) {
@@ -216,7 +386,7 @@ export class PostgresRepository extends Repository {
       const offset = (page - 1) * limit;
 
       // Construct query
-      const queryText = `SELECT ${columns} FROM "${this.tableName}" ${whereClause} ORDER BY ${orderBy} LIMIT $${filterValues.length + 1} OFFSET $${filterValues.length + 2}`;
+      const queryText = `SELECT ${columns} FROM "${this.tableName}" ${joinClause} ${whereClause} ORDER BY ${orderBy} LIMIT $${filterValues.length + 1} OFFSET $${filterValues.length + 2}`;
       const queryValues = filterValues.concat([limit, offset]);
       const result = await client.query(queryText, queryValues);
       return result.rows;
@@ -233,7 +403,9 @@ export class PostgresRepository extends Repository {
       const filterValues: any[] = [];
       Object.keys(query).forEach((key) => {
         const value = query[key];
-        if (key.includes("initDate")) {
+        if (value === "null") {
+          filterConditions.push(`"${key}" IS NULL`);
+        } else if (key.includes("initDate")) {
           filterConditions.push(`"${key}" > $${filterValues.length + 1}`);
           filterValues.push(value);
         } else if (key.includes("endDate")) {

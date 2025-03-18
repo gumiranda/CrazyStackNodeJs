@@ -29,6 +29,7 @@ export const addFidelityPostSchema = {
     body: bodyAddFidelityJsonSchema,
     response: { 200: addFidelityResponse },
     headers: headersJsonSchema,
+    security: [{ bearerAuth: [] }],
   },
 };
 
@@ -52,6 +53,7 @@ const loadFidelityResponse = {
 export const loadFidelityGetSchema = {
   schema: {
     headers: headersJsonSchema,
+    security: [{ bearerAuth: [] }],
     querystring: queryStringJsonLoadFidelitySchema,
     response: {
       200: loadFidelityResponse,
@@ -69,6 +71,7 @@ const queryStringJsonDeleteFidelitySchema = {
 export const deleteFidelitySchema = {
   schema: {
     headers: headersJsonSchema,
+    security: [{ bearerAuth: [] }],
     querystring: queryStringJsonDeleteFidelitySchema,
     response: {
       200: deleteFidelityResponse,
@@ -99,6 +102,7 @@ const updateFidelityBody = {
 export const updateFidelitySchema = {
   schema: {
     headers: headersJsonSchema,
+    security: [{ bearerAuth: [] }],
     querystring: queryStringJsonUpdateFidelitySchema,
     body: updateFidelityBody,
     response: {
@@ -138,6 +142,7 @@ const loadFidelityByPageResponse = {
 export const loadFidelityByPageGetSchema = {
   schema: {
     headers: headersJsonSchema,
+    security: [{ bearerAuth: [] }],
     querystring: queryStringJsonLoadFidelityByPageSchema,
     response: {
       200: loadFidelityByPageResponse,

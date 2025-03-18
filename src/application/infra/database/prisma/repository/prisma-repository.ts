@@ -1,5 +1,6 @@
 import { Repository } from "@/application/infra/contracts";
 import { prisma } from "../prisma";
+import { Prisma } from "@prisma/client";
 
 export class PrismaRepository extends Repository {
   private tableName: any;
@@ -30,6 +31,12 @@ export class PrismaRepository extends Repository {
     if (record && record.id) {
       record._id = record.id;
       delete record.id;
+    }
+    // if (record?.password) {
+    //   delete record.password;
+    // }
+    if (record?.user?.password) {
+      delete record.user.password;
     }
     return record;
   }
@@ -134,15 +141,69 @@ export class PrismaRepository extends Repository {
   async deleteOne(fields: any): Promise<any> {
     return this.deleteMany(fields);
   }
+  exclude<T extends Record<string, any>, Key extends keyof T>(
+    object: T,
+    keys: Key[]
+  ): Omit<T, Key> {
+    return Object.fromEntries(
+      Object.entries(object).filter(([key]) => !keys.includes(key as Key))
+    ) as Omit<T, Key>;
+  }
+  getValidIncludeFields(model: any): string[] {
+    const modelFields = Prisma.dmmf.datamodel.models.find(
+      (m: any) => m.name === model
+    )?.fields;
 
-  async getOne(query: any): Promise<any> {
-    query = this.mapId(query);
-    const record = await this.tableName.findFirst({
-      where: query,
-    });
-    return this.mapReturnId(record);
+    return (
+      modelFields
+        ?.filter((field: any) => field.kind === "object")
+        .map((field: any) => field.name) || []
+    );
   }
 
+  async getOne(query: any, options: any): Promise<any> {
+    query = this.mapId(query);
+    query = { where: query };
+
+    // Valida os campos da projeção (select)
+    if (options?.projection) {
+      const includedFields = Object.keys(options?.projection).filter(
+        (key) => options?.projection[key] === 1
+      );
+
+      if (includedFields.length > 0) {
+        query.select = {};
+        Object.keys(options?.projection).forEach((key) => {
+          query.select[key] = options?.projection[key] === 1; // Incluir campo se for 1
+        });
+      }
+    }
+
+    // Obtém dinamicamente os campos válidos do modelo associado à tabela
+    if (options?.include) {
+      const validIncludeFields = this.getValidIncludeFields(this.tableName.$name);
+
+      query.include = {};
+      Object.keys(options.include).forEach((key) => {
+        if (validIncludeFields.includes(key)) {
+          query.include[key] = options.include[key];
+        }
+      });
+    }
+
+    // Busca o registro no banco de dados
+    const record = await this.tableName.findFirst(query);
+
+    // Se houver projeção, filtra campos a serem excluídos
+    if (options?.projection && record?.id) {
+      const excludedFields = Object.keys(options?.projection).filter(
+        (key) => options?.projection[key] === 0
+      );
+      return this.mapReturnId(this.exclude(record, excludedFields));
+    }
+
+    return this.mapReturnId(record);
+  }
   async getAll(): Promise<any[]> {
     const records = await this.tableName.findMany();
     return this.mapReturnIds(records);
@@ -153,11 +214,30 @@ export class PrismaRepository extends Repository {
     fields: any,
     sort: any,
     limit = 10,
-    projection: any = {}
+    projection: any = {},
+    populate = null
   ): Promise<any[]> {
     const skip = (page - 1) * limit;
     fields = this.mapId(fields);
-    const query = { where: fields, orderBy: this.mapSortOrder(sort), take: limit, skip };
+
+    const query: any = {
+      where: fields,
+      orderBy: this.mapSortOrder(sort),
+      take: limit,
+      skip,
+      include: {},
+    };
+    if (populate) {
+      const validIncludeFields = this.getValidIncludeFields(this.tableName.$name);
+
+      Object.keys(populate).forEach((key) => {
+        if (validIncludeFields.includes(key)) {
+          query.include[key] = populate[key];
+        }
+      });
+    } else {
+      delete query.include;
+    }
     const queryFinal =
       Object.keys(projection).length === 0
         ? query

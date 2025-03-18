@@ -87,4 +87,5 @@ const headersJsonSchema = {
 export const wooviWebhook = {
   body: webHookBody,
   headers: headersJsonSchema,
+  security: [{ bearerAuth: [] }],
 };

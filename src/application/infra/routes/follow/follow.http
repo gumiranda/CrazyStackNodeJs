@@ -1,0 +1,37 @@
+@apiurl = http://127.0.0.1:3333/api
+@token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzEyOGZkNWU0MmE1ODZiNTZjOWU5N2UiLCJpYXQiOjE3MjkyNjk3MTcsImV4cCI6MTczNDQ1MzcxN30.BNwoAKfbCSJ_5f84c1fsnO8nSHdl17Sllc4PIOYtAgQ
+
+@token2=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzEyOTM3NjliZjA3YmEyZGU2MGQyYzkiLCJpYXQiOjE3MjkyNzA2NTAsImV4cCI6MTczNDQ1NDY1MH0.RRREgEizh72nq1zBm5BLE7Q6H7fvuviu6ukGMTMuAuY
+@entityId=399d1487-3396-450e-85e8-8232f1e7fb71
+
+@entityType=follow
+@user1=671293769bf07ba2de60d2c9
+@userId=67128fd5e42a586b56c9e97e
+
+### POST add
+POST {{apiurl}}/{{entityType}}/add  HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{token2}}
+
+{
+  "userId": "671293769bf07ba2de60d2c9"
+}
+
+### GET loadById
+GET {{apiurl}}/{{entityType}}/load?_id={{entityId}} HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+
+### GET loadByPage
+GET {{apiurl}}/{{entityType}}/loadByPage?page=1&userId={{userId}} HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+
+
+### DELETE delete
+DELETE {{apiurl}}/{{entityType}}/delete?_id={{entityId}}	 HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{token}}
+

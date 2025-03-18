@@ -31,10 +31,12 @@ const signupResponse = {
           _id: { type: "string" },
           email: { type: "string" },
           name: { type: "string" },
+          ownerId: { type: "string" },
           role: { type: "string" },
           phone: { type: "string" },
           createdAt: { type: "string" },
           active: { type: "boolean" },
+          slug: { type: "string" },
           coord: {
             type: "object",
             properties: {
@@ -77,7 +79,9 @@ const loginResponse = {
           phone: { type: "string" },
           role: { type: "string" },
           active: { type: "boolean" },
+          ownerId: { type: "string" },
           createdAt: { type: "string" },
+          slug: { type: "string" },
         },
       },
     },

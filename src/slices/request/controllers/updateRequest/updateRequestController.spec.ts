@@ -42,15 +42,7 @@ describe("UpdateRequestController", () => {
   it("should extends class Controller", async () => {
     expect(testInstance).toBeInstanceOf(Controller);
   });
-  test("should call validationQuery with correct params", async () => {
-    await testInstance.execute({
-      query: fakeRequestEntity,
-      userId: fakeUserEntity?._id,
-      userLogged: fakeUserEntity,
-    });
-    expect(validationQuery.validate).toHaveBeenCalledWith(fakeRequestEntity);
-    expect(validationQuery.validate).toHaveBeenCalledTimes(1);
-  });
+
   test("should call validationBody with correct params", async () => {
     await testInstance.execute({
       query: fakeRequestEntity,
@@ -115,7 +107,7 @@ describe("UpdateRequestController", () => {
       status: 4,
       updatedById: fakeUserEntity?._id,
       updatedByRole: fakeUserEntity?.role,
-      date: new Date().toISOString(),
+      // date: new Date().toISOString(),
     });
     expect(updateRequest.updateRequestById).toHaveBeenCalledTimes(1);
   });

@@ -47,7 +47,10 @@ describe("LoadUserController", () => {
         createdById: fakeUserEntity?._id,
       })
     );
-    expect(loadUser).toHaveBeenCalledWith({ fields: fakeQuery, options: {} });
+    expect(loadUser).toHaveBeenCalledWith({
+      fields: fakeQuery,
+      options: { include: { owner: true } },
+    });
     expect(loadUser).toHaveBeenCalledTimes(1);
   });
   test("should throws if loadUser throw", async () => {

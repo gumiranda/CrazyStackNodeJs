@@ -19,10 +19,10 @@ import { onSendRedis, preHandlerRedis } from "../../redis";
 
 async function user(fastify: any) {
   fastify.addHook("preHandler", authLogged());
-  if (process.env.NODE_ENV === "production") {
-    fastify.addHook("preHandler", preHandlerRedis("user", ["loadByPage"]));
-    fastify.addHook("onSend", onSendRedis("user", 120, ["loadByPage"]));
-  }
+  // if (process.env.NODE_ENV === "production") {
+  //   fastify.addHook("preHandler", preHandlerRedis("user", ["loadByPage"]));
+  //   fastify.addHook("onSend", onSendRedis("user", 120, ["loadByPage"]));
+  // }
   fastify.post("/user/add", addUserPostSchema, addUserAdapter());
   fastify.get("/user/load", loadUserGetSchema, loadUserAdapter());
   fastify.get("/user/loadByPage", loadUserByPageGetSchema, loadUserByPageAdapter());

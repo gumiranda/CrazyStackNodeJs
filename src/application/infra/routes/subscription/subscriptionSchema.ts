@@ -105,6 +105,7 @@ export const addSubscriptionPostSchema = {
     body: bodyAddSubscriptionJsonSchema,
     response: { 200: addSubscriptionResponse },
     headers: headersJsonSchema,
+    security: [{ bearerAuth: [] }],
   },
 };
 
@@ -136,6 +137,7 @@ const loadSubscriptionResponse = {
 export const loadSubscriptionGetSchema = {
   schema: {
     headers: headersJsonSchema,
+    security: [{ bearerAuth: [] }],
     querystring: queryStringJsonLoadSubscriptionSchema,
     response: {
       200: loadSubscriptionResponse,
@@ -153,6 +155,7 @@ const queryStringJsonDeleteSubscriptionSchema = {
 export const deleteSubscriptionSchema = {
   schema: {
     headers: headersJsonSchema,
+    security: [{ bearerAuth: [] }],
     querystring: queryStringJsonDeleteSubscriptionSchema,
     response: {
       200: deleteSubscriptionResponse,
@@ -195,6 +198,7 @@ const updateSubscriptionBody = {
 export const updateSubscriptionSchema = {
   schema: {
     headers: headersJsonSchema,
+    security: [{ bearerAuth: [] }],
     querystring: queryStringJsonUpdateSubscriptionSchema,
     body: updateSubscriptionBody,
     response: {
@@ -241,6 +245,7 @@ const loadSubscriptionByPageResponse = {
 export const loadSubscriptionByPageGetSchema = {
   schema: {
     headers: headersJsonSchema,
+    security: [{ bearerAuth: [] }],
     querystring: queryStringJsonLoadSubscriptionByPageSchema,
     response: {
       200: loadSubscriptionByPageResponse,

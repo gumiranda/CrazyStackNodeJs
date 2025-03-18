@@ -28,7 +28,7 @@ export class OwnerRepository
       query?.options?.page ?? 0,
       query?.fields ?? {},
       query?.options?.sort ?? { createdAt: -1 },
-      10,
+      query?.options?.limitPerPage ?? 10,
       query?.options?.projection ?? {}
     );
     const total = await this.repository.getCount(query?.fields ?? {});
