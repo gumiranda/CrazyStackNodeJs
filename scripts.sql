@@ -685,3 +685,7 @@ ALTER TABLE "follow" DROP COLUMN "user1Slug",
 DROP COLUMN "user2Slug",
 ADD COLUMN     "userId" UUID NOT NULL,
 ALTER COLUMN "createdById" SET NOT NULL;
+
+
+
+ALTER TABLE "users" ADD COLUMN "token" VARCHAR(255);
