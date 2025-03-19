@@ -2,9 +2,23 @@ import { idSchema } from "@/application/types/id";
 
 const bodyAddPlaceJsonSchema = {
   type: "object",
-  required: ["name"],
+  required: ["name", "categoryPlaceId"],
   properties: {
     name: { type: "string" },
+    categoryPlaceId: { type: "string" },
+    ownerId: { type: "string" },
+    description: { type: "string" },
+    coord: {
+      type: "object",
+      properties: {
+        type: { type: "string", enum: ["Point"] },
+        coordinates: { type: "array", items: { type: "number" } },
+      },
+    },
+    address: { type: "string" },
+    phone: { type: "string" },
+    cover: { type: "string" },
+    profilephoto: { type: "string" },
   },
 };
 const headersJsonSchema = {
@@ -22,13 +36,28 @@ const addPlaceResponse = {
     active: { type: "boolean" },
     createdById: { type: "string" },
     createdAt: { type: "string" },
+    categoryPlaceId: { type: "string" },
+    ownerId: { type: "string" },
+    description: { type: "string" },
+    coord: {
+      type: "object",
+      properties: {
+        type: { type: "string", enum: ["Point"] },
+        coordinates: { type: "array", items: { type: "number" } },
+      },
+    },
+    address: { type: "string" },
+    phone: { type: "string" },
+    cover: { type: "string" },
+    profilephoto: { type: "string" },
   },
 };
 export const addPlacePostSchema = {
   schema: {
     body: bodyAddPlaceJsonSchema,
     response: { 200: addPlaceResponse },
-    headers: headersJsonSchema,security: [{ bearerAuth: [] }],
+    headers: headersJsonSchema,
+    security: [{ bearerAuth: [] }],
   },
 };
 
@@ -47,11 +76,26 @@ const loadPlaceResponse = {
     active: { type: "boolean" },
     createdById: { type: "string" },
     createdAt: { type: "string" },
+    categoryPlaceId: { type: "string" },
+    ownerId: { type: "string" },
+    description: { type: "string" },
+    coord: {
+      type: "object",
+      properties: {
+        type: { type: "string", enum: ["Point"] },
+        coordinates: { type: "array", items: { type: "number" } },
+      },
+    },
+    address: { type: "string" },
+    phone: { type: "string" },
+    cover: { type: "string" },
+    profilephoto: { type: "string" },
   },
 };
 export const loadPlaceGetSchema = {
   schema: {
-    headers: headersJsonSchema,security: [{ bearerAuth: [] }],
+    headers: headersJsonSchema,
+    security: [{ bearerAuth: [] }],
     querystring: queryStringJsonLoadPlaceSchema,
     response: {
       200: loadPlaceResponse,
@@ -68,7 +112,8 @@ const queryStringJsonDeletePlaceSchema = {
 };
 export const deletePlaceSchema = {
   schema: {
-    headers: headersJsonSchema,security: [{ bearerAuth: [] }],
+    headers: headersJsonSchema,
+    security: [{ bearerAuth: [] }],
     querystring: queryStringJsonDeletePlaceSchema,
     response: {
       200: deletePlaceResponse,
@@ -88,17 +133,46 @@ const updatePlaceResponse = {
     _id: idSchema,
     name: { type: "string" },
     createdById: { type: "string" },
+    categoryPlaceId: { type: "string" },
+    ownerId: { type: "string" },
+    description: { type: "string" },
+    coord: {
+      type: "object",
+      properties: {
+        type: { type: "string", enum: ["Point"] },
+        coordinates: { type: "array", items: { type: "number" } },
+      },
+    },
+    address: { type: "string" },
+    phone: { type: "string" },
+    cover: { type: "string" },
+    profilephoto: { type: "string" },
   },
 };
 const updatePlaceBody = {
   type: "object",
   properties: {
     name: { type: "string" },
+    categoryPlaceId: { type: "string" },
+    ownerId: { type: "string" },
+    description: { type: "string" },
+    coord: {
+      type: "object",
+      properties: {
+        type: { type: "string", enum: ["Point"] },
+        coordinates: { type: "array", items: { type: "number" } },
+      },
+    },
+    address: { type: "string" },
+    phone: { type: "string" },
+    cover: { type: "string" },
+    profilephoto: { type: "string" },
   },
 };
 export const updatePlaceSchema = {
   schema: {
-    headers: headersJsonSchema,security: [{ bearerAuth: [] }],
+    headers: headersJsonSchema,
+    security: [{ bearerAuth: [] }],
     querystring: queryStringJsonUpdatePlaceSchema,
     body: updatePlaceBody,
     response: {
@@ -112,6 +186,19 @@ const queryStringJsonLoadPlaceByPageSchema = {
     page: { type: "integer", minimum: 1 },
     sortBy: { type: "string" },
     typeSort: { type: "string" },
+  },
+  required: ["page"],
+};
+const queryStringJsonLoadPlaceByPageGeoNearSchema = {
+  type: "object",
+  properties: {
+    page: { type: "integer", minimum: 1 },
+    sortBy: { type: "string" },
+    typeSort: { type: "string" },
+    lng: { type: "number" },
+    lat: {
+      type: "number",
+    },
   },
   required: ["page"],
 };
@@ -129,6 +216,21 @@ const loadPlaceByPageResponse = {
           active: { type: "boolean" },
           createdById: { type: "string" },
           createdAt: { type: "string" },
+          categoryPlaceId: { type: "string" },
+          ownerId: { type: "string" },
+          description: { type: "string" },
+          coord: {
+            type: "object",
+            properties: {
+              type: { type: "string", enum: ["Point"] },
+              coordinates: { type: "array", items: { type: "number" } },
+            },
+          },
+          address: { type: "string" },
+          phone: { type: "string" },
+          cover: { type: "string" },
+          profilephoto: { type: "string" },
+          distance: {},
         },
       },
     },
@@ -137,8 +239,19 @@ const loadPlaceByPageResponse = {
 };
 export const loadPlaceByPageGetSchema = {
   schema: {
-    headers: headersJsonSchema,security: [{ bearerAuth: [] }],
+    headers: headersJsonSchema,
+    security: [{ bearerAuth: [] }],
     querystring: queryStringJsonLoadPlaceByPageSchema,
+    response: {
+      200: loadPlaceByPageResponse,
+    },
+  },
+};
+export const loadPlaceByGeoNearSchema = {
+  schema: {
+    headers: headersJsonSchema,
+    security: [{ bearerAuth: [] }],
+    querystring: queryStringJsonLoadPlaceByPageGeoNearSchema,
     response: {
       200: loadPlaceByPageResponse,
     },
