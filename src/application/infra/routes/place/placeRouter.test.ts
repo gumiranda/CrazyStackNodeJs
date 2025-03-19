@@ -19,9 +19,15 @@ const userBody = {
 };
 const placeBody = {
   name: "test",
+  categoryPlaceId: "122121",
 };
 const makeAccessToken = async (role: string, password: string): Promise<any> => {
-  const result = await userCollection.insertOne({ ...userBody, password,payDay: addDays(new Date(), 30), role });
+  const result = await userCollection.insertOne({
+    ...userBody,
+    password,
+    payDay: addDays(new Date(), 30),
+    role,
+  });
   const _id = result?.insertedId;
   return { _id, token: sign({ _id }, env.jwtSecret) };
 };
