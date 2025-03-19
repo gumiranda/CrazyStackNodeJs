@@ -1,9 +1,12 @@
 import { makeDatabaseInstance } from "@/application/infra";
 import { whiteLabel } from "@/application/infra/config/whiteLabel";
+import { makeLoadPhotoFactory } from "@/slices/photo/useCases";
 import { PlaceRepository } from "@/slices/place/repositories";
 import { loadPlace, LoadPlace } from "@/slices/place/useCases";
 
 export const makeLoadPlaceFactory = (): LoadPlace => {
-  const repository = new PlaceRepository(makeDatabaseInstance(whiteLabel.database,"place"));
-  return loadPlace(repository);
+  const repository = new PlaceRepository(
+    makeDatabaseInstance(whiteLabel.database, "place")
+  );
+  return loadPlace(repository, makeLoadPhotoFactory());
 };
