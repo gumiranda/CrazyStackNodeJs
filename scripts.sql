@@ -687,5 +687,36 @@ ADD COLUMN     "userId" UUID NOT NULL,
 ALTER COLUMN "createdById" SET NOT NULL;
 
 
+CREATE TABLE "categoryPlace" (
+    "_id" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    "createdById" UUID NOT NULL,
+    "name" VARCHAR(255) NOT NULL,
+    "active" BOOLEAN DEFAULT TRUE,
+    "createdAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT "fk_createdById_categoryplace" FOREIGN KEY ("createdById") REFERENCES users("_id")
+);
+
+
+CREATE TABLE "place" (
+    "_id" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    "createdById" UUID NOT NULL,
+    "name" VARCHAR(255) NOT NULL,
+    "coord" JSONB,
+    "address" TEXT,
+    "categoryPlaceId" UUID NOT NULL,
+    "profilephoto" VARCHAR(255),
+    "ownerId" UUID,
+    "description" TEXT,
+    "phone" VARCHAR(255),
+    "cover" VARCHAR(255),
+    "active" BOOLEAN DEFAULT TRUE,
+    "createdAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT "fk_createdById_categoryplace" FOREIGN KEY ("createdById") REFERENCES users("_id"),
+    CONSTRAINT "fk_categoryPlaceId_place" FOREIGN KEY ("categoryPlaceId") REFERENCES "categoryPlace"("_id")
+    -- CONSTRAINT "fk_ownerId_place" FOREIGN KEY ("ownerId") REFERENCES owner("_id")
+);
+
 
 ALTER TABLE "users" ADD COLUMN "token" VARCHAR(255);
