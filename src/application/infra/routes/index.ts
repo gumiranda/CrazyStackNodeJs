@@ -3,6 +3,8 @@ import { auth } from "./auth";
 import { account } from "./account";
 import { category } from "./category";
 // IMPORT MODULE FILES
+import { place } from "./place";
+import { categoryPlace } from "./categoryPlace";
 import { trend } from "./trend";
 import { follow } from "./follow";
 import { tweetlike } from "./tweetlike";
@@ -38,6 +40,8 @@ const routes = [
   account,
   category,
   // ADD FUNCTION IMPORTS
+place,
+categoryPlace,
   trend,
   follow,
   tweetlike,
