@@ -23,8 +23,8 @@ export class SQLQueryBuilder {
     ST_DistanceSphere(
         ST_SetSRID(
             ST_MakePoint(
-                (users.coord->'coordinates'->>0)::float,
-                (users.coord->'coordinates'->>1)::float
+                (${this.tableName}.coord->'coordinates'->>0)::float,
+                (${this.tableName}.coord->'coordinates'->>1)::float
             ), 4326
         ),
         ST_SetSRID(ST_MakePoint($4, $5), 4326)
