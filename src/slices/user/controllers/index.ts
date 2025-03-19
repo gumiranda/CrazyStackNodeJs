@@ -6,3 +6,5 @@ export * from "./loadUserByPageGeoNear";
 export * from "./loadUserByPage";
 export * from "./signup";
 export * from "./login";
+export * from "./verifyEmail";
+export * from "./resendVerificationEmail";

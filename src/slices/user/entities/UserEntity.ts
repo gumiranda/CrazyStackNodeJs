@@ -46,6 +46,7 @@ export type UserData = {
   bio?: string;
   cover?: string;
   link?: string;
+  token?: string | null;
 };
 
 export type UserPaginated = {
@@ -99,6 +100,7 @@ export class UserEntity {
   bio?: string;
   cover?: string;
   link?: string;
+  token?: string | null;
   constructor(data: UserData) {
     this.createdById = data.createdById;
     this.name = data.name;
@@ -145,5 +147,6 @@ export class UserEntity {
     this.bio = data.bio;
     this.cover = data.cover;
     this.link = data.link;
+    this.token = data.token;
   }
 }

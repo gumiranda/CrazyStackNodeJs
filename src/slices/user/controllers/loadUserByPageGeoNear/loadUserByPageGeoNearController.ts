@@ -30,8 +30,12 @@ export class LoadUserByPageGeoNearController extends Controller {
     } = httpRequest?.query || {};
     const fields = {
       ...rest,
-      lng: httpRequest?.userLogged?.coord?.coordinates?.[0],
-      lat: httpRequest?.userLogged?.coord?.coordinates?.[1],
+      lng:
+        httpRequest?.userLogged?.coord?.coordinates?.[1] ??
+        httpRequest?.userLogged?.coord?.lng,
+      lat:
+        httpRequest?.userLogged?.coord?.coordinates?.[0] ??
+        httpRequest?.userLogged?.coord?.lat,
     };
     const sort = { [sortBy]: typeSort === "asc" ? 1 : -1 };
     const options = { sort, page, userLoggedId: httpRequest?.userId, limitPerPage };

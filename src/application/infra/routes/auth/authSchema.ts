@@ -55,6 +55,45 @@ export const signupPostSchema = {
     response: signupResponse,
   },
 };
+export const verifyEmailSchema = {
+  schema: {
+    body: {
+      type: "object",
+      required: ["email", "code"],
+      properties: {
+        email: { type: "string" },
+        code: { type: "string" },
+      },
+    },
+    response: {
+      200: {
+        type: "object",
+        properties: {
+          message: { type: "string" },
+        },
+      },
+    },
+  },
+};
+export const resendEmailSchema = {
+  schema: {
+    body: {
+      type: "object",
+      required: ["email"],
+      properties: {
+        email: { type: "string" },
+      },
+    },
+    response: {
+      200: {
+        type: "object",
+        properties: {
+          message: { type: "string" },
+        },
+      },
+    },
+  },
+};
 const bodyLoginJsonSchema = {
   type: "object",
   required: ["email", "password", "passwordConfirmation"],

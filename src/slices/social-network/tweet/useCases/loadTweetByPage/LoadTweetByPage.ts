@@ -3,6 +3,7 @@ import { Query } from "@/application/types";
 import type { LoadPhoto } from "@/slices/photo/useCases";
 import type { LoadUser } from "@/slices/user/useCases";
 import type { LoadTweetlikeByPage } from "@/slices/social-network/tweetlike/useCases";
+import { isValidUUID } from "@/application/helpers";
 
 export type LoadTweetByPage = (query: Query) => Promise<any | null>;
 export type LoadTweetByPageSignature = (
@@ -26,7 +27,7 @@ export const loadTweetByPage: LoadTweetByPageSignature =
         const sort = { createdAt: -1 };
         const options = { sort, page: 1 };
         const [photo, user, likes] = await Promise.all([
-          tweet.image
+          tweet.image && isValidUUID(tweet.image)
             ? loadPhoto({ fields: { _id: tweet.image } })
             : Promise.resolve(null),
           tweet.createdById

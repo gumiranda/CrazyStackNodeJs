@@ -8,6 +8,8 @@ import { AddCustomer } from "@/slices/payment/customer/useCases";
 import { AddSubscription } from "@/slices/payment/subscription/useCases";
 import { whiteLabel } from "@/application/infra/config/whiteLabel";
 import { v4 as uuidv4 } from "uuid";
+import type { LoadCategoryPlace } from "@/slices/categoryPlace/useCases";
+import type { AddPlace } from "@/slices/place/useCases";
 
 export type UserInput = {
   _id: string;
@@ -27,7 +29,9 @@ export type CompleteOwnerSignature = (
   addOwner: AddOwner,
   addClient: AddClient,
   addCustomer: AddCustomer,
-  addSubscription: AddSubscription
+  addSubscription: AddSubscription,
+  loadCategoryPlace: LoadCategoryPlace,
+  addPlace: AddPlace
 ) => CompleteOwner;
 
 export const completeOwner: CompleteOwnerSignature =
@@ -38,7 +42,9 @@ export const completeOwner: CompleteOwnerSignature =
     addOwner: AddOwner,
     addClient: AddClient,
     addCustomer: AddCustomer,
-    addSubscription: AddSubscription
+    addSubscription: AddSubscription,
+    loadCategoryPlace: LoadCategoryPlace,
+    addPlace: AddPlace
   ) =>
   async (userCreated: UserInput) => {
     const { _id, name, password, email, phone, cpf, cnpj } = userCreated;
@@ -70,51 +76,54 @@ export const completeOwner: CompleteOwnerSignature =
         value: service?._id?.toString?.(),
         label: service?.name,
       })) ?? [];
-    const ownerData = await addOwner({
-      name,
-      createdById: _id,
-      minimumTimeForReSchedule: 30,
-      hourStart1: "9:00",
-      hourEnd1: "18:00",
-      hourStart2: "8:00",
-      hourEnd2: "18:00",
-      hourStart3: "8:00",
-      hourEnd3: "18:00",
-      hourLunchStart1: "12:00",
-      hourLunchEnd1: "13:00",
-      days1: {
-        monday1: true,
-        tuesday1: true,
-        wednesday1: true,
-        thursday1: true,
-        friday1: true,
-        saturday1: false,
-        sunday1: false,
-      },
-      days2: {
-        monday2: false,
-        tuesday2: false,
-        wednesday2: false,
-        thursday2: false,
-        friday2: false,
-        saturday2: false,
-        sunday2: false,
-      },
-      days3: {
-        monday3: false,
-        tuesday3: false,
-        wednesday3: false,
-        thursday3: false,
-        friday3: false,
-        saturday3: false,
-        sunday3: false,
-      },
-      haveDelivery: false,
-      appointmentsTotal: 0,
-      ratingsTotal: 0,
-      typeTax: "fixed",
-      active: true,
-    });
+    const [ownerData, categoryPlace] = await Promise.all([
+      addOwner({
+        name,
+        createdById: _id,
+        minimumTimeForReSchedule: 30,
+        hourStart1: "9:00",
+        hourEnd1: "18:00",
+        hourStart2: "8:00",
+        hourEnd2: "18:00",
+        hourStart3: "8:00",
+        hourEnd3: "18:00",
+        hourLunchStart1: "12:00",
+        hourLunchEnd1: "13:00",
+        days1: {
+          monday1: true,
+          tuesday1: true,
+          wednesday1: true,
+          thursday1: true,
+          friday1: true,
+          saturday1: false,
+          sunday1: false,
+        },
+        days2: {
+          monday2: false,
+          tuesday2: false,
+          wednesday2: false,
+          thursday2: false,
+          friday2: false,
+          saturday2: false,
+          sunday2: false,
+        },
+        days3: {
+          monday3: false,
+          tuesday3: false,
+          wednesday3: false,
+          thursday3: false,
+          friday3: false,
+          saturday3: false,
+          sunday3: false,
+        },
+        haveDelivery: false,
+        appointmentsTotal: 0,
+        ratingsTotal: 0,
+        typeTax: "fixed",
+        active: true,
+      }),
+      loadCategoryPlace({ fields: { name: "Parceiros Belezix" }, options: {} }),
+    ]);
     const taxID = cpf?.length > 0 ? cpf : cnpj;
     const customer = {
       createdById: _id,
@@ -124,6 +133,14 @@ export const completeOwner: CompleteOwnerSignature =
       taxID,
       correlationID: uuidv4(),
     };
+    const placeCreated: any = await addPlace({
+      createdById: _id,
+      ownerId: ownerData?._id ?? "",
+      name: ownerData?.name ?? "",
+      description: "",
+      active: true,
+      categoryPlaceId: categoryPlace?._id ?? "",
+    });
     const customerCreated: any = await addCustomer(customer as any);
     if (customerCreated?.error === "Há outro cliente com esses dados") {
       return null;
@@ -191,6 +208,7 @@ export const completeOwner: CompleteOwnerSignature =
       updateUser,
       customerCreated,
       subscription,
+      placeCreated,
     };
   };
 export const flattenArray = (arrays: any) =>

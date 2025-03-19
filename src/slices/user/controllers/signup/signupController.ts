@@ -17,6 +17,7 @@ import { EmailInUseError, InvalidParamError } from "@/application/errors";
 import emailValidator from "deep-email-validator";
 import { sendMessage } from "@/application/infra/messaging";
 import slug from "slug";
+import { generateToken } from "@/application/helpers/utils/generateToken";
 export class SignupController extends Controller {
   constructor(
     private readonly validation: Validation,
@@ -96,7 +97,12 @@ export class SignupController extends Controller {
         genSlug = false;
       }
     }
-    const userCreated = await this.addUser({ ...httpRequest?.body, slug: userSlug });
+    const token = generateToken();
+    const userCreated = await this.addUser({
+      ...httpRequest?.body,
+      slug: userSlug,
+      token,
+    });
     const { accessToken = null, refreshToken = null } =
       (await this.authentication.auth(email, password)) || {};
     if (!accessToken || !refreshToken) {
@@ -109,29 +115,27 @@ export class SignupController extends Controller {
       active: true,
       expiresAt: addDays(new Date(), 1) as unknown as string,
     });
+    const msg = {
+      userCreated: {
+        email: userCreated?.email,
+        name: userCreated?.name,
+        _id: userCreated?._id,
+        phone: userCreated?.phone,
+        cpf: userCreated?.cpf ?? "",
+        cnpj: userCreated?.cnpj ?? "",
+      },
+    };
+    const message = JSON.stringify(msg);
     if (role === "owner") {
-      // await this.completeOwner({
-      //   _id: userCreated?._id as string,
-      //   name: userCreated?.name as string,
-      //   email: userCreated?.email as string,
-      //   password: "random_password",
-      // });
-      const msg = {
-        userCreated: {
-          email: userCreated?.email,
-          name: userCreated?.name,
-          _id: userCreated?._id,
-          phone: userCreated?.phone,
-          cpf: userCreated?.cpf ?? "",
-          cnpj: userCreated?.cnpj ?? "",
-        },
-      };
-      const message = JSON.stringify(msg);
       await sendMessage({
         topic: "newOwner",
         message,
       });
     }
+    await sendMessage({
+      topic: "sendEmailVerification",
+      message,
+    });
     return ok({ user: userCreated, accessToken, refreshToken });
   }
 }
