@@ -31,7 +31,10 @@ describe("LoadCategoryPlaceByPageController", () => {
     fakeQueryParams = { _id: fakeCategoryPlaceEntity._id };
     fakeRestQuery = { page: 1, sortBy: "name", typeSort: "asc" };
     fakeQuery = { ...fakeQueryParams, ...fakeRestQuery };
-    testInstance = new LoadCategoryPlaceByPageController(validation, loadCategoryPlaceByPage);
+    testInstance = new LoadCategoryPlaceByPageController(
+      validation,
+      loadCategoryPlaceByPage
+    );
   });
   it("should extends class Controller", async () => {
     expect(testInstance).toBeInstanceOf(Controller);
@@ -49,7 +52,11 @@ describe("LoadCategoryPlaceByPageController", () => {
     expect(result).toEqual(ok(fakeCategoryPlacePaginated));
     expect(loadCategoryPlaceByPage).toHaveBeenCalledWith({
       fields: fakeQueryParams,
-      options: { sort: { [fakeRestQuery?.sortBy]: 1 }, page: fakeRestQuery?.page },
+      options: {
+        sort: { [fakeRestQuery?.sortBy]: 1 },
+        page: fakeRestQuery?.page,
+        limitPerPage: 10,
+      },
     });
     expect(loadCategoryPlaceByPage).toHaveBeenCalledTimes(1);
   });
@@ -61,7 +68,11 @@ describe("LoadCategoryPlaceByPageController", () => {
     expect(result).toEqual(ok(fakeCategoryPlacePaginated));
     expect(loadCategoryPlaceByPage).toHaveBeenCalledWith({
       fields: fakeQueryParams,
-      options: { sort: { [fakeRestQuery?.sortBy]: -1 }, page: fakeRestQuery?.page },
+      options: {
+        sort: { [fakeRestQuery?.sortBy]: -1 },
+        page: fakeRestQuery?.page,
+        limitPerPage: 10,
+      },
     });
     expect(loadCategoryPlaceByPage).toHaveBeenCalledTimes(1);
   });
