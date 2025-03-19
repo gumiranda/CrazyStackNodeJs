@@ -49,7 +49,11 @@ describe("LoadPlaceByPageController", () => {
     expect(result).toEqual(ok(fakePlacePaginated));
     expect(loadPlaceByPage).toHaveBeenCalledWith({
       fields: fakeQueryParams,
-      options: { sort: { [fakeRestQuery?.sortBy]: 1 }, page: fakeRestQuery?.page },
+      options: {
+        sort: { [fakeRestQuery?.sortBy]: 1 },
+        page: fakeRestQuery?.page,
+        limitPerPage: 10,
+      },
     });
     expect(loadPlaceByPage).toHaveBeenCalledTimes(1);
   });
@@ -61,7 +65,11 @@ describe("LoadPlaceByPageController", () => {
     expect(result).toEqual(ok(fakePlacePaginated));
     expect(loadPlaceByPage).toHaveBeenCalledWith({
       fields: fakeQueryParams,
-      options: { sort: { [fakeRestQuery?.sortBy]: -1 }, page: fakeRestQuery?.page },
+      options: {
+        sort: { [fakeRestQuery?.sortBy]: -1 },
+        page: fakeRestQuery?.page,
+        limitPerPage: 10,
+      },
     });
     expect(loadPlaceByPage).toHaveBeenCalledTimes(1);
   });
