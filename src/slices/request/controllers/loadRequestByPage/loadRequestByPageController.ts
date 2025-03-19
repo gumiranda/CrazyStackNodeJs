@@ -30,10 +30,12 @@ export class LoadRequestByPageController extends Controller {
     const fields =
       httpRequest?.userLogged?.role === "admin"
         ? rest
-        : {
-            ...rest,
-            createdById: httpRequest?.userId,
-          };
+        : httpRequest?.userLogged?.role === "owner"
+          ? {
+              ...rest,
+              createdForId: httpRequest?.userId,
+            }
+          : { ...rest, createdById: httpRequest?.userId };
     const sort = { [sortBy]: typeSort === "asc" ? 1 : -1 };
     const options = { sort, page };
     const requestLoaded = await this.loadRequestByPage({
