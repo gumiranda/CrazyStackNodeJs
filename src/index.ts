@@ -15,6 +15,7 @@ import { closePool } from "./application/infra/database/postgres";
 import { consumeMessage } from "./application/infra/messaging";
 import fastifySwagger from "@fastify/swagger";
 import fastifySwaggerUI from "@fastify/swagger-ui";
+import { emailConsumer } from "./application/infra/messaging/consumers/SendEmailVerification";
 
 export const makeFastifyInstance = async (externalMongoClient: any) => {
   const fastify: FastifyInstance = Fastify({ logger: true });
@@ -112,6 +113,7 @@ const start = async () => {
       updatePositionConsumer,
       routeDriverFinishedConsumer,
       newOwnerConsumer,
+      emailConsumer,
     ];
     const gracefulServer = GracefulServer(fastifyInstance.server);
     gracefulServer.on(GracefulServer.READY, () => {
