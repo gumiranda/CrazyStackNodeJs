@@ -8,13 +8,15 @@ import {
 } from "@/application/helpers";
 import { Controller } from "@/application/infra/contracts";
 import { LoadOwner } from "@/slices/owner/useCases";
+import type { LoadPlace } from "@/slices/place/useCases";
 import type { LoadServiceByPage } from "@/slices/service/useCases";
 
 export class LoadOwnerController extends Controller {
   constructor(
     private readonly validation: Validation,
     private readonly loadOwner: LoadOwner,
-    private readonly loadServiceByPage: LoadServiceByPage
+    private readonly loadServiceByPage: LoadServiceByPage,
+    private readonly loadPlace: LoadPlace
   ) {
     super();
   }
@@ -34,10 +36,16 @@ export class LoadOwnerController extends Controller {
     };
     const sort = { [sortBy]: typeSort === "asc" ? 1 : -1 };
     const options = { sort, page, limitPerPage: 100 };
-    const services = await this.loadServiceByPage({
-      fields,
-      options,
-    });
-    return ok({ ...ownerLoaded, services });
+    const [services, place] = await Promise.all([
+      this.loadServiceByPage({
+        fields,
+        options,
+      }),
+      this.loadPlace({
+        fields: { ownerId: ownerLoaded?._id },
+        options: {},
+      }),
+    ]);
+    return ok({ ...ownerLoaded, services, place });
   }
 }
