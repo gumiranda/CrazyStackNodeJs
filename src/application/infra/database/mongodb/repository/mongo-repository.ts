@@ -124,9 +124,10 @@ export class MongoRepository extends Repository {
     if (query?._id) {
       query._id = new ObjectId(query._id);
     }
+    const pipeline: any[] = [];
 
     const mongoQuery: any = mapQueryParamsToQueryMongo(query);
-
+    pipeline.push({ $match: mongoQuery });
     // Inicia a projeção
     const projection: any = {};
     if (options?.projection) {
@@ -136,7 +137,6 @@ export class MongoRepository extends Repository {
     }
 
     // Inicializa o pipeline para agregar as relações (lookup no MongoDB)
-    const pipeline: any[] = [];
 
     // Adiciona a etapa de projeção (caso exista)
     if (Object.keys(projection).length > 0) {
@@ -171,7 +171,6 @@ export class MongoRepository extends Repository {
     }
 
     // Adiciona a etapa de match (filtro) com a query original
-    pipeline.push({ $match: mongoQuery });
 
     // Executa a consulta agregada
     const result = await collection.aggregate(pipeline, { session }).toArray();
@@ -199,12 +198,12 @@ export class MongoRepository extends Repository {
 
     const pipeline = [];
 
+    const queryMongo = mapQueryParamsToQueryMongo(query) ?? {};
+    pipeline.push({ $match: queryMongo });
+
     if (Object.keys(projection).length > 0) {
       pipeline.push({ $project: projection });
     }
-
-    const queryMongo = mapQueryParamsToQueryMongo(query) ?? {};
-    pipeline.push({ $match: queryMongo });
     if (populate) {
       for (const relation of Object.keys(populate)) {
         if (populate[relation]) {

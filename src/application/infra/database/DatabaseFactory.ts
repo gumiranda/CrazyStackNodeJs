@@ -1,7 +1,7 @@
 import { Repository } from "../contracts";
 import { MongoRepository } from "./mongodb";
 import { PostgresRepository } from "./postgres";
-import { PrismaRepository } from "./prisma/repository/prisma-repository";
+//import { PrismaRepository } from "./prisma/repository/prisma-repository";
 
 export const makeDatabaseInstance = (
   database: Database,
@@ -13,7 +13,7 @@ export const makeDatabaseInstance = (
 const databases = {
   mongodb: MongoRepository,
   postgres: PostgresRepository,
-  prisma: PrismaRepository,
+  prisma: PostgresRepository, // PrismaRepository,
 } as const;
 
 export type Database = keyof typeof databases;

@@ -13,7 +13,7 @@ export const newOwnerConsumer = {
     const loadUser = makeLoadUserFactory();
     const user = await loadUser({
       fields: { email },
-      options: { projection: { password: 1 } },
+      options: { projection: { password: 0 } },
     });
     if (!user) {
       return;
