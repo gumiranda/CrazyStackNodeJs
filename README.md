@@ -128,6 +128,146 @@ PAGARME_KEY = SEUS_BAGULHO;
 - `yarn test:t`: Testes personalizados.
 - `yarn test:v`: Testes com output detalhado.
 
+
+# Deploy da sua PRÓPRIA API Node.js
+
+## Passo a Passo
+
+### 1. Clonar o Template
+- Clone o template do projeto a partir do repositório: [CrazyStackNodeJs](https://github.com/gumiranda/CrazyStackNodeJs)
+
+### 2. Instalação das Dependências
+- Baixe o repositório
+- Rode o comando:
+  ```bash
+  yarn
+  ```
+- Crie o arquivo `.env` a partir do arquivo `env.example`
+
+---
+
+## Configuração do Banco de Dados
+
+### 3. Criar Conta no MongoDB Atlas
+- Acesse: [MongoDB Atlas](https://www.mongodb.com/lp/cloud/atlas/try4-reg)
+- Crie sua conta e um novo cluster.
+- Permita acesso de qualquer IP através do link:
+  [Network Access](https://cloud.mongodb.com/v2/67dfe86414db796e800078bc#/security/network/accessList/addToAccessList)
+
+### 4. Variáveis de Ambiente para o MongoDB
+- Defina as seguintes variáveis no arquivo `.env`:
+  ```bash
+  DATABASE=mongodb
+  MONGO_URL=<URL do banco de teste>
+  MONGO_URL_PROD=<URL do banco de produção>
+  ```
+
+---
+
+## Configuração do RabbitMQ
+
+### 5. Criar Conta no CloudAMQP
+- Acesse: [CloudAMQP](https://customer.cloudamqp.com/signup)
+- Crie uma nova instância: [Create Instance](https://customer.cloudamqp.com/instance/create)
+- Atualize o arquivo `.env` com a variável:
+  ```bash
+  RABBITMQ_URL=<URL do RabbitMQ>
+  ```
+
+### 6. Criar Tópicos no RabbitMQ
+- No gerenciador do RabbitMQ, crie os seguintes tópicos:
+  - `newOwner`
+  - `resendEmailVerification`
+  - `updatePosition`
+  - `routeDriverFinished`
+  - `sendEmailVerification`
+
+---
+
+## Autenticação com JWT
+
+### 7. Gerar Secret JWT
+- Gere um secret de 64 caracteres em: [JWT Secret Generator](https://jwtsecret.com/generate)
+
+---
+
+## Armazenamento na Cloudflare R2
+
+### 8. Criar Conta na Cloudflare
+- Acesse: [Cloudflare](https://dash.cloudflare.com/login)
+- Crie um bucket no armazenamento R2
+- Gere um token de API com permissão de leitura/gravação
+
+### 9. Variáveis de Ambiente Cloudflare R2
+- Adicione ao arquivo `.env`:
+  ```bash
+  CLOUDFLARE_R2_SECRET_ACCESS_KEY=<Chave de acesso secreta>
+  CLOUDFLARE_R2_BUCKET_NAME=<Nome do bucket>
+  CLOUDFLARE_R2_ACCESS_KEY_ID=<ID da chave de acesso>
+  CLOUDFLARE_R2_ACCOUNT_ID=<ID da conta>
+  ```
+
+---
+
+## Outras Integrações
+
+### 10. Configurar Resend
+- Acesse: [Resend API Keys](https://resend.com/api-keys)
+- Crie uma chave de API e adicione ao `.env`
+
+### 11. Configurar Google Maps API
+- Acesse: [Google Maps API](https://console.cloud.google.com/apis/credentials)
+- Crie uma chave de API e adicione ao `.env`:
+  ```bash
+  GOOGLE_MAPS_API_KEY=<Sua chave de API>
+  ```
+
+### 12. Configurar Redis no Upstash
+- Acesse: [Upstash](https://console.upstash.com/login)
+- Crie um banco de dados e adicione ao `.env`:
+  ```bash
+  REDIS_URL=<URL do Redis>
+  REDIS_PASSWORD=<Senha do Redis>
+  ```
+
+---
+
+## Deploy no Fly.io
+
+### 13. Criar Conta no Fly.io
+- Acesse: [Fly.io](https://fly.io/dashboard/personal/new-launch)
+- Adicione um cartão de crédito e conecte o GitHub
+- Rode o comando para instalar o Flyctl:
+  ```bash
+  brew install flyctl
+  ```
+- Lance a aplicação:
+  ```bash
+  fly launch
+  fly deploy
+  ```
+
+---
+
+## Configuração do PIX na Woovi
+
+### 14. Criar Conta na Woovi
+- Acesse: [Woovi](https://app.woovi.com/home/start)
+- Crie um novo webhook com o evento de cobrança paga
+- Adicione o `WOOVI_KEY` ao arquivo `.env`
+
+---
+
+## Teste da API
+- Verifique se a API está funcionando acessando a URL de documentação:
+  ```bash
+  fly open /docs
+  ```
+
+## Criando Usuário no Swagger
+- Acesse o Swagger da aplicação e crie um novo usuário para testar a configuração no /signup.
+
+
 ## Contribuição 🤝
 
 Contribuições são bem-vindas! Se você deseja melhorar este projeto, sinta-se à vontade para abrir uma *issue* ou enviar um *pull request*.
