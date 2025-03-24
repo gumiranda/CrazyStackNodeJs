@@ -611,12 +611,10 @@ CREATE TABLE "tweetlike" (
 -- CreateTable
 CREATE TABLE "follow" (
     "_id" UUID NOT NULL DEFAULT uuid_generate_v4(),
-    "user1Slug" TEXT NOT NULL,
-    "user2Slug" TEXT NOT NULL,
     "createdById" UUID,
     "createdAt" TIMESTAMP(6) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(6) DEFAULT CURRENT_TIMESTAMP,
-
+    "userId" UUID NOT NULL,
     CONSTRAINT "follow_pkey" PRIMARY KEY ("_id")
 );
 
@@ -634,14 +632,13 @@ CREATE TABLE "trend" (
 CREATE TABLE tweettweetlike (
     "_id" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     "userId" UUID NOT NULL,
-    "tweetId" UUID  ,
+    "tweetId" UUID,
     "tweetlikeId" UUID  ,
     "createdAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT "fk_createdById_fidelity" FOREIGN KEY ("userId") REFERENCES users("_id"),
-    CONSTRAINT "fk_tweetId_tweetlike" FOREIGN KEY ("tweetId") REFERENCES tweet("_id"),
-   -- CONSTRAINT "fk_tweetlikeId_tweetlike" FOREIGN KEY ("tweetlikeId") REFERENCES tweetlike("_id")
-);
+    CONSTRAINT "fk_tweetId_tweetlike" FOREIGN KEY ("tweetId") REFERENCES tweet("_id")
+ );
 
 -- AddForeignKey
 ALTER TABLE "tweet" ADD CONSTRAINT "tweet_createdById_fkey" FOREIGN KEY ("createdById") REFERENCES "users"("_id") ON DELETE SET NULL ON UPDATE CASCADE;
@@ -686,10 +683,7 @@ ALTER TABLE "tweetlike" ADD CONSTRAINT "tweetlike_tweetId_fkey" FOREIGN KEY ("tw
 
 -- AddForeignKey
 ALTER TABLE "follow" ADD CONSTRAINT "follow_createdById_fkey" FOREIGN KEY ("createdById") REFERENCES "users"("_id") ON DELETE NO ACTION ON UPDATE NO ACTION;
-ALTER TABLE "follow" DROP COLUMN "user1Slug",
-DROP COLUMN "user2Slug",
-ADD COLUMN     "userId" UUID NOT NULL,
-ALTER COLUMN "createdById" SET NOT NULL;
+
 
 
 CREATE TABLE "categoryPlace" (
