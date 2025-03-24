@@ -5,7 +5,7 @@ export type PlaceData = {
   active?: boolean;
   createdAt?: Date;
   updatedAt?: Date;
-  categoryPlaceId: string;
+  categoryPlaceId: string | null;
   ownerId?: string;
   description?: string;
   coord?: any;
@@ -26,7 +26,7 @@ export class PlaceEntity {
   active?: boolean;
   createdAt?: Date;
   updatedAt?: Date;
-  categoryPlaceId: string;
+  categoryPlaceId: string | null;
   ownerId?: string;
   description?: string;
   coord?: any;

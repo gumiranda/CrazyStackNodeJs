@@ -142,7 +142,7 @@ export const completeOwner: CompleteOwnerSignature =
       name: ownerData?.name ?? "",
       description: "",
       active: true,
-      categoryPlaceId: categoryPlace?._id ?? "",
+      categoryPlaceId: categoryPlace?._id ?? null,
     });
     const customerCreated: any = await addCustomer(customer as any);
     if (customerCreated?.error === "Há outro cliente com esses dados") {

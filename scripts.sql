@@ -703,7 +703,7 @@ CREATE TABLE "place" (
     "name" VARCHAR(255) NOT NULL,
     "coord" JSONB,
     "address" TEXT,
-    "categoryPlaceId" UUID NOT NULL,
+    "categoryPlaceId" UUID,
     "profilephoto" VARCHAR(255),
     "ownerId" UUID,
     "description" TEXT,
