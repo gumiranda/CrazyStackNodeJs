@@ -47,6 +47,11 @@ CREATE TABLE users (
 );
 -- ALTER TABLE users ALTER COLUMN "globalID" TYPE VARCHAR(255);
 ALTER TABLE users ADD COLUMN "customerID" VARCHAR(255);
+ALTER TABLE "users" ADD COLUMN "token" VARCHAR(255);
+ALTER TABLE "users" ADD COLUMN "slug" VARCHAR(255);
+ALTER TABLE "users" ADD COLUMN "cover" VARCHAR(255);
+ALTER TABLE "users" ADD COLUMN "bio" VARCHAR(255);
+ALTER TABLE "users" ADD COLUMN "link" VARCHAR(255);
 
 -- Indexes for users table
 CREATE INDEX idx_users_createdById ON users("createdById");
@@ -719,4 +724,3 @@ CREATE TABLE "place" (
 );
 
 
-ALTER TABLE "users" ADD COLUMN "token" VARCHAR(255);
