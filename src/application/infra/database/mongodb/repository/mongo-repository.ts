@@ -232,8 +232,8 @@ export class MongoRepository extends Repository {
       pipeline.push({ $sort: sort });
     }
 
-    pipeline.push({ $skip: (page - 1) * limit });
-    pipeline.push({ $limit: limit });
+    pipeline.push({ $skip: (page - 1) * Number(limit) });
+    pipeline.push({ $limit: Number(limit) });
 
     return collection.aggregate(pipeline, { session }).toArray();
   }
