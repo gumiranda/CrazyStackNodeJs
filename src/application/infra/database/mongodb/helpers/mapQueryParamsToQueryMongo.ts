@@ -59,6 +59,8 @@ export const mapQueryParamsToQueryMongo = (queryParams: any): any => {
       };
     } else if (!key?.includes?.("endDate")) {
       newQuery[key] = queryParams[key];
+    } else if (queryParams[key] === "null") {
+      newQuery[key] = null;
     }
   }
   return newQuery;
