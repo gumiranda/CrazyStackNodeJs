@@ -122,7 +122,10 @@ export const completeOwner: CompleteOwnerSignature =
         typeTax: "fixed",
         active: true,
       }),
-      loadCategoryPlace({ fields: { name: "Parceiros Belezix" }, options: {} }),
+      loadCategoryPlace({
+        fields: { name: `Parceiros ${whiteLabel.systemName}` },
+        options: {},
+      }),
     ]);
     const taxID = cpf?.length > 0 ? cpf : cnpj;
     const customer = {

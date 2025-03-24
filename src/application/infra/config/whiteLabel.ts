@@ -3,6 +3,7 @@ import { Database } from "../database";
 export const whiteLabel = {
   database: (process.env.DATABASE ?? "mongodb") as Database,
   valueMonth: "2990",
+  systemName: "Belezix",
   paymentDaysDue: 30,
   gatewayPix: "woovi",
   gatewayCreditCard: "pagarme",
