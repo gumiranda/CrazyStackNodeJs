@@ -255,6 +255,8 @@ PAGARME_KEY = SEUS_BAGULHO;
 - Acesse: [Woovi](https://app.woovi.com/home/start)
 - Crie um novo webhook com o evento de cobrança paga
 - Adicione o `WOOVI_KEY` ao arquivo `.env`
+- Crie a webhook de cobrança paga apontando pra url do fly.io no endpoint `/api/webhooks/add`
+- Atualize o env com a variável `WOOVI_WEBHOOK_SECRET`
 
 ---
 
