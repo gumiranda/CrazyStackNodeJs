@@ -720,7 +720,6 @@ CREATE TABLE "place" (
     "updatedAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT "fk_createdById_categoryplace" FOREIGN KEY ("createdById") REFERENCES users("_id"),
     CONSTRAINT "fk_categoryPlaceId_place" FOREIGN KEY ("categoryPlaceId") REFERENCES "categoryPlace"("_id")
-    -- CONSTRAINT "fk_ownerId_place" FOREIGN KEY ("ownerId") REFERENCES owner("_id")
 );
 
 
