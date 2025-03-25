@@ -20,8 +20,8 @@ Este projeto utiliza as seguintes tecnologias:
 
 - **Node.js** 🟢 para a criação do servidor.
 - **Fastify** ⚡ como framework de servidor web, com suporte a WebSockets.
-- **MongoDB** 🐱‍💻 para banco de dados, usando MongoDB Memory Server para testes.
-- **KafkaJS** 🐻 para integração com o Apache Kafka.
+- **MongoDB/PostgreSQL** 🐱‍💻 para banco de dados não relacional ou relacional, você escolhe!
+- **RabbitMQ** 🐻 para processamento de jobs paralelos via mensageria
 - **Redis** 🧊 (via IORedis) para gerenciamento de cache.
 - **JWT (JsonWebToken)** 🔐 para autenticação e autorização.
 - **Axios** 📦 para requisições HTTP.
@@ -32,7 +32,7 @@ Este projeto utiliza as seguintes tecnologias:
 - Node.js v18+
 - MongoDB
 - Redis
-- Kafka (opcional, se houver necessidade de integração com filas)
+- Kafka ou RabbitMQ
 
 ## Instalação 🛠️
 
@@ -81,7 +81,7 @@ REDIS_PASSWORD = SEUS_BAGULHO;
 GOOGLE_MAPS_API_KEY = SEUS_BAGULHO;
 WOOVI_KEY = "SEUS_BAGULHO";
 WOOVI_WEBHOOK_SECRET = "SEUS_BAGULHO";
-FUSORARIOBR = "production";
+FUSORARIOBR = "inactive"; //mudar pra production se rodar local 
 DATABASE = "mongodb"; // postgres or mongodb
 CLOUDFLARE_R2_ACCESS_KEY_ID = SEUS_BAGULHO;
 CLOUDFLARE_R2_ACCOUNT_ID = SEUS_BAGULHO;
@@ -146,7 +146,7 @@ PAGARME_KEY = SEUS_BAGULHO;
 
 ---
 
-## Configuração do Banco de Dados
+## Configuração do Banco de Dados não relacional
 
 ### 3. Criar Conta no MongoDB Atlas
 - Acesse: [MongoDB Atlas](https://www.mongodb.com/lp/cloud/atlas/try4-reg)
