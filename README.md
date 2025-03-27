@@ -74,7 +74,7 @@ Crie um arquivo `.env` na raiz do projeto e defina as variáveis de ambiente nec
 NODE_ENV = production;
 JWT_SECRET = SEUS_BAGULHO;
 JWT_REFRESH_SECRET = SEUS_BAGULHO;
-PORT = 3333;
+PORT = 3000
 REDIS_PORT = 6379;
 REDIS_URL = SEUS_BAGULHO;
 REDIS_PASSWORD = SEUS_BAGULHO;
