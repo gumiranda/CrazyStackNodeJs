@@ -1,5 +1,19 @@
 import { ForbiddenError, UnauthorizedError, ServerError } from "@/application/errors";
-export type HttpResponse<T = any> = { statusCode: number; data: T };
+export type HttpResponse<T = any> = {
+  statusCode: number;
+  data: T;
+  cookies?: Array<{
+    name: string;
+    value: string;
+    options?: {
+      httpOnly?: boolean;
+      secure?: boolean;
+      sameSite?: "strict" | "lax" | "none";
+      path?: string;
+      maxAge?: number;
+    };
+  }>;
+};
 export type HttpRequest<T = any> = {
   body?: T;
   headers?: T;
@@ -8,6 +22,9 @@ export type HttpRequest<T = any> = {
   userLogged?: T;
   userId?: string;
   daysToNextPayment?: any;
+  cookies?: {
+    [key: string]: string;
+  };
 };
 
 export const ok = <T = any>(data: T): HttpResponse<T> => ({ statusCode: 200, data });

@@ -15,6 +15,8 @@ export const envSchema = z.object({
   awsAccessKeyId: z.string().default("secret"),
   awsSecretAccessKey: z.string().default("secret"),
   port: z.coerce.number().optional().default(3000),
+  corsOrigins: z.string().optional().default("http://localhost:3000"),
+  corsAllowAll: z.boolean().optional().default(false),
   environment: z
     .enum(["development", "test", "production"], {
       errorMap: () => ({ message: "O ambiente deve ser development, test ou production" }),
@@ -54,6 +56,8 @@ const mappedEnv = {
   jwtSecret: process.env.JWT_SECRET ?? "secret",
   jwtRefreshSecret: process.env.JWT_REFRESH_SECRET ?? "secret",
   port: process.env.PORT ?? 8080,
+  corsOrigins: process.env.CORS_ORIGINS ?? "http://localhost:3000",
+  corsAllowAll: process.env.CORS_ALLOW_ALL === "true",
   environment: process.env.NODE_ENV ?? "development",
   redisPort: process.env.REDIS_PORT ?? 40043,
   redisUrl: process.env.REDIS_URL ?? "us1-active-example-40043.upstash.io",

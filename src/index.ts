@@ -17,9 +17,10 @@ import fastifySwagger from "@fastify/swagger";
 import fastifySwaggerUI from "@fastify/swagger-ui";
 import { emailConsumer } from "./application/infra/messaging/consumers/SendEmailVerification";
 import { resendEmailVerificationConsumer } from "./application/infra/messaging/consumers/ResendEmailVerification";
+import cookie from "@fastify/cookie";
 
 export const makeFastifyInstance = async (externalMongoClient: any) => {
-  const fastify: FastifyInstance = Fastify({ logger: true });
+  const fastify: FastifyInstance = Fastify({ logger: true, trustProxy: true });
   try {
     const client = externalMongoClient ?? (await MongoHelper.connect(env.mongoUri));
     await fastify.register(require("@fastify/multipart"), {
@@ -42,10 +43,38 @@ export const makeFastifyInstance = async (externalMongoClient: any) => {
       timeWindow: "10 minutes",
       global: false,
     });
+    await fastify.register(cookie, {
+      secret: env.jwtSecret,
+      hook: "onRequest",
+      parseOptions: {
+        httpOnly: true,
+        secure: env.environment === "production",
+        sameSite: "lax",
+        path: "/",
+      },
+    });
+    const allowedOrigins = env.corsOrigins?.split(",") || ["http://localhost:3000"];
+
     await fastify.register(cors, {
-      origin: "*",
-      methods: ["POST", "GET", "PATCH", "DELETE"],
-      allowedHeaders: ["Content-Type", "Authorization", "authorization", "refreshtoken"],
+      origin: (origin: string | undefined, cb) => {
+        if (!origin) {
+          return cb(null, origin || false);
+        }
+        if (env.corsAllowAll) {
+          return cb(null, true);
+        }
+        if (env.environment === "production" && origin.startsWith("http://localhost")) {
+          return cb(null, true);
+        }
+        if (allowedOrigins.indexOf(origin) !== -1) {
+          return cb(null, origin);
+        }
+        return cb(new Error("Origem não permitida pelo CORS"), false);
+      },
+      methods: ["POST", "GET", "PATCH", "DELETE", "OPTIONS"],
+      allowedHeaders: ["Content-Type", "Authorization", "authorization", "Cookie"],
+      exposedHeaders: ["Set-Cookie"],
+      credentials: true,
     });
     await fastify.register(websocket);
 
