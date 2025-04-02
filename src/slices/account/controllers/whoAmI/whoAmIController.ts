@@ -29,7 +29,7 @@ export class WhoAmIController extends Controller {
     const accountExists = await this.loadAccount({
       fields: {
         createdById: httpRequest?.userId,
-        refreshToken: httpRequest?.headers?.refreshtoken,
+        refreshToken: httpRequest?.cookies?.refreshToken,
         isFutureexpiresAt: new Date(),
       },
       options: {},
@@ -49,6 +49,23 @@ export class WhoAmIController extends Controller {
     if (!user) {
       return unauthorized();
     }
-    return ok({ user });
+
+    // Configura o novo refresh token como cookie
+    const response = ok({ user });
+    response.cookies = [
+      {
+        name: "refreshToken",
+        value: refreshToken,
+        options: {
+          httpOnly: true,
+          secure: process.env.NODE_ENV === "production",
+          sameSite: "lax", // Alterado para lax para permitir requisições cross-origin
+          path: "/",
+          maxAge: 90 * 24 * 60 * 60 * 1000, // 90 dias em milissegundos
+        },
+      },
+    ];
+
+    return response;
   }
 }

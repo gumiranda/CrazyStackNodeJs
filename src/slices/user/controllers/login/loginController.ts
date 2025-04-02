@@ -51,6 +51,23 @@ export class LoginController extends Controller {
       active: true,
       expiresAt: addDays(new Date(), 1) as unknown as string,
     });
-    return ok({ user: userExists, accessToken, refreshToken });
+
+    // Retorna o refresh token como cookie HTTP only
+    const response = ok({ user: userExists, accessToken });
+    response.cookies = [
+      {
+        name: "refreshToken",
+        value: refreshToken,
+        options: {
+          httpOnly: true,
+          secure: process.env.NODE_ENV === "production",
+          sameSite: "strict",
+          path: "/",
+          maxAge: 90 * 24 * 60 * 60 * 1000, // 90 dias em milissegundos
+        },
+      },
+    ];
+
+    return response;
   }
 }

@@ -11,6 +11,7 @@ import {
 } from "@/application/helpers";
 import { Controller } from "@/application/infra/contracts";
 import { LoadAccount, AddAccount } from "@/slices/account/useCases";
+import { env } from "@/application/infra";
 
 export class LoadAccountController extends Controller {
   constructor(
@@ -26,15 +27,23 @@ export class LoadAccountController extends Controller {
     if (errors?.length > 0) {
       return badRequest(errors);
     }
-    const accountExists = await this.loadAccount({
-      fields: {
-        createdById: httpRequest?.userId,
-        refreshToken: httpRequest?.headers?.refreshtoken,
+    const fields = {
+      createdById: httpRequest?.userId,
+      refreshToken: httpRequest?.cookies?.refreshToken,
+    };
+    if (env.database === "mongodb") {
+      Object.assign(fields, {
         isFutureexpiresAt: new Date(),
-      },
+      });
+    }
+    const accountExists = await this.loadAccount({
+      fields,
       options: {},
     });
-    if (!accountExists) {
+    if (!accountExists || !accountExists?.expiresAt) {
+      return unauthorized();
+    }
+    if (new Date(accountExists?.expiresAt) < new Date()) {
       return unauthorized();
     }
     const { accessToken = null, refreshToken = null } =
@@ -49,6 +58,20 @@ export class LoadAccountController extends Controller {
       active: true,
       expiresAt: addDays(new Date(), 1) as unknown as string,
     });
-    return ok({ accessToken, refreshToken });
+    const response = ok({ accessToken });
+    response.cookies = [
+      {
+        name: "refreshToken",
+        value: refreshToken,
+        options: {
+          httpOnly: true,
+          secure: process.env.NODE_ENV === "production",
+          sameSite: "lax", // Alterado para lax para permitir requisições cross-origin
+          path: "/",
+          maxAge: 1 * 24 * 60 * 60 * 1000, // 90 dias em milissegundos
+        },
+      },
+    ];
+    return response;
   }
 }

@@ -136,6 +136,21 @@ export class SignupController extends Controller {
       topic: "sendEmailVerification",
       message,
     });
-    return ok({ user: userCreated, accessToken, refreshToken });
+    const response = ok({ user: userCreated, accessToken });
+    response.cookies = [
+      {
+        name: "refreshToken",
+        value: refreshToken,
+        options: {
+          httpOnly: true,
+          secure: process.env.NODE_ENV === "production",
+          sameSite: "strict",
+          path: "/",
+          maxAge: 1 * 24 * 60 * 60 * 1000, // 1 dia  em milissegundos
+        },
+      },
+    ];
+
+    return response;
   }
 }
