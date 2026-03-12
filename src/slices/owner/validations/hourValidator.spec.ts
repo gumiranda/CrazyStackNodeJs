@@ -1,6 +1,6 @@
 import MockDate from "mockdate";
 
-import { hourValidator, useMapBusinessHours, validateHours } from "./hourValidator";
+import { handleHoursErrors, hourValidator, useMapBusinessHours, validateHours } from "./hourValidator";
 describe("hourValidation", () => {
   let fakeBody: any;
   beforeAll(async () => {
@@ -107,6 +107,36 @@ describe("hourValidation", () => {
       hourLunchEnd3: "13:00",
     });
     expect(result).toBe(true);
+  });
+  it("should use default index when not provided", () => {
+    const result = hourValidator({
+      hourEnd1: "18:00",
+      hourStart1: "8:00",
+      hourLunchStart1: "12:00",
+      hourLunchEnd1: "13:00",
+    } as any);
+    expect(result).toBe(true);
+  });
+  it("should return true in hourValidator when valid hours without lunch", () => {
+    const result = hourValidator(
+      {
+        hourEnd1: "18:00",
+        hourStart1: "8:00",
+      },
+      1
+    );
+    expect(result).toBe(true);
+  });
+  it("should push MissingParamError in handleHoursErrors when hours are invalid", () => {
+    const errors: any[] = [];
+    handleHoursErrors({ errors, body: { hourStart1: "12:00", hourEnd1: "12:00" } as any });
+    expect(errors.length).toBe(1);
+    expect(errors[0].message).toContain("hourStart1");
+  });
+  it("should not push errors in handleHoursErrors when hours are valid", () => {
+    const errors: any[] = [];
+    handleHoursErrors({ errors, body: { hourStart1: "8:00", hourEnd1: "18:00" } as any });
+    expect(errors.length).toBe(0);
   });
   it("should return false in validateHours if at least one hour is incorrect", () => {
     const result = validateHours({

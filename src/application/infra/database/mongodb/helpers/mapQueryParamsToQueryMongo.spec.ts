@@ -135,6 +135,16 @@ describe("mapQueryParamsToQueryMongo", () => {
     const objectMapped = mapQueryParamsToQueryMongo(null as any);
     expect(objectMapped).toBeUndefined();
   });
+  test("mapQueryParamsToQueryMongo with null value should set key to null", () => {
+    const objectMapped = mapQueryParamsToQueryMongo({
+      deletedAt: "null",
+      name: "test",
+    });
+    expect(objectMapped).toEqual({
+      deletedAt: null,
+      name: "test",
+    });
+  });
   test("mountGeoNearQuery", () => {
     const objectMapped = mountGeoNearQuery(null as any);
     expect(objectMapped).toBeNull();

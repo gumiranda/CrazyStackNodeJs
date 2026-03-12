@@ -73,6 +73,20 @@ describe("adaptUploadPhotoRoute", () => {
     expect(reply.send).toHaveBeenCalledWith({ success: true });
   });
 
+  it("should handle null context values", async () => {
+    const { requestContext } = require("@fastify/request-context");
+    requestContext.get.mockReturnValueOnce(null);
+    const handler = adaptUploadPhotoRoute(controller);
+    await handler(request, reply);
+    expect(controller.handle).toHaveBeenCalledWith(
+      expect.objectContaining({
+        userId: null,
+        userLogged: null,
+        daysToNextPayment: null,
+      })
+    );
+  });
+
   it("should return 500 when upload fails", async () => {
     mockUploadFile.mockRejectedValueOnce(new Error("upload error"));
     const handler = adaptUploadPhotoRoute(controller);

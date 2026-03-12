@@ -173,4 +173,33 @@ describe("AppointmentAggregatePgRepository", () => {
       ).rejects.toThrow("pg_invoice_error");
     });
   });
+
+  describe("handleTimezone in production mode", () => {
+    it("should subtract 3 hours when FUSORARIOBR is production", async () => {
+      jest.resetModules();
+      jest.doMock("@/application/infra", () => ({
+        env: { FUSORARIOBR: "production" },
+      }));
+      const { AppointmentAggregatePgRepository: ProdRepo } =
+        require("./appointmentAggregatePgRepository");
+      const prodInstance = new ProdRepo(repository);
+      const now = new Date("2024-06-15T10:00:00.000Z");
+      repository.aggregate.mockResolvedValueOnce([
+        { _id: "1", initDate: now, endDate: now },
+      ]);
+      const result = await prodInstance.loadAvailableTimes({
+        professionalId: "prof1",
+        initDay: "2024-01-01" as any,
+        endDay: "2024-01-02" as any,
+      } as any);
+      expect(result).toBeDefined();
+      expect(result?.data?.[0]?.initDate).toBe(
+        new Date("2024-06-15T07:00:00.000Z").toISOString()
+      );
+      // restore original mock
+      jest.doMock("@/application/infra", () => ({
+        env: { FUSORARIOBR: "development" },
+      }));
+    });
+  });
 });

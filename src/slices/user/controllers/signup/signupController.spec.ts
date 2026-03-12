@@ -192,6 +192,18 @@ describe("SignupController", () => {
     const result = await sut.execute({ body: bodyWithCpf });
     expect(result).toEqual(forbidden(new EmailInUseError()));
   });
+  it("should return badRequest when emailValidator returns null", async () => {
+    const emailValidator = require("deep-email-validator");
+    emailValidator.mockResolvedValueOnce(null);
+    const result = await sut.execute({ body: fakeBody });
+    expect(result).toEqual(badRequest([new InvalidParamError("email")]));
+  });
+  it("should return badRequest when emailValidator returns empty validators", async () => {
+    const emailValidator = require("deep-email-validator");
+    emailValidator.mockResolvedValueOnce({ validators: {} });
+    const result = await sut.execute({ body: fakeBody });
+    expect(result).toEqual(badRequest([new InvalidParamError("email")]));
+  });
   it("should return forbidden when cnpj user already exists", async () => {
     const bodyWithCnpj = { ...fakeBody, cnpj: "12345678000100" };
     loadUser

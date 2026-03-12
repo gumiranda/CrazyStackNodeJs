@@ -116,6 +116,23 @@ describe("ValidateAvailableTimes", () => {
     });
     expect(appointment).toBe(true);
   });
+  it("should fill in query.date when date is not provided", async () => {
+    testInstance = validateAvailableTimes(
+      jest.fn().mockImplementation((query) => {
+        expect(query.date).toBeDefined();
+        return fakeAvailableTimesModel;
+      })
+    );
+    const appointment = await testInstance({
+      professionalId: "fakeUserId",
+      date: null as any,
+      serviceId: "fakeServiceId",
+      ownerId: "fakeOwnerId",
+      initDate: "2021-10-14T11:00:00.000Z",
+      endDate: "2021-10-14T11:30:00.000Z",
+    });
+    expect(typeof appointment).toBe("boolean");
+  });
   it("should return false if i haven`t time available", async () => {
     testInstance = validateAvailableTimes(
       jest.fn().mockImplementation((query) => fakeAvailableTimesModel)

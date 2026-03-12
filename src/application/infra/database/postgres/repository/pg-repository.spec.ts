@@ -406,6 +406,39 @@ describe("PostgresRepository", () => {
       expect(mockRelease).toHaveBeenCalled();
     });
 
+    test("should handle isSameTable in 1:n branch (select clause skipped)", async () => {
+      // getTableFields for current table - includes "test_tableId"
+      mockQuery.mockResolvedValueOnce({
+        rows: [
+          { column_name: "_id" },
+          { column_name: "name" },
+          { column_name: "test_tableId" },
+        ],
+      });
+      // getTableFields for related table (test_table = self) - return empty to force 1:n path
+      mockQuery.mockResolvedValueOnce({
+        rows: [],
+      });
+      // getTableFields for join table (test_tabletest_table) - has fields
+      mockQuery.mockResolvedValueOnce({
+        rows: [
+          { column_name: "_id" },
+          { column_name: "test_tableId" },
+          { column_name: "data" },
+        ],
+      });
+      // actual query result
+      mockQuery.mockResolvedValueOnce({
+        rows: [{ _id: "1", name: "test" }],
+      });
+      const result = await repository.getOne(
+        { _id: "1" },
+        { include: { test_table: true } }
+      );
+      expect(result).toEqual({ _id: "1", name: "test" });
+      expect(mockRelease).toHaveBeenCalled();
+    });
+
     test("should handle include with false value (skip relation)", async () => {
       // getTableFields for current table
       mockQuery.mockResolvedValueOnce({
@@ -636,6 +669,65 @@ describe("PostgresRepository", () => {
       expect(mockRelease).toHaveBeenCalled();
     });
 
+    test("should handle ASC sort order", async () => {
+      mockQuery.mockResolvedValueOnce({
+        rows: [{ column_name: "_id" }, { column_name: "name" }],
+      });
+      mockQuery.mockResolvedValueOnce({ rows: [{ _id: "1" }] });
+      await repository.getPaginate(
+        1,
+        { name: "test" },
+        { name: 1 },
+        10,
+        {}
+      );
+      const queryText = mockQuery.mock.calls[1][0];
+      expect(queryText).toContain("ASC");
+      expect(mockRelease).toHaveBeenCalled();
+    });
+
+    test("should handle populate with users relation", async () => {
+      mockQuery.mockResolvedValueOnce({
+        rows: [{ column_name: "_id" }, { column_name: "name" }, { column_name: "userId" }],
+      });
+      mockQuery.mockResolvedValueOnce({
+        rows: [{ column_name: "_id" }, { column_name: "name" }, { column_name: "email" }],
+      });
+      mockQuery.mockResolvedValueOnce({ rows: [{ _id: "1" }] });
+      await repository.getPaginate(
+        1,
+        {},
+        { createdAt: -1 },
+        10,
+        {},
+        { users: true } as any
+      );
+      const queryText = mockQuery.mock.calls[2][0];
+      expect(queryText).toContain("INNER JOIN");
+      expect(mockRelease).toHaveBeenCalled();
+    });
+
+    test("should handle populate with createdBy relation", async () => {
+      mockQuery.mockResolvedValueOnce({
+        rows: [{ column_name: "_id" }, { column_name: "name" }, { column_name: "createdById" }],
+      });
+      mockQuery.mockResolvedValueOnce({
+        rows: [{ column_name: "_id" }, { column_name: "name" }],
+      });
+      mockQuery.mockResolvedValueOnce({ rows: [{ _id: "1" }] });
+      await repository.getPaginate(
+        1,
+        {},
+        { createdAt: -1 },
+        10,
+        {},
+        { createdBy: true } as any
+      );
+      const queryText = mockQuery.mock.calls[2][0];
+      expect(queryText).toContain("INNER JOIN");
+      expect(mockRelease).toHaveBeenCalled();
+    });
+
     test("should release client even on error", async () => {
       mockQuery.mockRejectedValueOnce(new Error("paginate error"));
       await expect(
@@ -682,6 +774,31 @@ describe("PostgresRepository", () => {
       await repository.getCount({ name: { search: "test" } });
       const queryText = mockQuery.mock.calls[0][0];
       expect(queryText).toContain("LIKE");
+      expect(mockRelease).toHaveBeenCalled();
+    });
+
+    test("should handle string equality in getCount filter", async () => {
+      mockQuery.mockResolvedValueOnce({ rows: [{ count: "3" }] });
+      await repository.getCount({ status: "active" });
+      const queryText = mockQuery.mock.calls[0][0];
+      expect(queryText).toContain('"status" =');
+      expect(mockRelease).toHaveBeenCalled();
+    });
+
+    test("should handle number equality in getCount filter", async () => {
+      mockQuery.mockResolvedValueOnce({ rows: [{ count: "2" }] });
+      await repository.getCount({ age: 25 });
+      const queryText = mockQuery.mock.calls[0][0];
+      expect(queryText).toContain('"age" =');
+      expect(mockRelease).toHaveBeenCalled();
+    });
+
+    test("should handle empty filter in getCount", async () => {
+      mockQuery.mockResolvedValueOnce({ rows: [{ count: "10" }] });
+      const result = await repository.getCount({});
+      const queryText = mockQuery.mock.calls[0][0];
+      expect(queryText).not.toContain("WHERE");
+      expect(result).toBe("10");
       expect(mockRelease).toHaveBeenCalled();
     });
 

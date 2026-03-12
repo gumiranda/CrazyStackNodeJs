@@ -144,3 +144,17 @@ describe("makeValidateAvailableTimesFactory", () => {
     expect(result).toBeDefined();
   });
 });
+describe("makeAggregateRepository postgres branch", () => {
+  it("should return postgres repository when database is not mongodb", () => {
+    const { whiteLabel } = require("@/application/infra/config/whiteLabel");
+    const originalDb = whiteLabel.database;
+    whiteLabel.database = "postgres";
+    try {
+      const { makeAggregateRepository } = require("./useCases/loadAvailableTimes/LoadAvailableTimesFactory");
+      const result = makeAggregateRepository();
+      expect(result).toBeDefined();
+    } finally {
+      whiteLabel.database = originalDb;
+    }
+  });
+});

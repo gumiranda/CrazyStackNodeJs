@@ -106,4 +106,25 @@ describe("CategoryRepository", () => {
     repository.update.mockRejectedValueOnce(new Error("Error"));
     await expect(testInstance.updateCategory(fakeQuery, fakeCategoryEntity)).rejects.toThrow("Error");
   });
+  test("should use default values when query has no fields or options", async () => {
+    const result = await testInstance.loadCategoryByPage({ fields: undefined, options: undefined } as any);
+    expect(repository.getPaginate).toHaveBeenCalledWith(0, {}, { createdAt: -1 }, 10, {});
+    expect(repository.getCount).toHaveBeenCalledWith({});
+    expect(result).toBeDefined();
+  });
+  test("should use provided sort and page when options are set", async () => {
+    const query: any = { fields: { active: true }, options: { page: 2, sort: { name: 1 }, projection: { name: 1 } } };
+    await testInstance.loadCategoryByPage(query);
+    expect(repository.getPaginate).toHaveBeenCalledWith(2, { active: true }, { name: 1 }, 10, { name: 1 });
+  });
+  test("should use defaults for loadCategory with null query", async () => {
+    const result = await testInstance.loadCategory(null as any);
+    expect(repository.getOne).toHaveBeenCalledWith({}, {});
+    expect(result).toBeDefined();
+  });
+  test("should use defaults for updateCategory with null query", async () => {
+    const result = await testInstance.updateCategory(null as any, fakeCategoryEntity);
+    expect(repository.update).toHaveBeenCalledWith({}, fakeCategoryEntity);
+    expect(result).toBeDefined();
+  });
 });

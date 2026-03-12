@@ -95,4 +95,25 @@ describe("PhotoRepository", () => {
     repository.update.mockRejectedValueOnce(new Error("Error"));
     await expect(testInstance.updatePhoto(fakeQuery, fakePhotoEntity)).rejects.toThrow("Error");
   });
+  test("should use default values when query has no fields or options", async () => {
+    const result = await testInstance.loadPhotoByPage({ fields: undefined, options: undefined } as any);
+    expect(repository.getPaginate).toHaveBeenCalledWith(0, {}, { createdAt: -1 }, 10, {});
+    expect(repository.getCount).toHaveBeenCalledWith({});
+    expect(result).toBeDefined();
+  });
+  test("should use provided sort and projection when set", async () => {
+    const query: any = { fields: { active: true }, options: { page: 2, sort: { name: 1 }, projection: { name: 1 } } };
+    await testInstance.loadPhotoByPage(query);
+    expect(repository.getPaginate).toHaveBeenCalledWith(2, { active: true }, { name: 1 }, 10, { name: 1 });
+  });
+  test("should use defaults for loadPhoto with null query", async () => {
+    const result = await testInstance.loadPhoto(null as any);
+    expect(repository.getOne).toHaveBeenCalledWith({}, {});
+    expect(result).toBeDefined();
+  });
+  test("should use defaults for updatePhoto with null query", async () => {
+    const result = await testInstance.updatePhoto(null as any, fakePhotoEntity);
+    expect(repository.update).toHaveBeenCalledWith({}, fakePhotoEntity);
+    expect(result).toBeDefined();
+  });
 });

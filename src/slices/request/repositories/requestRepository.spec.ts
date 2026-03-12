@@ -95,4 +95,25 @@ describe("RequestRepository", () => {
     repository.update.mockRejectedValueOnce(new Error("Error"));
     await expect(testInstance.updateRequest(fakeQuery, fakeRequestEntity)).rejects.toThrow("Error");
   });
+  test("should use default values when query has no fields or options", async () => {
+    const result = await testInstance.loadRequestByPage({ fields: undefined, options: undefined } as any);
+    expect(repository.getPaginate).toHaveBeenCalledWith(0, {}, { createdAt: -1 }, 10, {});
+    expect(repository.getCount).toHaveBeenCalledWith({});
+    expect(result).toBeDefined();
+  });
+  test("should use provided sort and projection when set", async () => {
+    const query: any = { fields: { active: true }, options: { page: 2, sort: { name: 1 }, projection: { name: 1 } } };
+    await testInstance.loadRequestByPage(query);
+    expect(repository.getPaginate).toHaveBeenCalledWith(2, { active: true }, { name: 1 }, 10, { name: 1 });
+  });
+  test("should use defaults for loadRequest with null query", async () => {
+    const result = await testInstance.loadRequest(null as any);
+    expect(repository.getOne).toHaveBeenCalledWith({}, {});
+    expect(result).toBeDefined();
+  });
+  test("should use defaults for updateRequest with null query", async () => {
+    const result = await testInstance.updateRequest(null as any, fakeRequestEntity);
+    expect(repository.update).toHaveBeenCalledWith({}, fakeRequestEntity);
+    expect(result).toBeDefined();
+  });
 });

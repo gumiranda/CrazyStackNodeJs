@@ -140,4 +140,19 @@ describe("UserRepository", () => {
     repository.increment.mockRejectedValueOnce(new Error("Error"));
     await expect(testInstance.incrementAppointmentsTotal(fakeQuery)).rejects.toThrow("Error");
   });
+  test("should use provided sort, page, limit and projection when set", async () => {
+    const query: any = { fields: { active: true }, options: { page: 2, sort: { name: 1 }, limitPerPage: 20, projection: { name: 1 } } };
+    await testInstance.loadUserByPage(query);
+    expect(repository.getPaginate).toHaveBeenCalledWith(2, { active: true }, { name: 1 }, 20, { name: 1 });
+  });
+  test("should use defaults for loadUser with null query", async () => {
+    const result = await testInstance.loadUser(null as any);
+    expect(repository.getOne).toHaveBeenCalledWith({}, {});
+    expect(result).toBeDefined();
+  });
+  test("should use defaults for incrementAppointmentsTotal with null query", async () => {
+    const result = await testInstance.incrementAppointmentsTotal(null as any);
+    expect(repository.increment).toHaveBeenCalledWith({}, { appointmentsTotal: 1 });
+    expect(result).toBeDefined();
+  });
 });

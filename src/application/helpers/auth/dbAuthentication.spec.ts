@@ -81,6 +81,12 @@ describe("DbAuthentication", () => {
       await sut.auth("any@mail.com", "any_password");
       expect(refreshTokenGenerator.generate).toHaveBeenCalledWith("any_id");
     });
+    it("should handle null from authRefreshToken gracefully", async () => {
+      tokenGenerator.generate.mockResolvedValueOnce(null);
+      refreshTokenGenerator.generate.mockResolvedValueOnce(null);
+      const result = await sut.auth("any@mail.com", "any_password");
+      expect(result).toEqual({ accessToken: null, refreshToken: null });
+    });
   });
 
   describe("authRefreshToken", () => {

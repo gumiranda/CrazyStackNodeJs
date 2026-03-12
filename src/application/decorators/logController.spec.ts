@@ -4,6 +4,11 @@ import { LogController } from "./logController";
 import { fakeUserEntity } from "@/slices/user/entities/UserEntity.spec";
 import { HttpRequest, ok, serverError } from "@/application/helpers/http";
 
+jest.mock("@/application/infra/database/mongodb/repository", () => ({
+  LogMongoRepository: jest.fn(),
+}));
+import { makeLogController } from "./logControllerFactory";
+
 describe("logController", () => {
   let testInstance: LogController;
   let logRepository: MockProxy<LogRepository>;
@@ -33,5 +38,13 @@ describe("logController", () => {
       serverError(new Error("any_error")).data
     );
     expect(logRepository.logError).toHaveBeenCalledTimes(1);
+  });
+});
+
+describe("makeLogController", () => {
+  test("should return a LogController instance", () => {
+    const fakeController = mock<Controller>();
+    const result = makeLogController("test_domain", fakeController);
+    expect(result).toBeInstanceOf(LogController);
   });
 });

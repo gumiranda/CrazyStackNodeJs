@@ -48,6 +48,19 @@ describe("auth middleware", () => {
     const httpResponse = await testInstance.handle(mockFakeRequestHeader());
     expect(httpResponse).toEqual(serverError(new Error("loadUser_error")));
   });
+  test("should return 401 when jwt.verify throws synchronously (invalid token)", async () => {
+    const jwt = require("jsonwebtoken");
+    jest.spyOn(jwt, "verify").mockImplementationOnce(() => {
+      throw new Error("invalid token");
+    });
+    const httpResponse = await testInstance.handle(mockFakeRequestHeader());
+    expect(httpResponse).toEqual(unauthorized());
+  });
+  test("should return 403 when user is not found by loadUser", async () => {
+    loadUser.mockResolvedValueOnce(null);
+    const httpResponse = await testInstance.handle(mockFakeRequestHeader());
+    expect(httpResponse).toEqual(forbidden(new AccessDeniedError()));
+  });
 });
 
 jest.mock("@/application/adapters", () => ({

@@ -107,4 +107,30 @@ describe("ServiceRepository", () => {
     repository.increment.mockRejectedValueOnce(new Error("Error"));
     await expect(testInstance.incrementAppointmentsTotal(fakeQuery)).rejects.toThrow("Error");
   });
+  test("should use default values when query has no fields or options", async () => {
+    const result = await testInstance.loadServiceByPage({ fields: undefined, options: undefined } as any);
+    expect(repository.getPaginate).toHaveBeenCalledWith(0, {}, { createdAt: -1 }, 10, {});
+    expect(repository.getCount).toHaveBeenCalledWith({});
+    expect(result).toBeDefined();
+  });
+  test("should use provided sort, page, limit and projection when set", async () => {
+    const query: any = { fields: { active: true }, options: { page: 2, sort: { name: 1 }, limitPerPage: 20, projection: { name: 1 } } };
+    await testInstance.loadServiceByPage(query);
+    expect(repository.getPaginate).toHaveBeenCalledWith(2, { active: true }, { name: 1 }, 20, { name: 1 });
+  });
+  test("should use defaults for loadService with null query", async () => {
+    const result = await testInstance.loadService(null as any);
+    expect(repository.getOne).toHaveBeenCalledWith({}, {});
+    expect(result).toBeDefined();
+  });
+  test("should use defaults for updateService with null query", async () => {
+    const result = await testInstance.updateService(null as any, fakeServiceEntity);
+    expect(repository.update).toHaveBeenCalledWith({}, fakeServiceEntity);
+    expect(result).toBeDefined();
+  });
+  test("should use defaults for incrementAppointmentsTotal with null query", async () => {
+    const result = await testInstance.incrementAppointmentsTotal(null as any);
+    expect(repository.increment).toHaveBeenCalledWith({}, { appointmentsTotal: 1 });
+    expect(result).toBeDefined();
+  });
 });

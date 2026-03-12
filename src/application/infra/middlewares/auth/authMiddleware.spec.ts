@@ -66,6 +66,14 @@ describe("auth middleware", () => {
     const httpResponse = await testInstance.handle(mockFakeRequestHeader());
     expect(httpResponse).toEqual(forbidden(new AccessDeniedError()));
   });
+  test("should return 401 when jwt.verify throws synchronously (invalid token)", async () => {
+    const jwt = require("jsonwebtoken");
+    jest.spyOn(jwt, "verify").mockImplementationOnce(() => {
+      throw new Error("invalid token");
+    });
+    const httpResponse = await testInstance.handle(mockFakeRequestHeader());
+    expect(httpResponse).toEqual(unauthorized());
+  });
   test("should return 403 when owner has exceeded payment deadline", async () => {
     const pastDate = new Date();
     pastDate.setDate(pastDate.getDate() - 60);
@@ -77,6 +85,21 @@ describe("auth middleware", () => {
     });
     const httpResponse = await testInstance.handle(mockFakeRequestHeader());
     expect(httpResponse).toEqual(forbidden(new AccessDeniedError()));
+  });
+  test("should use postgres query format when database is not mongodb", async () => {
+    const whiteLabelConfig = require("@/application/infra/config/whiteLabel");
+    const originalDb = whiteLabelConfig.whiteLabel.database;
+    whiteLabelConfig.whiteLabel.database = "postgres";
+    try {
+      const httpResponse = await testInstance.handle(mockFakeRequestHeader());
+      expect(httpResponse.statusCode).toBe(200);
+      expect(loadUser).toHaveBeenCalledWith({
+        fields: { _id: undefined },
+        options: { projection: { password: 0 } },
+      });
+    } finally {
+      whiteLabelConfig.whiteLabel.database = originalDb;
+    }
   });
 });
 

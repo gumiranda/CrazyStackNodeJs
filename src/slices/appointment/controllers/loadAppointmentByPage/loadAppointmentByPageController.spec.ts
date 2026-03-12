@@ -84,4 +84,17 @@ describe("LoadAppointmentByPageController", () => {
     const httpResponse = await testInstance.execute({ query: fakeQuery });
     expect(httpResponse).toEqual(badRequest([new MissingParamError("page")]));
   });
+  test("should use rest only as fields when user role is admin", async () => {
+    const adminQuery = { _id: fakeAppointmentEntity._id, page: 1, sortBy: "name", typeSort: "asc" };
+    const result = await testInstance.execute({
+      query: adminQuery,
+      userId: fakeUserEntity?._id,
+      userLogged: { ...fakeUserEntity, role: "admin" },
+    });
+    expect(result).toEqual(ok(fakeAppointmentPaginated));
+    expect(loadAppointmentByPage).toHaveBeenCalledWith({
+      fields: { _id: fakeAppointmentEntity._id },
+      options: { sort: { name: 1 }, page: 1 },
+    });
+  });
 });

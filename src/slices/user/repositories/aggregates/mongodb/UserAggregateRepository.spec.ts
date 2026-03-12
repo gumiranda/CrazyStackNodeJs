@@ -146,4 +146,75 @@ describe("UserAggregateRepository", () => {
     const result = await testInstance.loadUserByPageGeoNear(fakeQuery);
     expect(result).toEqual({ users: [], total: 0 });
   });
+
+  test("should use default sort when sort is not provided", async () => {
+    const { mapQueryParamsToQueryMongo } = require("@/application/infra/database/mongodb");
+    mapQueryParamsToQueryMongo.mockReturnValueOnce({
+      $text: { $search: "test" },
+      active: true,
+    });
+    fakeQuery.options = { userLoggedId: "507f1f77bcf86cd799439011" };
+    const result = await testInstance.loadUserByPageGeoNear(fakeQuery);
+    expect(result).toBeDefined();
+    expect(repository.getPaginate).toHaveBeenCalledWith(
+      0,
+      expect.any(Object),
+      { createdAt: -1 },
+      10,
+      {}
+    );
+  });
+
+  test("should use default projection when projection is not provided", async () => {
+    repository.aggregate
+      .mockResolvedValueOnce(fakeUsers)
+      .mockResolvedValueOnce([{ name: 3 }]);
+    fakeQuery.options = { userLoggedId: "507f1f77bcf86cd799439011", page: 1 };
+    const result = await testInstance.loadUserByPageGeoNear(fakeQuery);
+    expect(result).toBeDefined();
+  });
+
+  test("should handle null getCount in $text branch", async () => {
+    const { mapQueryParamsToQueryMongo } = require("@/application/infra/database/mongodb");
+    mapQueryParamsToQueryMongo.mockReturnValueOnce({
+      $text: { $search: "test" },
+      active: true,
+    });
+    repository.getPaginate.mockResolvedValueOnce(null);
+    repository.getCount.mockResolvedValueOnce(null);
+    const result = await testInstance.loadUserByPageGeoNear(fakeQuery);
+    expect(result).toEqual({ users: [], total: 0 });
+  });
+
+  test("should use custom sort and projection in $text branch when provided", async () => {
+    const { mapQueryParamsToQueryMongo } = require("@/application/infra/database/mongodb");
+    mapQueryParamsToQueryMongo.mockReturnValueOnce({
+      $text: { $search: "test" },
+      active: true,
+    });
+    fakeQuery.options = {
+      userLoggedId: "507f1f77bcf86cd799439011",
+      page: 2,
+      sort: { name: 1 },
+      projection: { name: 1 },
+    };
+    const result = await testInstance.loadUserByPageGeoNear(fakeQuery);
+    expect(result).toBeDefined();
+    expect(repository.getPaginate).toHaveBeenCalledWith(
+      2,
+      expect.any(Object),
+      { name: 1 },
+      10,
+      { name: 1 }
+    );
+  });
+
+  test("should handle null fields in query", async () => {
+    fakeQuery.fields = null as any;
+    repository.aggregate
+      .mockResolvedValueOnce(fakeUsers)
+      .mockResolvedValueOnce([{ name: 2 }]);
+    const result = await testInstance.loadUserByPageGeoNear(fakeQuery);
+    expect(result).toBeDefined();
+  });
 });

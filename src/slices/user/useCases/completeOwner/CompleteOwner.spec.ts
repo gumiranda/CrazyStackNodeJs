@@ -117,6 +117,62 @@ describe("completeOwner", () => {
     );
   });
 
+  it("should handle services with null _id", async () => {
+    addService = jest
+      .fn()
+      .mockResolvedValueOnce({ _id: null, name: "Service1" })
+      .mockResolvedValueOnce({ name: "Service2" });
+    const sut = completeOwner(userRepository, addCategory, addService, addOwner);
+    const result = await sut(fakeUserInput);
+    expect(result).toBeDefined();
+    expect(result.servicesInserted).toHaveLength(2);
+  });
+
+  it("should handle null category _id", async () => {
+    addCategory = jest.fn().mockResolvedValue({ _id: null, name: "Category1" });
+    addService = jest
+      .fn()
+      .mockResolvedValueOnce({ _id: "service_1_id", name: "Service1" })
+      .mockResolvedValueOnce({ _id: "service_2_id", name: "Service2" });
+    const sut = completeOwner(userRepository, addCategory, addService, addOwner);
+    const result = await sut(fakeUserInput);
+    expect(result).toBeDefined();
+    expect(addService).toHaveBeenCalledWith(
+      expect.objectContaining({ categoryId: "" })
+    );
+  });
+
+  it("should handle services with no _id property (toString branch)", async () => {
+    addService = jest
+      .fn()
+      .mockResolvedValueOnce({ name: "Service1" })
+      .mockResolvedValueOnce({ _id: undefined, name: "Service2" });
+    const sut = completeOwner(userRepository, addCategory, addService, addOwner);
+    const result = await sut(fakeUserInput);
+    expect(result).toBeDefined();
+    expect(result.servicesInserted).toHaveLength(2);
+  });
+
+  it("should handle null password in userCreated", async () => {
+    const sut = completeOwner(userRepository, addCategory, addService, addOwner);
+    const result = await sut({ ...fakeUserInput, password: null as any });
+    expect(result).toBeDefined();
+    expect(userRepository.addUser).toHaveBeenCalledWith(
+      expect.objectContaining({ password: "" })
+    );
+  });
+
+  it("should handle null ownerData._id", async () => {
+    addOwner.mockResolvedValueOnce({ _id: null });
+    const sut = completeOwner(userRepository, addCategory, addService, addOwner);
+    const result = await sut(fakeUserInput);
+    expect(result).toBeDefined();
+    expect(userRepository.updateUser).toHaveBeenCalledWith(
+      expect.any(Object),
+      expect.objectContaining({ ownerId: null })
+    );
+  });
+
   it("should return all created data", async () => {
     const sut = completeOwner(userRepository, addCategory, addService, addOwner);
     const result = await sut(fakeUserInput);

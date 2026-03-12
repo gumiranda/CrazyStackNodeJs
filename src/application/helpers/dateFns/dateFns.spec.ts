@@ -22,6 +22,7 @@ import {
   dayOfWeek,
   subMinutes,
   subDays,
+  subHours,
   isAfter,
   cloneDate,
   isBefore,
@@ -271,5 +272,10 @@ describe("dateFns functions", () => {
   test("trataTimezone function", () => {
     const timezonedDate = formatISO(trataTimezone(new Date(2021, 9, 21, 10, 30)));
     expect(timezonedDate).toStrictEqual("2021-10-21T10:30:00-03:00");
+  });
+  test("subHours function", () => {
+    expect(subHours(new Date(2021, 9, 21, 10, 30), 3)).toStrictEqual(
+      new Date(2021, 9, 21, 7, 30)
+    );
   });
 });

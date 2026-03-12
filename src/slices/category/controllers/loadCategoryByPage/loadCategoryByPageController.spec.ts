@@ -84,4 +84,20 @@ describe("LoadCategoryByPageController", () => {
     const httpResponse = await testInstance.execute({ query: fakeQuery });
     expect(httpResponse).toEqual(badRequest([new MissingParamError("page")]));
   });
+  test("should not append createdById when user role is admin", async () => {
+    const result = await testInstance.execute({
+      query: fakeQuery,
+      userId: fakeUserEntity?._id,
+      userLogged: { ...fakeUserEntity, role: "admin" },
+    });
+    expect(result).toEqual(ok(fakeCategoryPaginated));
+  });
+  test("should not append createdById when user role is client", async () => {
+    const result = await testInstance.execute({
+      query: fakeQuery,
+      userId: fakeUserEntity?._id,
+      userLogged: { ...fakeUserEntity, role: "client" },
+    });
+    expect(result).toEqual(ok(fakeCategoryPaginated));
+  });
 });

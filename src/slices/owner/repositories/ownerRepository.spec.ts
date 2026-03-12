@@ -96,4 +96,25 @@ describe("OwnerRepository", () => {
     repository.update.mockRejectedValueOnce(new Error("Error"));
     await expect(testInstance.updateOwner(fakeQuery, fakeOwnerEntity)).rejects.toThrow("Error");
   });
+  test("should use default values when query has no fields or options", async () => {
+    const result = await testInstance.loadOwnerByPage({ fields: undefined, options: undefined } as any);
+    expect(repository.getPaginate).toHaveBeenCalledWith(0, {}, { createdAt: -1 }, 10, {});
+    expect(repository.getCount).toHaveBeenCalledWith({});
+    expect(result).toBeDefined();
+  });
+  test("should use provided sort, page, limit and projection when set", async () => {
+    const query: any = { fields: { active: true }, options: { page: 2, sort: { name: 1 }, limitPerPage: 20, projection: { name: 1 } } };
+    await testInstance.loadOwnerByPage(query);
+    expect(repository.getPaginate).toHaveBeenCalledWith(2, { active: true }, { name: 1 }, 20, { name: 1 });
+  });
+  test("should use defaults for loadOwner with null query", async () => {
+    const result = await testInstance.loadOwner(null as any);
+    expect(repository.getOne).toHaveBeenCalledWith({}, {});
+    expect(result).toBeDefined();
+  });
+  test("should use defaults for updateOwner with null query", async () => {
+    const result = await testInstance.updateOwner(null as any, fakeOwnerEntity);
+    expect(repository.update).toHaveBeenCalledWith({}, fakeOwnerEntity);
+    expect(result).toBeDefined();
+  });
 });

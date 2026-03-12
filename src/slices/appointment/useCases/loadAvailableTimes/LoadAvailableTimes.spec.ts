@@ -111,4 +111,14 @@ describe("LoadAvailableTimes", () => {
     const appointment = await testInstance(null as any);
     expect(appointment).toBeNull();
   });
+  it("should fallback to loadUser by _id when myOwnerId is null", async () => {
+    loadAvailableTimesRepository.loadAvailableTimes.mockResolvedValueOnce(null);
+    userRepository.loadUser
+      .mockResolvedValueOnce({ myOwnerId: null } as any)
+      .mockResolvedValueOnce({ myOwnerId: "fallbackOwnerId" } as any);
+    ownerRepository.loadOwner.mockResolvedValueOnce(fakeOwnerEntity);
+    const appointment = await testInstance(fakeQueryAvailableTimes);
+    expect(userRepository.loadUser).toHaveBeenCalledTimes(2);
+    expect(appointment).toBeDefined();
+  });
 });

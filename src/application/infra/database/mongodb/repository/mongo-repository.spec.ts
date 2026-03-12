@@ -201,6 +201,31 @@ describe("MongoRepository", () => {
       expect(lookupStage).toBeTruthy();
       expect(lookupStage.$lookup.from).toBe("users");
     });
+
+    test("should skip include/lookup when relation value is false", async () => {
+      mockToArray.mockResolvedValueOnce([{ _id: "abc", name: "test" }]);
+      await repository.getOne({ name: "test" }, { include: { createdBy: false } });
+      const pipeline = mockAggregate.mock.calls[0][0];
+      const lookupStage = pipeline.find((s: any) => s.$lookup);
+      expect(lookupStage).toBeUndefined();
+    });
+
+    test("should use relation name as collection when not createdBy", async () => {
+      mockToArray.mockResolvedValueOnce([{ _id: "abc", name: "test" }]);
+      await repository.getOne({ name: "test" }, { include: { category: true } });
+      const pipeline = mockAggregate.mock.calls[0][0];
+      const lookupStage = pipeline.find((s: any) => s.$lookup);
+      expect(lookupStage.$lookup.from).toBe("category");
+      expect(lookupStage.$lookup.localField).toBe("categoryId");
+    });
+
+    test("should not add projection when options has no projection", async () => {
+      mockToArray.mockResolvedValueOnce([{ _id: "abc" }]);
+      await repository.getOne({ name: "test" }, {});
+      const pipeline = mockAggregate.mock.calls[0][0];
+      const projectStage = pipeline.find((s: any) => s.$project);
+      expect(projectStage).toBeUndefined();
+    });
   });
 
   describe("getAll", () => {
@@ -253,6 +278,85 @@ describe("MongoRepository", () => {
       const pipeline = mockAggregate.mock.calls[0][0];
       const lookupStage = pipeline.find((s: any) => s.$lookup);
       expect(lookupStage).toBeTruthy();
+    });
+
+    test("should skip populate when populate is null", async () => {
+      mockToArray.mockResolvedValueOnce([{ _id: "1" }]);
+      const result = await repository.getPaginate(
+        1,
+        {},
+        { createdAt: -1 },
+        10,
+        {},
+        null
+      );
+      expect(result).toEqual([{ _id: "1" }]);
+      const pipeline = mockAggregate.mock.calls[0][0];
+      const lookupStage = pipeline.find((s: any) => s.$lookup);
+      expect(lookupStage).toBeUndefined();
+    });
+
+    test("should skip populate relation when value is false", async () => {
+      mockToArray.mockResolvedValueOnce([]);
+      await repository.getPaginate(
+        1,
+        {},
+        { createdAt: -1 },
+        10,
+        {},
+        { createdBy: false }
+      );
+      const pipeline = mockAggregate.mock.calls[0][0];
+      const lookupStage = pipeline.find((s: any) => s.$lookup);
+      expect(lookupStage).toBeUndefined();
+    });
+
+    test("should use 'user' prefix for users relation in populate localField", async () => {
+      mockToArray.mockResolvedValueOnce([]);
+      await repository.getPaginate(
+        1,
+        {},
+        { createdAt: -1 },
+        10,
+        {},
+        { users: true }
+      );
+      const pipeline = mockAggregate.mock.calls[0][0];
+      const lookupStage = pipeline.find((s: any) => s.$lookup);
+      expect(lookupStage.$lookup.localField).toBe("userId");
+      expect(lookupStage.$lookup.from).toBe("users");
+    });
+
+    test("should use relation name for non-users populate", async () => {
+      mockToArray.mockResolvedValueOnce([]);
+      await repository.getPaginate(
+        1,
+        {},
+        { createdAt: -1 },
+        10,
+        {},
+        { category: true }
+      );
+      const pipeline = mockAggregate.mock.calls[0][0];
+      const lookupStage = pipeline.find((s: any) => s.$lookup);
+      expect(lookupStage.$lookup.localField).toBe("categoryId");
+      expect(lookupStage.$lookup.from).toBe("category");
+    });
+
+    test("should handle null from mapQueryParamsToQueryMongo in getPaginate", async () => {
+      const { mapQueryParamsToQueryMongo } = require("@/application/infra/database/mongodb");
+      mapQueryParamsToQueryMongo.mockReturnValueOnce(null);
+      mockToArray.mockResolvedValueOnce([]);
+      await repository.getPaginate(1, {}, { createdAt: -1 }, 10, {});
+      expect(mockAggregate).toHaveBeenCalled();
+    });
+
+    test("should handle null sort", async () => {
+      mockToArray.mockResolvedValueOnce([]);
+      await repository.getPaginate(1, {}, null, 10, {});
+      const pipeline = mockAggregate.mock.calls[0][0];
+      const sortStage = pipeline.find((s: any) => s.$sort);
+      expect(sortStage).toBeUndefined();
     });
   });
 
