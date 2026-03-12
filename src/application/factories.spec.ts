@@ -1,16 +1,21 @@
 jest.mock("@/application/decorators/logControllerFactory", () => ({
   makeLogController: jest.fn().mockImplementation((_domain, controller) => controller),
 }));
-jest.mock("@/application/infra", () => ({
-  makeDatabaseInstance: jest.fn().mockReturnValue({
+jest.mock("@/application/infra", () => {
+  const mockRepo = {
     add: jest.fn(), getOne: jest.fn(), update: jest.fn(),
     getPaginate: jest.fn(), getCount: jest.fn(), deleteOne: jest.fn(),
     aggregate: jest.fn(), increment: jest.fn(),
-  }),
-  env: { jwtSecret: "secret", jwtRefreshSecret: "refresh_secret", uploadProvider: "cloudflare_r2" },
-  BcryptAdapter: jest.fn().mockImplementation(() => ({ compare: jest.fn(), encrypt: jest.fn() })),
-  JwtAdapter: jest.fn().mockImplementation(() => ({ generate: jest.fn(), decrypt: jest.fn() })),
-}));
+  };
+  return {
+    makeDatabaseInstance: jest.fn().mockReturnValue(mockRepo),
+    env: { jwtSecret: "secret", jwtRefreshSecret: "refresh_secret", uploadProvider: "cloudflare_r2" },
+    BcryptAdapter: jest.fn().mockImplementation(() => ({ compare: jest.fn(), encrypt: jest.fn() })),
+    JwtAdapter: jest.fn().mockImplementation(() => ({ generate: jest.fn(), decrypt: jest.fn() })),
+    MongoRepository: jest.fn().mockImplementation(() => mockRepo),
+    PostgresRepository: jest.fn().mockImplementation(() => mockRepo),
+  };
+});
 jest.mock("@/application/infra/config/whiteLabel", () => ({
   whiteLabel: { database: "mongodb", systemName: "Test", categories: [{ name: "Cat", description: "D", services: [{ name: "S", description: "D", price: 50, comission: 50, duration: 30 }] }] },
 }));
@@ -19,6 +24,16 @@ jest.mock("@/application/infra/config/env", () => ({
 }));
 jest.mock("@/application/infra/storage/storageFactory", () => ({
   makeUploadProvider: jest.fn().mockReturnValue({ uploadFile: jest.fn(), delete: jest.fn() }),
+}));
+jest.mock("@/slices/user/useCases", () => ({
+  makeLoadUserFactory: jest.fn().mockReturnValue(jest.fn()),
+  loadUser: jest.fn().mockReturnValue(jest.fn()),
+}));
+jest.mock("@/slices/photo/useCases", () => ({
+  makeLoadPhotoFactory: jest.fn().mockReturnValue(jest.fn()),
+}));
+jest.mock("@/slices/user/repositories", () => ({
+  UserRepository: jest.fn().mockImplementation(() => ({})),
 }));
 
 import { makeLogController } from "./decorators/logControllerFactory";
@@ -32,7 +47,7 @@ import { makeUploadProvider } from "./infra/storage/storageFactory";
 
 describe("makeLogController", () => {
   it("should return a valid instance", () => {
-    const result = makeLogController();
+    const result = makeLogController("test", {} as any);
     expect(result).toBeDefined();
   });
 });
@@ -99,28 +114,28 @@ describe("makeValidationComposite", () => {
 
 describe("makeDatabaseInstance", () => {
   it("should return a valid instance", () => {
-    const result = makeDatabaseInstance();
+    const result = makeDatabaseInstance("mongodb" as any, "test");
     expect(result).toBeDefined();
   });
 });
 
 describe("makeAuthMiddleware", () => {
   it("should return a valid instance", () => {
-    const result = makeAuthMiddleware();
+    const result = makeAuthMiddleware(["client"]);
     expect(result).toBeDefined();
   });
 });
 
 describe("makeRefreshTokenMiddleware", () => {
   it("should return a valid instance", () => {
-    const result = makeRefreshTokenMiddleware();
+    const result = makeRefreshTokenMiddleware(["client"]);
     expect(result).toBeDefined();
   });
 });
 
 describe("makeUploadProvider", () => {
   it("should return a valid instance", () => {
-    const result = makeUploadProvider();
+    const result = makeUploadProvider("cloudflare_r2" as any);
     expect(result).toBeDefined();
   });
 });

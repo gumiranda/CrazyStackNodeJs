@@ -1,27 +1,25 @@
-import { HttpRequest, HttpResponse, serverError } from "@/application/helpers";
+jest.mock("@/application/helpers/date/date", () => ({}));
+jest.mock("@/application/helpers/date/index", () => ({}));
 
-// Replicate Controller logic to avoid circular dependency from barrel exports
-abstract class TestController {
-  abstract execute(httpRequest: HttpRequest): Promise<HttpResponse>;
-  async handle(httpRequest: HttpRequest): Promise<HttpResponse> {
-    try {
-      return this.execute(httpRequest);
-    } catch (error) {
-      return serverError(error);
-    }
-  }
-}
+import { HttpRequest, HttpResponse, serverError } from "@/application/helpers/http/http";
+import { Controller } from "./controller";
 
-class ControllerStub extends TestController {
+class ControllerStub extends Controller {
   result: HttpResponse = { statusCode: 200, data: { success: true } };
   override async execute(_httpRequest: HttpRequest): Promise<HttpResponse> {
     return this.result;
   }
 }
 
-class ControllerSyncErrorStub extends TestController {
+class ControllerSyncErrorStub extends Controller {
   override execute(_httpRequest: HttpRequest): Promise<HttpResponse> {
     throw new Error("sync_error");
+  }
+}
+
+class ControllerAsyncErrorStub extends Controller {
+  override async execute(_httpRequest: HttpRequest): Promise<HttpResponse> {
+    throw new Error("async_error");
   }
 }
 
@@ -48,5 +46,28 @@ describe("Controller", () => {
     const result = await errorSut.handle({ body: {} });
     expect(result.statusCode).toBe(500);
     expect(result.data.name).toBe("ServerError");
+  });
+
+  it("should propagate rejection when execute rejects asynchronously (no await)", async () => {
+    const errorSut = new ControllerAsyncErrorStub();
+    await expect(errorSut.handle({ body: {} })).rejects.toThrow("async_error");
+  });
+
+  it("should handle httpRequest with all optional fields", async () => {
+    const httpRequest: HttpRequest = {
+      body: { data: "value" },
+      headers: { authorization: "Bearer token" },
+      params: { id: "123" },
+      query: { page: "1" },
+      userId: "user_123",
+    };
+    const result = await sut.handle(httpRequest);
+    expect(result).toEqual({ statusCode: 200, data: { success: true } });
+  });
+
+  it("should be an abstract class requiring execute implementation", () => {
+    expect(sut).toBeInstanceOf(Controller);
+    expect(typeof sut.execute).toBe("function");
+    expect(typeof sut.handle).toBe("function");
   });
 });

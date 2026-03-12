@@ -49,3 +49,74 @@ describe("auth middleware", () => {
     expect(httpResponse).toEqual(serverError(new Error("loadUser_error")));
   });
 });
+
+jest.mock("@/application/adapters", () => ({
+  adaptMiddleware: jest.fn((middleware: any) => middleware),
+}));
+jest.mock("@/slices/user/useCases", () => ({
+  makeLoadUserFactory: jest.fn(() => jest.fn()),
+}));
+
+import {
+  refreshtokenClient,
+  refreshtokenAdmin,
+  refreshtokenOwner,
+  refreshtokenProfessional,
+  refreshtokenVisitor,
+  refreshtokenLogged,
+  makeRefreshTokenMiddleware,
+} from "./refreshTokenMiddlewareFactory";
+import { adaptMiddleware } from "@/application/adapters";
+
+describe("refreshTokenMiddlewareFactory", () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
+  it("makeRefreshTokenMiddleware should return a RefreshTokenMiddleware instance", () => {
+    const result = makeRefreshTokenMiddleware(["client"]);
+    expect(result).toBeInstanceOf(RefreshTokenMiddleware);
+  });
+
+  it("refreshtokenClient should call adaptMiddleware with RefreshTokenMiddleware", () => {
+    const result = refreshtokenClient();
+    expect(adaptMiddleware).toHaveBeenCalledTimes(1);
+    const middleware = (adaptMiddleware as jest.Mock).mock.calls[0][0];
+    expect(middleware).toBeInstanceOf(RefreshTokenMiddleware);
+  });
+
+  it("refreshtokenAdmin should call adaptMiddleware with RefreshTokenMiddleware", () => {
+    const result = refreshtokenAdmin();
+    expect(adaptMiddleware).toHaveBeenCalledTimes(1);
+    const middleware = (adaptMiddleware as jest.Mock).mock.calls[0][0];
+    expect(middleware).toBeInstanceOf(RefreshTokenMiddleware);
+  });
+
+  it("refreshtokenOwner should call adaptMiddleware with RefreshTokenMiddleware", () => {
+    const result = refreshtokenOwner();
+    expect(adaptMiddleware).toHaveBeenCalledTimes(1);
+    const middleware = (adaptMiddleware as jest.Mock).mock.calls[0][0];
+    expect(middleware).toBeInstanceOf(RefreshTokenMiddleware);
+  });
+
+  it("refreshtokenProfessional should call adaptMiddleware with RefreshTokenMiddleware", () => {
+    const result = refreshtokenProfessional();
+    expect(adaptMiddleware).toHaveBeenCalledTimes(1);
+    const middleware = (adaptMiddleware as jest.Mock).mock.calls[0][0];
+    expect(middleware).toBeInstanceOf(RefreshTokenMiddleware);
+  });
+
+  it("refreshtokenVisitor should call adaptMiddleware with RefreshTokenMiddleware", () => {
+    const result = refreshtokenVisitor();
+    expect(adaptMiddleware).toHaveBeenCalledTimes(1);
+    const middleware = (adaptMiddleware as jest.Mock).mock.calls[0][0];
+    expect(middleware).toBeInstanceOf(RefreshTokenMiddleware);
+  });
+
+  it("refreshtokenLogged should call adaptMiddleware with RefreshTokenMiddleware", () => {
+    const result = refreshtokenLogged();
+    expect(adaptMiddleware).toHaveBeenCalledTimes(1);
+    const middleware = (adaptMiddleware as jest.Mock).mock.calls[0][0];
+    expect(middleware).toBeInstanceOf(RefreshTokenMiddleware);
+  });
+});

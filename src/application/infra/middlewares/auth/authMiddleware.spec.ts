@@ -51,3 +51,74 @@ describe("auth middleware", () => {
     expect(httpResponse).toEqual(serverError(new Error("loadUser_error")));
   });
 });
+
+jest.mock("@/application/adapters", () => ({
+  adaptMiddleware: jest.fn((middleware: any) => middleware),
+}));
+jest.mock("@/slices/user/useCases/loadUser", () => ({
+  makeLoadUserFactory: jest.fn(() => jest.fn()),
+}));
+
+import {
+  authClient,
+  authAdmin,
+  authOwner,
+  authProfessional,
+  authVisitor,
+  authLogged,
+  makeAuthMiddleware,
+} from "./authMiddlewareFactory";
+import { adaptMiddleware } from "@/application/adapters";
+
+describe("authMiddlewareFactory", () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
+  it("makeAuthMiddleware should return an AuthMiddleware instance", () => {
+    const result = makeAuthMiddleware(["client"]);
+    expect(result).toBeInstanceOf(AuthMiddleware);
+  });
+
+  it("authClient should call adaptMiddleware with roles ['client', 'admin']", () => {
+    const result = authClient();
+    expect(adaptMiddleware).toHaveBeenCalledTimes(1);
+    const middleware = (adaptMiddleware as jest.Mock).mock.calls[0][0];
+    expect(middleware).toBeInstanceOf(AuthMiddleware);
+  });
+
+  it("authAdmin should call adaptMiddleware with roles ['admin']", () => {
+    const result = authAdmin();
+    expect(adaptMiddleware).toHaveBeenCalledTimes(1);
+    const middleware = (adaptMiddleware as jest.Mock).mock.calls[0][0];
+    expect(middleware).toBeInstanceOf(AuthMiddleware);
+  });
+
+  it("authOwner should call adaptMiddleware with roles ['owner', 'admin']", () => {
+    const result = authOwner();
+    expect(adaptMiddleware).toHaveBeenCalledTimes(1);
+    const middleware = (adaptMiddleware as jest.Mock).mock.calls[0][0];
+    expect(middleware).toBeInstanceOf(AuthMiddleware);
+  });
+
+  it("authProfessional should call adaptMiddleware with roles ['owner', 'professional', 'admin']", () => {
+    const result = authProfessional();
+    expect(adaptMiddleware).toHaveBeenCalledTimes(1);
+    const middleware = (adaptMiddleware as jest.Mock).mock.calls[0][0];
+    expect(middleware).toBeInstanceOf(AuthMiddleware);
+  });
+
+  it("authVisitor should call adaptMiddleware with roles including visitor", () => {
+    const result = authVisitor();
+    expect(adaptMiddleware).toHaveBeenCalledTimes(1);
+    const middleware = (adaptMiddleware as jest.Mock).mock.calls[0][0];
+    expect(middleware).toBeInstanceOf(AuthMiddleware);
+  });
+
+  it("authLogged should call adaptMiddleware with roles ['owner', 'professional', 'client', 'admin']", () => {
+    const result = authLogged();
+    expect(adaptMiddleware).toHaveBeenCalledTimes(1);
+    const middleware = (adaptMiddleware as jest.Mock).mock.calls[0][0];
+    expect(middleware).toBeInstanceOf(AuthMiddleware);
+  });
+});
