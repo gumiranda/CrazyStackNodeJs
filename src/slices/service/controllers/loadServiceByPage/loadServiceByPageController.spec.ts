@@ -92,4 +92,35 @@ describe("LoadServiceByPageController", () => {
     const httpResponse = await testInstance.execute({ query: fakeQuery });
     expect(httpResponse).toEqual(badRequest([new MissingParamError("page")]));
   });
+  test("should include createdById in fields when role is professional", async () => {
+    const result = await testInstance.execute({
+      query: fakeQuery,
+      userId: fakeUserEntity?._id,
+      userLogged: { ...fakeUserEntity, role: "professional" },
+    });
+    expect(result).toEqual(ok(fakeServicePaginated));
+    expect(loadServiceByPage).toHaveBeenCalledWith(
+      expect.objectContaining({
+        fields: expect.objectContaining({
+          createdById: fakeUserEntity?._id,
+        }),
+      })
+    );
+  });
+  test("should NOT include createdById in fields when role is admin", async () => {
+    const queryWithoutCreatedById = { _id: fakeServiceEntity._id };
+    const result = await testInstance.execute({
+      query: { ...queryWithoutCreatedById, page: 1, sortBy: "name", typeSort: "asc" },
+      userId: fakeUserEntity?._id,
+      userLogged: { ...fakeUserEntity, role: "admin" },
+    });
+    expect(result).toEqual(ok(fakeServicePaginated));
+    expect(loadServiceByPage).toHaveBeenCalledWith(
+      expect.objectContaining({
+        fields: expect.not.objectContaining({
+          createdById: expect.anything(),
+        }),
+      })
+    );
+  });
 });

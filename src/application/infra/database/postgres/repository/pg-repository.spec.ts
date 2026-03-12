@@ -293,6 +293,136 @@ describe("PostgresRepository", () => {
       expect(mockRelease).toHaveBeenCalled();
     });
 
+    test("should apply projection inclusion when tableName is not users", async () => {
+      mockQuery.mockResolvedValueOnce({
+        rows: [{ name: "test" }],
+      });
+      const result = await repository.getOne(
+        { _id: "1" },
+        { projection: { name: 1 } }
+      );
+      expect(result).toEqual({ name: "test" });
+      const queryText = mockQuery.mock.calls[0][0];
+      expect(queryText).toContain('"test_table".name');
+      expect(mockRelease).toHaveBeenCalled();
+    });
+
+    test("should handle include with 1:1 relationship (FK in currentTableFields)", async () => {
+      // getTableFields for current table
+      mockQuery.mockResolvedValueOnce({
+        rows: [
+          { column_name: "_id" },
+          { column_name: "name" },
+          { column_name: "categoryId" },
+        ],
+      });
+      // getTableFields for related table (category)
+      mockQuery.mockResolvedValueOnce({
+        rows: [
+          { column_name: "_id" },
+          { column_name: "name" },
+          { column_name: "description" },
+        ],
+      });
+      // actual query
+      mockQuery.mockResolvedValueOnce({
+        rows: [{ _id: "1", name: "test", categoryname: "Cat1" }],
+      });
+      const result = await repository.getOne(
+        { _id: "1" },
+        { include: { category: true } }
+      );
+      expect(result).toBeDefined();
+      const queryText = mockQuery.mock.calls[2][0];
+      expect(queryText).toContain("LEFT JOIN");
+      expect(queryText).toContain('"category"');
+      expect(mockRelease).toHaveBeenCalled();
+    });
+
+    test("should handle include with 1:n relationship (FK NOT in currentTableFields)", async () => {
+      // getTableFields for current table
+      mockQuery.mockResolvedValueOnce({
+        rows: [
+          { column_name: "_id" },
+          { column_name: "name" },
+        ],
+      });
+      // getTableFields for related table (service)
+      mockQuery.mockResolvedValueOnce({
+        rows: [
+          { column_name: "_id" },
+          { column_name: "name" },
+        ],
+      });
+      // getTableFields for join table (test_tableservice)
+      mockQuery.mockResolvedValueOnce({
+        rows: [
+          { column_name: "_id" },
+          { column_name: "test_tableId" },
+          { column_name: "serviceId" },
+        ],
+      });
+      // actual query
+      mockQuery.mockResolvedValueOnce({
+        rows: [{ _id: "1", name: "test" }],
+      });
+      const result = await repository.getOne(
+        { _id: "1" },
+        { include: { service: true } }
+      );
+      expect(result).toBeDefined();
+      const queryText = mockQuery.mock.calls[3][0];
+      expect(queryText).toContain("LEFT JOIN");
+      expect(mockRelease).toHaveBeenCalled();
+    });
+
+    test("should handle include with isSameTable = true (1:1 branch)", async () => {
+      const sameRepo = new PostgresRepository("users");
+      // getTableFields for current table (users) - includes createdById
+      mockQuery.mockResolvedValueOnce({
+        rows: [
+          { column_name: "_id" },
+          { column_name: "name" },
+          { column_name: "createdById" },
+        ],
+      });
+      // getTableFields for related table (users - createdBy maps to users)
+      mockQuery.mockResolvedValueOnce({
+        rows: [
+          { column_name: "_id" },
+          { column_name: "name" },
+          { column_name: "email" },
+        ],
+      });
+      // actual query result
+      mockQuery.mockResolvedValueOnce({
+        rows: [{ _id: "1", name: "test", usersname: "creator" }],
+      });
+      const result = await sameRepo.getOne(
+        { _id: "1" },
+        { include: { createdBy: true } }
+      );
+      expect(result).toEqual({ _id: "1", name: "test", usersname: "creator" });
+      expect(mockRelease).toHaveBeenCalled();
+    });
+
+    test("should handle include with false value (skip relation)", async () => {
+      // getTableFields for current table
+      mockQuery.mockResolvedValueOnce({
+        rows: [{ column_name: "_id" }, { column_name: "name" }],
+      });
+      // actual query
+      mockQuery.mockResolvedValueOnce({
+        rows: [{ _id: "1", name: "test" }],
+      });
+      const result = await repository.getOne(
+        { _id: "1" },
+        { include: { category: false } }
+      );
+      expect(result).toBeDefined();
+      expect(mockRelease).toHaveBeenCalled();
+    });
+
     test("should release client even on error", async () => {
       mockQuery.mockRejectedValueOnce(new Error("getOne error"));
       await expect(repository.getOne({ _id: "1" }, {})).rejects.toThrow("getOne error");
@@ -389,6 +519,123 @@ describe("PostgresRepository", () => {
       expect(mockRelease).toHaveBeenCalled();
     });
 
+    test("should handle projection exclusion", async () => {
+      // getTableFields
+      mockQuery.mockResolvedValueOnce({
+        rows: [
+          { column_name: "_id" },
+          { column_name: "name" },
+          { column_name: "email" },
+        ],
+      });
+      // actual query
+      mockQuery.mockResolvedValueOnce({
+        rows: [{ _id: "1", name: "test", email: "t@t.com" }],
+      });
+      const result = await repository.getPaginate(
+        1,
+        { name: "test" },
+        { createdAt: -1 },
+        10,
+        { password: 0 }
+      );
+      expect(result).toBeDefined();
+      expect(mockRelease).toHaveBeenCalled();
+    });
+
+    test("should handle projection inclusion", async () => {
+      // getTableFields
+      mockQuery.mockResolvedValueOnce({
+        rows: [{ column_name: "_id" }, { column_name: "name" }],
+      });
+      // actual query
+      mockQuery.mockResolvedValueOnce({
+        rows: [{ name: "test" }],
+      });
+      const result = await repository.getPaginate(
+        1,
+        { name: "test" },
+        { createdAt: -1 },
+        10,
+        { name: 1 }
+      );
+      expect(result).toBeDefined();
+      const queryText = mockQuery.mock.calls[1][0];
+      expect(queryText).toContain('"test_table".name');
+      expect(mockRelease).toHaveBeenCalled();
+    });
+
+    test("should handle populate with relation fields", async () => {
+      // getTableFields for current table
+      mockQuery.mockResolvedValueOnce({
+        rows: [
+          { column_name: "_id" },
+          { column_name: "name" },
+          { column_name: "categoryId" },
+        ],
+      });
+      // getTableFields for related table
+      mockQuery.mockResolvedValueOnce({
+        rows: [
+          { column_name: "_id" },
+          { column_name: "name" },
+          { column_name: "description" },
+        ],
+      });
+      // actual query
+      mockQuery.mockResolvedValueOnce({
+        rows: [{ _id: "1", name: "test" }],
+      });
+      const result = await repository.getPaginate(
+        1,
+        { name: "test" },
+        { createdAt: -1 },
+        10,
+        {},
+        { category: true } as any
+      );
+      expect(result).toBeDefined();
+      const queryText = mockQuery.mock.calls[2][0];
+      expect(queryText).toContain("INNER JOIN");
+      expect(mockRelease).toHaveBeenCalled();
+    });
+
+    test("should handle LIKE condition for object values", async () => {
+      // getTableFields
+      mockQuery.mockResolvedValueOnce({
+        rows: [{ column_name: "_id" }, { column_name: "name" }],
+      });
+      // actual query
+      mockQuery.mockResolvedValueOnce({ rows: [] });
+      await repository.getPaginate(
+        1,
+        { name: { search: "test" } },
+        { createdAt: -1 },
+        10,
+        {}
+      );
+      const queryText = mockQuery.mock.calls[1][0];
+      expect(queryText).toContain("LIKE");
+      expect(mockRelease).toHaveBeenCalled();
+    });
+
+    test("should use default page=0 and limit=10", async () => {
+      // getTableFields
+      mockQuery.mockResolvedValueOnce({
+        rows: [{ column_name: "_id" }],
+      });
+      // actual query
+      mockQuery.mockResolvedValueOnce({ rows: [] });
+      await repository.getPaginate(
+        undefined as any,
+        { name: "test" },
+        { createdAt: -1 },
+        undefined as any,
+        {}
+      );
+      expect(mockRelease).toHaveBeenCalled();
+    });
+
     test("should release client even on error", async () => {
       mockQuery.mockRejectedValueOnce(new Error("paginate error"));
       await expect(
@@ -422,9 +669,34 @@ describe("PostgresRepository", () => {
       expect(mockRelease).toHaveBeenCalled();
     });
 
+    test("should handle endDate filter in getCount", async () => {
+      mockQuery.mockResolvedValueOnce({ rows: [{ count: "2" }] });
+      await repository.getCount({ endDate: "2024-12-31" });
+      const queryText = mockQuery.mock.calls[0][0];
+      expect(queryText).toContain("<");
+      expect(mockRelease).toHaveBeenCalled();
+    });
+
+    test("should handle LIKE condition for object values in getCount", async () => {
+      mockQuery.mockResolvedValueOnce({ rows: [{ count: "1" }] });
+      await repository.getCount({ name: { search: "test" } });
+      const queryText = mockQuery.mock.calls[0][0];
+      expect(queryText).toContain("LIKE");
+      expect(mockRelease).toHaveBeenCalled();
+    });
+
     test("should release client even on error", async () => {
       mockQuery.mockRejectedValueOnce(new Error("count error"));
       await expect(repository.getCount({ active: true })).rejects.toThrow("count error");
+      expect(mockRelease).toHaveBeenCalled();
+    });
+  });
+
+  describe("incrementOne", () => {
+    test("should delegate to increment method", async () => {
+      mockQuery.mockResolvedValueOnce({ rowCount: 1 });
+      const result = await repository.incrementOne({ _id: "1" }, { views: 1 });
+      expect(result).toBe(1);
       expect(mockRelease).toHaveBeenCalled();
     });
   });

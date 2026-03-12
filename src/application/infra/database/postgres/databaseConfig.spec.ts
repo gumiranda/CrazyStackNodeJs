@@ -61,4 +61,64 @@ describe("databaseConfig", () => {
     const { closePool } = require("./databaseConfig");
     await expect(closePool()).rejects.toThrow("close error");
   });
+
+  test("should register pool event handlers", () => {
+    jest.isolateModules(() => {
+      require("./databaseConfig");
+    });
+    const onCalls = mockOn.mock.calls;
+    const eventNames = onCalls.map((call: any) => call[0]);
+    expect(eventNames).toContain("error");
+    expect(eventNames).toContain("connect");
+    expect(eventNames).toContain("remove");
+    expect(eventNames).toContain("release");
+  });
+
+  test("pool connect handler should log", () => {
+    jest.isolateModules(() => {
+      require("./databaseConfig");
+    });
+    const connectHandler = mockOn.mock.calls.find((call: any) => call[0] === "connect")?.[1];
+    const consoleSpy = jest.spyOn(console, "log").mockImplementation();
+    connectHandler();
+    expect(consoleSpy).toHaveBeenCalledWith("Connected to database");
+    consoleSpy.mockRestore();
+  });
+
+  test("pool remove handler should log", () => {
+    jest.isolateModules(() => {
+      require("./databaseConfig");
+    });
+    const removeHandler = mockOn.mock.calls.find((call: any) => call[0] === "remove")?.[1];
+    const consoleSpy = jest.spyOn(console, "log").mockImplementation();
+    removeHandler();
+    expect(consoleSpy).toHaveBeenCalledWith("Client removed from pool");
+    consoleSpy.mockRestore();
+  });
+
+  test("pool release handler should log", () => {
+    jest.isolateModules(() => {
+      require("./databaseConfig");
+    });
+    const releaseHandler = mockOn.mock.calls.find((call: any) => call[0] === "release")?.[1];
+    const consoleSpy = jest.spyOn(console, "log").mockImplementation();
+    releaseHandler();
+    expect(consoleSpy).toHaveBeenCalledWith("Client released from pool");
+    consoleSpy.mockRestore();
+  });
+
+  test("pool error handler should log error and exit", async () => {
+    jest.isolateModules(() => {
+      require("./databaseConfig");
+    });
+    const errorHandler = mockOn.mock.calls.find((call: any) => call[0] === "error")?.[1];
+    const consoleSpy = jest.spyOn(console, "error").mockImplementation();
+    const exitSpy = jest.spyOn(process, "exit").mockImplementation(() => undefined as never);
+    mockEnd.mockResolvedValueOnce(undefined);
+    await errorHandler(new Error("idle error"));
+    expect(consoleSpy).toHaveBeenCalledWith("Unexpected error on idle client", expect.any(Error));
+    expect(exitSpy).toHaveBeenCalledWith(-1);
+    consoleSpy.mockRestore();
+    exitSpy.mockRestore();
+  });
 });

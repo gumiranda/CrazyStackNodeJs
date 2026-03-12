@@ -84,4 +84,36 @@ describe("LoadRequestByPageController", () => {
     const httpResponse = await testInstance.execute({ query: fakeQuery });
     expect(httpResponse).toEqual(badRequest([new MissingParamError("page")]));
   });
+  test("should use rest only as fields when role is admin", async () => {
+    const queryWithoutCreatedById = { _id: fakeRequestEntity._id };
+    const result = await testInstance.execute({
+      query: { ...queryWithoutCreatedById, page: 1, sortBy: "name", typeSort: "asc" },
+      userId: fakeUserEntity?._id,
+      userLogged: { ...fakeUserEntity, role: "admin" },
+    });
+    expect(result).toEqual(ok(fakeRequestPaginated));
+    expect(loadRequestByPage).toHaveBeenCalledWith(
+      expect.objectContaining({
+        fields: expect.not.objectContaining({
+          createdById: expect.anything(),
+          createdForId: expect.anything(),
+        }),
+      })
+    );
+  });
+  test("should include createdForId in fields when role is owner", async () => {
+    const result = await testInstance.execute({
+      query: fakeQuery,
+      userId: fakeUserEntity?._id,
+      userLogged: { ...fakeUserEntity, role: "owner" },
+    });
+    expect(result).toEqual(ok(fakeRequestPaginated));
+    expect(loadRequestByPage).toHaveBeenCalledWith(
+      expect.objectContaining({
+        fields: expect.objectContaining({
+          createdForId: fakeUserEntity?._id,
+        }),
+      })
+    );
+  });
 });

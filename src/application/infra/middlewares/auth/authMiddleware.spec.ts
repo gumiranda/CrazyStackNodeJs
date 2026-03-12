@@ -50,6 +50,34 @@ describe("auth middleware", () => {
     const httpResponse = await testInstance.handle(mockFakeRequestHeader());
     expect(httpResponse).toEqual(serverError(new Error("loadUser_error")));
   });
+  test("should return 403 when authorization header has no token after split", async () => {
+    const httpResponse = await testInstance.handle({
+      headers: { authorization: "Bearer " },
+    });
+    expect(httpResponse).toEqual(forbidden(new AccessDeniedError()));
+  });
+  test("should return 403 when user is not found by loadUser", async () => {
+    loadUser.mockResolvedValueOnce(null);
+    const httpResponse = await testInstance.handle(mockFakeRequestHeader());
+    expect(httpResponse).toEqual(forbidden(new AccessDeniedError()));
+  });
+  test("should return 403 when user has no payDay", async () => {
+    loadUser.mockResolvedValueOnce({ ...fakeUserEntity, payDay: null, payday: null });
+    const httpResponse = await testInstance.handle(mockFakeRequestHeader());
+    expect(httpResponse).toEqual(forbidden(new AccessDeniedError()));
+  });
+  test("should return 403 when owner has exceeded payment deadline", async () => {
+    const pastDate = new Date();
+    pastDate.setDate(pastDate.getDate() - 60);
+    loadUser.mockResolvedValueOnce({
+      ...fakeUserEntity,
+      role: "owner",
+      payDay: pastDate.toISOString(),
+      payday: null,
+    });
+    const httpResponse = await testInstance.handle(mockFakeRequestHeader());
+    expect(httpResponse).toEqual(forbidden(new AccessDeniedError()));
+  });
 });
 
 jest.mock("@/application/adapters", () => ({

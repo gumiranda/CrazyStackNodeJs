@@ -115,4 +115,46 @@ describe("UpdateUserController", () => {
     const httpResponse = await testInstance.execute({ query: fakeUserEntity });
     expect(httpResponse).toEqual(badRequest([new MissingParamError("name")]));
   });
+  test("should use query directly when role is admin", async () => {
+    const adminQuery = { _id: "some_id" };
+    const result = await testInstance.execute({
+      body: { ...fakeUserEntity },
+      query: adminQuery,
+      userId: fakeUserEntity?._id,
+      userLogged: { ...fakeUserEntity, role: "admin" },
+    });
+    expect(result?.statusCode).toBe(200);
+    const callArgs = updateUser.mock.calls[updateUser.mock.calls.length - 1];
+    // admin query should use query as-is without appending createdById
+    expect(callArgs[0].fields).toEqual(adminQuery);
+  });
+  test("should append createdById to query when role is not admin", async () => {
+    const result = await testInstance.execute({
+      body: { ...fakeUserEntity },
+      query: { ...fakeUserEntity },
+      userId: fakeUserEntity?._id,
+      userLogged: { ...fakeUserEntity, role: "client" },
+    });
+    expect(result?.statusCode).toBe(200);
+    const callArgs = updateUser.mock.calls[updateUser.mock.calls.length - 1];
+    expect(callArgs[0].fields).toHaveProperty("createdById", fakeUserEntity._id);
+  });
+  test("should fallback to update by userId when updateUser returns falsy", async () => {
+    updateUser.mockResolvedValueOnce(null).mockResolvedValueOnce({
+      ...fakeUserEntity,
+      createdById: fakeUserEntity?._id,
+    });
+    const result = await testInstance.execute({
+      body: { ...fakeUserEntity },
+      query: { ...fakeUserEntity },
+      userId: fakeUserEntity?._id,
+      userLogged: { ...fakeUserEntity, role: "client" },
+    });
+    expect(updateUser).toHaveBeenCalledTimes(2);
+    expect(updateUser).toHaveBeenLastCalledWith(
+      { fields: { _id: fakeUserEntity?._id }, options: {} },
+      expect.any(Object)
+    );
+    expect(result?.statusCode).toBe(200);
+  });
 });

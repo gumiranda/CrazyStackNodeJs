@@ -79,4 +79,41 @@ describe("DeleteAppointmentController", () => {
     const httpResponse = await testInstance.execute({ query: fakeQuery });
     expect(httpResponse).toEqual(badRequest([new MissingParamError("_id")]));
   });
+  test("should return bad request when updateReq returns falsy", async () => {
+    updateReq.mockResolvedValueOnce(null);
+    const result = await testInstance.execute({
+      query: { ...fakeQuery, requestId: "any_request_id" },
+      userId: fakeUserEntity?._id,
+      userLogged: { ...fakeUserEntity, role: "client" },
+    });
+    expect(result).toEqual(badRequest("Request not found"));
+  });
+  test("should return bad request when appointmentDeleteed is falsy", async () => {
+    deleteAppointment.mockResolvedValueOnce(null);
+    const result = await testInstance.execute({
+      query: fakeQuery,
+      userId: fakeUserEntity?._id,
+      userLogged: { ...fakeUserEntity, role: "client" },
+    });
+    expect(result).toEqual(badRequest("Appointment not found"));
+  });
+  test("should set status 2 when role is owner", async () => {
+    const result = await testInstance.execute({
+      query: { ...fakeQuery, requestId: "any_request_id" },
+      userId: fakeUserEntity?._id,
+      userLogged: { ...fakeUserEntity, role: "owner" },
+    });
+    expect(updateReq).toHaveBeenCalledWith(
+      {
+        fields: { _id: "any_request_id" },
+        options: {},
+      },
+      expect.objectContaining({
+        updatedById: fakeUserEntity?._id,
+        updatedByRole: "owner",
+        status: 2,
+      })
+    );
+    expect(result).toEqual(ok(true));
+  });
 });

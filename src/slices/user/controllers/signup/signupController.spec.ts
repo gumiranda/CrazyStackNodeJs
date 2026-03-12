@@ -184,4 +184,20 @@ describe("SignupController", () => {
     const result = await sut.execute({ body: fakeBody });
     expect(result).not.toEqual(badRequest([new InvalidParamError("email")]));
   });
+  it("should return forbidden when cpf user already exists", async () => {
+    const bodyWithCpf = { ...fakeBody, cpf: "12345678900" };
+    loadUser
+      .mockResolvedValueOnce(null) // email check returns null
+      .mockResolvedValueOnce(fakeUser); // cpf check returns existing user
+    const result = await sut.execute({ body: bodyWithCpf });
+    expect(result).toEqual(forbidden(new EmailInUseError()));
+  });
+  it("should return forbidden when cnpj user already exists", async () => {
+    const bodyWithCnpj = { ...fakeBody, cnpj: "12345678000100" };
+    loadUser
+      .mockResolvedValueOnce(null) // email check returns null
+      .mockResolvedValueOnce(fakeUser); // cnpj check returns existing user
+    const result = await sut.execute({ body: bodyWithCnpj });
+    expect(result).toEqual(forbidden(new EmailInUseError()));
+  });
 });

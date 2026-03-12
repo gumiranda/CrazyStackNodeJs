@@ -109,4 +109,22 @@ describe("AddOwnerController", () => {
     const httpResponse = await testInstance.execute({ body: fakeOwnerEntity });
     expect(httpResponse).toEqual(badRequest([new MissingParamError("name")]));
   });
+  test("should allow admin to create owner even when ownerExists", async () => {
+    loadOwner.mockResolvedValueOnce(fakeOwnerEntity);
+    const result = await testInstance.execute({
+      body: fakeOwnerEntity,
+      userId: fakeUserEntity?._id,
+      userLogged: { ...fakeUserEntity, role: "admin" },
+    });
+    expect(result).toEqual(
+      ok({
+        ...fakeOwnerEntity,
+        createdById: fakeUserEntity?._id,
+      })
+    );
+    expect(addOwner).toHaveBeenCalledWith({
+      ...fakeOwnerEntity,
+      createdById: fakeUserEntity?._id,
+    });
+  });
 });

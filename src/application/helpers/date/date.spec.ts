@@ -5,6 +5,9 @@ import {
   addTimeInArray,
   AddTimeInArrayInput,
   BusinessHoursInput,
+  calculateDaysSinceRegister,
+  calculateDaysToNextPayment,
+  daysSinceRegister,
   firstStep,
   FirstStepInput,
   getArrayTimes,
@@ -16,6 +19,7 @@ import {
   mapBusinessHours,
   queryDateGenerator,
   secondStep,
+  userHaveToPay,
 } from "./date";
 
 describe("date tests business rules", () => {
@@ -1118,6 +1122,89 @@ describe("date tests business rules", () => {
           initDate: new Date("2021-10-14T16:00:00.000Z"),
         },
       ],
+    });
+  });
+  describe("calculateDaysSinceRegister", () => {
+    test("should return number of days since registration", () => {
+      const pastDate = new Date();
+      pastDate.setDate(pastDate.getDate() - 10);
+      const result = calculateDaysSinceRegister(pastDate.toISOString());
+      expect(result).toBe(10);
+    });
+    test("should return 9999 when createdAt is falsy", () => {
+      expect(calculateDaysSinceRegister(null as any)).toBe(9999);
+      expect(calculateDaysSinceRegister("")).toBe(9999);
+    });
+  });
+  describe("calculateDaysToNextPayment", () => {
+    test("should return positive days when payDay is in the future", () => {
+      const futureDate = new Date();
+      futureDate.setDate(futureDate.getDate() + 15);
+      const result = calculateDaysToNextPayment(futureDate.toISOString());
+      expect(result).toBeGreaterThanOrEqual(14);
+      expect(result).toBeLessThanOrEqual(15);
+    });
+    test("should return 0 when payDay is falsy", () => {
+      expect(calculateDaysToNextPayment(null as any)).toBe(0);
+      expect(calculateDaysToNextPayment("")).toBe(0);
+    });
+  });
+  describe("daysSinceRegister", () => {
+    test("should return days since user creation", () => {
+      const pastDate = new Date();
+      pastDate.setDate(pastDate.getDate() - 5);
+      const result = daysSinceRegister({ createdAt: pastDate.toISOString() });
+      expect(result).toBe(5);
+    });
+    test("should return 9999 when user has no createdAt", () => {
+      expect(daysSinceRegister({})).toBe(9999);
+      expect(daysSinceRegister(null)).toBe(9999);
+    });
+  });
+  describe("userHaveToPay", () => {
+    test("should return true when owner with paidDaysAgo > 30 and registered > 30 days", () => {
+      const pastDate = new Date();
+      pastDate.setDate(pastDate.getDate() - 60);
+      const result = userHaveToPay({
+        user: { role: "owner", createdAt: pastDate.toISOString() },
+        paidDaysAgo: 31,
+      });
+      expect(result).toBe(true);
+    });
+    test("should return false when user is not owner", () => {
+      const pastDate = new Date();
+      pastDate.setDate(pastDate.getDate() - 60);
+      const result = userHaveToPay({
+        user: { role: "client", createdAt: pastDate.toISOString() },
+        paidDaysAgo: 31,
+      });
+      expect(result).toBe(false);
+    });
+    test("should return false when paidDaysAgo <= 30", () => {
+      const pastDate = new Date();
+      pastDate.setDate(pastDate.getDate() - 60);
+      const result = userHaveToPay({
+        user: { role: "owner", createdAt: pastDate.toISOString() },
+        paidDaysAgo: 20,
+      });
+      expect(result).toBe(false);
+    });
+    test("should return false when registered <= 30 days", () => {
+      const pastDate = new Date();
+      pastDate.setDate(pastDate.getDate() - 10);
+      const result = userHaveToPay({
+        user: { role: "owner", createdAt: pastDate.toISOString() },
+        paidDaysAgo: 31,
+      });
+      expect(result).toBe(false);
+    });
+    test("should use default paidDaysAgo=9999 when not provided", () => {
+      const pastDate = new Date();
+      pastDate.setDate(pastDate.getDate() - 60);
+      const result = userHaveToPay({
+        user: { role: "owner", createdAt: pastDate.toISOString() },
+      });
+      expect(result).toBe(true);
     });
   });
   test("testing queryDateGenerator function when date passed is before today", () => {
