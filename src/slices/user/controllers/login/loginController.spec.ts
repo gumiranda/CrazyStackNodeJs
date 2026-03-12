@@ -1,6 +1,5 @@
 import MockDate from "mockdate";
 import {
-  addDays,
   Authentication,
   badRequest,
   forbidden,
@@ -11,22 +10,18 @@ import {
 import { MockProxy, mock } from "jest-mock-extended";
 import { LoginController } from "./loginController";
 import { fakeUserEntity } from "@/slices/user/entities/UserEntity.spec";
-import { fakeAccountEntity } from "@/slices/account/entities/AccountEntity.spec";
 import { Controller } from "@/application/infra/contracts";
 import { EmailInUseError, MissingParamError } from "@/application/errors";
 
 describe("LoginController", () => {
   let testInstance: LoginController;
   let loadUser: jest.Mock;
-  let addAccount: jest.Mock;
   let authentication: MockProxy<Authentication>;
   let validation: MockProxy<Validation>;
   beforeAll(async () => {
     MockDate.set(new Date());
     loadUser = jest.fn();
     loadUser.mockResolvedValue(fakeUserEntity);
-    addAccount = jest.fn();
-    addAccount.mockResolvedValue(fakeAccountEntity);
     authentication = mock();
     validation = mock();
     authentication.auth.mockResolvedValue({
@@ -39,7 +34,7 @@ describe("LoginController", () => {
     MockDate.reset();
   });
   beforeEach(() => {
-    testInstance = new LoginController(validation, loadUser, authentication, addAccount);
+    testInstance = new LoginController(validation, loadUser, authentication);
   });
   it("should extends class Controller", async () => {
     expect(testInstance).toBeInstanceOf(Controller);
@@ -64,17 +59,6 @@ describe("LoginController", () => {
       fakeUserEntity?.password
     );
     expect(authentication.auth).toHaveBeenCalledTimes(1);
-  });
-  test("should call addAccount with correct params", async () => {
-    await testInstance.execute({ body: fakeUserEntity });
-    expect(addAccount).toHaveBeenCalledWith({
-      createdById: fakeUserEntity?._id,
-      name: fakeUserEntity?.name,
-      refreshToken: "fakeRefreshToken",
-      active: true,
-      expiresAt: addDays(new Date(), 1),
-    });
-    expect(addAccount).toHaveBeenCalledTimes(1);
   });
   test("should return success if authentication login succeeds", async () => {
     const httpResponse = await testInstance.execute({ body: fakeUserEntity });

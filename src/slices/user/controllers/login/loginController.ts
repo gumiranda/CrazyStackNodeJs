@@ -7,20 +7,17 @@ import {
   badRequest,
   forbidden,
   unauthorized,
-  addDays,
   ok,
 } from "@/application/helpers";
 import { Controller } from "@/application/infra/contracts";
 import { LoadUser } from "@/slices/user/useCases";
-import { AddAccount } from "@/slices/account/useCases";
 import { EmailInUseError } from "@/application/errors";
 
 export class LoginController extends Controller {
   constructor(
     private readonly validation: Validation,
     private readonly loadUser: LoadUser,
-    private readonly authentication: Authentication,
-    private readonly addAccount: AddAccount
+    private readonly authentication: Authentication
   ) {
     super();
   }
@@ -44,13 +41,6 @@ export class LoginController extends Controller {
     if (!accessToken || !refreshToken) {
       return unauthorized();
     }
-    await this.addAccount({
-      createdById: userExists?._id as string,
-      name: userExists?.name as string,
-      refreshToken,
-      active: true,
-      expiresAt: addDays(new Date(), 1) as unknown as string,
-    });
     return ok({ user: userExists, accessToken, refreshToken });
   }
 }

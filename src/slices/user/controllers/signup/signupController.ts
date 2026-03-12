@@ -7,15 +7,12 @@ import {
   badRequest,
   forbidden,
   unauthorized,
-  addDays,
   ok,
 } from "@/application/helpers";
 import { Controller } from "@/application/infra/contracts";
 import { AddUser, CompleteOwner, LoadUser } from "@/slices/user/useCases";
-import { AddAccount } from "@/slices/account/useCases";
 import { EmailInUseError, InvalidParamError } from "@/application/errors";
 import emailValidator from "deep-email-validator";
-import { sendMessage } from "@/application/infra/messaging";
 import slug from "slug";
 import { generateToken } from "@/application/helpers/utils/generateToken";
 export class SignupController extends Controller {
@@ -24,7 +21,6 @@ export class SignupController extends Controller {
     private readonly addUser: AddUser,
     private readonly loadUser: LoadUser,
     private readonly authentication: Authentication,
-    private readonly addAccount: AddAccount,
     private readonly completeOwner: CompleteOwner
   ) {
     super();
@@ -108,34 +104,17 @@ export class SignupController extends Controller {
     if (!accessToken || !refreshToken) {
       return unauthorized();
     }
-    await this.addAccount({
-      createdById: userCreated?._id as string,
-      name: userCreated?.name as string,
-      refreshToken,
-      active: true,
-      expiresAt: addDays(new Date(), 1) as unknown as string,
-    });
-    const msg = {
-      userCreated: {
-        email: userCreated?.email,
-        name: userCreated?.name,
-        _id: userCreated?._id,
-        phone: userCreated?.phone,
+    if (role === "owner") {
+      await this.completeOwner({
+        _id: userCreated?._id as string,
+        email,
+        password,
+        name: userCreated?.name as string,
+        phone: userCreated?.phone as string,
         cpf: userCreated?.cpf ?? "",
         cnpj: userCreated?.cnpj ?? "",
-      },
-    };
-    const message = JSON.stringify(msg);
-    if (role === "owner") {
-      await sendMessage({
-        topic: "newOwner",
-        message,
       });
     }
-    await sendMessage({
-      topic: "sendEmailVerification",
-      message,
-    });
     return ok({ user: userCreated, accessToken, refreshToken });
   }
 }

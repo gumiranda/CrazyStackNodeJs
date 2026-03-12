@@ -3,20 +3,11 @@ import "./application/infra/config/module-alias";
 import { env, routes, MongoHelper } from "@/application/infra";
 import Fastify, { FastifyInstance } from "fastify";
 import cors from "@fastify/cors";
-import websocket from "@fastify/websocket";
 const { fastifyRequestContextPlugin } = require("@fastify/request-context");
 import GracefulServer from "@gquittet/graceful-server";
-import {
-  routeDriverFinishedConsumer,
-  updatePositionConsumer,
-} from "./application/infra/messaging/consumers";
-import { newOwnerConsumer } from "./application/infra/messaging/consumers/OwnerConsumer";
 import { closePool } from "./application/infra/database/postgres";
-import { consumeMessage } from "./application/infra/messaging";
 import fastifySwagger from "@fastify/swagger";
 import fastifySwaggerUI from "@fastify/swagger-ui";
-import { emailConsumer } from "./application/infra/messaging/consumers/SendEmailVerification";
-import { resendEmailVerificationConsumer } from "./application/infra/messaging/consumers/ResendEmailVerification";
 
 export const makeFastifyInstance = async (externalMongoClient: any) => {
   const fastify: FastifyInstance = Fastify({ logger: true });
@@ -47,8 +38,6 @@ export const makeFastifyInstance = async (externalMongoClient: any) => {
       methods: ["POST", "GET", "PATCH", "DELETE"],
       allowedHeaders: ["Content-Type", "Authorization", "authorization", "refreshtoken"],
     });
-    await fastify.register(websocket);
-
     if (env.environment === "production") {
       // await fastify.register(require("@fastify/under-pressure"), {
       //   maxEventLoopDelay: 1000,
@@ -102,7 +91,6 @@ export const makeFastifyInstance = async (externalMongoClient: any) => {
     process.exit(1);
   }
 };
-let brokerMessagingAdapter: any;
 // Run the server!
 const start = async () => {
   try {
@@ -110,13 +98,6 @@ const start = async () => {
       env.database !== "mongodb" ? {} : null
     );
     if (!fastifyInstance) return;
-    const brokerMessagingConsumers = [
-      updatePositionConsumer,
-      routeDriverFinishedConsumer,
-      newOwnerConsumer,
-      emailConsumer,
-      resendEmailVerificationConsumer,
-    ];
     const gracefulServer = GracefulServer(fastifyInstance.server);
     gracefulServer.on(GracefulServer.READY, () => {
       console.log("O pai ta on");
@@ -124,9 +105,6 @@ const start = async () => {
     gracefulServer.on(GracefulServer.SHUTTING_DOWN, () => {
       closePool().then(() => {
         console.log("desconectou do banco");
-      });
-      brokerMessagingAdapter.disconnect().then(() => {
-        console.log("desconectou brokerMessaging");
       });
       console.log("O pai ta ficando off");
     });
@@ -138,7 +116,6 @@ const start = async () => {
     fastifyInstance.log.info(`server listening on ${port}`);
     gracefulServer.setReady();
     fastifyInstance.swagger();
-    brokerMessagingAdapter = await consumeMessage({ consumers: brokerMessagingConsumers });
   } catch (err) {
     await closePool();
     process.exit(1);

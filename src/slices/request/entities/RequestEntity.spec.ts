@@ -1,9 +1,5 @@
 import { RequestEntity } from "./RequestEntity";
 import MockDate from "mockdate";
-import { fakeOrderEntity } from "@/slices/order/entities/OrderEntity.spec";
-import { fakeFidelityEntity } from "@/slices/fidelity/entities/FidelityEntity.spec";
-import { fakeRecurrenceEntity } from "@/slices/recurrence/entities/RecurrenceEntity.spec";
-import { fakeRideEntity } from "@/slices/ride/entities/RideEntity.spec";
 
 export const fakeRequestEntity = {
   _id: "123",
@@ -29,10 +25,10 @@ export const fakeRequestEntity = {
   push: false,
   email: false,
   cancelledAt: null,
-  order: fakeOrderEntity,
-  fidelity: fakeFidelityEntity,
-  recurrence: fakeRecurrenceEntity,
-  ride: fakeRideEntity,
+  order: null,
+  fidelity: null,
+  recurrence: null,
+  ride: null,
   updatedById: "61c1f9d0e399d2917bdff44e",
   updatedByRole: "admin",
   duration: 10,

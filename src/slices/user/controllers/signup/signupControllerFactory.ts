@@ -1,7 +1,6 @@
 import { makeLogController } from "@/application/decorators/logControllerFactory";
 import { makeDbAuthentication, makeValidationComposite } from "@/application/factories";
 import { Controller } from "@/application/infra/contracts";
-import { makeAddAccountFactory } from "@/slices/account/useCases";
 import { SignupController } from "@/slices/user/controllers";
 import {
   makeAddUserFactory,
@@ -25,7 +24,6 @@ export const makeSignupController = (): Controller => {
       makeAddUserFactory(),
       makeLoadUserFactory(),
       makeDbAuthentication(),
-      makeAddAccountFactory(),
       makeCompleteOwnerFactory()
     )
   );

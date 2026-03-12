@@ -1,8 +1,3 @@
-import { FidelityData } from "@/slices/fidelity/entities";
-import { OrderData } from "@/slices/order/entities";
-import { RecurrenceData } from "@/slices/recurrence/entities";
-import { RideData } from "@/slices/ride/entities";
-
 export type RequestData = {
   _id?: string;
   createdById: string;
@@ -27,10 +22,10 @@ export type RequestData = {
   haveRecurrence?: boolean;
   haveFidelity?: boolean;
   haveRide?: boolean;
-  fidelity?: FidelityData;
-  ride?: RideData;
-  recurrence?: RecurrenceData;
-  order?: OrderData;
+  fidelity?: any;
+  ride?: any;
+  recurrence?: any;
+  order?: any;
   initDate: string;
   endDate: string;
   cancelledAt?: Date | null;
@@ -69,10 +64,10 @@ export class RequestEntity {
   haveRecurrence?: boolean;
   haveFidelity?: boolean;
   haveRide?: boolean;
-  fidelity?: FidelityData;
-  ride?: RideData;
-  recurrence?: RecurrenceData;
-  order?: OrderData;
+  fidelity?: any;
+  ride?: any;
+  recurrence?: any;
+  order?: any;
   initDate: string;
   endDate: string;
   cancelledAt?: Date | null;

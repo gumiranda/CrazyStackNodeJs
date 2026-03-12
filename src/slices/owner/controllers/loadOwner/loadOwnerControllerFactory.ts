@@ -4,7 +4,6 @@ import { Controller } from "@/application/infra/contracts";
 import { makeLoadOwnerFactory } from "@/slices/owner/useCases";
 import { LoadOwnerController } from "@/slices/owner/controllers";
 import { makeLoadServiceByPageFactory } from "@/slices/service/useCases";
-import { makeLoadPlaceFactory } from "@/slices/place/useCases";
 
 export const makeLoadOwnerController = (): Controller => {
   return makeLogController(
@@ -12,8 +11,7 @@ export const makeLoadOwnerController = (): Controller => {
     new LoadOwnerController(
       makeValidationComposite([]),
       makeLoadOwnerFactory(),
-      makeLoadServiceByPageFactory(),
-      makeLoadPlaceFactory()
+      makeLoadServiceByPageFactory()
     )
   );
 };
