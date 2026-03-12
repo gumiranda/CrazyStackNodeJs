@@ -121,4 +121,12 @@ describe("LoadAvailableTimes", () => {
     expect(userRepository.loadUser).toHaveBeenCalledTimes(2);
     expect(appointment).toBeDefined();
   });
+  it("should return null when both loadUser calls return null myOwnerId", async () => {
+    loadAvailableTimesRepository.loadAvailableTimes.mockResolvedValueOnce(null);
+    userRepository.loadUser
+      .mockResolvedValueOnce({ myOwnerId: null } as any)
+      .mockResolvedValueOnce(null);
+    const result = await testInstance(fakeQueryAvailableTimes);
+    expect(result).toBeNull();
+  });
 });

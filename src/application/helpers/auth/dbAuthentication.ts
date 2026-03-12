@@ -18,7 +18,7 @@ export class DbAuthentication implements Authentication {
       const isValid = await this.hashComparer.compare(password, user.password);
       if (isValid) {
         const { accessToken, refreshToken } =
-          (await this.authRefreshToken(user._id)) || {};
+          await this.authRefreshToken(user._id);
         return { accessToken, refreshToken };
       }
     }

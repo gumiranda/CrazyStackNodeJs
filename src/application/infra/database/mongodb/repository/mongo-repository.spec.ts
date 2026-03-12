@@ -358,6 +358,12 @@ describe("MongoRepository", () => {
       const sortStage = pipeline.find((s: any) => s.$sort);
       expect(sortStage).toBeUndefined();
     });
+
+    test("should use default query and limit when not provided", async () => {
+      mockToArray.mockResolvedValueOnce([]);
+      await repository.getPaginate(1, undefined as any, { createdAt: -1 }, undefined as any, {});
+      expect(mockAggregate).toHaveBeenCalled();
+    });
   });
 
   describe("getCount", () => {

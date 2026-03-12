@@ -54,12 +54,12 @@ export const completeOwner: CompleteOwnerSignature =
       ).map((service: any) => addService(service))
     );
     const serviceIds =
-      servicesInserted.map((service: any) => service?._id?.toString?.()) ?? [];
+      servicesInserted.map((service: any) => service?._id?.toString?.());
     const serviceOptions =
       servicesInserted.map((service: any) => ({
         value: service?._id?.toString?.(),
         label: service?.name,
-      })) ?? [];
+      }));
     const ownerData = await addOwner({
       name,
       createdById: _id,

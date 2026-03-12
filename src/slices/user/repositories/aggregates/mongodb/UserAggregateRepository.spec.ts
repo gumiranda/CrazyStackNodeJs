@@ -217,4 +217,21 @@ describe("UserAggregateRepository", () => {
     const result = await testInstance.loadUserByPageGeoNear(fakeQuery);
     expect(result).toBeDefined();
   });
+
+  test("should use default page 0 in geoNear branch when page not provided", async () => {
+    fakeQuery.options = { userLoggedId: "507f1f77bcf86cd799439011" };
+    repository.aggregate
+      .mockResolvedValueOnce(fakeUsers)
+      .mockResolvedValueOnce([{ name: 3 }]);
+    const result = await testInstance.loadUserByPageGeoNear(fakeQuery);
+    expect(result).toEqual({ users: fakeUsers, total: 3 });
+  });
+
+  test("should return empty users when first aggregate returns null in geoNear", async () => {
+    repository.aggregate
+      .mockResolvedValueOnce(null)
+      .mockResolvedValueOnce([{ name: 3 }]);
+    const result = await testInstance.loadUserByPageGeoNear(fakeQuery);
+    expect(result).toEqual({ users: [], total: 3 });
+  });
 });

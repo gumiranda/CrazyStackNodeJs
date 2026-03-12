@@ -31,7 +31,7 @@ export class AuthMiddleware implements Middleware {
     try {
       const authHeader = httpRequest?.headers?.["authorization"];
       if (authHeader) {
-        const [, accessToken] = authHeader?.split?.(" ") ?? [];
+        const [, accessToken] = authHeader.split(" ");
         if (accessToken) {
           const decoded = await this.verifyToken(accessToken, env.jwtSecret);
           if (!decoded) {
