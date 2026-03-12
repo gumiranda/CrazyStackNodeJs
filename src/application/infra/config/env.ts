@@ -18,7 +18,7 @@ export const envSchema = z.object({
     })
     .default("development"),
   uploadProvider: z.enum(["cloudflare_r2"]).default("cloudflare_r2"),
-  database: z.enum(["postgres", "mongodb", "prisma"]).default("mongodb"),
+  database: z.enum(["postgres", "mongodb"]).default("mongodb"),
   FUSORARIOBR: z.string().default("production"),
   PGUSER: z.string().default("secret"),
   PGPASSWORD: z.string().default("secret"),
