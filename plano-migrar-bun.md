@@ -35,6 +35,10 @@
  - Verificar se MongoHelper (singleton com connection pooling) funciona corretamente.
  - O MongoHelper.connect() retorna o MongoClient — garantir que sessions/transactions continuam
  funcionando.
+ - Memory leak report: Ha reports de crescimento de RSS de 8-12MB/hora com conexoes MongoDB abertas no
+  Bun (Issues #12117, #24118 no repo do Bun). O MongoHelper mantem conexao aberta permanentemente.
+ Rodar teste de longa duracao (~1h) e monitorar RSS. Se confirmar leak, mitigar com reconexao
+ periodica ou pool drain agendado ate fix upstream.
 
  0.3 Arquivos .env
 
@@ -147,28 +151,58 @@
  ---
  Fase 3: Framework — Fastify para Elysia
 
- 3.1 Instalar Elysia e plugins
+ 3.1 Instalar Elysia e plugins (versoes minimas por seguranca)
 
- bun add elysia @elysiajs/cors @elysiajs/swagger elysia-rate-limit
+ bun add elysia@^1.4.26 @elysiajs/cors@^1.4.1 @elysiajs/swagger elysia-rate-limit
  bun remove fastify @fastify/cors @fastify/helmet @fastify/multipart @fastify/rate-limit
  @fastify/request-context @fastify/swagger @fastify/swagger-ui @fastify/under-pressure
  @fastify/mongodb @gquittet/graceful-server
+ CVEs criticos:
+ - Elysia < 1.4.18: RCE via prototype pollution (CVE confirmado)
+ - @elysiajs/cors < 1.3.1: bypass via substring matching — perigoso pro multi-tenant do Barberix onde
+ cada white-label tem dominio proprio
 
  3.2 src/index.ts — Reescrever completo
 
- - Criar instancia Elysia com plugins (cors, swagger, rate-limit)
- - Rate limiting: elysia-rate-limit com { max: 1000, duration: 600_000 } (1000 req / 10 min)
-   - Alternativa para producao: delegar rate limit ao reverse proxy (Nginx/Cloudflare) — mais robusto
- para multi-tenant/white-label
- - Registrar rotas com prefixo /api via .group()
+ Plugins:
+ - CORS dinamico para multi-tenant (ver 3.2.1)
+ - Swagger
+ - Rate limiting: elysia-rate-limit com { max: 1000, duration: 600_000 }
+   - Alternativa para producao: delegar ao reverse proxy (Nginx/Cloudflare)
  - Headers de seguranca via onAfterHandle (substitui helmet)
- - Graceful shutdown completo — chamar na ordem:
-   a. app.stop() — fecha o Elysia e para de aceitar conexoes
-   b. MongoHelper.disconnect() / client.close() — fecha pool MongoDB
-   c. closePool() — fecha pool PostgreSQL
-   d. process.exit(0)
+ - Registrar rotas com prefixo /api via .group()
+
+ 3.2.1 CORS dinamico para multi-tenant:
+ Barberix e white-label com dominios por tenant. CORS com string estatica e inseguro:
+ import cors from "@elysiajs/cors";
+
+ app.use(cors({
+   origin: ({ request }) => {
+     if (env.environment !== "production") return true;
+     const origin = request.headers.get("origin") ?? "";
+     const allowed = (process.env.ALLOWED_ORIGINS ?? "").split(",").filter(Boolean);
+     return allowed.includes(origin);
+   },
+   methods: ["POST", "GET", "PATCH", "DELETE"],
+   allowedHeaders: ["Content-Type", "Authorization", "authorization", "refreshtoken"],
+ }));
+
+ 3.2.2 Graceful shutdown com drain (app.stop() nao espera requests in-flight — Issue #1214):
+ let isShuttingDown = false;
+
+ // No app, antes das rotas:
+ app.onBeforeHandle(({ set }) => {
+   if (isShuttingDown) {
+     set.status = 503;
+     return { error: "Server shutting down" };
+   }
+ });
+
  const shutdown = async () => {
-   console.log("O pai ta ficando off");
+   console.log("Draining...");
+   isShuttingDown = true;
+   // Espera requests em andamento terminarem (timeout 10s)
+   await new Promise((r) => setTimeout(r, 10_000));
    await app.stop();
    await MongoHelper.disconnect();
    await closePool();
@@ -176,6 +210,19 @@
  };
  process.on("SIGTERM", shutdown);
  process.on("SIGINT", shutdown);
+
+ 3.2.3 Structured logging minimo (observabilidade):
+ APM vendors (dd-trace, etc.) geralmente nao suportam Bun nativamente. Incluir ao menos logging com
+ request ID e latencia:
+ app.onAfterResponse(({ request, set }) => {
+   console.log(JSON.stringify({
+     method: request.method,
+     url: request.url,
+     status: set.status,
+     timestamp: new Date().toISOString(),
+   }));
+ });
+ Melhoria futura: @elysiajs/opentelemetry + @opentelemetry/exporter-trace-otlp-http para APM completo.
 
  3.3 src/application/adapters/router-adapter.ts — Reescrever
 
@@ -260,20 +307,28 @@
    // ...
  }
 
- Padrao novo (Elysia):
+ Padrao novo (Elysia) — usar guard() ao inves de onBeforeHandle() solto:
+
+ IMPORTANTE sobre ordem de hooks no Elysia: No Fastify, hooks dentro de um plugin afetam todas as
+ rotas do plugin. No Elysia, hooks so afetam rotas registradas depois deles. Se alguem adicionar rota
+ antes do onBeforeHandle, fica sem auth sem aviso. guard() forca o escopo visualmente e e mais seguro:
+
  import { Elysia } from "elysia";
 
+ // Rotas autenticadas — usar guard() para escopo explicito
  export const user = new Elysia()
    .state("userId", null as string | null)
    .state("userLogged", null as any)
    .state("daysToNextPayment", null as any)
-   .onBeforeHandle(authLogged())
-   .post("/user/add", addUserAdapter())
-   .get("/user/load", loadUserAdapter())
-   .get("/user/loadByPage", loadUserByPageAdapter())
-   .get("/user/loadByGeoNear", loadUserByGeoNearAdapter())
-   .delete("/user/delete", deleteUserAdapter())
-   .patch("/user/update", updateUserAdapter());
+   .guard({ beforeHandle: [authLogged()] }, (app) =>
+     app
+       .post("/user/add", addUserAdapter())
+       .get("/user/load", loadUserAdapter())
+       .get("/user/loadByPage", loadUserByPageAdapter())
+       .get("/user/loadByGeoNear", loadUserByGeoNearAdapter())
+       .delete("/user/delete", deleteUserAdapter())
+       .patch("/user/update", updateUserAdapter())
+   );
 
  Rotas sem auth (auth, public, health):
  export const auth = new Elysia()
@@ -323,9 +378,9 @@
  core-js, jest, @types/jest, ts-jest, jest-*, @shelf/jest-mongodb,
  jest-mock-extended, dotenv
 
- Adicionar
+ Adicionar (versoes minimas por seguranca)
 
- elysia, @elysiajs/cors, @elysiajs/swagger, elysia-rate-limit, jose, bun-types
+ elysia@^1.4.26, @elysiajs/cors@^1.4.1, @elysiajs/swagger, elysia-rate-limit, jose, bun-types
 
  Scripts finais
 
@@ -408,3 +463,38 @@
 
  Sequencia: 0 (validacao) → 1+2 juntas (runtime+crypto, sem gap por causa do bcrypt nativo) → 3
  (framework) → 4 (cleanup) → 5 (testes)
+
+ ---
+ Melhorias futuras (pos-migracao)
+
+ resolve() ao inves de .state() para contexto de request
+
+ O plano usa .state() nos routers para userId, userLogged, etc. — e state global mutavel, funciona mas
+  nao e type-safe por request. O padrao idiomatico do Elysia e resolve():
+ export const user = new Elysia()
+   .resolve(async ({ headers }) => {
+     const auth = await verifyAuth(headers);
+     return { userId: auth.userId, userLogged: auth.user };
+   })
+   .post("/user/add", ({ userId }) => { /* userId e tipado */ });
+ Elimina .state() em cada router e o tipo e inferido automaticamente.
+
+ Bun.S3Client nativo para R2
+
+ Bun tem client S3/R2 nativo (Bun.S3Client) ~5x mais rapido que @aws-sdk/client-s3 para downloads:
+ const s3 = new Bun.S3Client({
+   endpoint: process.env.R2_ENDPOINT,
+   accessKeyId: process.env.R2_ACCESS_KEY,
+   secretAccessKey: process.env.R2_SECRET_KEY,
+ });
+ Substituir CloudflareR2UploadProvider para usar isso.
+
+ Schemas Typebox completos
+
+ Migrar JSON Schema dos arquivos *Schema.ts para t (Typebox) do Elysia — ganha validacao runtime no
+ framework + Swagger auto-gerado com tipos.
+
+ OpenTelemetry
+
+ bun add @elysiajs/opentelemetry @opentelemetry/exporter-trace-otlp-http
+ APM completo com traces, spans, e metricas exportando para collector da escolha.
