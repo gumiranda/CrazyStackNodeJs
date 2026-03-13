@@ -1,14 +1,53 @@
-Migrar CrazyStackNodeJs para Bun.js + Elysia
+ Migrar CrazyStackNodeJs para Bun.js + Elysia
 
  Context
 
- O projeto Barberix (sistema de agendamentos online) roda em Node.js + Fastify 5 + TypeScript. O objetivo e migrar
-  para Bun.js + Elysia para aproveitar a performance nativa do Bun (TS nativo, password hashing built-in, testes
- built-in) e a DX do Elysia (type-safe, end-to-end).
+ O projeto Barberix (sistema de agendamentos online) roda em Node.js + Fastify 5 + TypeScript. O
+ objetivo e migrar para Bun.js + Elysia para aproveitar a performance nativa do Bun (TS nativo,
+ password hashing built-in, testes built-in) e a DX do Elysia (type-safe, end-to-end).
 
- A arquitetura Clean Architecture com feature slices (src/slices/) e framework-agnostica — o Fastify so aparece na
-  camada de infraestrutura. Isso torna a migracao viavel com mudancas concentradas em ~40 arquivos, sem tocar na
- logica de negocio (~440 arquivos intactos).
+ A arquitetura Clean Architecture com feature slices (src/slices/) e framework-agnostica — o Fastify
+ so aparece na camada de infraestrutura. Isso torna a migracao viavel com mudancas concentradas em ~40
+  arquivos, sem tocar na logica de negocio (~440 arquivos intactos).
+
+ ---
+ Fase 0: Pre-flight — Validacao de compatibilidade
+
+ Antes de qualquer mudanca, rodar bun install no projeto atual para verificar:
+
+ 0.1 Deps com bindings nativos (N-API/node-gyp)
+
+ - bcrypt usa binding nativo que pode falhar no Bun. Como sera removido na Fase 2, executar Fase 1 e 2
+  juntas (sem gap) para nao travar com bcrypt quebrado.
+ - Se bun install falhar no bcrypt, adicionar bcrypt ao trustedDependencies no package.json ou usar
+ --ignore-scripts temporariamente.
+
+ 0.2 MongoDB Connection Pooling
+
+ - Testar conexao MongoDB isolada sob Bun antes de migrar o framework:
+ // test-mongo-bun.ts (script temporario)
+ import { MongoClient } from "mongodb";
+ const client = new MongoClient("mongodb://localhost:27017");
+ await client.connect();
+ const db = client.db("test");
+ console.log(await db.listCollections().toArray());
+ await client.close();
+ - Verificar se MongoHelper (singleton com connection pooling) funciona corretamente.
+ - O MongoHelper.connect() retorna o MongoClient — garantir que sessions/transactions continuam
+ funcionando.
+
+ 0.3 Arquivos .env
+
+ - Bun carrega .env automaticamente sem dotenv, mas o comportamento com .env.production, .env.test
+ etc. e diferente:
+   - Bun carrega .env e .env.local por padrao
+   - .env.production / .env.test nao sao carregados automaticamente (diferente do dotenv com scripts
+ customizados)
+ - Verificar se env.ts (Zod schema) continua parseando corretamente em todos os ambientes
+ - Se necessario, carregar manualmente no src/index.ts:
+ import { file } from "bun";
+ // Bun ja carrega .env, mas se precisar de .env.production:
+ // import.meta.env ou process.env ja estarao populados
 
  ---
  Fase 1: Runtime — Node.js para Bun
@@ -110,16 +149,33 @@ Migrar CrazyStackNodeJs para Bun.js + Elysia
 
  3.1 Instalar Elysia e plugins
 
- bun add elysia @elysiajs/cors @elysiajs/swagger
- bun remove fastify @fastify/cors @fastify/helmet @fastify/multipart @fastify/rate-limit @fastify/request-context
- @fastify/swagger @fastify/swagger-ui @fastify/under-pressure @fastify/mongodb @gquittet/graceful-server
+ bun add elysia @elysiajs/cors @elysiajs/swagger elysia-rate-limit
+ bun remove fastify @fastify/cors @fastify/helmet @fastify/multipart @fastify/rate-limit
+ @fastify/request-context @fastify/swagger @fastify/swagger-ui @fastify/under-pressure
+ @fastify/mongodb @gquittet/graceful-server
 
  3.2 src/index.ts — Reescrever completo
 
- - Criar instancia Elysia com plugins (cors, swagger)
+ - Criar instancia Elysia com plugins (cors, swagger, rate-limit)
+ - Rate limiting: elysia-rate-limit com { max: 1000, duration: 600_000 } (1000 req / 10 min)
+   - Alternativa para producao: delegar rate limit ao reverse proxy (Nginx/Cloudflare) — mais robusto
+ para multi-tenant/white-label
  - Registrar rotas com prefixo /api via .group()
  - Headers de seguranca via onAfterHandle (substitui helmet)
- - Graceful shutdown via process.on("SIGTERM"/"SIGINT")
+ - Graceful shutdown completo — chamar na ordem:
+   a. app.stop() — fecha o Elysia e para de aceitar conexoes
+   b. MongoHelper.disconnect() / client.close() — fecha pool MongoDB
+   c. closePool() — fecha pool PostgreSQL
+   d. process.exit(0)
+ const shutdown = async () => {
+   console.log("O pai ta ficando off");
+   await app.stop();
+   await MongoHelper.disconnect();
+   await closePool();
+   process.exit(0);
+ };
+ process.on("SIGTERM", shutdown);
+ process.on("SIGINT", shutdown);
 
  3.3 src/application/adapters/router-adapter.ts — Reescrever
 
@@ -167,8 +223,33 @@ Migrar CrazyStackNodeJs para Bun.js + Elysia
 
  3.5 src/application/adapters/upload-photo-adapter.ts — Reescrever
 
- Trocar request.file() do Fastify por body.file do Elysia (Web API File/Blob). Trocar requestContext.get() por
- store.
+ Trocar request.file() do Fastify por body.file do Elysia (Web API File/Blob). Trocar
+ requestContext.get() por store.
+
+ IMPORTANTE: O Elysia precisa de t.File() do Typebox no schema da rota para parsear multipart
+ corretamente. Sem isso, body.file vem undefined. Isso e uma excecao a decisao de "manter JSON Schema"
+  — para upload, Typebox e obrigatorio:
+
+ // No uploadPhotoRouter.ts
+ import { t } from "elysia";
+
+ export const uploadRoutes = new Elysia()
+   .state("userId", null as string | null)
+   .state("userLogged", null as any)
+   .state("daysToNextPayment", null as any)
+   .onBeforeHandle(authLogged())
+   .post("/upload", adaptUploadPhotoRoute(makeAddPhotoController()), {
+     body: t.Object({
+       file: t.File(),
+     }),
+   });
+
+ Alem disso, o CloudflareR2UploadProvider.uploadFile() recebe stream do Fastify multipart. Com Elysia,
+  recebe File (Web API Blob). Atualizar para aceitar ambos:
+ async uploadFile(file: any, expiresIn: number) {
+   const body = file instanceof Blob ? file.stream() : file.file;
+   // ... resto do upload
+ }
 
  3.6 Reescrever 10 Router files — Mesma transformacao mecanica
 
@@ -217,10 +298,11 @@ Migrar CrazyStackNodeJs para Bun.js + Elysia
 
  Manter como array de plugins Elysia (compativel com .use()).
 
- 3.8 Schemas — Manter JSON Schema existente
+ 3.8 Schemas — Manter JSON Schema existente (exceto upload)
 
- Os controllers ja validam via ValidationComposite. Schemas servem so pro Swagger. Migrar pra Typebox do Elysia
- fica como melhoria futura.
+ Os controllers ja validam via ValidationComposite. Schemas servem so pro Swagger. Migrar pra Typebox
+ do Elysia fica como melhoria futura.
+ Excecao: Rota de upload PRECISA de t.File() do Typebox (ver 3.5).
 
  3.9 Headers de seguranca (substitui @fastify/helmet)
 
@@ -243,7 +325,7 @@ Migrar CrazyStackNodeJs para Bun.js + Elysia
 
  Adicionar
 
- elysia, @elysiajs/cors, @elysiajs/swagger, jose, bun-types
+ elysia, @elysiajs/cors, @elysiajs/swagger, elysia-rate-limit, jose, bun-types
 
  Scripts finais
 
@@ -263,13 +345,13 @@ Migrar CrazyStackNodeJs para Bun.js + Elysia
  5.1 Deletar configs Jest
 
  - jest.config.js, jest-all-config.js, jest-db-config.js, jest-mongodb-config.js, jest-spec-config.js,
- jest-test-config.js
+  jest-test-config.js
 
  5.2 Em cada arquivo .spec.ts / .test.ts (~181 arquivos)
 
  Transformacao mecanica:
- - import { jest } from "@jest/globals"  →  import { describe, it, expect, beforeAll, afterAll, beforeEach,
- afterEach, mock, spyOn } from "bun:test"
+ - import { jest } from "@jest/globals"  →  import { describe, it, expect, beforeAll, afterAll,
+ beforeEach, afterEach, mock, spyOn } from "bun:test"
  - jest.fn()                             →  mock(() => {})
  - jest.fn().mockResolvedValue(x)        →  mock(() => Promise.resolve(x))
  - jest.mock("mod", ...)                 →  mock.module("mod", ...)
@@ -277,6 +359,20 @@ Migrar CrazyStackNodeJs para Bun.js + Elysia
  5.3 Testes de integracao (*.test.ts nos routers)
 
  Trocar fastify.inject() por app.handle(new Request(...)) do Elysia.
+
+ 5.4 Cuidado: mock.module() do Bun e experimental
+
+ - mock.module() do Bun nao funciona igual ao jest.mock() em todos os cenarios:
+   - Nao faz hoisting automatico (jest.mock sobe pro topo do arquivo)
+   - Nao funciona bem com modulos ja importados
+   - Pode falhar com re-exports e barrel files
+ - Estrategia: Como a arquitetura usa injecao de dependencia via factories (controllers recebem
+ useCases, useCases recebem repositories), a maioria dos testes unitarios ja usa DI explicita — nao
+ depende de jest.mock().
+ - Para os testes que usam jest.mock() pesadamente: avaliar caso a caso se precisa refatorar para DI
+ explicita ou se mock.module() funciona.
+ - Se mock.module() causar problemas demais, considerar manter Jest rodando via Bun (bunx jest) como
+ fallback temporario.
 
  ---
  O que NAO muda (~440 arquivos)
@@ -297,14 +393,18 @@ Migrar CrazyStackNodeJs para Bun.js + Elysia
  ---
  Verificacao
 
- 1. Fase 1: bun run src/index.ts — servidor inicia (ainda com Fastify)
- 2. Fase 2: Testar login/signup com hashes existentes no banco
- 3. Fase 3: Testar todos endpoints — health, auth (signup/login), CRUD autenticado, upload
- 4. Fase 5: bun test — todos os 181 testes passam
+ 1. Fase 0: bun install sem erros + script de teste MongoDB conecta
+ 2. Fase 1: bun run src/index.ts — servidor inicia (ainda com Fastify)
+ 3. Fase 2: Testar login/signup — hashes existentes no banco continuam funcionando com
+ Bun.password.verify
+ 4. Fase 3: Testar todos endpoints — health, auth (signup/login), CRUD autenticado, upload de foto
+   - Verificar rate limiting esta ativo
+   - Verificar headers de seguranca nas responses
+   - Verificar graceful shutdown fecha MongoDB + PostgreSQL
+ 5. Fase 5: bun test — testes passam. Testes com mock.module() que falharem precisam de refactor para
+ DI.
 
- Ordem de execucao recomendada
+ Ordem de execucao
 
- Fase 3 (framework) primeiro, ja que e a maior mudanca e as outras dependem dela. Fases 1 e 2 sao pre-requisitos.
- Fase 4 e 5 sao cleanup.
-
- Sequencia: 1 → 2 → 3 → 4 (cleanup) → 5 (testes)
+ Sequencia: 0 (validacao) → 1+2 juntas (runtime+crypto, sem gap por causa do bcrypt nativo) → 3
+ (framework) → 4 (cleanup) → 5 (testes)
