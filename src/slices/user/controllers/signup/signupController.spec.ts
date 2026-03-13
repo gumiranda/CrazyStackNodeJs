@@ -147,6 +147,16 @@ describe("SignupController", () => {
     await sut.execute({ body: fakeBody });
     expect(loadUser).toHaveBeenCalledTimes(3);
   });
+  it("should call slug with suffix when slug collision occurs", async () => {
+    loadUser
+      .mockResolvedValueOnce(null) // email check
+      .mockResolvedValueOnce({ _id: "existing" }) // first slug check
+      .mockResolvedValueOnce(null); // second slug check
+    await sut.execute({ body: fakeBody });
+    expect(mockSlug).toHaveBeenCalledTimes(2);
+    const secondCall = mockSlug.mock.calls[1][0];
+    expect(secondCall).toMatch(/^Test User \d+$/);
+  });
   it("should check cpf if provided", async () => {
     const bodyWithCpf = { ...fakeBody, cpf: "12345678900" };
     await sut.execute({ body: bodyWithCpf });

@@ -43,6 +43,14 @@ describe("logController", () => {
   });
 });
 
+  test("should call execute directly and return ok", async () => {
+    controller.execute.mockResolvedValueOnce(ok(fakeUserEntity));
+    const result = await testInstance.execute(fakeRequest);
+    expect(result).toEqual(ok(fakeUserEntity));
+    expect(controller.execute).toHaveBeenCalledWith(fakeRequest);
+  });
+});
+
 describe("makeLogController", () => {
   test("should return a LogController instance", () => {
     const fakeController = mock<Controller>();

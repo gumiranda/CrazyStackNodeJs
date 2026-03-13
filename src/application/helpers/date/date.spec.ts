@@ -19,8 +19,10 @@ import {
   mapBusinessHours,
   queryDateGenerator,
   secondStep,
+  SecondStepInput,
   userHaveToPay,
 } from "./date";
+import { env } from "@/application/infra";
 
 describe("date tests business rules", () => {
   let mockHoursObject: GetHoursObjectInput;
@@ -1229,5 +1231,153 @@ describe("date tests business rules", () => {
       endDay: formatISO(endOfDay(new Date())),
       initDay: formatISO(startOfDay(new Date())),
     });
+  });
+  test("getDateWithCustomHourAndMinutes in production adds 3 hours", () => {
+    const originalEnv = env.environment;
+    (env as any).environment = "production";
+    try {
+      const result = getDateWithCustomHourAndMinutes({
+        hours: 8,
+        minutes: 0,
+        date: new Date(2021, 10, 10),
+      });
+      expect(result.getUTCHours()).toBe(11);
+      expect(result.getUTCMinutes()).toBe(0);
+    } finally {
+      (env as any).environment = originalEnv;
+    }
+  });
+  test("secondStep with haveLunchTime and last appointment in second half without next", () => {
+    const input: SecondStepInput = {
+      hourStart: new Date(2021, 10, 10, 8, 0, 0),
+      hourEnd: new Date(2021, 10, 10, 19, 0, 0),
+      hourLunchStart: new Date(2021, 10, 10, 11, 0, 0),
+      hourLunchEnd: new Date(2021, 10, 10, 12, 0, 0),
+      haveLunchTime: true,
+      dateQuery: new Date(2021, 10, 10, 3, 0),
+      timeAvailableProfessional: [],
+      appointments: [
+        {
+          initDate: "2021-11-10T15:30:00.000Z",
+          endDate: "2021-11-10T16:00:00.000Z",
+        },
+      ],
+    };
+    secondStep(input);
+    expect(input.timeAvailableProfessional).toStrictEqual([
+      {
+        initDate: new Date("2021-11-10T16:00:00.000Z"),
+        endDate: new Date("2021-11-10T22:00:00.000Z"),
+      },
+    ]);
+  });
+  test("secondStep with haveLunchTime and two consecutive appointments both in second half", () => {
+    const input: SecondStepInput = {
+      hourStart: new Date(2021, 10, 10, 8, 0, 0),
+      hourEnd: new Date(2021, 10, 10, 19, 0, 0),
+      hourLunchStart: new Date(2021, 10, 10, 11, 0, 0),
+      hourLunchEnd: new Date(2021, 10, 10, 12, 0, 0),
+      haveLunchTime: true,
+      dateQuery: new Date(2021, 10, 10, 3, 0),
+      timeAvailableProfessional: [],
+      appointments: [
+        {
+          initDate: "2021-11-10T15:30:00.000Z",
+          endDate: "2021-11-10T16:00:00.000Z",
+        },
+        {
+          initDate: "2021-11-10T16:30:00.000Z",
+          endDate: "2021-11-10T17:00:00.000Z",
+        },
+      ],
+    };
+    secondStep(input);
+    expect(input.timeAvailableProfessional).toStrictEqual([
+      {
+        initDate: new Date("2021-11-10T16:00:00.000Z"),
+        endDate: new Date("2021-11-10T16:30:00.000Z"),
+      },
+      {
+        initDate: new Date("2021-11-10T17:00:00.000Z"),
+        endDate: new Date("2021-11-10T22:00:00.000Z"),
+      },
+    ]);
+  });
+  test("addTimeInArray when initDate is greater than endDate", () => {
+    const arr: any[] = [];
+    addTimeInArray({
+      initDate: new Date(2021, 10, 10, 14, 0, 0),
+      endDate: new Date(2021, 10, 10, 11, 0, 0),
+      dateQuery: new Date(2021, 10, 10, 0, 0, 0),
+      array: arr,
+    });
+    expect(arr).toStrictEqual([]);
+  });
+  test("addTimeInArray when initDate is before dateQuery", () => {
+    const arr: any[] = [];
+    addTimeInArray({
+      initDate: new Date(2021, 10, 9, 10, 0, 0),
+      endDate: new Date(2021, 10, 10, 11, 0, 0),
+      dateQuery: new Date(2021, 10, 10, 12, 0, 0),
+      array: arr,
+    });
+    expect(arr).toStrictEqual([]);
+  });
+  test("getArrayTimes with appointments but no lunch time (else branch)", () => {
+    const infoOwnerNoLunch = {
+      hourStart1: "8:00",
+      hourEnd1: "18:00",
+      hourLunchEnd1: null,
+      hourLunchStart1: null,
+      hourStart2: "8:00",
+      hourEnd2: "18:00",
+      hourLunchEnd2: "13:00",
+      hourLunchStart2: "12:00",
+      hourStart3: "8:00",
+      hourEnd3: "18:00",
+      hourLunchEnd3: "13:00",
+      hourLunchStart3: "12:00",
+      days1: {
+        monday1: true,
+        sunday1: false,
+        tuesday1: true,
+        thursday1: true,
+        friday1: true,
+        wednsday1: false,
+        saturday1: false,
+      },
+      days2: {
+        monday2: false,
+        sunday2: false,
+        tuesday2: false,
+        thursday2: false,
+        friday2: false,
+        wednsday2: true,
+        saturday2: false,
+      },
+      days3: {
+        monday3: false,
+        sunday3: false,
+        tuesday3: false,
+        thursday3: false,
+        friday3: false,
+        wednsday3: false,
+        saturday3: true,
+      },
+    };
+    const result = getArrayTimes({
+      infoOwner: infoOwnerNoLunch,
+      dayOfWeekFound: "monday",
+      dateQuery: new Date(2021, 10, 10, 0, 0, 0),
+      duration: 30,
+      appointments: [
+        {
+          initDate: "2021-11-10T14:00:00.000Z",
+          endDate: "2021-11-10T14:30:00.000Z",
+        },
+      ],
+    });
+    expect(result.timeAvailableProfessional.length).toBeGreaterThan(0);
+    expect(result.timeAvailable.length).toBeGreaterThan(0);
   });
 });

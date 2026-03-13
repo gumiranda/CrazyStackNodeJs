@@ -415,6 +415,127 @@ describe("MongoRepository", () => {
     });
   });
 
+  describe("getOne (additional branches)", () => {
+    test("should work with no options parameter", async () => {
+      const fakeDoc = { _id: "abc", name: "test" };
+      mockToArray.mockResolvedValueOnce([fakeDoc]);
+      const result = await repository.getOne({ name: "test" });
+      expect(result).toEqual(fakeDoc);
+      const pipeline = mockAggregate.mock.calls[0][0];
+      // No $project stage
+      const projectStage = pipeline.find((s: any) => s.$project);
+      expect(projectStage).toBeUndefined();
+      // No $lookup stage
+      const lookupStage = pipeline.find((s: any) => s.$lookup);
+      expect(lookupStage).toBeUndefined();
+    });
+
+    test("should not add $project when projection is empty",
+      async () => {
+        mockToArray.mockResolvedValueOnce([{ _id: "abc" }]);
+        await repository.getOne(
+          { name: "test" },
+          { projection: {} }
+        );
+        const pipeline = mockAggregate.mock.calls[0][0];
+        const projectStage = pipeline.find(
+          (s: any) => s.$project
+        );
+        expect(projectStage).toBeUndefined();
+      }
+    );
+
+    test("should not crash when query has no _id", async () => {
+      mockToArray.mockResolvedValueOnce([{ _id: "abc", name: "x" }]);
+      const result = await repository.getOne({ name: "x" });
+      expect(result).toEqual({ _id: "abc", name: "x" });
+    });
+  });
+
+  describe("add (edge cases)", () => {
+    test("should return null when insertOne returns undefined",
+      async () => {
+        mockInsertOne.mockResolvedValueOnce(undefined);
+        const result = await repository.add({ name: "test" });
+        expect(result).toBeNull();
+      }
+    );
+  });
+
+  describe("getPaginate (additional branches)", () => {
+    test("should not add $project when projection is empty",
+      async () => {
+        mockToArray.mockResolvedValueOnce([]);
+        await repository.getPaginate(
+          1,
+          {},
+          { createdAt: -1 },
+          10,
+          {}
+        );
+        const pipeline = mockAggregate.mock.calls[0][0];
+        const projectStage = pipeline.find(
+          (s: any) => s.$project
+        );
+        expect(projectStage).toBeUndefined();
+      }
+    );
+
+    test("should use 'users' as relatedCollection for createdBy " +
+      "populate",
+      async () => {
+        mockToArray.mockResolvedValueOnce([]);
+        await repository.getPaginate(
+          1,
+          {},
+          { createdAt: -1 },
+          10,
+          {},
+          { createdBy: true }
+        );
+        const pipeline = mockAggregate.mock.calls[0][0];
+        const lookupStage = pipeline.find(
+          (s: any) => s.$lookup
+        );
+        expect(lookupStage.$lookup.from).toBe("users");
+        expect(lookupStage.$lookup.localField).toBe("createdById");
+      }
+    );
+
+    test("should handle normalizeQuery without _id in getPaginate",
+      async () => {
+        mockToArray.mockResolvedValueOnce([{ _id: "1" }]);
+        const result = await repository.getPaginate(
+          1,
+          { active: true },
+          { createdAt: -1 },
+          5,
+          {}
+        );
+        expect(result).toEqual([{ _id: "1" }]);
+        expect(mockAggregate).toHaveBeenCalled();
+      }
+    );
+  });
+
+  describe("normalizeQuery (edge cases)", () => {
+    test("should not crash when query has no _id (via getCount)",
+      async () => {
+        mockCountDocuments.mockResolvedValueOnce(3);
+        const result = await repository.getCount({ active: true });
+        expect(result).toBe(3);
+      }
+    );
+
+    test("should not crash when query is empty (via deleteOne)",
+      async () => {
+        mockDeleteOne.mockResolvedValueOnce({ deletedCount: 0 });
+        const result = await repository.deleteOne({});
+        expect(result).toBe(false);
+      }
+    );
+  });
+
   describe("upsertAndPush", () => {
     test("should call findOneAndUpdate with correct parameters", async () => {
       const query = { name: "test" };

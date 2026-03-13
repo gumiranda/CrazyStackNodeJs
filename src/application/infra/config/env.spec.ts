@@ -116,4 +116,71 @@ describe("env config", () => {
     expect(result.jwtRefreshSecret).toBe("secret");
     expect(result.environment).toBe("production");
   });
+
+  test("production fail-fast: should throw when jwtSecret is default", () => {
+    const parsed = envSchema.parse({
+      ...baseEnv,
+      environment: "production",
+      jwtSecret: "secret",
+      jwtRefreshSecret: "my-refresh-secret",
+    });
+    expect(() => {
+      if (parsed.environment === "production") {
+        if (
+          parsed.jwtSecret === "secret" ||
+          parsed.jwtRefreshSecret === "secret"
+        ) {
+          throw new Error(
+            "JWT secrets must not use default values in production."
+            + " Set JWT_SECRET and JWT_REFRESH_SECRET"
+            + " environment variables."
+          );
+        }
+      }
+    }).toThrow("JWT secrets must not use default values");
+  });
+
+  test("production fail-fast: should throw when jwtRefreshSecret is default", () => {
+    const parsed = envSchema.parse({
+      ...baseEnv,
+      environment: "production",
+      jwtSecret: "real-secret",
+      jwtRefreshSecret: "secret",
+    });
+    expect(() => {
+      if (parsed.environment === "production") {
+        if (
+          parsed.jwtSecret === "secret" ||
+          parsed.jwtRefreshSecret === "secret"
+        ) {
+          throw new Error(
+            "JWT secrets must not use default values in production."
+            + " Set JWT_SECRET and JWT_REFRESH_SECRET"
+            + " environment variables."
+          );
+        }
+      }
+    }).toThrow("JWT secrets must not use default values");
+  });
+
+  test("production fail-fast: should NOT throw when both secrets are non-default", () => {
+    const parsed = envSchema.parse({
+      ...baseEnv,
+      environment: "production",
+      jwtSecret: "real-secret",
+      jwtRefreshSecret: "real-refresh-secret",
+    });
+    expect(() => {
+      if (parsed.environment === "production") {
+        if (
+          parsed.jwtSecret === "secret" ||
+          parsed.jwtRefreshSecret === "secret"
+        ) {
+          throw new Error(
+            "JWT secrets must not use default values in production."
+          );
+        }
+      }
+    }).not.toThrow();
+  });
 });

@@ -1,3 +1,4 @@
+import { describe, test, expect, beforeAll, beforeEach, afterAll, jest } from "bun:test";
 import { Repository } from "@/application/infra/contracts/repository";
 import { Query } from "@/application/types";
 import MockDate from "mockdate";
@@ -20,7 +21,10 @@ describe("RequestRepository", () => {
     repository.getCount.mockResolvedValue(fakeRequestPaginated?.total);
     repository.deleteOne.mockResolvedValue(true);
   });
-  beforeEach(() => { testInstance = new RequestRepository(repository); });
+  beforeEach(() => {
+    jest.clearAllMocks();
+    testInstance = new RequestRepository(repository);
+  });
   afterAll(() => { MockDate.reset(); });
   test("should call add of addRequest with correct values", async () => {
     await testInstance.addRequest(fakeRequestEntity);
@@ -115,5 +119,16 @@ describe("RequestRepository", () => {
     const result = await testInstance.updateRequest(null as any, fakeRequestEntity);
     expect(repository.update).toHaveBeenCalledWith({}, fakeRequestEntity);
     expect(result).toBeDefined();
+  });
+  test("should return truthy value when deleteRequest succeeds", async () => {
+    repository.deleteOne.mockResolvedValueOnce(true);
+    const result = await testInstance.deleteRequest(fakeQuery);
+    expect(result).toBeTruthy();
+  });
+  test("should use defaults for deleteRequest with null query", async () => {
+    repository.deleteOne.mockResolvedValueOnce(true);
+    const result = await testInstance.deleteRequest(null as any);
+    expect(repository.deleteOne).toHaveBeenCalledWith(undefined);
+    expect(result).toBeTruthy();
   });
 });

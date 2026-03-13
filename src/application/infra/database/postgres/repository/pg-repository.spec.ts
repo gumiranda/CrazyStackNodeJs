@@ -828,6 +828,293 @@ describe("PostgresRepository", () => {
     });
   });
 
+  describe("buildFilterClause (direct)", () => {
+    test("should return filterConditions and filterValues", () => {
+      const result = repository.buildFilterClause({
+        status: "active",
+      });
+      expect(result.filterConditions).toEqual([
+        '"status" = $1',
+      ]);
+      expect(result.filterValues).toEqual(["active"]);
+    });
+
+    test("should return empty arrays for empty fields", () => {
+      const result = repository.buildFilterClause({});
+      expect(result.filterConditions).toEqual([]);
+      expect(result.filterValues).toEqual([]);
+    });
+
+    test("should handle mixed filter types at once", () => {
+      const result = repository.buildFilterClause({
+        deletedAt: "null",
+        initDate: "2024-01-01",
+        endDate: "2024-12-31",
+        name: "test",
+        age: 25,
+        meta: { foo: "bar" },
+      });
+      expect(result.filterConditions).toHaveLength(6);
+      expect(result.filterConditions[0]).toContain("IS NULL");
+      expect(result.filterConditions[1]).toContain(">");
+      expect(result.filterConditions[2]).toContain("<");
+      expect(result.filterConditions[3]).toContain("=");
+      expect(result.filterConditions[4]).toContain("=");
+      expect(result.filterConditions[5]).toContain("LIKE");
+      // null produces no filterValue, so 5 values total
+      expect(result.filterValues).toHaveLength(5);
+    });
+  });
+
+  describe("getTableFields cache hit", () => {
+    test("should return cached fields on second call", async () => {
+      const fakeClient = {
+        query: jest.fn().mockResolvedValue({
+          rows: [
+            { column_name: "_id" },
+            { column_name: "name" },
+          ],
+        }),
+      };
+      const first = await repository.getTableFields(
+        "cached_table",
+        fakeClient
+      );
+      expect(first).toEqual(["_id", "name"]);
+      expect(fakeClient.query).toHaveBeenCalledTimes(1);
+
+      const second = await repository.getTableFields(
+        "cached_table",
+        fakeClient
+      );
+      expect(second).toEqual(["_id", "name"]);
+      // Should NOT have called query again
+      expect(fakeClient.query).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  describe("getOne (users table projection)", () => {
+    test("should skip projection exclusion when tableName is users",
+      async () => {
+        const usersRepo = new PostgresRepository("users");
+        // actual query (no getTableFields call expected)
+        mockQuery.mockResolvedValueOnce({
+          rows: [{ _id: "1", name: "test", password: "secret" }],
+        });
+        const result = await usersRepo.getOne(
+          { _id: "1" },
+          { projection: { password: 0 } }
+        );
+        expect(result).toEqual({
+          _id: "1",
+          name: "test",
+          password: "secret",
+        });
+        // The query should use "users".* because exclusion is skipped
+        const queryText = mockQuery.mock.calls[0][0];
+        expect(queryText).toContain('"users".*');
+        expect(mockRelease).toHaveBeenCalled();
+      }
+    );
+
+    test("should skip projection inclusion when tableName is users",
+      async () => {
+        const usersRepo = new PostgresRepository("users");
+        mockQuery.mockResolvedValueOnce({
+          rows: [{ name: "test" }],
+        });
+        const result = await usersRepo.getOne(
+          { _id: "1" },
+          { projection: { name: 1 } }
+        );
+        expect(result).toEqual({ name: "test" });
+        const queryText = mockQuery.mock.calls[0][0];
+        // Should still use "users".* because inclusion is skipped
+        expect(queryText).toContain('"users".*');
+        expect(mockRelease).toHaveBeenCalled();
+      }
+    );
+  });
+
+  describe("getOne (include edge cases)", () => {
+    test("should skip join when relatedFields is empty", async () => {
+      // getTableFields for current table
+      mockQuery.mockResolvedValueOnce({
+        rows: [
+          { column_name: "_id" },
+          { column_name: "name" },
+          { column_name: "categoryId" },
+        ],
+      });
+      // getTableFields for related table returns empty
+      mockQuery.mockResolvedValueOnce({ rows: 0 });
+      // getTableFields for join table also returns empty
+      mockQuery.mockResolvedValueOnce({ rows: 0 });
+      // actual query
+      mockQuery.mockResolvedValueOnce({
+        rows: [{ _id: "1", name: "test" }],
+      });
+      const result = await repository.getOne(
+        { _id: "1" },
+        { include: { category: true } }
+      );
+      expect(result).toBeDefined();
+      const queryText = mockQuery.mock.calls[3][0];
+      // No JOIN should be added
+      expect(queryText).not.toContain("JOIN");
+      expect(mockRelease).toHaveBeenCalled();
+    });
+
+    test("should skip 1:n join when joinTableFields is empty",
+      async () => {
+        // getTableFields for current table - no categoryId
+        mockQuery.mockResolvedValueOnce({
+          rows: [
+            { column_name: "_id" },
+            { column_name: "name" },
+          ],
+        });
+        // getTableFields for related table (category) - has fields
+        // but since categoryId not in currentTableFields, goes 1:n
+        mockQuery.mockResolvedValueOnce({
+          rows: [
+            { column_name: "_id" },
+            { column_name: "title" },
+          ],
+        });
+        // getTableFields for join table returns empty
+        mockQuery.mockResolvedValueOnce({ rows: 0 });
+        // actual query
+        mockQuery.mockResolvedValueOnce({
+          rows: [{ _id: "1", name: "test" }],
+        });
+        const result = await repository.getOne(
+          { _id: "1" },
+          { include: { category: true } }
+        );
+        expect(result).toBeDefined();
+        const queryText = mockQuery.mock.calls[3][0];
+        expect(queryText).not.toContain("JOIN");
+        expect(mockRelease).toHaveBeenCalled();
+      }
+    );
+  });
+
+  describe("getPaginate (populate edge cases)", () => {
+    test("should skip join when isSameTable is true", async () => {
+      // getTableFields for current table
+      mockQuery.mockResolvedValueOnce({
+        rows: [
+          { column_name: "_id" },
+          { column_name: "name" },
+          { column_name: "test_tableId" },
+        ],
+      });
+      // getTableFields for related table (same as current)
+      // uses cache since same table name
+      // actual query
+      mockQuery.mockResolvedValueOnce({
+        rows: [{ _id: "1", name: "test" }],
+      });
+      const result = await repository.getPaginate(
+        1,
+        {},
+        { createdAt: -1 },
+        10,
+        {},
+        { test_table: true } as any
+      );
+      expect(result).toBeDefined();
+      const queryText = mockQuery.mock.calls[1][0];
+      // isSameTable means the INNER JOIN condition is not met
+      expect(queryText).not.toContain("INNER JOIN");
+      expect(mockRelease).toHaveBeenCalled();
+    });
+
+    test("should skip join when relatedFields is empty",
+      async () => {
+        // getTableFields for current table
+        mockQuery.mockResolvedValueOnce({
+          rows: [
+            { column_name: "_id" },
+            { column_name: "name" },
+            { column_name: "categoryId" },
+          ],
+        });
+        // getTableFields for related table returns empty
+        mockQuery.mockResolvedValueOnce({ rows: 0 });
+        // actual query
+        mockQuery.mockResolvedValueOnce({
+          rows: [{ _id: "1", name: "test" }],
+        });
+        const result = await repository.getPaginate(
+          1,
+          {},
+          { createdAt: -1 },
+          10,
+          {},
+          { category: true } as any
+        );
+        expect(result).toBeDefined();
+        const queryText = mockQuery.mock.calls[2][0];
+        expect(queryText).not.toContain("INNER JOIN");
+        expect(mockRelease).toHaveBeenCalled();
+      }
+    );
+
+    test(
+      "should skip join when currentTableFields does not include " +
+      "relationField",
+      async () => {
+        // getTableFields for current table - no categoryId
+        mockQuery.mockResolvedValueOnce({
+          rows: [
+            { column_name: "_id" },
+            { column_name: "name" },
+          ],
+        });
+        // getTableFields for related table (category)
+        mockQuery.mockResolvedValueOnce({
+          rows: [
+            { column_name: "_id" },
+            { column_name: "title" },
+          ],
+        });
+        // actual query
+        mockQuery.mockResolvedValueOnce({
+          rows: [{ _id: "1", name: "test" }],
+        });
+        const result = await repository.getPaginate(
+          1,
+          {},
+          { createdAt: -1 },
+          10,
+          {},
+          { category: true } as any
+        );
+        expect(result).toBeDefined();
+        const queryText = mockQuery.mock.calls[2][0];
+        // No INNER JOIN since categoryId not in currentTableFields
+        expect(queryText).not.toContain("INNER JOIN");
+        expect(mockRelease).toHaveBeenCalled();
+      }
+    );
+  });
+
+  describe("increment (error via incrementOne)", () => {
+    test("should propagate error from increment through incrementOne",
+      async () => {
+        mockQuery.mockRejectedValueOnce(
+          new Error("increment db error")
+        );
+        await expect(
+          repository.incrementOne({ _id: "1" }, { views: 1 })
+        ).rejects.toThrow("increment db error");
+        expect(mockRelease).toHaveBeenCalled();
+      }
+    );
+  });
+
   describe("aggregate", () => {
     test("should execute raw query and return rows", async () => {
       mockQuery.mockResolvedValueOnce({

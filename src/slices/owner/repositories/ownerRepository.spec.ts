@@ -1,3 +1,4 @@
+import { describe, test, expect, beforeAll, beforeEach, afterAll, jest } from "bun:test";
 import { Repository } from "@/application/infra/contracts/repository";
 import { Query } from "@/application/types";
 import MockDate from "mockdate";
@@ -20,7 +21,10 @@ describe("OwnerRepository", () => {
     repository.getCount.mockResolvedValue(fakeOwnerPaginated?.total);
     repository.deleteOne.mockResolvedValue(true);
   });
-  beforeEach(() => { testInstance = new OwnerRepository(repository); });
+  beforeEach(() => {
+    jest.clearAllMocks();
+    testInstance = new OwnerRepository(repository);
+  });
   afterAll(() => { MockDate.reset(); });
   test("should call add of addOwner with correct values", async () => {
     await testInstance.addOwner(fakeOwnerEntity);
@@ -116,5 +120,16 @@ describe("OwnerRepository", () => {
     const result = await testInstance.updateOwner(null as any, fakeOwnerEntity);
     expect(repository.update).toHaveBeenCalledWith({}, fakeOwnerEntity);
     expect(result).toBeDefined();
+  });
+  test("should return truthy value when deleteOwner succeeds", async () => {
+    repository.deleteOne.mockResolvedValueOnce(true);
+    const result = await testInstance.deleteOwner(fakeQuery);
+    expect(result).toBeTruthy();
+  });
+  test("should use defaults for deleteOwner with null query", async () => {
+    repository.deleteOne.mockResolvedValueOnce(true);
+    const result = await testInstance.deleteOwner(null as any);
+    expect(repository.deleteOne).toHaveBeenCalledWith(undefined);
+    expect(result).toBeTruthy();
   });
 });

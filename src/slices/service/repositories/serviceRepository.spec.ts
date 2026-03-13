@@ -133,4 +133,20 @@ describe("ServiceRepository", () => {
     expect(repository.increment).toHaveBeenCalledWith({}, { appointmentsTotal: 1 });
     expect(result).toBeDefined();
   });
+  test("should return truthy value when deleteService succeeds", async () => {
+    repository.deleteOne.mockResolvedValueOnce(true);
+    const result = await testInstance.deleteService(fakeQuery);
+    expect(result).toBeTruthy();
+  });
+  test("should use defaults for deleteService with null query", async () => {
+    repository.deleteOne.mockResolvedValueOnce(true);
+    const result = await testInstance.deleteService(null as any);
+    expect(repository.deleteOne).toHaveBeenCalledWith(undefined);
+    expect(result).toBeTruthy();
+  });
+  test("should return null when incrementAppointmentsTotal returns null", async () => {
+    repository.increment.mockResolvedValueOnce(null);
+    const result = await testInstance.incrementAppointmentsTotal(fakeQuery);
+    expect(result).toBeNull();
+  });
 });

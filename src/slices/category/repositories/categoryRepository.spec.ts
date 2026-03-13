@@ -1,3 +1,4 @@
+import { describe, test, expect, beforeAll, beforeEach, afterAll, jest } from "bun:test";
 import { Repository } from "@/application/infra/contracts/repository";
 import { Query } from "@/application/types";
 import MockDate from "mockdate";
@@ -21,6 +22,7 @@ describe("CategoryRepository", () => {
     repository.deleteOne.mockResolvedValue(true);
   });
   beforeEach(() => {
+    jest.clearAllMocks();
     testInstance = new CategoryRepository(repository);
   });
   afterAll(() => { MockDate.reset(); });
@@ -126,5 +128,16 @@ describe("CategoryRepository", () => {
     const result = await testInstance.updateCategory(null as any, fakeCategoryEntity);
     expect(repository.update).toHaveBeenCalledWith({}, fakeCategoryEntity);
     expect(result).toBeDefined();
+  });
+  test("should return truthy value when deleteCategory succeeds", async () => {
+    repository.deleteOne.mockResolvedValueOnce(true);
+    const result = await testInstance.deleteCategory(fakeQuery);
+    expect(result).toBeTruthy();
+  });
+  test("should use defaults for deleteCategory with null query", async () => {
+    repository.deleteOne.mockResolvedValueOnce(true);
+    const result = await testInstance.deleteCategory(null as any);
+    expect(repository.deleteOne).toHaveBeenCalledWith(undefined);
+    expect(result).toBeTruthy();
   });
 });

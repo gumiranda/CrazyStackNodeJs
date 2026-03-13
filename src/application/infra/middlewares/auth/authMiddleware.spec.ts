@@ -91,6 +91,22 @@ describe("auth middleware", () => {
     const httpResponse = await testInstance.handle(await mockFakeRequestHeader());
     expect(httpResponse).toEqual(forbidden(new AccessDeniedError()));
   });
+  test("should use lowercase payday fallback when payDay is null", async () => {
+    const futureDate = new Date();
+    futureDate.setDate(futureDate.getDate() + 30);
+    loadUser.mockResolvedValueOnce({
+      ...fakeUserEntity,
+      payDay: null,
+      payday: futureDate.toISOString(),
+    });
+    const httpResponse = await testInstance.handle(
+      await mockFakeRequestHeader()
+    );
+    expect(httpResponse.statusCode).toBe(200);
+    expect(httpResponse.body).toEqual(
+      expect.objectContaining({ userId: "123" })
+    );
+  });
   test("should use postgres query format when database is not mongodb", async () => {
     const whiteLabelConfig = require("@/application/infra/config/whiteLabel");
     const originalDb = whiteLabelConfig.whiteLabel.database;

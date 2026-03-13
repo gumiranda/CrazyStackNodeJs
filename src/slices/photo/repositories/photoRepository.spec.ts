@@ -1,3 +1,4 @@
+import { describe, test, expect, beforeAll, beforeEach, afterAll, jest } from "bun:test";
 import { Repository } from "@/application/infra/contracts/repository";
 import { Query } from "@/application/types";
 import MockDate from "mockdate";
@@ -20,7 +21,10 @@ describe("PhotoRepository", () => {
     repository.getCount.mockResolvedValue(fakePhotoPaginated?.total);
     repository.deleteOne.mockResolvedValue(true);
   });
-  beforeEach(() => { testInstance = new PhotoRepository(repository); });
+  beforeEach(() => {
+    jest.clearAllMocks();
+    testInstance = new PhotoRepository(repository);
+  });
   afterAll(() => { MockDate.reset(); });
   test("should call add of addPhoto with correct values", async () => {
     await testInstance.addPhoto(fakePhotoEntity);
@@ -115,5 +119,16 @@ describe("PhotoRepository", () => {
     const result = await testInstance.updatePhoto(null as any, fakePhotoEntity);
     expect(repository.update).toHaveBeenCalledWith({}, fakePhotoEntity);
     expect(result).toBeDefined();
+  });
+  test("should return truthy value when deletePhoto succeeds", async () => {
+    repository.deleteOne.mockResolvedValueOnce(true);
+    const result = await testInstance.deletePhoto(fakeQuery);
+    expect(result).toBeTruthy();
+  });
+  test("should use defaults for deletePhoto with null query", async () => {
+    repository.deleteOne.mockResolvedValueOnce(true);
+    const result = await testInstance.deletePhoto(null as any);
+    expect(repository.deleteOne).toHaveBeenCalledWith(undefined);
+    expect(result).toBeTruthy();
   });
 });

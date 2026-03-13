@@ -254,6 +254,32 @@ describe("Testing status validators", () => {
     }
   );
 });
+describe("getValidStatusForNewStatus default case", () => {
+  it("should return empty array for invalid newStatus (e.g. 4)", () => {
+    expect(
+      statusIsValid({
+        currentRequest: {
+          ...fakeRequestEntity,
+          initDate: new Date(2099, 10, 10, 10).toISOString(),
+          status: 1,
+        },
+        newStatus: 4,
+      })
+    ).toBe(false);
+  });
+  it("should return false for newStatus 0", () => {
+    expect(
+      statusIsValid({
+        currentRequest: {
+          ...fakeRequestEntity,
+          initDate: new Date(2099, 10, 10, 10).toISOString(),
+          status: 1,
+        },
+        newStatus: 0,
+      })
+    ).toBe(false);
+  });
+});
 const statusTypes = [
   "status 0 é solicitado",
   "status 1 é confirmado",
