@@ -1,6 +1,8 @@
 import { OwnerEntity } from "./OwnerEntity";
 import MockDate from "mockdate";
 
+MockDate.set(new Date());
+
 export const fakeOwnerEntity = {
   _id: "123",
   createdById: "123",
@@ -45,12 +47,6 @@ export const fakeOwnerPaginated = {
 };
 
 describe("Owner", () => {
-  beforeAll(async () => {
-    MockDate.set(new Date());
-  });
-  afterAll(async () => {
-    MockDate.reset();
-  });
   it("can be created", () => {
     const obj = new OwnerEntity(fakeOwnerEntity);
     expect(obj).toBeTruthy();

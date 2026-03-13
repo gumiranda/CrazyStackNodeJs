@@ -8,10 +8,11 @@
   "scripts": {
     "start": "bun run src/index.ts",
     "dev": "bun --watch run src/index.ts",
-    "test": "bun test .spec.",
+    "test": "bun run scripts/run-tests.ts",
+    "test:fast": "bun test .spec.",
+    "test:file": "bun test",
     "test:integration": "bun test .test.",
-    "test:all": "bun test",
-    "test:db": "bun test --bail 1",
+    "test:all": "bun run scripts/run-tests.ts",
     "format": "prettier --write \"**/*.{ts,tsx,json,md}\"",
     "generate": "yarn plop --plopfile ./generators/plopfile.js"
   },

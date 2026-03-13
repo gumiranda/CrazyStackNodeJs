@@ -3,6 +3,8 @@ import MockDate from "mockdate";
 import { parseISO } from "@/application/helpers/dateFns";
 import { queryDateGenerator } from "@/application/helpers/date";
 
+MockDate.set(new Date());
+
 export const fakeAppointmentEntity = {
   _id: "123",
   createdById: "123",
@@ -154,12 +156,6 @@ export const fakeQueryAvailableTimesRepository = {
   initDay: queryDateGenerator(new Date().toISOString())?.initDay,
 };
 describe("Appointment", () => {
-  beforeAll(async () => {
-    MockDate.set(new Date());
-  });
-  afterAll(async () => {
-    MockDate.reset();
-  });
   it("can be created", () => {
     const obj = new AppointmentEntity(fakeAppointmentEntity);
     expect(obj).toBeTruthy();

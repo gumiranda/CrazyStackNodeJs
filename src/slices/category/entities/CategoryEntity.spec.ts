@@ -1,6 +1,8 @@
 import { CategoryEntity } from "./CategoryEntity";
 import MockDate from "mockdate";
 
+MockDate.set(new Date());
+
 export const fakeCategoryEntity = {
   _id: "123",
   createdById: "123",
@@ -29,12 +31,6 @@ export const fakeCategoryPaginated = {
 };
 
 describe("Category", () => {
-  beforeAll(async () => {
-    MockDate.set(new Date());
-  });
-  afterAll(async () => {
-    MockDate.reset();
-  });
   it("can be created", () => {
     const obj = new CategoryEntity(fakeCategoryEntity);
     expect(obj).toBeTruthy();

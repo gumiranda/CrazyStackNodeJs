@@ -39,7 +39,7 @@ describe("auth middleware", () => {
   test("should return 200 IF returns an user logged correctly", async () => {
     const httpResponse = await testInstance.handle(await mockFakeRequestHeader());
     expect(httpResponse).toEqual(
-      ok({ userId: "123", userLogged: fakeUserEntity, daysToNextPayment: 29 })
+      ok({ userId: "123", userLogged: fakeUserEntity, daysToNextPayment: 30 })
     );
   });
   test("should return 401 IF returns null in verify token", async () => {

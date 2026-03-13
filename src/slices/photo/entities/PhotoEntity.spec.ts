@@ -2,6 +2,8 @@ import MockDate from "mockdate";
 
 import { PhotoEntity } from "./PhotoEntity";
 
+MockDate.set(new Date());
+
 export const fakePhotoEntity = {
   _id: "123",
   createdById: "123",
@@ -30,12 +32,6 @@ export const fakePhotoPaginated = {
   ],
 };
 describe("Photo", () => {
-  beforeAll(async () => {
-    MockDate.set(new Date());
-  });
-  afterAll(async () => {
-    MockDate.reset();
-  });
   it("can be created", () => {
     const obj = new PhotoEntity(fakePhotoEntity);
     expect(obj).toBeTruthy();

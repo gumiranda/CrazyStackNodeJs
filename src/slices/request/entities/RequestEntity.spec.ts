@@ -1,6 +1,8 @@
 import { RequestEntity } from "./RequestEntity";
 import MockDate from "mockdate";
 
+MockDate.set(new Date());
+
 export const fakeRequestEntity = {
   _id: "123",
   createdById: "123",
@@ -51,12 +53,6 @@ export const fakeRequestPaginated = {
 };
 
 describe("Request", () => {
-  beforeAll(async () => {
-    MockDate.set(new Date());
-  });
-  afterAll(async () => {
-    MockDate.reset();
-  });
   it("can be created", () => {
     const obj = new RequestEntity(fakeRequestEntity);
     expect(obj).toBeTruthy();

@@ -1,6 +1,8 @@
 import { ServiceEntity } from "./ServiceEntity";
 import MockDate from "mockdate";
 
+MockDate.set(new Date());
+
 export const fakeServiceEntity = {
   _id: "123",
   createdById: "123",
@@ -40,12 +42,6 @@ export const fakeServicePaginated = {
 };
 
 describe("Service", () => {
-  beforeAll(async () => {
-    MockDate.set(new Date());
-  });
-  afterAll(async () => {
-    MockDate.reset();
-  });
   it("can be created", () => {
     const obj = new ServiceEntity(fakeServiceEntity);
     expect(obj).toBeTruthy();

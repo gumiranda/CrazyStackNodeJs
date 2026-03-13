@@ -2,6 +2,8 @@ import { addDays } from "@/application/helpers";
 import { UserEntity } from "./UserEntity";
 import MockDate from "mockdate";
 
+MockDate.set(new Date());
+
 export const fakeUserEntity = {
   _id: "123",
   createdById: "123",
@@ -61,12 +63,6 @@ export const fakeUserPaginated = {
 };
 
 describe("User", () => {
-  beforeAll(async () => {
-    MockDate.set(new Date());
-  });
-  afterAll(async () => {
-    MockDate.reset();
-  });
   it("can be created", () => {
     const obj = new UserEntity(fakeUserEntity);
     expect(obj).toBeTruthy();
@@ -80,6 +76,13 @@ describe("User", () => {
       createdAt: new Date(),
       updatedAt: new Date(),
       payDay: addDays(new Date(), 30),
+      bio: undefined,
+      cover: undefined,
+      customerID: undefined,
+      link: undefined,
+      serviceIds: undefined,
+      serviceOptions: undefined,
+      token: undefined,
     });
   });
 });
