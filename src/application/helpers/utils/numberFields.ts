@@ -32,6 +32,7 @@ export const numberFieldsWithOperations = [
   ...numberFieldsWithOperatorsLt,
   ...numberFieldsWithOperatorsne,
 ];
+export const numberFieldsWithOperationsSet = new Set(numberFieldsWithOperations);
 export const booleanFields = [
   "canPayWithFidelityPoints",
   "hasFidelityGenerator",

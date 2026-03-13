@@ -12,6 +12,7 @@ import { LoadUser } from "@/slices/user/useCases/loadUser";
 import { AccessDeniedError } from "@/application/errors";
 import { env } from "@/application/infra/config";
 import { ObjectId } from "mongodb";
+import { whiteLabel } from "@/application/infra/config/whiteLabel";
 
 export class RefreshTokenMiddleware implements Middleware {
   constructor(private readonly loadUser: LoadUser, private readonly roles: string[]) {}
@@ -31,13 +32,7 @@ export class RefreshTokenMiddleware implements Middleware {
           return unauthorized();
         }
         const { _id } = decoded;
-        const query = {
-          fields: {
-            _id: new ObjectId(_id),
-            role: { $in: this.roles },
-          },
-          options: { projection: { password: 0 } },
-        };
+        const query = this.buildQuery(_id);
         const user = await this.loadUser(query);
         if (user) {
           return ok({ userId: user?._id, userLogged: user });
@@ -47,5 +42,20 @@ export class RefreshTokenMiddleware implements Middleware {
     } catch (error) {
       return serverError(error);
     }
+  }
+  private buildQuery(_id: string) {
+    if (whiteLabel.database !== "mongodb") {
+      return {
+        fields: { _id, role: this.roles },
+        options: { projection: { password: 0 } },
+      };
+    }
+    return {
+      fields: {
+        _id: new ObjectId(_id),
+        role: { $in: this.roles },
+      },
+      options: { projection: { password: 0 } },
+    };
   }
 }

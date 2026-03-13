@@ -1,18 +1,68 @@
 /* eslint-disable prefer-const */
 import { Repository } from "@/application/infra/contracts";
 import { connect } from "@/application/infra/database/postgres/databaseConfig";
+
+const VALID_IDENTIFIER = /^[a-zA-Z_][a-zA-Z0-9_]*$/;
+
+function sanitizeIdentifier(name: string): string {
+  if (!VALID_IDENTIFIER.test(name)) {
+    throw new Error(`Invalid identifier: ${name}`);
+  }
+  return name;
+}
+
+// Cache for table field metadata (P1)
+const tableFieldsCache = new Map<string, string[]>();
+
+export function clearTableFieldsCache() {
+  tableFieldsCache.clear();
+}
+
 export class PostgresRepository extends Repository {
   private tableName: string;
   constructor(tableName: string) {
     super();
-    this.tableName = tableName;
+    this.tableName = sanitizeIdentifier(tableName);
   }
   buildWhereClause(query: any): { whereClause: string; values: any[] } {
+    const values: any[] = [];
     const whereClause = Object.keys(query)
-      .map((key, idx) => `"${this.tableName}"."${key}" = $${idx + 1}`)
+      .map((key) => {
+        const safeTable = sanitizeIdentifier(this.tableName);
+        const safeKey = sanitizeIdentifier(key);
+        values.push(query[key]);
+        if (Array.isArray(query[key])) {
+          return `"${safeTable}"."${safeKey}" = ANY($${values.length})`;
+        }
+        return `"${safeTable}"."${safeKey}" = $${values.length}`;
+      })
       .join(" AND ");
-    const values = Object.values(query);
     return { whereClause, values };
+  }
+  // Extracted shared filter builder (R1)
+  buildFilterClause(fields: any): { filterConditions: string[]; filterValues: any[] } {
+    const filterConditions: string[] = [];
+    const filterValues: any[] = [];
+    Object.keys(fields).forEach((key) => {
+      const safeKey = sanitizeIdentifier(key);
+      const value = fields[key];
+      if (value === "null") {
+        filterConditions.push(`"${safeKey}" IS NULL`);
+      } else if (key.includes("initDate")) {
+        filterConditions.push(`"${safeKey}" > $${filterValues.length + 1}`);
+        filterValues.push(value);
+      } else if (key.includes("endDate")) {
+        filterConditions.push(`"${safeKey}" < $${filterValues.length + 1}`);
+        filterValues.push(value);
+      } else if (typeof value === "string" || typeof value === "number") {
+        filterConditions.push(`"${safeKey}" = $${filterValues.length + 1}`);
+        filterValues.push(value);
+      } else {
+        filterConditions.push(`"${safeKey}" LIKE '%' || $${filterValues.length + 1} || '%'`);
+        filterValues.push(value);
+      }
+    });
+    return { filterConditions, filterValues };
   }
   async add(data: any): Promise<any> {
     const inserted = await this.insertOne(data);
@@ -22,11 +72,11 @@ export class PostgresRepository extends Repository {
     const client = await connect();
     try {
       const columns = Object.keys(data)
-        .map((key) => `"${key}"`)
+        .map((key) => `"${sanitizeIdentifier(key)}"`)
         .join(", ");
       const values = Object.values(data);
       const placeholders = values.map((_, i) => `$${i + 1}`).join(", ");
-      const query = `INSERT INTO "${this.tableName}" (${columns}) VALUES (${placeholders}) RETURNING *`;
+      const query = `INSERT INTO "${sanitizeIdentifier(this.tableName)}" (${columns}) VALUES (${placeholders}) RETURNING *`;
       const result = await client.query(query, values);
       return result.rows[0];
     } finally {
@@ -37,9 +87,9 @@ export class PostgresRepository extends Repository {
     const client = await connect();
     try {
       const updates = Object.keys(data)
-        .map((key, index) => `"${key}" = $${index + 2}`)
+        .map((key, index) => `"${sanitizeIdentifier(key)}" = $${index + 2}`)
         .join(", ");
-      const query = `UPDATE "${this.tableName}" SET ${updates} WHERE "_id" = $1 RETURNING *`;
+      const query = `UPDATE "${sanitizeIdentifier(this.tableName)}" SET ${updates} WHERE "_id" = $1 RETURNING *`;
       const result = await client.query(query, [id, ...Object.values(data)]);
       return result.rows[0];
     } finally {
@@ -50,14 +100,14 @@ export class PostgresRepository extends Repository {
     const client = await connect();
     try {
       const setClause = Object.keys(data)
-        .map((key, index) => `"${key}" = $${index + 1}`)
+        .map((key, index) => `"${sanitizeIdentifier(key)}" = $${index + 1}`)
         .join(", ");
       const whereClause = Object.keys(query)
-        .map((key, idx) => `"${key}" = $${idx + Object.keys(data).length + 1}`)
+        .map((key, idx) => `"${sanitizeIdentifier(key)}" = $${idx + Object.keys(data).length + 1}`)
         .join(" AND ");
       const values = [...Object.values(data), ...Object.values(query)];
 
-      const queryText = `UPDATE "${this.tableName}" SET ${setClause} WHERE ${whereClause} RETURNING *`;
+      const queryText = `UPDATE "${sanitizeIdentifier(this.tableName)}" SET ${setClause} WHERE ${whereClause} RETURNING *`;
       const result = await client.query(queryText, values);
       return result.rows[0];
     } finally {
@@ -78,7 +128,7 @@ export class PostgresRepository extends Repository {
       // Start transaction
       await client.query("BEGIN");
 
-      const selectQuery = `SELECT "${keyToPush}" FROM "${this.tableName}" WHERE "${Object.keys(query)[0]}" = $1 AND "${Object.keys(query)[1]}" = $2`;
+      const selectQuery = `SELECT "${sanitizeIdentifier(keyToPush)}" FROM "${sanitizeIdentifier(this.tableName)}" WHERE "${sanitizeIdentifier(Object.keys(query)[0])}" = $1 AND "${sanitizeIdentifier(Object.keys(query)[1])}" = $2`;
       const selectResult = await client.query(selectQuery, [
         query[Object.keys(query)[0]],
         query[Object.keys(query)[1]],
@@ -91,11 +141,11 @@ export class PostgresRepository extends Repository {
       } else {
         updatedArray = [valuesToPushJson];
       }
-      const chave = Object.keys(query)[0];
-      const chave2 = Object.keys(query)[1];
+      const chave = sanitizeIdentifier(Object.keys(query)[0]);
+      const chave2 = sanitizeIdentifier(Object.keys(query)[1]);
       const valor = query[Object.keys(query)[0]];
       const valor2 = query[Object.keys(query)[1]];
-      const updateQuery = `UPDATE "${this.tableName}" SET "${keyToPush}" = $1 WHERE "${chave}" = $2 AND "${chave2}" = $3 RETURNING *`;
+      const updateQuery = `UPDATE "${sanitizeIdentifier(this.tableName)}" SET "${sanitizeIdentifier(keyToPush)}" = $1 WHERE "${chave}" = $2 AND "${chave2}" = $3 RETURNING *`;
       result = await client.query(updateQuery, [
         JSON.stringify(updatedArray),
         valor,
@@ -118,13 +168,16 @@ export class PostgresRepository extends Repository {
     const client = await connect();
     try {
       const setClause = Object.keys(data)
-        .map((key, idx) => `"${key}" = "${key}" + $${idx + 1}`)
+        .map((key, idx) => {
+          const safeKey = sanitizeIdentifier(key);
+          return `"${safeKey}" = "${safeKey}" + $${idx + 1}`;
+        })
         .join(", ");
       const whereClause = Object.keys(query)
-        .map((key, idx) => `"${key}" = $${idx + Object.keys(data).length + 1}`)
+        .map((key, idx) => `"${sanitizeIdentifier(key)}" = $${idx + Object.keys(data).length + 1}`)
         .join(" AND ");
       const values = [...Object.values(data), ...Object.values(query)];
-      const queryText = `UPDATE "${this.tableName}" SET ${setClause} WHERE ${whereClause}`;
+      const queryText = `UPDATE "${sanitizeIdentifier(this.tableName)}" SET ${setClause} WHERE ${whereClause}`;
       const result = await client.query(queryText, values);
       return result.rowCount;
     } finally {
@@ -135,10 +188,10 @@ export class PostgresRepository extends Repository {
     const client = await connect();
     try {
       const whereClause = Object.keys(query)
-        .map((key, idx) => `"${key}" = $${idx + 1}`)
+        .map((key, idx) => `"${sanitizeIdentifier(key)}" = $${idx + 1}`)
         .join(" AND ");
       const values = Object.values(query);
-      const queryText = `DELETE FROM "${this.tableName}" WHERE ${whereClause}`;
+      const queryText = `DELETE FROM "${sanitizeIdentifier(this.tableName)}" WHERE ${whereClause}`;
       const result = await client.query(queryText, values);
       return result.rowsCount;
     } finally {
@@ -150,21 +203,22 @@ export class PostgresRepository extends Repository {
   }
 
   async getTableFields(tableName: string, client: any): Promise<string[]> {
-    // Consulta para obter os nomes das colunas da tabela
+    const cached = tableFieldsCache.get(tableName);
+    if (cached) {
+      return cached;
+    }
     const result = await client.query(
-      `
-      SELECT column_name
-      FROM information_schema.columns
-      WHERE table_name = $1
-    `,
+      `SELECT column_name FROM information_schema.columns WHERE table_name = $1`,
       [tableName]
     );
     if (result?.rows === 0) {
       return [];
     }
-    return result?.rows
+    const fields = result?.rows
       ?.map?.((row: any) => row.column_name)
       ?.filter?.((field: any) => field !== "password");
+    tableFieldsCache.set(tableName, fields);
+    return fields;
   }
   async getOne(query: any, options: any, returnOneRegister = true): Promise<any> {
     let currentTableFields: any;
@@ -353,33 +407,14 @@ export class PostgresRepository extends Repository {
 
       // Handle filtering
       let whereClause = "";
-      const filterConditions: string[] = [];
-      const filterValues: any[] = [];
-      Object.keys(fields).forEach((key) => {
-        const value = fields[key];
-        if (value === "null") {
-          filterConditions.push(`"${key}" IS NULL`);
-        } else if (key.includes("initDate")) {
-          filterConditions.push(`"${key}" > $${filterValues.length + 1}`);
-          filterValues.push(value);
-        } else if (key.includes("endDate")) {
-          filterConditions.push(`"${key}" < $${filterValues.length + 1}`);
-          filterValues.push(value);
-        } else if (typeof value === "string" || typeof value === "number") {
-          filterConditions.push(`"${key}" = $${filterValues.length + 1}`);
-          filterValues.push(value);
-        } else {
-          filterConditions.push(`"${key}" LIKE '%' || $${filterValues.length + 1} || '%'`);
-          filterValues.push(value);
-        }
-      });
+      const { filterConditions, filterValues } = this.buildFilterClause(fields);
       if (filterConditions.length > 0) {
         whereClause = `WHERE ${filterConditions.join(" AND ")}`;
       }
 
       // Handle sorting
       const orderBy = Object.keys(sort)
-        .map((key) => `"${key}" ${sort[key] === -1 ? "DESC" : "ASC"}`)
+        .map((key) => `"${sanitizeIdentifier(key)}" ${sort[key] === -1 ? "DESC" : "ASC"}`)
         .join(", ");
 
       // Calculate offset
@@ -399,31 +434,12 @@ export class PostgresRepository extends Repository {
     const client = await connect();
     try {
       let whereClause = "";
-      const filterConditions: string[] = [];
-      const filterValues: any[] = [];
-      Object.keys(query).forEach((key) => {
-        const value = query[key];
-        if (value === "null") {
-          filterConditions.push(`"${key}" IS NULL`);
-        } else if (key.includes("initDate")) {
-          filterConditions.push(`"${key}" > $${filterValues.length + 1}`);
-          filterValues.push(value);
-        } else if (key.includes("endDate")) {
-          filterConditions.push(`"${key}" < $${filterValues.length + 1}`);
-          filterValues.push(value);
-        } else if (typeof value === "string" || typeof value === "number") {
-          filterConditions.push(`"${key}" = $${filterValues.length + 1}`);
-          filterValues.push(value);
-        } else {
-          filterConditions.push(`"${key}" LIKE '%' || $${filterValues.length + 1} || '%'`);
-          filterValues.push(value); // Adjust this accordingly if you're sanitizing your inputs
-        }
-      });
+      const { filterConditions, filterValues } = this.buildFilterClause(query);
       if (filterConditions.length > 0) {
         whereClause = `WHERE ${filterConditions.join(" AND ")}`;
       }
 
-      const queryText = `SELECT COUNT(*) FROM "${this.tableName}" ${whereClause ? `${whereClause}` : ""}`;
+      const queryText = `SELECT COUNT(*) FROM "${sanitizeIdentifier(this.tableName)}" ${whereClause ? `${whereClause}` : ""}`;
       const result = await client.query(queryText, filterValues);
       return result.rows[0].count;
     } finally {

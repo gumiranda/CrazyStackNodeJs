@@ -1,9 +1,15 @@
 import {
   numberFields,
-  numberFieldsWithOperations,
+  numberFieldsWithOperationsSet,
 } from "@/application/helpers/utils/numberFields";
 import { ObjectId } from "mongodb";
 import { subHours } from "date-fns";
+
+const ALLOWED_OPERATORS = new Set(["gt", "gte", "lt", "lte", "ne"]);
+
+function escapeRegex(str: string): string {
+  return str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
 
 export const mapQueryParamsToQueryMongo = (queryParams: any): any => {
   if (
@@ -29,13 +35,16 @@ export const mapQueryParamsToQueryMongo = (queryParams: any): any => {
       newQuery[key] = { $eq: Number(queryParams[key]) };
     } else if (
       !isNaN(Number(queryParams[key])) &&
-      numberFieldsWithOperations?.includes?.(key)
+      numberFieldsWithOperationsSet.has(key)
     ) {
       const aux = key?.split?.("operator");
-      newQuery[aux?.[0]] = { ["$" + aux?.[1]]: Number(queryParams[key]) };
+      const operator = aux?.[1];
+      if (ALLOWED_OPERATORS.has(operator)) {
+        newQuery[aux?.[0]] = { ["$" + operator]: Number(queryParams[key]) };
+      }
     } else if (key?.includes?.("textregex")) {
       newQuery[key?.replace?.("textregex", "")] = {
-        $regex: queryParams[key],
+        $regex: escapeRegex(queryParams[key]),
         $options: "i",
       };
     } else if (key?.includes?.("text")) {

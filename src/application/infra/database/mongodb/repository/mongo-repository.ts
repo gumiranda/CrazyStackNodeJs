@@ -7,12 +7,16 @@ import { Repository } from "@/application/infra/contracts/repository";
 import { Collection, ObjectId } from "mongodb";
 
 export class MongoRepository extends Repository {
+  private normalizeQuery(query: any): any {
+    if (query?._id) {
+      query._id = new ObjectId(query._id);
+    }
+    return query;
+  }
   async deleteMany(query: any): Promise<any> {
     const collection = await this.getCollection();
     const session = await MongoHelper.getSession();
-    if (query._id) {
-      query._id = new ObjectId(query._id);
-    }
+    this.normalizeQuery(query);
     const result = (await collection.deleteMany(mapQueryParamsToQueryMongo(query), {
       session,
     })) as any;
@@ -35,26 +39,16 @@ export class MongoRepository extends Repository {
     return collection.insertOne(mapAnyToMongoObject(data), { session });
   }
   async add(data: any): Promise<any> {
-    const collection = await this.getCollection();
-    const session = await MongoHelper.getSession();
-    //await collection.createIndex({ coord: "2dsphere" });
-
     const { insertedId } = (await this.insertOne(data)) || {};
     if (insertedId) {
-      const objInserted = await collection.findOne(
-        { _id: new ObjectId(insertedId) },
-        { session }
-      );
-      return MongoHelper.mapPassword(objInserted);
+      return MongoHelper.mapPassword({ ...data, _id: insertedId });
     }
     return null;
   }
   async updateOne(query: any, data: any): Promise<any> {
     const collection = await this.getCollection();
     const session = await MongoHelper.getSession();
-    if (query._id) {
-      query._id = new ObjectId(query._id);
-    }
+    this.normalizeQuery(query);
     return collection.updateOne(
       mapQueryParamsToQueryMongo(query),
       { $set: mapAnyToMongoObject(data) },
@@ -64,9 +58,7 @@ export class MongoRepository extends Repository {
   async upsertAndPush(query: any, data: any, pushData: any): Promise<any> {
     const collection = await this.getCollection();
     const session = await MongoHelper.getSession();
-    if (query._id) {
-      query._id = new ObjectId(query._id);
-    }
+    this.normalizeQuery(query);
     return collection.findOneAndUpdate(
       mapQueryParamsToQueryMongo(query),
       { $set: mapAnyToMongoObject(data), $push: pushData },
@@ -85,9 +77,7 @@ export class MongoRepository extends Repository {
   async incrementOne(query: any, data: any): Promise<any> {
     const collection = await this.getCollection();
     const session = await MongoHelper.getSession();
-    if (query._id) {
-      query._id = new ObjectId(query._id);
-    }
+    this.normalizeQuery(query);
     return collection.updateOne(
       mapQueryParamsToQueryMongo(query),
       { $inc: mapAnyToMongoObject(data) },
@@ -106,9 +96,7 @@ export class MongoRepository extends Repository {
   async deleteOne(query: any): Promise<any> {
     const collection = await this.getCollection();
     const session = await MongoHelper.getSession();
-    if (query._id) {
-      query._id = new ObjectId(query._id);
-    }
+    this.normalizeQuery(query);
     const result = (await collection.deleteOne(mapQueryParamsToQueryMongo(query), {
       session,
     })) as any;
@@ -120,10 +108,7 @@ export class MongoRepository extends Repository {
   async getOne(query: any, options?: any): Promise<any> {
     const collection = await this.getCollection();
     const session = await MongoHelper.getSession();
-
-    if (query?._id) {
-      query._id = new ObjectId(query._id);
-    }
+    this.normalizeQuery(query);
     const pipeline: any[] = [];
 
     const mongoQuery: any = mapQueryParamsToQueryMongo(query);
@@ -240,9 +225,7 @@ export class MongoRepository extends Repository {
 
   async getCount(query: any): Promise<any> {
     const collection = await this.getCollection();
-    if (query._id) {
-      query._id = new ObjectId(query._id);
-    }
+    this.normalizeQuery(query);
     return collection.countDocuments(mapQueryParamsToQueryMongo(query));
   }
   async aggregate(query: any): Promise<any> {

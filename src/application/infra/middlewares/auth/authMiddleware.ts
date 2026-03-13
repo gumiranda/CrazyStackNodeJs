@@ -60,6 +60,7 @@ const getQuery = ({ roles, _id }: any) => {
     return {
       fields: {
         _id,
+        role: roles,
       },
       options: { projection: { password: 0 } },
     };

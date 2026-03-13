@@ -11,14 +11,14 @@ export const mapAnyToMongoObject = (anyObject: any): any => {
   }
   const mongoObject: any = {};
   Object.keys(anyObject).forEach((key: string) => {
-    if (
+    if (key?.includes?.("Ids") || key?.includes?.("_ids")) {
+      mongoObject[key] = anyObject[key]?.map((id: string) => new ObjectId(id));
+    } else if (
       (key?.includes?.("Id") || key?.includes?.("_id")) &&
       anyObject?.[key]?.length === 24 &&
       typeof anyObject[key] === "string"
     ) {
       mongoObject[key] = new ObjectId(anyObject[key]);
-    } else if (key?.includes?.("Ids") || key?.includes?.("_ids")) {
-      mongoObject[key] = anyObject[key]?.map((id: string) => new ObjectId(id));
     } else {
       mongoObject[key] = anyObject[key];
     }

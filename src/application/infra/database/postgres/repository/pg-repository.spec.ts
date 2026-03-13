@@ -15,13 +15,15 @@ jest.mock("@/application/infra/contracts", () => ({
   },
 }));
 
-import { PostgresRepository } from "./pg-repository";
+import { PostgresRepository, clearTableFieldsCache } from "./pg-repository";
 
 describe("PostgresRepository", () => {
   let repository: PostgresRepository;
 
   beforeEach(() => {
     jest.clearAllMocks();
+    mockQuery.mockReset();
+    clearTableFieldsCache();
     repository = new PostgresRepository("test_table");
   });
 
@@ -378,7 +380,7 @@ describe("PostgresRepository", () => {
 
     test("should handle include with isSameTable = true (1:1 branch)", async () => {
       const sameRepo = new PostgresRepository("users");
-      // getTableFields for current table (users) - includes createdById
+      // getTableFields for "users" (cached for both current and related table)
       mockQuery.mockResolvedValueOnce({
         rows: [
           { column_name: "_id" },
@@ -386,15 +388,7 @@ describe("PostgresRepository", () => {
           { column_name: "createdById" },
         ],
       });
-      // getTableFields for related table (users - createdBy maps to users)
-      mockQuery.mockResolvedValueOnce({
-        rows: [
-          { column_name: "_id" },
-          { column_name: "name" },
-          { column_name: "email" },
-        ],
-      });
-      // actual query result
+      // actual query result (2nd call - related table uses cache)
       mockQuery.mockResolvedValueOnce({
         rows: [{ _id: "1", name: "test", usersname: "creator" }],
       });
@@ -407,17 +401,12 @@ describe("PostgresRepository", () => {
     });
 
     test("should handle isSameTable in 1:n branch (select clause skipped)", async () => {
-      // getTableFields for current table - includes "test_tableId"
+      // getTableFields for current table - NO "test_tableId" to force 1:n path
       mockQuery.mockResolvedValueOnce({
         rows: [
           { column_name: "_id" },
           { column_name: "name" },
-          { column_name: "test_tableId" },
         ],
-      });
-      // getTableFields for related table (test_table = self) - return empty to force 1:n path
-      mockQuery.mockResolvedValueOnce({
-        rows: [],
       });
       // getTableFields for join table (test_tabletest_table) - has fields
       mockQuery.mockResolvedValueOnce({

@@ -66,9 +66,9 @@ describe("MongoRepository", () => {
       const data = { name: "test" };
       const insertedId = new ObjectId();
       mockInsertOne.mockResolvedValueOnce({ insertedId });
-      mockFindOne.mockResolvedValueOnce({ _id: insertedId, name: "test", password: "secret" });
       const result = await repository.add(data);
-      expect(result).toEqual({ _id: insertedId, name: "test", password: null });
+      expect(result).toEqual({ name: "test", _id: insertedId, password: null });
+      expect(mockFindOne).not.toHaveBeenCalled();
     });
 
     test("should return null when insertOne returns no insertedId", async () => {

@@ -31,22 +31,24 @@ export const makeFastifyInstance = async (externalMongoClient: any) => {
     await fastify.register(import("@fastify/rate-limit"), {
       max: 1000,
       timeWindow: "10 minutes",
-      global: false,
+      global: true,
     });
     await fastify.register(cors, {
-      origin: "*",
+      origin: env.environment === "production"
+        ? (process.env.ALLOWED_ORIGINS ?? "").split(",").filter(Boolean)
+        : "*",
       methods: ["POST", "GET", "PATCH", "DELETE"],
       allowedHeaders: ["Content-Type", "Authorization", "authorization", "refreshtoken"],
     });
     if (env.environment === "production") {
-      // await fastify.register(require("@fastify/under-pressure"), {
-      //   maxEventLoopDelay: 1000,
-      //   maxHeapUsedBytes: 100000000,
-      //   maxRssBytes: 100000000,
-      //   maxEventLoopUtilization: 0.98,
-      //   message: "Estamos sobrecarregados!",
-      //   retryAfter: 50,
-      // });
+      await fastify.register(require("@fastify/under-pressure"), {
+        maxEventLoopDelay: 1000,
+        maxHeapUsedBytes: 100000000,
+        maxRssBytes: 100000000,
+        maxEventLoopUtilization: 0.98,
+        message: "Server under pressure, try again later",
+        retryAfter: 50,
+      });
     }
     await fastify.register(fastifyRequestContextPlugin, {
       hook: "onRequest",

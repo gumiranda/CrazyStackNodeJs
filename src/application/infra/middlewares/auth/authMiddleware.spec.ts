@@ -94,7 +94,7 @@ describe("auth middleware", () => {
       const httpResponse = await testInstance.handle(mockFakeRequestHeader());
       expect(httpResponse.statusCode).toBe(200);
       expect(loadUser).toHaveBeenCalledWith({
-        fields: { _id: undefined },
+        fields: { _id: undefined, role: ["client"] },
         options: { projection: { password: 0 } },
       });
     } finally {
