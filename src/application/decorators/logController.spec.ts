@@ -41,8 +41,6 @@ describe("logController", () => {
     );
     expect(logRepository.logError).toHaveBeenCalledTimes(1);
   });
-});
-
   test("should call execute directly and return ok", async () => {
     controller.execute.mockResolvedValueOnce(ok(fakeUserEntity));
     const result = await testInstance.execute(fakeRequest);

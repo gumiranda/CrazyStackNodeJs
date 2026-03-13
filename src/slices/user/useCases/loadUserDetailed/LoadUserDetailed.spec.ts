@@ -58,6 +58,31 @@ describe("loadUserDetailed", () => {
     expect(loadPhoto).not.toHaveBeenCalled();
   });
 
+  it("should return user without photo when photoId is undefined", async () => {
+    loadUserRepository.loadUser.mockResolvedValueOnce({
+      ...fakeUser,
+      photoId: undefined,
+    });
+    const sut = loadUserDetailed(loadUserRepository, loadPhoto);
+    const result = await sut(fakeQuery);
+    expect(result).toBeDefined();
+    expect(result?.photo).toBeUndefined();
+    expect(loadPhoto).not.toHaveBeenCalled();
+  });
+
+  it("should return user with photo data merged", async () => {
+    const userWithPhoto = { ...fakeUser, photoId: "photo_123" };
+    loadUserRepository.loadUser.mockResolvedValueOnce(userWithPhoto);
+    const sut = loadUserDetailed(loadUserRepository, loadPhoto);
+    const result = await sut(fakeQuery);
+    expect(result).toEqual(
+      expect.objectContaining({
+        ...userWithPhoto,
+        photo: expect.objectContaining({ _id: "photo_id" }),
+      })
+    );
+  });
+
   it("should call loadUserRepository with correct query", async () => {
     const sut = loadUserDetailed(loadUserRepository, loadPhoto);
     await sut(fakeQuery);

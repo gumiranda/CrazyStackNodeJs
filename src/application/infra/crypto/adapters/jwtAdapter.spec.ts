@@ -6,6 +6,12 @@ const makeSut = (): JwtAdapter => {
 };
 
 describe("jwtAdapter", () => {
+  describe("constructor", () => {
+    test("Should create an instance with given secret and expiration", () => {
+      const sut = new JwtAdapter("my_secret", "2h");
+      expect(sut).toBeDefined();
+    });
+  });
   describe("generate()", () => {
     test("Should return a token on generate success", async () => {
       const sut = makeSut();

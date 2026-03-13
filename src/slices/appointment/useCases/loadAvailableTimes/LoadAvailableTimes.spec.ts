@@ -102,6 +102,15 @@ describe("LoadAvailableTimes", () => {
     const appointment = await testInstance(fakeQueryAvailableTimes);
     expect(appointment).toBeNull();
   });
+  it("should return times when loadAvailableTimes has _id and data", async () => {
+    loadAvailableTimesRepository.loadAvailableTimes.mockResolvedValueOnce(
+      fakeAvailableTimesEntity
+    );
+    const result = await testInstance(fakeQueryAvailableTimes);
+    expect(result).toBeDefined();
+    expect(result).toHaveProperty("timeAvailable");
+    expect(result).toHaveProperty("timeAvailableProfessional");
+  });
   it("should return null if load of loadUser returns null", async () => {
     loadAvailableTimesRepository.loadAvailableTimes.mockResolvedValueOnce(null);
     userRepository.loadUser.mockResolvedValueOnce(null);

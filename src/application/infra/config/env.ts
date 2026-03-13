@@ -55,10 +55,13 @@ export type EnvInfer = z.infer<typeof envSchema>;
 export const env: EnvInfer = envSchema.parse(mappedEnv);
 
 // S4: Fail fast if JWT secrets are defaults in production
-if (env.environment === "production") {
-  if (env.jwtSecret === "secret" || env.jwtRefreshSecret === "secret") {
-    throw new Error(
-      "JWT secrets must not use default values in production. Set JWT_SECRET and JWT_REFRESH_SECRET environment variables."
-    );
+export function validateProductionSecrets(e: EnvInfer) {
+  if (e.environment === "production") {
+    if (e.jwtSecret === "secret" || e.jwtRefreshSecret === "secret") {
+      throw new Error(
+        "JWT secrets must not use default values in production. Set JWT_SECRET and JWT_REFRESH_SECRET environment variables."
+      );
+    }
   }
 }
+validateProductionSecrets(env);

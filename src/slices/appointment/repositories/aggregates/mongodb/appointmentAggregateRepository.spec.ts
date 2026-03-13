@@ -194,6 +194,28 @@ describe("Appointment Mongo Repository", () => {
     expect(result).toEqual(fakeInvoice);
   });
 
+  test("should return null when appointments[0] has no data", async () => {
+    repository.aggregate.mockResolvedValueOnce([
+      { _id: { hourStart1: "8:00" } },
+    ]);
+    const result = await testInstance.loadAvailableTimes({
+      ...fakeQueryAvailableTimesRepository,
+      professionalId: fakeId,
+    });
+    expect(result).toBeNull();
+  });
+
+  test("should return null when appointments[0] has no _id", async () => {
+    repository.aggregate.mockResolvedValueOnce([
+      { data: [{ initDate: new Date(), endDate: new Date() }] },
+    ]);
+    const result = await testInstance.loadAvailableTimes({
+      ...fakeQueryAvailableTimesRepository,
+      professionalId: fakeId,
+    });
+    expect(result).toBeNull();
+  });
+
   test("should return empty array if loadInvoice returns no appointments", async () => {
     repository.aggregate.mockResolvedValueOnce([]);
     const result = await testInstance.loadInvoice({

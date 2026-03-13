@@ -8,6 +8,10 @@ const makeSut = (): BcryptAdapter => {
 };
 
 describe("Bcrypt Adapter", () => {
+  test("Should create an instance with given salt", () => {
+    const sut = makeSut();
+    expect(sut).toBeDefined();
+  });
   test("Should return a hashed value on encrypt", async () => {
     const sut = makeSut();
     const hash = await sut.encrypt("any_value");

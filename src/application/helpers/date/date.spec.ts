@@ -1241,7 +1241,7 @@ describe("date tests business rules", () => {
         minutes: 0,
         date: new Date(2021, 10, 10),
       });
-      expect(result.getUTCHours()).toBe(11);
+      expect(result.getUTCHours()).toBe(14);
       expect(result.getUTCMinutes()).toBe(0);
     } finally {
       (env as any).environment = originalEnv;

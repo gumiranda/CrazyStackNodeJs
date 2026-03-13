@@ -212,6 +212,16 @@ describe("UpdateRequestById useCase", () => {
       })
     ).rejects.toThrow("Não foi possível cancelar o agendamento");
   });
+  it("Should throw if data is null", async () => {
+    await expect(
+      testInstance.updateRequestById(fakeRequestEntity._id, null as any)
+    ).rejects.toThrow("Erro ao atualizar a solicitação");
+  });
+  it("Should throw if id is empty string", async () => {
+    await expect(
+      testInstance.updateRequestById("", fakeRequestEntity)
+    ).rejects.toThrow("Erro ao atualizar a solicitação");
+  });
   test("should call mockAppointment.addAppointment method with correct values", async () => {
     const newfakeRequestEntity = { ...fakeRequestEntity, status: 7 };
     mockRepo.updateRequest.mockResolvedValueOnce(newfakeRequestEntity);

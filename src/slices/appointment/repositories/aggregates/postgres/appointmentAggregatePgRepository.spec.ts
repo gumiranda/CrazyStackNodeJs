@@ -176,6 +176,57 @@ describe("AppointmentAggregatePgRepository", () => {
     });
   });
 
+  describe("loadInvoice query building", () => {
+    it("should build subquery with correct field projections", async () => {
+      repository.aggregate
+        .mockResolvedValueOnce([{ grand_total: 200 }])
+        .mockResolvedValueOnce([
+          {
+            _id: "a1",
+            initDate: new Date(),
+            endDate: new Date(),
+            serviceId: "s1",
+            total_price: 200,
+          },
+        ]);
+      const result = await testInstance.loadInvoice({
+        fields: {
+          initDate: "2024-03-01",
+          endDate: "2024-03-31",
+        },
+        options: {},
+      });
+      expect(result).toBeDefined();
+      expect(result.total).toBe(200);
+      expect(result.appointments).toHaveLength(1);
+      expect(repository.aggregate).toHaveBeenCalledTimes(2);
+      const firstCall = repository.aggregate.mock.calls[0][0];
+      expect(firstCall.text).toContain("SUM");
+      expect(firstCall.text).toContain("grand_total");
+    });
+  });
+
+  describe("loadAvailableTimes query building", () => {
+    it("should build query with JOINs and date conversions", async () => {
+      const now = new Date("2024-06-15T12:00:00.000Z");
+      repository.aggregate.mockResolvedValueOnce([
+        { _id: "p1", initDate: now, endDate: now },
+        { _id: "p2", initDate: now, endDate: now },
+      ]);
+      const result = await testInstance.loadAvailableTimes({
+        professionalId: "prof1",
+        initDay: "2024-06-15" as any,
+        endDay: "2024-06-16" as any,
+      } as any);
+      expect(result).toBeDefined();
+      expect(result?.data).toHaveLength(2);
+      const query = repository.aggregate.mock.calls[0][0];
+      expect(query.text).toContain("JOIN");
+      expect(query.text).toContain("owner");
+      expect(query.values).toContain("prof1");
+    });
+  });
+
   describe("handleTimezone in production mode", () => {
     it("should subtract 3 hours when FUSORARIOBR is production", async () => {
 

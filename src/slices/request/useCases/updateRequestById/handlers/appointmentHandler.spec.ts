@@ -41,6 +41,10 @@ describe("AppointmentHandler", () => {
     sut = new AppointmentHandler(appointmentRepository);
   });
 
+  test("should create an instance of AppointmentHandler", () => {
+    expect(sut).toBeInstanceOf(AppointmentHandler);
+  });
+
   test("should create appointment when status is 1", async () => {
     const request = {
       _id: "requestId",

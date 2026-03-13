@@ -126,7 +126,9 @@ if (COVERAGE) {
     const lcovPath = path.join(COVERAGE_DIR, "lcov.info");
     writeFileSync(lcovPath, merged);
 
-    // Parse lcov into per-file stats (deduplicate by taking max hit per line)
+    // Parse lcov into per-file stats
+    // Strategy: collect all parts per file, then merge using "best part" approach
+    // to avoid instrumentation artifacts from inflating uncovered line counts
     interface FileCov {
       linesFound: number;
       linesHit: number;
@@ -134,7 +136,13 @@ if (COVERAGE) {
       fnHit: number;
       lineHits: Map<number, number>;
     }
-    const fileMap = new Map<string, FileCov>();
+    interface PartData {
+      lineHits: Map<number, number>;
+      fnFound: number;
+      fnHit: number;
+    }
+    // Collect all parts per file
+    const fileParts = new Map<string, PartData[]>();
     let currentFile = "";
     let currentLines = new Map<number, number>();
     let fnf = 0, fnh = 0;
@@ -152,26 +160,58 @@ if (COVERAGE) {
       } else if (line.startsWith("FNH:")) {
         fnh = parseInt(line.slice(4), 10);
       } else if (line === "end_of_record" && currentFile) {
-        const existing = fileMap.get(currentFile);
-        if (existing) {
-          for (const [ln, cnt] of currentLines) {
-            existing.lineHits.set(ln, Math.max(existing.lineHits.get(ln) ?? 0, cnt));
-          }
-          existing.fnFound = Math.max(existing.fnFound, fnf);
-          existing.fnHit = Math.max(existing.fnHit, fnh);
-          existing.linesFound = existing.lineHits.size;
-          existing.linesHit = [...existing.lineHits.values()].filter(v => v > 0).length;
-        } else {
-          fileMap.set(currentFile, {
-            linesFound: currentLines.size,
-            linesHit: [...currentLines.values()].filter(v => v > 0).length,
-            fnFound: fnf,
-            fnHit: fnh,
-            lineHits: currentLines,
-          });
+        if (!fileParts.has(currentFile)) {
+          fileParts.set(currentFile, []);
         }
+        fileParts.get(currentFile)!.push({
+          lineHits: currentLines,
+          fnFound: fnf,
+          fnHit: fnh,
+        });
         currentFile = "";
       }
+    }
+
+    // Merge parts per file using "best part" strategy
+    const fileMap = new Map<string, FileCov>();
+    for (const [file, parts] of fileParts) {
+      // Find the part with highest coverage ratio to use as baseline
+      let bestPart: PartData | null = null;
+      let bestRatio = -1;
+      for (const part of parts) {
+        const total = part.lineHits.size;
+        const hit = [...part.lineHits.values()].filter(v => v > 0).length;
+        const ratio = total > 0 ? hit / total : 0;
+        if (ratio > bestRatio) {
+          bestRatio = ratio;
+          bestPart = part;
+        }
+      }
+      // Start with the best part's line set
+      const mergedHits = new Map(bestPart!.lineHits);
+      let maxFnf = bestPart!.fnFound;
+      let maxFnh = bestPart!.fnHit;
+      // Merge in covered lines from other parts
+      for (const part of parts) {
+        maxFnf = Math.max(maxFnf, part.fnFound);
+        maxFnh = Math.max(maxFnh, part.fnHit);
+        for (const [ln, cnt] of part.lineHits) {
+          const prev = mergedHits.get(ln);
+          if (prev !== undefined) {
+            mergedHits.set(ln, Math.max(prev, cnt));
+          } else if (cnt > 0) {
+            // Only add new lines if they were actually hit
+            mergedHits.set(ln, cnt);
+          }
+        }
+      }
+      fileMap.set(file, {
+        linesFound: mergedHits.size,
+        linesHit: [...mergedHits.values()].filter(v => v > 0).length,
+        fnFound: maxFnf,
+        fnHit: maxFnh,
+        lineHits: mergedHits,
+      });
     }
 
     // Aggregate by folder

@@ -66,6 +66,18 @@ describe("mapAnyToMongoObject", () => {
       anyField: "anyValue",
     });
   });
+  test("mapAnyToMongoObject with regular field (no Id or Ids pattern)", () => {
+    const objectMapped = mapAnyToMongoObject({
+      name: "test",
+      email: "test@test.com",
+      active: true,
+    });
+    expect(objectMapped).toEqual({
+      name: "test",
+      email: "test@test.com",
+      active: true,
+    });
+  });
   test("mapAnyToMongoObject with non-string Id field", () => {
     const objectMapped = mapAnyToMongoObject({
       userId: 12345,

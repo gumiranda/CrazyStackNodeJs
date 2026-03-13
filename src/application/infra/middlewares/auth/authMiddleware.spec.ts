@@ -103,7 +103,7 @@ describe("auth middleware", () => {
       await mockFakeRequestHeader()
     );
     expect(httpResponse.statusCode).toBe(200);
-    expect(httpResponse.body).toEqual(
+    expect(httpResponse.data).toEqual(
       expect.objectContaining({ userId: "123" })
     );
   });
