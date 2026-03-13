@@ -12,6 +12,7 @@
     "test:fast": "bun test .spec.",
     "test:file": "bun test",
     "test:integration": "bun test .test.",
+    "test:coverage": "bun run scripts/run-tests.ts --coverage",
     "test:all": "bun run scripts/run-tests.ts",
     "format": "prettier --write \"**/*.{ts,tsx,json,md}\"",
     "generate": "yarn plop --plopfile ./generators/plopfile.js"
