@@ -1,21 +1,19 @@
-import jwt from "jsonwebtoken";
+import { SignJWT, jwtVerify } from "jose";
 import { TokenDecrypter, TokenGenerator } from "@/application/infra/crypto/protocols";
 
 export class JwtAdapter implements TokenDecrypter, TokenGenerator {
-  constructor(
-    private readonly secret: string,
-    private readonly expirationTime: string
-  ) {
-    this.secret = secret;
-    this.expirationTime = expirationTime;
+  private secretKey: Uint8Array;
+  constructor(secret: string, private readonly expirationTime: string) {
+    this.secretKey = new TextEncoder().encode(secret);
   }
   async decrypt(value: string): Promise<string> {
-    return jwt.verify(value, this.secret) as any;
+    const { payload } = await jwtVerify(value, this.secretKey);
+    return payload as any;
   }
   async generate(_id: string): Promise<string> {
-    const options: jwt.SignOptions = {
-      expiresIn: this.expirationTime as any,
-    };
-    return jwt.sign({ _id }, this.secret, options);
+    return new SignJWT({ _id })
+      .setProtectedHeader({ alg: "HS256" })
+      .setExpirationTime(this.expirationTime)
+      .sign(this.secretKey);
   }
 }

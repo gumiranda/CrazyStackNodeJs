@@ -15,6 +15,7 @@ describe("addRequest", () => {
     addRequestRepository.addRequest.mockResolvedValue(fakeRequestEntity);
   });
   beforeEach(() => {
+    jest.clearAllMocks();
     testInstance = addRequest(addRequestRepository);
   });
   afterAll(async () => {

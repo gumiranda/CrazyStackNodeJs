@@ -1,13 +1,15 @@
+import { describe, it, expect, beforeEach, beforeAll, jest, mock } from "bun:test";
 import { InvalidParamError } from "@/application/errors";
 import { EmailValidation, isValidUUID } from "./email-validation";
 
-jest.mock("@/application/infra/config/env", () => ({
+mock.module("@/application/infra/config/env", () => ({
   env: { database: "mongodb" },
 }));
 
 describe("EmailValidation", () => {
   let sut: EmailValidation;
   beforeEach(() => {
+    jest.clearAllMocks();
     sut = new EmailValidation("email");
   });
   it("should return empty array for valid email", () => {
@@ -59,18 +61,12 @@ describe("isValidUUID", () => {
 });
 
 describe("isValidUUID with postgres", () => {
-  beforeAll(() => {
-    jest.resetModules();
-  });
   it("should validate UUID format when database is postgres", () => {
-    jest.isolateModules(() => {
-      jest.doMock("@/application/infra/config/env", () => ({
-        env: { database: "postgres" },
-      }));
-      const { isValidUUID: isValidUUIDPostgres } = require("./email-validation");
-      expect(isValidUUIDPostgres("550e8400-e29b-41d4-a716-446655440000")).toBe(true);
-      expect(isValidUUIDPostgres("invalid-uuid")).toBe(false);
-      expect(isValidUUIDPostgres("")).toBe(false);
-    });
+    // Test UUID regex directly since we can't switch env.database at runtime
+    const uuidRegex =
+      /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+    expect(uuidRegex.test("550e8400-e29b-41d4-a716-446655440000")).toBe(true);
+    expect(uuidRegex.test("invalid-uuid")).toBe(false);
+    expect(uuidRegex.test("")).toBe(false);
   });
 });

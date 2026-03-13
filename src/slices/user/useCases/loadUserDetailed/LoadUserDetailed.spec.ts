@@ -1,3 +1,4 @@
+import { describe, it, expect, beforeEach, jest } from "bun:test";
 import { loadUserDetailed } from "./LoadUserDetailed";
 
 describe("loadUserDetailed", () => {
@@ -13,6 +14,7 @@ describe("loadUserDetailed", () => {
   const fakeQuery = { fields: { _id: "user_id" }, options: {} };
 
   beforeEach(() => {
+    jest.clearAllMocks();
     loadUserRepository = {
       loadUser: jest.fn().mockResolvedValue(fakeUser),
     };

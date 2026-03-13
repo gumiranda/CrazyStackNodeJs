@@ -1,6 +1,7 @@
+import { describe, it, expect, beforeEach, jest, mock } from "bun:test";
 import { completeOwner, flattenArray } from "./CompleteOwner";
 
-jest.mock("@/application/infra/config/whiteLabel", () => ({
+mock.module("@/application/infra/config/whiteLabel", () => ({
   whiteLabel: {
     database: "mongodb",
     systemName: "Test",
@@ -33,6 +34,7 @@ describe("completeOwner", () => {
   };
 
   beforeEach(() => {
+    jest.clearAllMocks();
     userRepository = {
       addUser: jest.fn().mockResolvedValue({ _id: "new_user_id", name: "User" }),
       updateUser: jest.fn().mockResolvedValue({ _id: "owner_id" }),

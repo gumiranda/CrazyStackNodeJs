@@ -4,7 +4,7 @@ import { Collection, ObjectId } from "mongodb";
 import MockDate from "mockdate";
 import { MongoRepository } from "./mongo-repository";
 
-jest.setTimeout(500000);
+
 
 const mockUser = {
   name: "valid_name",

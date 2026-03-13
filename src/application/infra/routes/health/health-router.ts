@@ -1,7 +1,6 @@
-import { FastifyInstance } from "fastify";
-async function health(fastify: FastifyInstance, options: any) {
-  fastify.get("/", async (request, reply) => {
-    return { hello: "world" };
-  });
-}
+import { Elysia } from "elysia";
+
+const health = new Elysia()
+  .get("/", () => ({ hello: "world" }));
+
 export { health };

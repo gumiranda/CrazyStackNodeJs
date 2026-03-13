@@ -1,4 +1,1 @@
-import { addAlias } from "module-alias";
-import { resolve } from "path";
-
-addAlias("@", resolve(process.env.TS_NODE_ENV === undefined ? "dist" : "src"));
+// Module alias is no longer needed — Bun resolves @/* paths natively via tsconfig.json

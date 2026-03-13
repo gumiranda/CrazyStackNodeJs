@@ -22,6 +22,7 @@ describe("UserRepository", () => {
     repository.increment.mockResolvedValue(fakeUserEntity);
   });
   beforeEach(() => {
+    jest.clearAllMocks();
     testInstance = new UserRepository(repository);
   });
   afterAll(() => {

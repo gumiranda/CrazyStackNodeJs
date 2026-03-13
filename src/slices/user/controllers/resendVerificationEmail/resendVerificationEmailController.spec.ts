@@ -1,10 +1,11 @@
+import { describe, it, expect, beforeEach, jest, mock as bunMock } from "bun:test";
 import { mock, MockProxy } from "jest-mock-extended";
 import { ResendVerificationEmailController } from "./resendVerificationEmailController";
 import { Controller } from "@/application/infra/contracts";
 import { Validation, badRequest, forbidden, ok } from "@/application/helpers";
 import { InvalidParamError, MissingParamError } from "@/application/errors";
 
-jest.mock("@/application/helpers/utils/generateToken", () => ({
+bunMock.module("@/application/helpers/utils/generateToken", () => ({
   generateToken: jest.fn().mockReturnValue("generated_token"),
 }));
 
@@ -16,6 +17,7 @@ describe("ResendVerificationEmailController", () => {
   const fakeBody = { email: "test@mail.com" };
 
   beforeEach(() => {
+    jest.clearAllMocks();
     validation = mock();
     validation.validate.mockReturnValue([]);
     updateUser = jest.fn().mockResolvedValue({ _id: "any_id" });

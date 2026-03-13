@@ -18,6 +18,7 @@ describe("LoadAppointmentByPage", () => {
     );
   });
   beforeEach(() => {
+    jest.clearAllMocks();
     testInstance = loadAppointmentByPage(loadAppointmentByPageRepository);
   });
   afterAll(async () => {

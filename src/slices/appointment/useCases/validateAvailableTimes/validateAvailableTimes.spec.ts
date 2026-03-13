@@ -1,3 +1,4 @@
+import { describe, it, expect, beforeEach, beforeAll, afterAll, jest } from "bun:test";
 import {
   fakeAvailableTimesEntity as fakeAvailableTimesModelRepository,
   fakeAvailableTimesModel2,
@@ -44,6 +45,7 @@ describe("ValidateAvailableTimes", () => {
     );
   });
   beforeEach(() => {
+    jest.clearAllMocks();
     testLoadAvailableTimes = loadAvailableTimes(
       loadAvailableTimesRepository,
       serviceRepository,

@@ -18,6 +18,7 @@ describe("deleteAppointment", () => {
     deleteAppointmentRepository.deleteAppointment.mockResolvedValue(fakeAppointmentEntity);
   });
   beforeEach(() => {
+    jest.clearAllMocks();
     testInstance = deleteAppointment(deleteAppointmentRepository);
   });
   afterAll(async () => {

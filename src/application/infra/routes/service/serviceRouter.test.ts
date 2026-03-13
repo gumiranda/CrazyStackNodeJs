@@ -1,10 +1,22 @@
-import { makeFastifyInstance } from "@/index";
+import { makeElysiaInstance } from "@/index";
 import { Collection, ObjectId } from "mongodb";
 import { MongoHelper, env } from "@/application/infra";
-import { sign } from "jsonwebtoken";
+import { SignJWT } from "jose";
 import { userBody } from "@/application/helpers/mocks/userBody";
 import { addDays } from "date-fns";
-jest.setTimeout(500000);
+
+const BASE = "http://localhost/api";
+const secretKey = new TextEncoder().encode(env.jwtSecret);
+
+const inject = async (app: any, opts: { method: string; url: string; payload?: any; headers?: any }) => {
+  const init: RequestInit = {
+    method: opts.method,
+    headers: { "Content-Type": "application/json", ...opts.headers },
+  };
+  if (opts.payload) init.body = JSON.stringify(opts.payload);
+  const res = await app.handle(new Request(`${BASE}${opts.url}`, init));
+  return { statusCode: res.status, body: await res.json() };
+};
 
 let userCollection: Collection;
 let serviceCollection: Collection;
@@ -31,19 +43,22 @@ const makeAccessToken = async (role: string, password: string): Promise<any> => 
     role,
   });
   const _id = result?.insertedId;
-  return { _id, token: sign({ _id }, env.jwtSecret) };
+  const token = await new SignJWT({ _id: _id.toString() })
+    .setProtectedHeader({ alg: "HS256" })
+    .setExpirationTime("1d")
+    .sign(secretKey);
+  return { _id, token };
 };
 describe("Route api/service", () => {
-  let fastify: any;
+  let app: any;
   beforeAll(async () => {
     const client = await MongoHelper.connect(process.env.MONGO_URL as string);
-    fastify = await makeFastifyInstance(client);
-    await fastify.listen({ port: 3000, host: "0.0.0.0" });
+    const result = await makeElysiaInstance(client);
+    app = result!.app;
   });
   afterAll(async () => {
-    await fastify.close();
     await MongoHelper.disconnect();
-    fastify = null;
+    app = null;
   });
   beforeEach(async () => {
     userCollection = await MongoHelper.getCollection("users");
@@ -54,132 +69,129 @@ describe("Route api/service", () => {
   describe("POST /api/service/add", () => {
     test("Should return 200 on add", async () => {
       const { token } = await makeAccessToken("admin", "password");
-      const responseAdd = await fastify.inject({
+      const { statusCode, body } = await inject(app, {
         method: "POST",
-        url: "/api/service/add",
+        url: "/service/add",
         headers: { authorization: `Bearer ${token}` },
         payload: serviceBody,
       });
-      const responseBodyAdd = JSON.parse(responseAdd.body);
-      expect(responseAdd.statusCode).toBe(200);
-      expect(responseBodyAdd._id).toBeTruthy();
+      expect(statusCode).toBe(200);
+      expect(body._id).toBeTruthy();
     });
     test("Should return 400 for bad requests", async () => {
       const { token } = await makeAccessToken("admin", "password");
       const serviceWrongBody = { ...serviceBody, name: null };
-      const responseAdd = await fastify.inject({
+      const { statusCode } = await inject(app, {
         method: "POST",
-        url: "/api/service/add",
+        url: "/service/add",
         headers: { authorization: `Bearer ${token}` },
         payload: serviceWrongBody,
       });
-      expect(responseAdd.statusCode).toBe(400);
+      expect(statusCode).toBe(400);
     });
     test("Should return 401 for unauthorized access token", async () => {
-      const response = await fastify.inject({
+      const { statusCode } = await inject(app, {
         method: "POST",
-        url: "/api/service/add",
+        url: "/service/add",
         headers: { authorization: "Bearer invalid_token" },
         payload: serviceBody,
       });
-      expect(response.statusCode).toBe(401);
+      expect(statusCode).toBe(401);
     });
     test("Should return 400 if i dont pass any token", async () => {
-      const response = await fastify.inject({
+      const { statusCode } = await inject(app, {
         method: "POST",
-        url: "/api/service/add",
+        url: "/service/add",
         payload: serviceBody,
       });
-      expect(response.statusCode).toBe(400);
+      expect(statusCode).toBe(400);
     });
   });
   describe("GET /api/service/load", () => {
     test("Should return 400 for bad requests", async () => {
       const { token } = await makeAccessToken("admin", "password");
-      const response = await fastify.inject({
+      const { statusCode } = await inject(app, {
         method: "GET",
-        url: "/api/service/load",
+        url: "/service/load",
         headers: { authorization: `Bearer ${token}` },
       });
-      expect(response.statusCode).toBe(400);
+      expect(statusCode).toBe(400);
     });
     test("Should return 200 on load", async () => {
       const { insertedId } = await serviceCollection.insertOne(serviceBody);
       const { token } = await makeAccessToken("admin", "password");
-      const response = await fastify.inject({
+      const { statusCode, body } = await inject(app, {
         method: "GET",
-        url: `/api/service/load?_id=${insertedId.toString()}`,
+        url: `/service/load?_id=${insertedId.toString()}`,
         headers: { authorization: `Bearer ${token}` },
       });
-      const responseBody = JSON.parse(response.body);
-      expect(response.statusCode).toBe(200);
-      expect(responseBody._id).toEqual(insertedId.toString());
+      expect(statusCode).toBe(200);
+      expect(body._id).toEqual(insertedId.toString());
     });
     test("Should return 401 for unauthorized access token", async () => {
-      const response = await fastify.inject({
+      const { statusCode } = await inject(app, {
         method: "GET",
-        url: `/api/service/load?_id=${ObjectId.createFromTime(new Date().getTime()).toString()}`,
+        url: `/service/load?_id=${ObjectId.createFromTime(new Date().getTime()).toString()}`,
         headers: { authorization: "Bearer invalid_token" },
       });
-      expect(response.statusCode).toBe(401);
+      expect(statusCode).toBe(401);
     });
     test("Should return 400 if i dont pass any token", async () => {
-      const response = await fastify.inject({
+      const { statusCode } = await inject(app, {
         method: "GET",
-        url: "/api/service/load",
+        url: "/service/load",
       });
-      expect(response.statusCode).toBe(400);
+      expect(statusCode).toBe(400);
     });
   });
 
   describe("GET /api/service/loadByPage", () => {
     test("Should return 400 for bad requests", async () => {
       const { token } = await makeAccessToken("admin", "password");
-      const response = await fastify.inject({
+      const { statusCode } = await inject(app, {
         method: "GET",
-        url: "/api/service/loadByPage",
+        url: "/service/loadByPage",
         headers: { authorization: `Bearer ${token}` },
       });
-      expect(response.statusCode).toBe(400);
+      expect(statusCode).toBe(400);
     });
     test("Should return 200 on loadByPage", async () => {
       await serviceCollection.insertOne(serviceBody);
       const { token } = await makeAccessToken("admin", "password");
-      const response = await fastify.inject({
+      const { statusCode, body } = await inject(app, {
         method: "GET",
-        url: `/api/service/loadByPage?page=${1}`,
+        url: `/service/loadByPage?page=${1}`,
         headers: { authorization: `Bearer ${token}` },
       });
-      const responseBody = JSON.parse(response.body);
-      expect(response.statusCode).toBe(200);
-      expect(responseBody.services).toBeTruthy();
-      expect(responseBody.total).toBeTruthy();
+      expect(statusCode).toBe(200);
+      expect(body.services).toBeTruthy();
+      expect(body.total).toBeTruthy();
     });
     test("Should return 401 for unauthorized access token", async () => {
-      const response = await fastify.inject({
+      const { statusCode } = await inject(app, {
         method: "GET",
-        url: `/api/service/loadByPage?page=${1}`,
+        url: `/service/loadByPage?page=${1}`,
         headers: { authorization: "Bearer invalid_token" },
       });
-      expect(response.statusCode).toBe(401);
+      expect(statusCode).toBe(401);
     });
     test("Should return 400 if i dont pass any token", async () => {
-      const response = await fastify.inject({
+      const { statusCode } = await inject(app, {
         method: "GET",
-        url: "/api/service/loadByPage",
+        url: "/service/loadByPage",
       });
-      expect(response.statusCode).toBe(400);
+      expect(statusCode).toBe(400);
     });
   });
   describe("DELETE /api/service/delete", () => {
     test("Should return 400 for bad requests", async () => {
       const { token } = await makeAccessToken("admin", "password");
-      const response = await fastify.inject({
+      const { statusCode } = await inject(app, {
         method: "DELETE",
-        url: "/api/service/delete",
+        url: "/service/delete",
         headers: { authorization: `Bearer ${token}` },
       });
-      expect(response.statusCode).toBe(400);
+      expect(statusCode).toBe(400);
     });
     test("Should return 200 on delete", async () => {
       const { token, _id } = await makeAccessToken("admin", "password");
@@ -187,40 +199,39 @@ describe("Route api/service", () => {
         ...serviceBody,
         createdById: _id,
       });
-      const response = await fastify.inject({
+      const { statusCode, body } = await inject(app, {
         method: "DELETE",
-        url: `/api/service/delete?_id=${insertedId.toString()}`,
+        url: `/service/delete?_id=${insertedId.toString()}`,
         headers: { authorization: `Bearer ${token}` },
       });
-      const responseBody = JSON.parse(response.body);
-      expect(response.statusCode).toBe(200);
-      expect(responseBody).toEqual(true);
+      expect(statusCode).toBe(200);
+      expect(body).toEqual(true);
     });
     test("Should return 401 for unauthorized access token", async () => {
-      const response = await fastify.inject({
+      const { statusCode } = await inject(app, {
         method: "DELETE",
-        url: `/api/service/delete?_id=${ObjectId.createFromTime(new Date().getTime()).toString()}`,
+        url: `/service/delete?_id=${ObjectId.createFromTime(new Date().getTime()).toString()}`,
         headers: { authorization: "Bearer invalid_token" },
       });
-      expect(response.statusCode).toBe(401);
+      expect(statusCode).toBe(401);
     });
     test("Should return 400 if i dont pass any token", async () => {
-      const response = await fastify.inject({
+      const { statusCode } = await inject(app, {
         method: "DELETE",
-        url: "/api/service/delete",
+        url: "/service/delete",
       });
-      expect(response.statusCode).toBe(400);
+      expect(statusCode).toBe(400);
     });
   });
   describe("PATCH /api/service/update", () => {
     test("Should return 400 for bad requests", async () => {
       const { token } = await makeAccessToken("admin", "password");
-      const response = await fastify.inject({
+      const { statusCode } = await inject(app, {
         method: "PATCH",
-        url: "/api/service/update",
+        url: "/service/update",
         headers: { authorization: `Bearer ${token}` },
       });
-      expect(response.statusCode).toBe(400);
+      expect(statusCode).toBe(400);
     });
     test("Should return 200 on update", async () => {
       const { token, _id } = await makeAccessToken("admin", "password");
@@ -228,31 +239,30 @@ describe("Route api/service", () => {
         ...serviceBody,
         createdById: _id,
       });
-      const response = await fastify.inject({
+      const { statusCode, body } = await inject(app, {
         method: "PATCH",
-        url: `/api/service/update?_id=${insertedId.toString()}`,
+        url: `/service/update?_id=${insertedId.toString()}`,
         headers: { authorization: `Bearer ${token}` },
-        body: { name: "new name" },
+        payload: { name: "new name" },
       });
-      const responseBody = JSON.parse(response.body);
-      expect(response.statusCode).toBe(200);
-      expect(responseBody.name).toEqual("new name");
+      expect(statusCode).toBe(200);
+      expect(body.name).toEqual("new name");
     });
     test("Should return 401 for unauthorized access token", async () => {
-      const response = await fastify.inject({
+      const { statusCode } = await inject(app, {
         method: "PATCH",
-        url: `/api/service/update?_id=${ObjectId.createFromTime(new Date().getTime()).toString()}`,
+        url: `/service/update?_id=${ObjectId.createFromTime(new Date().getTime()).toString()}`,
         headers: { authorization: "Bearer invalid_token" },
-        body: { name: "new name" },
+        payload: { name: "new name" },
       });
-      expect(response.statusCode).toBe(401);
+      expect(statusCode).toBe(401);
     });
     test("Should return 400 if i dont pass any token", async () => {
-      const response = await fastify.inject({
+      const { statusCode } = await inject(app, {
         method: "PATCH",
-        url: "/api/service/update",
+        url: "/service/update",
       });
-      expect(response.statusCode).toBe(400);
+      expect(statusCode).toBe(400);
     });
   });
 });

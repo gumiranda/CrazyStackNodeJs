@@ -16,6 +16,7 @@ describe("UpdateAppointment", () => {
     updateAppointmentRepository.updateAppointment.mockResolvedValue(fakeAppointmentEntity);
   });
   beforeEach(() => {
+    jest.clearAllMocks();
     testInstance = updateAppointment(updateAppointmentRepository);
   });
   afterAll(async () => {

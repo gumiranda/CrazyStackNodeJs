@@ -1,25 +1,19 @@
-import { requestContext } from "@fastify/request-context";
 import { HttpRequest } from "@/application/helpers";
 import { Controller } from "@/application/infra/contracts";
 
 export const adaptRoute = (controller: Controller) => {
-  return async (request: any, reply: any) => {
-    const { body, params, query, headers } = request;
-    const {
-      userId = null,
-      userLogged = null,
-      daysToNextPayment = null,
-    }: any = (requestContext as any).get("context" as any) || {};
+  return async ({ body, params, query, headers, set, store }: any) => {
     const httpRequest: HttpRequest = {
       body,
       params,
       headers,
-      userId,
       query,
-      userLogged,
-      daysToNextPayment,
+      userId: store?.userId ?? null,
+      userLogged: store?.userLogged ?? null,
+      daysToNextPayment: store?.daysToNextPayment ?? null,
     };
     const { statusCode, data } = await controller.handle(httpRequest);
-    reply.code(statusCode).send(data);
+    set.status = statusCode;
+    return data;
   };
 };

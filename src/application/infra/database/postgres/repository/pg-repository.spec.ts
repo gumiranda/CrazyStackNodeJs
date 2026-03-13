@@ -1,3 +1,4 @@
+import { describe, test, expect, beforeEach, jest, mock } from "bun:test";
 const mockQuery = jest.fn();
 const mockRelease = jest.fn();
 const mockClient = {
@@ -5,11 +6,11 @@ const mockClient = {
   release: mockRelease,
 };
 
-jest.mock("@/application/infra/database/postgres/databaseConfig", () => ({
+mock.module("@/application/infra/database/postgres/databaseConfig", () => ({
   connect: jest.fn().mockResolvedValue(mockClient),
 }));
 
-jest.mock("@/application/infra/contracts", () => ({
+mock.module("@/application/infra/contracts", () => ({
   Repository: class {
     constructor() {}
   },

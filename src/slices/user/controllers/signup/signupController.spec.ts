@@ -1,3 +1,4 @@
+import { describe, it, expect, beforeEach, beforeAll, afterAll, jest, mock as bunMock } from "bun:test";
 import MockDate from "mockdate";
 import { mock, MockProxy } from "jest-mock-extended";
 import { SignupController } from "./signupController";
@@ -12,19 +13,23 @@ import {
 } from "@/application/helpers";
 import { EmailInUseError, InvalidParamError, MissingParamError } from "@/application/errors";
 
-jest.mock("deep-email-validator", () =>
-  jest.fn().mockResolvedValue({
-    validators: {
-      regex: { valid: true },
-      typo: { valid: true },
-      disposable: { valid: true },
-      smtp: { valid: true },
-      mx: { valid: true },
-    },
-  })
-);
-jest.mock("slug", () => jest.fn().mockReturnValue("any-slug"));
-jest.mock("@/application/helpers/utils/generateToken", () => ({
+const mockEmailValidator = jest.fn().mockResolvedValue({
+  validators: {
+    regex: { valid: true },
+    typo: { valid: true },
+    disposable: { valid: true },
+    smtp: { valid: true },
+    mx: { valid: true },
+  },
+});
+bunMock.module("deep-email-validator", () => ({
+  default: mockEmailValidator,
+}));
+const mockSlug = jest.fn().mockReturnValue("any-slug");
+bunMock.module("slug", () => ({
+  default: mockSlug,
+}));
+bunMock.module("@/application/helpers/utils/generateToken", () => ({
   generateToken: jest.fn().mockReturnValue("any_token"),
 }));
 
@@ -52,6 +57,7 @@ describe("SignupController", () => {
     MockDate.reset();
   });
   beforeEach(() => {
+    jest.clearAllMocks();
     validation = mock();
     validation.validate.mockReturnValue([]);
     addUser = jest.fn().mockResolvedValue(fakeUser);
@@ -78,8 +84,7 @@ describe("SignupController", () => {
     expect(validation.validate).toHaveBeenCalledWith(fakeBody);
   });
   it("should return badRequest if email validator fails (regex invalid)", async () => {
-    const emailValidator = require("deep-email-validator");
-    emailValidator.mockResolvedValueOnce({
+    mockEmailValidator.mockResolvedValueOnce({
       validators: {
         regex: { valid: false },
         typo: { valid: true },
@@ -157,8 +162,7 @@ describe("SignupController", () => {
     );
   });
   it("should return badRequest if smtp is invalid and reason is not Timeout", async () => {
-    const emailValidator = require("deep-email-validator");
-    emailValidator.mockResolvedValueOnce({
+    mockEmailValidator.mockResolvedValueOnce({
       validators: {
         regex: { valid: true },
         typo: { valid: true },
@@ -171,8 +175,7 @@ describe("SignupController", () => {
     expect(result).toEqual(badRequest([new InvalidParamError("email")]));
   });
   it("should not return badRequest if smtp is invalid but reason is Timeout", async () => {
-    const emailValidator = require("deep-email-validator");
-    emailValidator.mockResolvedValueOnce({
+    mockEmailValidator.mockResolvedValueOnce({
       validators: {
         regex: { valid: true },
         typo: { valid: true },
@@ -193,14 +196,12 @@ describe("SignupController", () => {
     expect(result).toEqual(forbidden(new EmailInUseError()));
   });
   it("should return badRequest when emailValidator returns null", async () => {
-    const emailValidator = require("deep-email-validator");
-    emailValidator.mockResolvedValueOnce(null);
+    mockEmailValidator.mockResolvedValueOnce(null);
     const result = await sut.execute({ body: fakeBody });
     expect(result).toEqual(badRequest([new InvalidParamError("email")]));
   });
   it("should return badRequest when emailValidator returns empty validators", async () => {
-    const emailValidator = require("deep-email-validator");
-    emailValidator.mockResolvedValueOnce({ validators: {} });
+    mockEmailValidator.mockResolvedValueOnce({ validators: {} });
     const result = await sut.execute({ body: fakeBody });
     expect(result).toEqual(badRequest([new InvalidParamError("email")]));
   });

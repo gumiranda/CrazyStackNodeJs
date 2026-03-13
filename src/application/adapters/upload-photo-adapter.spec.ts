@@ -1,20 +1,12 @@
-jest.mock("@fastify/request-context", () => ({
-  requestContext: {
-    get: jest.fn().mockReturnValue({
-      userId: "any_user_id",
-      userLogged: { _id: "any_user_id" },
-      daysToNextPayment: 30,
-    }),
-  },
-}));
+import { describe, it, expect, beforeEach, jest, mock } from "bun:test";
 
 const mockUploadFile = jest.fn().mockResolvedValue({ url: "http://uploaded.com/photo.jpg", key: "photo.jpg" });
-jest.mock("../infra/storage/storageFactory", () => ({
+mock.module("../infra/storage/storageFactory", () => ({
   makeUploadProvider: jest.fn().mockReturnValue({
     uploadFile: mockUploadFile,
   }),
 }));
-jest.mock("../infra", () => ({
+mock.module("../infra", () => ({
   env: { uploadProvider: "cloudflare_r2" },
 }));
 
@@ -22,37 +14,31 @@ import { adaptUploadPhotoRoute, calculateExpiration } from "./upload-photo-adapt
 
 describe("adaptUploadPhotoRoute", () => {
   let controller: any;
-  let request: any;
-  let reply: any;
+  let context: any;
 
   beforeEach(() => {
+    jest.clearAllMocks();
     mockUploadFile.mockClear();
     controller = {
       handle: jest.fn().mockResolvedValue({ statusCode: 200, data: { success: true } }),
     };
-    request = {
-      body: { name: "photo" },
+    context = {
+      body: { name: "photo", file: new Blob(["test"], { type: "image/jpeg" }) },
       params: { id: "any_id" },
       query: {},
       headers: {},
-      file: jest.fn().mockResolvedValue({ filename: "photo.jpg" }),
+      set: { status: 0 },
+      store: {
+        userId: "any_user_id",
+        userLogged: { _id: "any_user_id" },
+        daysToNextPayment: 30,
+      },
     };
-    reply = {
-      code: jest.fn().mockReturnThis(),
-      send: jest.fn(),
-      status: jest.fn().mockReturnThis(),
-    };
-  });
-
-  it("should call request.file()", async () => {
-    const handler = adaptUploadPhotoRoute(controller);
-    await handler(request, reply);
-    expect(request.file).toHaveBeenCalled();
   });
 
   it("should call controller.handle with uploaded file data", async () => {
     const handler = adaptUploadPhotoRoute(controller);
-    await handler(request, reply);
+    await handler(context);
     expect(controller.handle).toHaveBeenCalledWith(
       expect.objectContaining({
         body: expect.objectContaining({
@@ -66,18 +52,17 @@ describe("adaptUploadPhotoRoute", () => {
     );
   });
 
-  it("should reply with controller result", async () => {
+  it("should set status and return data", async () => {
     const handler = adaptUploadPhotoRoute(controller);
-    await handler(request, reply);
-    expect(reply.code).toHaveBeenCalledWith(200);
-    expect(reply.send).toHaveBeenCalledWith({ success: true });
+    const result = await handler(context);
+    expect(context.set.status).toBe(200);
+    expect(result).toEqual({ success: true });
   });
 
-  it("should handle null context values", async () => {
-    const { requestContext } = require("@fastify/request-context");
-    requestContext.get.mockReturnValueOnce(null);
+  it("should handle empty store values", async () => {
+    context.store = {};
     const handler = adaptUploadPhotoRoute(controller);
-    await handler(request, reply);
+    await handler(context);
     expect(controller.handle).toHaveBeenCalledWith(
       expect.objectContaining({
         userId: null,
@@ -90,9 +75,9 @@ describe("adaptUploadPhotoRoute", () => {
   it("should return 500 when upload fails", async () => {
     mockUploadFile.mockRejectedValueOnce(new Error("upload error"));
     const handler = adaptUploadPhotoRoute(controller);
-    await handler(request, reply);
-    expect(reply.status).toHaveBeenCalledWith(500);
-    expect(reply.send).toHaveBeenCalledWith({ error: "Failed to upload files" });
+    const result = await handler(context);
+    expect(context.set.status).toBe(500);
+    expect(result).toEqual({ error: "Failed to upload files" });
   });
 });
 

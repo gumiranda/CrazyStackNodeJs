@@ -1,3 +1,4 @@
+import { describe, test, expect, beforeAll, beforeEach, afterAll, jest } from "bun:test";
 import {
   fakeAppointmentEntity,
   fakeAppointmentPaginated,
@@ -33,6 +34,8 @@ describe("Appointment Mongo Repository", () => {
     repository.aggregate.mockResolvedValue([fakeAvailableTimesEntity]);
   });
   beforeEach(async () => {
+    jest.clearAllMocks();
+    repository.aggregate.mockResolvedValue([fakeAvailableTimesEntity]);
     testInstance = new AppointmentAggregateRepository(repository);
   });
   afterAll(async () => {

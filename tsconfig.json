@@ -1,24 +1,22 @@
 {
   "compilerOptions": {
-    "incremental": true,
-    "outDir": "dist",
-    "rootDirs": ["src"],
-    "target": "es2021",
-    "sourceMap": true,
-    "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true,
-    "module": "commonjs",
-    "moduleResolution": "node",
-    "esModuleInterop": true,
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "types": ["bun-types"],
     "baseUrl": "./src",
     "paths": {
       "@/*": ["*"]
     },
     "strict": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
     "noImplicitOverride": true,
     "removeComments": true,
     "emitDecoratorMetadata": true,
-    "experimentalDecorators": true
+    "experimentalDecorators": true,
+    "outDir": "dist"
   },
   "include": ["src"]
 }

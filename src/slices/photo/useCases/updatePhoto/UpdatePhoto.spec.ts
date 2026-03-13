@@ -16,6 +16,7 @@ describe("UpdatePhoto", () => {
         updatePhotoRepository.updatePhoto.mockResolvedValue(fakePhotoEntity);
     });
     beforeEach(() => {
+    jest.clearAllMocks();
         testInstance = updatePhoto(updatePhotoRepository);
     });
     afterAll(async () => {

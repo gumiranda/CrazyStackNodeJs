@@ -16,6 +16,7 @@ describe("LoadCategory", () => {
     loadCategoryRepository.loadCategory.mockResolvedValue(fakeCategoryEntity);
   });
   beforeEach(() => {
+    jest.clearAllMocks();
     testInstance = loadCategory(loadCategoryRepository);
   });
   afterAll(async () => {

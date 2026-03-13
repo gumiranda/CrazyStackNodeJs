@@ -16,6 +16,7 @@ describe("LoadOwner", () => {
     loadOwnerRepository.loadOwner.mockResolvedValue(fakeOwnerEntity);
   });
   beforeEach(() => {
+    jest.clearAllMocks();
     testInstance = loadOwner(loadOwnerRepository);
   });
   afterAll(async () => {

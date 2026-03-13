@@ -1,7 +1,8 @@
+import { describe, it, expect, beforeEach, jest, mock } from "bun:test";
 const mockSend = jest.fn().mockResolvedValue({});
 const mockDone = jest.fn().mockResolvedValue({});
 
-jest.mock("@aws-sdk/client-s3", () => ({
+mock.module("@aws-sdk/client-s3", () => ({
   S3Client: jest.fn().mockImplementation(() => ({
     send: mockSend,
   })),
@@ -9,18 +10,18 @@ jest.mock("@aws-sdk/client-s3", () => ({
   GetObjectCommand: jest.fn().mockImplementation((params: any) => ({ ...params, _cmd: "Get" })),
   DeleteObjectCommand: jest.fn().mockImplementation((params: any) => ({ ...params, _cmd: "Delete" })),
 }));
-jest.mock("@aws-sdk/lib-storage", () => ({
+mock.module("@aws-sdk/lib-storage", () => ({
   Upload: jest.fn().mockImplementation(() => ({
     done: mockDone,
   })),
 }));
-jest.mock("@aws-sdk/s3-request-presigner", () => ({
+mock.module("@aws-sdk/s3-request-presigner", () => ({
   getSignedUrl: jest.fn().mockResolvedValue("https://signed-url.com"),
 }));
-jest.mock("uuid", () => ({
+mock.module("uuid", () => ({
   v4: jest.fn().mockReturnValue("test-uuid"),
 }));
-jest.mock("@/application/infra/config", () => ({
+mock.module("@/application/infra/config", () => ({
   env: {
     cloudflareAccountId: "test-account",
     awsAccessKeyId: "test-key",

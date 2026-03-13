@@ -1,3 +1,4 @@
+import { Elysia } from "elysia";
 import { authLogged } from "@/application/infra/middlewares";
 import {
   addRequestAdapter,
@@ -6,24 +7,18 @@ import {
   updateRequestAdapter,
   loadRequestByPageAdapter,
 } from "./requestAdapter";
-import {
-  addRequestPostSchema,
-  loadRequestGetSchema,
-  deleteRequestSchema,
-  updateRequestSchema,
-  loadRequestByPageGetSchema,
-} from "./requestSchema";
 
-async function request(fastify: any, options: any) {
-  fastify.addHook("preHandler", authLogged());
-  fastify.post("/request/add", addRequestPostSchema, addRequestAdapter());
-  fastify.get("/request/load", loadRequestGetSchema, loadRequestAdapter());
-  fastify.get(
-    "/request/loadByPage",
-    loadRequestByPageGetSchema,
-    loadRequestByPageAdapter()
+const request = new Elysia()
+  .state("userId", null as string | null)
+  .state("userLogged", null as any)
+  .state("daysToNextPayment", null as any)
+  .guard({ beforeHandle: [authLogged()] }, (app) =>
+    app
+      .post("/request/add", addRequestAdapter())
+      .get("/request/load", loadRequestAdapter())
+      .get("/request/loadByPage", loadRequestByPageAdapter())
+      .delete("/request/delete", deleteRequestAdapter())
+      .patch("/request/update", updateRequestAdapter())
   );
-  fastify.delete("/request/delete", deleteRequestSchema, deleteRequestAdapter());
-  fastify.patch("/request/update", updateRequestSchema, updateRequestAdapter());
-}
+
 export { request };

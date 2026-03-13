@@ -16,6 +16,7 @@ describe("LoadRequest", () => {
     loadRequestRepository.loadRequest.mockResolvedValue(fakeRequestEntity);
   });
   beforeEach(() => {
+    jest.clearAllMocks();
     testInstance = loadRequest(loadRequestRepository);
   });
   afterAll(async () => {

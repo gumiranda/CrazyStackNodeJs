@@ -1,3 +1,4 @@
+import { describe, it, test, expect, beforeEach, beforeAll, afterAll, jest } from "bun:test";
 import MockDate from "mockdate";
 import { badRequest, ok, Validation } from "@/application/helpers";
 import { MockProxy, mock } from "jest-mock-extended";
@@ -26,6 +27,7 @@ describe("LoadCategoryController", () => {
     MockDate.reset();
   });
   beforeEach(() => {
+    jest.clearAllMocks();
     fakeQuery = { _id: fakeCategoryEntity._id };
     testInstance = new LoadCategoryController(validation, loadCategory);
   });

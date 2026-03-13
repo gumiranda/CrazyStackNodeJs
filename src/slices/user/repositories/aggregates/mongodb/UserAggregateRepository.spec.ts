@@ -1,10 +1,11 @@
+import { describe, test, expect, beforeEach, beforeAll, afterAll, jest, mock as bunMock } from "bun:test";
 import { Repository } from "@/application/infra/contracts/repository";
 import { Query } from "@/application/types";
 import { mock, MockProxy } from "jest-mock-extended";
 import { UserAggregateRepository } from "./UserAggregateRepository";
 import MockDate from "mockdate";
 
-jest.mock("@/application/infra/database/mongodb", () => ({
+bunMock.module("@/application/infra/database/mongodb", () => ({
   mapQueryParamsToQueryMongo: jest.fn((query: any) => query),
   mountGeoNearQuery: jest.fn((params: any) => {
     if (!params) return null;
@@ -35,6 +36,7 @@ describe("UserAggregateRepository", () => {
   });
 
   beforeEach(() => {
+    jest.clearAllMocks();
     repository = mock<Repository>();
     repository.getOne.mockResolvedValue({
       coord: { type: "Point", coordinates: [10, 20] },

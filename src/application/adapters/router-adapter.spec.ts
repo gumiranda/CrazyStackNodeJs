@@ -1,39 +1,32 @@
+import { describe, it, expect, beforeEach, jest } from "bun:test";
 import { adaptRoute } from "./router-adapter";
-
-jest.mock("@fastify/request-context", () => ({
-  requestContext: {
-    get: jest.fn().mockReturnValue({
-      userId: "any_user_id",
-      userLogged: { _id: "any_user_id", role: "client" },
-      daysToNextPayment: 30,
-    }),
-  },
-}));
 
 describe("adaptRoute", () => {
   let controller: any;
-  let request: any;
-  let reply: any;
+  let context: any;
 
   beforeEach(() => {
+    jest.clearAllMocks();
     controller = {
       handle: jest.fn().mockResolvedValue({ statusCode: 200, data: { success: true } }),
     };
-    request = {
+    context = {
       body: { name: "any_name" },
       params: { id: "any_id" },
       query: { page: 1 },
       headers: { authorization: "Bearer token" },
-    };
-    reply = {
-      code: jest.fn().mockReturnThis(),
-      send: jest.fn(),
+      set: { status: 0 },
+      store: {
+        userId: "any_user_id",
+        userLogged: { _id: "any_user_id", role: "client" },
+        daysToNextPayment: 30,
+      },
     };
   });
 
   it("should call controller.handle with correct httpRequest", async () => {
     const handler = adaptRoute(controller);
-    await handler(request, reply);
+    await handler(context);
     expect(controller.handle).toHaveBeenCalledWith({
       body: { name: "any_name" },
       params: { id: "any_id" },
@@ -45,36 +38,22 @@ describe("adaptRoute", () => {
     });
   });
 
-  it("should reply with correct statusCode and data", async () => {
+  it("should set status and return data", async () => {
     const handler = adaptRoute(controller);
-    await handler(request, reply);
-    expect(reply.code).toHaveBeenCalledWith(200);
-    expect(reply.send).toHaveBeenCalledWith({ success: true });
+    const result = await handler(context);
+    expect(context.set.status).toBe(200);
+    expect(result).toEqual({ success: true });
   });
 
   it("should return a function", () => {
     const handler = adaptRoute(controller);
     expect(typeof handler).toBe("function");
   });
-});
 
-describe("adaptRoute with no context", () => {
-  beforeEach(() => {
-    jest.resetModules();
-  });
-
-  it("should use null defaults when requestContext returns null", async () => {
-    jest.doMock("@fastify/request-context", () => ({
-      requestContext: { get: jest.fn().mockReturnValue(null) },
-    }));
-    const { adaptRoute: adaptRouteNoCtx } = require("./router-adapter");
-    const controller = {
-      handle: jest.fn().mockResolvedValue({ statusCode: 200, data: {} }),
-    };
-    const request = { body: {}, params: {}, query: {}, headers: {} };
-    const reply = { code: jest.fn().mockReturnThis(), send: jest.fn() };
-    const handler = adaptRouteNoCtx(controller);
-    await handler(request, reply);
+  it("should use null defaults when store is empty", async () => {
+    context.store = {};
+    const handler = adaptRoute(controller);
+    await handler(context);
     expect(controller.handle).toHaveBeenCalledWith(
       expect.objectContaining({
         userId: null,

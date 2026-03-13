@@ -18,6 +18,7 @@ describe("LoadUserByPageGeoNear", () => {
     );
   });
   beforeEach(() => {
+    jest.clearAllMocks();
     testInstance = loadUserByPageGeoNear(loadUserByPageGeoNearRepository);
   });
   afterAll(async () => {

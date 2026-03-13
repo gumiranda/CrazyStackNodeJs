@@ -1,19 +1,23 @@
+import { describe, it, test, expect, beforeEach, beforeAll, afterAll, jest, mock } from "bun:test";
 import { fakeUserEntity } from "@/slices/user/entities/UserEntity.spec";
 import MockDate from "mockdate";
 import { Middleware } from "@/application/infra/contracts";
 import { AuthMiddleware } from "./authMiddleware";
 import { forbidden, serverError, ok, unauthorized } from "@/application/helpers";
 import { AccessDeniedError } from "@/application/errors";
-jest.mock("jsonwebtoken", () => ({
-  async sign(): Promise<string> {
-    return new Promise((resolve) => resolve("any_token"));
-  },
-  async verify(): Promise<string> {
-    return new Promise((resolve) => resolve("any_value"));
-  },
-}));
-export const mockFakeRequestHeader = (): any => ({
-  headers: { authorization: "Bearer any_token" },
+import { SignJWT } from "jose";
+import { env } from "@/application/infra/config";
+
+const makeToken = async (payload: any = { _id: "507f1f77bcf86cd799439011" }): Promise<string> => {
+  const secretKey = new TextEncoder().encode(env.jwtSecret);
+  return new SignJWT(payload)
+    .setProtectedHeader({ alg: "HS256" })
+    .setExpirationTime("1d")
+    .sign(secretKey);
+};
+
+export const mockFakeRequestHeader = async (): Promise<any> => ({
+  headers: { authorization: `Bearer ${await makeToken()}` },
 });
 
 describe("auth middleware", () => {
@@ -25,20 +29,23 @@ describe("auth middleware", () => {
     loadUser.mockResolvedValue(fakeUserEntity);
   });
   beforeEach(async () => {
+    jest.clearAllMocks();
+    loadUser.mockResolvedValue(fakeUserEntity);
     testInstance = new AuthMiddleware(loadUser, ["client"]);
   });
   afterAll(async () => {
     MockDate.reset();
   });
   test("should return 200 IF returns an user logged correctly", async () => {
-    const httpResponse = await testInstance.handle(mockFakeRequestHeader());
+    const httpResponse = await testInstance.handle(await mockFakeRequestHeader());
     expect(httpResponse).toEqual(
       ok({ userId: "123", userLogged: fakeUserEntity, daysToNextPayment: 29 })
     );
   });
   test("should return 401 IF returns null in verify token", async () => {
-    jest.spyOn(testInstance, "verifyToken" as never).mockResolvedValueOnce(null as never);
-    const httpResponse = await testInstance.handle(mockFakeRequestHeader());
+    const httpResponse = await testInstance.handle({
+      headers: { authorization: "Bearer invalid_token_here" },
+    });
     expect(httpResponse).toEqual(unauthorized());
   });
   test("should return 403 if no authorization exists in headers", async () => {
@@ -46,8 +53,8 @@ describe("auth middleware", () => {
     expect(httpResponse).toEqual(forbidden(new AccessDeniedError()));
   });
   test("should return 500 if loadUser throws", async () => {
-    loadUser.mockRejectedValueOnce(new Error("loadUser_error"));
-    const httpResponse = await testInstance.handle(mockFakeRequestHeader());
+    loadUser.mockImplementationOnce(() => { throw new Error("loadUser_error"); });
+    const httpResponse = await testInstance.handle(await mockFakeRequestHeader());
     expect(httpResponse).toEqual(serverError(new Error("loadUser_error")));
   });
   test("should return 403 when authorization header has no token after split", async () => {
@@ -58,20 +65,18 @@ describe("auth middleware", () => {
   });
   test("should return 403 when user is not found by loadUser", async () => {
     loadUser.mockResolvedValueOnce(null);
-    const httpResponse = await testInstance.handle(mockFakeRequestHeader());
+    const httpResponse = await testInstance.handle(await mockFakeRequestHeader());
     expect(httpResponse).toEqual(forbidden(new AccessDeniedError()));
   });
   test("should return 403 when user has no payDay", async () => {
     loadUser.mockResolvedValueOnce({ ...fakeUserEntity, payDay: null, payday: null });
-    const httpResponse = await testInstance.handle(mockFakeRequestHeader());
+    const httpResponse = await testInstance.handle(await mockFakeRequestHeader());
     expect(httpResponse).toEqual(forbidden(new AccessDeniedError()));
   });
-  test("should return 401 when jwt.verify throws synchronously (invalid token)", async () => {
-    const jwt = require("jsonwebtoken");
-    jest.spyOn(jwt, "verify").mockImplementationOnce(() => {
-      throw new Error("invalid token");
+  test("should return 401 when token is expired or invalid", async () => {
+    const httpResponse = await testInstance.handle({
+      headers: { authorization: "Bearer totally.invalid.token" },
     });
-    const httpResponse = await testInstance.handle(mockFakeRequestHeader());
     expect(httpResponse).toEqual(unauthorized());
   });
   test("should return 403 when owner has exceeded payment deadline", async () => {
@@ -83,7 +88,7 @@ describe("auth middleware", () => {
       payDay: pastDate.toISOString(),
       payday: null,
     });
-    const httpResponse = await testInstance.handle(mockFakeRequestHeader());
+    const httpResponse = await testInstance.handle(await mockFakeRequestHeader());
     expect(httpResponse).toEqual(forbidden(new AccessDeniedError()));
   });
   test("should use postgres query format when database is not mongodb", async () => {
@@ -91,10 +96,10 @@ describe("auth middleware", () => {
     const originalDb = whiteLabelConfig.whiteLabel.database;
     whiteLabelConfig.whiteLabel.database = "postgres";
     try {
-      const httpResponse = await testInstance.handle(mockFakeRequestHeader());
+      const httpResponse = await testInstance.handle(await mockFakeRequestHeader());
       expect(httpResponse.statusCode).toBe(200);
       expect(loadUser).toHaveBeenCalledWith({
-        fields: { _id: undefined, role: ["client"] },
+        fields: { _id: expect.any(String), role: ["client"] },
         options: { projection: { password: 0 } },
       });
     } finally {
@@ -103,10 +108,10 @@ describe("auth middleware", () => {
   });
 });
 
-jest.mock("@/application/adapters", () => ({
+mock.module("@/application/adapters", () => ({
   adaptMiddleware: jest.fn((middleware: any) => middleware),
 }));
-jest.mock("@/slices/user/useCases/loadUser", () => ({
+mock.module("@/slices/user/useCases/loadUser", () => ({
   makeLoadUserFactory: jest.fn(() => jest.fn()),
 }));
 

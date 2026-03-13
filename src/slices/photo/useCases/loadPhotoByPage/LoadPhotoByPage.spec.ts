@@ -18,6 +18,7 @@ describe("LoadPhotoByPage", () => {
         );
     });
     beforeEach(() => {
+    jest.clearAllMocks();
         testInstance = loadPhotoByPage(loadPhotoByPageRepository);
     });
     afterAll(async () => {

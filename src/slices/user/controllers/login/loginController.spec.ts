@@ -1,3 +1,4 @@
+import { describe, it, test, expect, beforeEach, beforeAll, afterAll, jest } from "bun:test";
 import MockDate from "mockdate";
 import {
   Authentication,
@@ -34,6 +35,7 @@ describe("LoginController", () => {
     MockDate.reset();
   });
   beforeEach(() => {
+    jest.clearAllMocks();
     testInstance = new LoginController(validation, loadUser, authentication);
   });
   it("should extends class Controller", async () => {

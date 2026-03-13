@@ -1,3 +1,4 @@
+import { describe, it, test, expect, beforeEach, beforeAll, afterAll, jest } from "bun:test";
 import MockDate from "mockdate";
 import { badRequest, ok, Validation } from "@/application/helpers";
 import { MockProxy, mock } from "jest-mock-extended";
@@ -26,6 +27,7 @@ describe("LoadInvoiceController", () => {
     MockDate.reset();
   });
   beforeEach(() => {
+    jest.clearAllMocks();
     fakeQuery = { _id: fakeAppointmentEntity._id };
     testInstance = new LoadInvoiceController(validation, loadInvoice);
   });

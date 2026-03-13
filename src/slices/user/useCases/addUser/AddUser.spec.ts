@@ -19,6 +19,7 @@ describe("addUser", () => {
     encrypter.encrypt.mockResolvedValue("hashedText");
   });
   beforeEach(() => {
+    jest.clearAllMocks();
     testInstance = addUser(addUserRepository, encrypter);
   });
   afterAll(async () => {

@@ -1,3 +1,4 @@
+import { describe, test, expect, beforeEach, jest, mock } from "bun:test";
 import { ObjectId } from "mongodb";
 
 const mockInsertOne = jest.fn();
@@ -11,7 +12,7 @@ const mockAggregate = jest.fn();
 const mockFindOneAndUpdate = jest.fn();
 const mockToArray = jest.fn();
 
-jest.mock("@/application/infra/database/mongodb", () => ({
+mock.module("@/application/infra/database/mongodb", () => ({
   MongoHelper: {
     getCollection: jest.fn().mockImplementation(async () => ({
       insertOne: mockInsertOne,

@@ -24,6 +24,7 @@ describe("AppointmentHandler", () => {
   });
 
   beforeEach(() => {
+    jest.clearAllMocks();
     appointmentRepository = mock();
     appointmentRepository.addAppointment.mockResolvedValue({
       _id: "appointmentId",

@@ -1,7 +1,8 @@
-jest.mock("@/application/decorators/logControllerFactory", () => ({
+import { describe, it, expect, jest, mock } from "bun:test";
+mock.module("@/application/decorators/logControllerFactory", () => ({
   makeLogController: jest.fn().mockImplementation((_domain, controller) => controller),
 }));
-jest.mock("@/application/infra", () => {
+mock.module("@/application/infra", () => {
   const mockRepo = {
     add: jest.fn(), getOne: jest.fn(), update: jest.fn(),
     getPaginate: jest.fn(), getCount: jest.fn(), deleteOne: jest.fn(),
@@ -16,23 +17,23 @@ jest.mock("@/application/infra", () => {
     PostgresRepository: jest.fn().mockImplementation(() => mockRepo),
   };
 });
-jest.mock("@/application/infra/config/whiteLabel", () => ({
+mock.module("@/application/infra/config/whiteLabel", () => ({
   whiteLabel: { database: "mongodb", systemName: "Test", categories: [{ name: "Cat", description: "D", services: [{ name: "S", description: "D", price: 50, comission: 50, duration: 30 }] }] },
 }));
-jest.mock("@/application/infra/config/env", () => ({
+mock.module("@/application/infra/config/env", () => ({
   env: { database: "mongodb" },
 }));
-jest.mock("@/application/infra/storage/storageFactory", () => ({
+mock.module("@/application/infra/storage/storageFactory", () => ({
   makeUploadProvider: jest.fn().mockReturnValue({ uploadFile: jest.fn(), delete: jest.fn() }),
 }));
-jest.mock("@/slices/user/useCases", () => ({
+mock.module("@/slices/user/useCases", () => ({
   makeLoadUserFactory: jest.fn().mockReturnValue(jest.fn()),
   loadUser: jest.fn().mockReturnValue(jest.fn()),
 }));
-jest.mock("@/slices/photo/useCases", () => ({
+mock.module("@/slices/photo/useCases", () => ({
   makeLoadPhotoFactory: jest.fn().mockReturnValue(jest.fn()),
 }));
-jest.mock("@/slices/user/repositories", () => ({
+mock.module("@/slices/user/repositories", () => ({
   UserRepository: jest.fn().mockImplementation(() => ({})),
 }));
 

@@ -1,7 +1,8 @@
-jest.mock("@/application/decorators/logControllerFactory", () => ({
+import { describe, it, expect, jest, mock } from "bun:test";
+mock.module("@/application/decorators/logControllerFactory", () => ({
   makeLogController: jest.fn().mockImplementation((_domain, controller) => controller),
 }));
-jest.mock("@/application/infra", () => {
+mock.module("@/application/infra", () => {
   const mockRepo = {
     add: jest.fn(), getOne: jest.fn(), update: jest.fn(),
     getPaginate: jest.fn(), getCount: jest.fn(), deleteOne: jest.fn(),
@@ -16,7 +17,7 @@ jest.mock("@/application/infra", () => {
     PostgresRepository: jest.fn().mockImplementation(() => mockRepo),
   };
 });
-jest.mock("@/application/infra/config/whiteLabel", () => ({
+mock.module("@/application/infra/config/whiteLabel", () => ({
   whiteLabel: {
     database: "mongodb",
     systemName: "Test",

@@ -18,6 +18,7 @@ describe("LoadOwnerByPage", () => {
   });
 
   beforeEach(() => {
+    jest.clearAllMocks();
     testInstance = loadOwnerByPage(loadOwnerByPageRepository);
   });
 

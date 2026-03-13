@@ -1,10 +1,11 @@
+import { describe, test, expect, beforeEach, beforeAll, afterAll, jest, mock as bunMock } from "bun:test";
 import { Repository } from "@/application/infra/contracts/repository";
 import { Query } from "@/application/types";
 import { mock, MockProxy } from "jest-mock-extended";
 import { UserAggregatePgRepository, mapPassword } from "./UserAggregatePgRepository";
 import MockDate from "mockdate";
 
-jest.mock("@/application/helpers", () => ({
+bunMock.module("@/application/helpers", () => ({
   SQLQueryBuilder: jest.fn().mockImplementation(() => {
     const builder: any = {};
     builder.projectWithDistance = jest.fn().mockReturnValue(builder);
@@ -35,6 +36,7 @@ describe("UserAggregatePgRepository", () => {
   });
 
   beforeEach(() => {
+    jest.clearAllMocks();
     repository = mock<Repository>();
     repository.aggregate.mockResolvedValue(fakeUsers);
     testInstance = new UserAggregatePgRepository(repository);

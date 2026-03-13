@@ -1,3 +1,4 @@
+import { describe, it, test, expect, beforeEach, beforeAll, afterAll, jest } from "bun:test";
 import MockDate from "mockdate";
 import { badRequest, ok, Validation } from "@/application/helpers";
 import { MockProxy, mock } from "jest-mock-extended";
@@ -28,6 +29,7 @@ describe("UpdateOwnerController", () => {
     MockDate.reset();
   });
   beforeEach(() => {
+    jest.clearAllMocks();
     testInstance = new UpdateOwnerController(validationQuery, validationBody, updateOwner);
   });
   it("should extends class Controller", async () => {

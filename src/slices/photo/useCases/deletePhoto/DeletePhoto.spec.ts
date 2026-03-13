@@ -1,3 +1,4 @@
+import { describe, it, expect, beforeEach, jest } from "bun:test";
 import { deletePhoto } from "./DeletePhoto";
 
 describe("deletePhoto", () => {
@@ -8,6 +9,7 @@ describe("deletePhoto", () => {
   const fakePhoto = { _id: "photo_id", url: "http://photo.com/1.jpg", key: "photo_key.jpg" };
 
   beforeEach(() => {
+    jest.clearAllMocks();
     deletePhotoRepository = {
       deletePhoto: jest.fn().mockResolvedValue(fakePhoto),
     };

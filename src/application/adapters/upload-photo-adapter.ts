@@ -1,4 +1,3 @@
-import { requestContext } from "@fastify/request-context";
 import { HttpRequest } from "@/application/helpers";
 import { Controller } from "@/application/infra/contracts";
 import { env } from "../infra";
@@ -6,21 +5,19 @@ import { makeUploadProvider } from "../infra/storage/storageFactory";
 import { addSeconds } from "date-fns";
 
 export const adaptUploadPhotoRoute = (controller: Controller) => {
-  return async (request: any, reply: any) => {
-    const { body, params, query, headers } = request;
-    const {
-      userId = null,
-      userLogged = null,
-      daysToNextPayment = null,
-    }: any = (requestContext as any).get("context" as any) || {};
-    const file = await request.file();
+  return async ({ body, params, query, headers, set, store }: any) => {
+    const file = body?.file;
     const uploadProvider = makeUploadProvider(env.uploadProvider);
     let fileUploaded;
     const expiresInSeconds = 60 * 60 * 24 * 7;
     try {
-      fileUploaded = await uploadProvider.uploadFile(file, expiresInSeconds);
+      const uploadPayload = file instanceof Blob
+        ? { file: file.stream(), mimetype: file.type }
+        : file;
+      fileUploaded = await uploadProvider.uploadFile(uploadPayload, expiresInSeconds);
     } catch (error) {
-      return reply.status(500).send({ error: "Failed to upload files" });
+      set.status = 500;
+      return { error: "Failed to upload files" };
     }
     const httpRequest: HttpRequest = {
       body: {
@@ -32,13 +29,14 @@ export const adaptUploadPhotoRoute = (controller: Controller) => {
       },
       params,
       headers,
-      userId,
+      userId: store?.userId ?? null,
       query,
-      userLogged,
-      daysToNextPayment,
+      userLogged: store?.userLogged ?? null,
+      daysToNextPayment: store?.daysToNextPayment ?? null,
     };
     const { statusCode, data } = await controller.handle(httpRequest);
-    reply.code(statusCode).send(data);
+    set.status = statusCode;
+    return data;
   };
 };
 export const calculateExpiration = (expiresInSeconds: number) => {

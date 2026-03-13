@@ -15,6 +15,7 @@ describe("addOwner", () => {
     addOwnerRepository.addOwner.mockResolvedValue(fakeOwnerEntity);
   });
   beforeEach(() => {
+    jest.clearAllMocks();
     testInstance = addOwner(addOwnerRepository);
   });
   afterAll(async () => {

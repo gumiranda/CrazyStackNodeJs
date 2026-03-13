@@ -1,4 +1,5 @@
-jest.mock("@/application/infra", () => ({
+import { describe, it, expect, beforeEach, beforeAll, afterAll, jest, mock as bunMock } from "bun:test";
+bunMock.module("@/application/infra", () => ({
   env: { FUSORARIOBR: "development" },
 }));
 
@@ -21,6 +22,7 @@ describe("AppointmentAggregatePgRepository", () => {
     MockDate.reset();
   });
   beforeEach(() => {
+    jest.clearAllMocks();
     testInstance = new AppointmentAggregatePgRepository(repository);
   });
 
@@ -176,8 +178,8 @@ describe("AppointmentAggregatePgRepository", () => {
 
   describe("handleTimezone in production mode", () => {
     it("should subtract 3 hours when FUSORARIOBR is production", async () => {
-      jest.resetModules();
-      jest.doMock("@/application/infra", () => ({
+
+      bunMock.module("@/application/infra", () => ({
         env: { FUSORARIOBR: "production" },
       }));
       const { AppointmentAggregatePgRepository: ProdRepo } =
@@ -197,7 +199,7 @@ describe("AppointmentAggregatePgRepository", () => {
         new Date("2024-06-15T07:00:00.000Z").toISOString()
       );
       // restore original mock
-      jest.doMock("@/application/infra", () => ({
+      bunMock.module("@/application/infra", () => ({
         env: { FUSORARIOBR: "development" },
       }));
     });

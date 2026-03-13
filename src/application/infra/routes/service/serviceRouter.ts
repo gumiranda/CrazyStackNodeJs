@@ -1,3 +1,4 @@
+import { Elysia } from "elysia";
 import { authLogged } from "@/application/infra/middlewares";
 import {
   addServiceAdapter,
@@ -6,24 +7,18 @@ import {
   updateServiceAdapter,
   loadServiceByPageAdapter,
 } from "./serviceAdapter";
-import {
-  addServicePostSchema,
-  loadServiceGetSchema,
-  deleteServiceSchema,
-  updateServiceSchema,
-  loadServiceByPageGetSchema,
-} from "./serviceSchema";
 
-async function service(fastify: any, options: any) {
-  fastify.addHook("preHandler", authLogged());
-  fastify.post("/service/add", addServicePostSchema, addServiceAdapter());
-  fastify.get("/service/load", loadServiceGetSchema, loadServiceAdapter());
-  fastify.get(
-    "/service/loadByPage",
-    loadServiceByPageGetSchema,
-    loadServiceByPageAdapter()
+const service = new Elysia()
+  .state("userId", null as string | null)
+  .state("userLogged", null as any)
+  .state("daysToNextPayment", null as any)
+  .guard({ beforeHandle: [authLogged()] }, (app) =>
+    app
+      .post("/service/add", addServiceAdapter())
+      .get("/service/load", loadServiceAdapter())
+      .get("/service/loadByPage", loadServiceByPageAdapter())
+      .delete("/service/delete", deleteServiceAdapter())
+      .patch("/service/update", updateServiceAdapter())
   );
-  fastify.delete("/service/delete", deleteServiceSchema, deleteServiceAdapter());
-  fastify.patch("/service/update", updateServiceSchema, updateServiceAdapter());
-}
+
 export { service };

@@ -16,6 +16,7 @@ describe("LoadRequestByPage", () => {
     loadRequestByPageRepository.loadRequestByPage.mockResolvedValue(fakeRequestPaginated);
   });
   beforeEach(() => {
+    jest.clearAllMocks();
     testInstance = loadRequestByPage(loadRequestByPageRepository);
   });
   afterAll(async () => {

@@ -1,3 +1,4 @@
+import { describe, it, test, expect, beforeEach, beforeAll, afterAll, jest } from "bun:test";
 import MockDate from "mockdate";
 import { badRequest, ok, Validation } from "@/application/helpers";
 import { MockProxy, mock } from "jest-mock-extended";
@@ -23,6 +24,7 @@ describe("DeleteOwnerController", () => {
     MockDate.reset();
   });
   beforeEach(() => {
+    jest.clearAllMocks();
     fakeQuery = { _id: fakeOwnerEntity._id };
     testInstance = new DeleteOwnerController(validation, deleteOwner);
   });

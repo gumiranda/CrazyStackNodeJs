@@ -48,6 +48,7 @@ describe("LoadAvailableTimes", () => {
     serviceRepository.loadService.mockResolvedValue(fakeServiceEntity);
   });
   beforeEach(() => {
+    jest.clearAllMocks();
     testInstance = loadAvailableTimes(
       loadAvailableTimesRepository,
       serviceRepository,

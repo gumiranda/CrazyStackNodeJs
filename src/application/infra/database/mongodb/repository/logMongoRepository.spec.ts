@@ -1,8 +1,9 @@
+import { describe, it, expect, beforeEach, beforeAll, afterAll, jest, mock } from "bun:test";
 import { LogMongoRepository } from "./logMongoRepository";
 import { MongoHelper } from "@/application/infra";
 import MockDate from "mockdate";
 
-jest.mock("@/application/infra", () => ({
+mock.module("@/application/infra", () => ({
   MongoHelper: {
     getCollection: jest.fn(),
   },
@@ -25,6 +26,7 @@ describe("LogMongoRepository (unit)", () => {
   });
 
   beforeEach(() => {
+    jest.clearAllMocks();
     testInstance = new LogMongoRepository();
     insertOneMock.mockClear();
     (MongoHelper.getCollection as jest.Mock).mockClear();

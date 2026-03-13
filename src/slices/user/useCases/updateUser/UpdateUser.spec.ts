@@ -16,6 +16,7 @@ describe("UpdateUser", () => {
     updateUserRepository.updateUser.mockResolvedValue(fakeUserEntity);
   });
   beforeEach(() => {
+    jest.clearAllMocks();
     testInstance = updateUser(updateUserRepository);
   });
   afterAll(async () => {

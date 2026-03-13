@@ -1,10 +1,11 @@
+import { describe, test, expect, beforeEach, beforeAll, jest, mock as bunMock } from "bun:test";
 import { mock, MockProxy } from "jest-mock-extended";
 import { LogRepository, Controller } from "@/application/infra/contracts";
 import { LogController } from "./logController";
 import { fakeUserEntity } from "@/slices/user/entities/UserEntity.spec";
 import { HttpRequest, ok, serverError } from "@/application/helpers/http";
 
-jest.mock("@/application/infra/database/mongodb/repository", () => ({
+bunMock.module("@/application/infra/database/mongodb/repository", () => ({
   LogMongoRepository: jest.fn(),
 }));
 import { makeLogController } from "./logControllerFactory";
@@ -23,6 +24,7 @@ describe("logController", () => {
     fakeRequest = { body: fakeUserEntity };
   });
   beforeEach(() => {
+    jest.clearAllMocks();
     testInstance = new LogController("user", controller, logRepository);
   });
   test("should call controller execute with correct params", async () => {

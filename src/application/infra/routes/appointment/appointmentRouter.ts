@@ -1,3 +1,4 @@
+import { Elysia } from "elysia";
 import { authLogged } from "@/application/infra/middlewares";
 import {
   addAppointmentAdapter,
@@ -8,40 +9,20 @@ import {
   loadAvailableTimesAdapter,
   loadInvoiceAdapter,
 } from "./appointmentAdapter";
-import {
-  addAppointmentPostSchema,
-  loadAppointmentGetSchema,
-  deleteAppointmentSchema,
-  updateAppointmentSchema,
-  loadAppointmentByPageGetSchema,
-  loadAvailableTimesSchema,
-  loadInvoiceSchema,
-} from "./appointmentSchema";
 
-async function appointment(fastify: any, options: any) {
-  fastify.addHook("preHandler", authLogged());
-  fastify.post("/appointment/add", addAppointmentPostSchema, addAppointmentAdapter());
-  fastify.get("/appointment/load", loadAppointmentGetSchema, loadAppointmentAdapter());
-  fastify.get("/appointment/loadInvoice", loadInvoiceSchema, loadInvoiceAdapter());
-  fastify.get(
-    "/appointment/loadAvailableTimes",
-    loadAvailableTimesSchema,
-    loadAvailableTimesAdapter()
+const appointment = new Elysia()
+  .state("userId", null as string | null)
+  .state("userLogged", null as any)
+  .state("daysToNextPayment", null as any)
+  .guard({ beforeHandle: [authLogged()] }, (app) =>
+    app
+      .post("/appointment/add", addAppointmentAdapter())
+      .get("/appointment/load", loadAppointmentAdapter())
+      .get("/appointment/loadInvoice", loadInvoiceAdapter())
+      .get("/appointment/loadAvailableTimes", loadAvailableTimesAdapter())
+      .get("/appointment/loadByPage", loadAppointmentByPageAdapter())
+      .delete("/appointment/delete", deleteAppointmentAdapter())
+      .patch("/appointment/update", updateAppointmentAdapter())
   );
-  fastify.get(
-    "/appointment/loadByPage",
-    loadAppointmentByPageGetSchema,
-    loadAppointmentByPageAdapter()
-  );
-  fastify.delete(
-    "/appointment/delete",
-    deleteAppointmentSchema,
-    deleteAppointmentAdapter()
-  );
-  fastify.patch(
-    "/appointment/update",
-    updateAppointmentSchema,
-    updateAppointmentAdapter()
-  );
-}
+
 export { appointment };

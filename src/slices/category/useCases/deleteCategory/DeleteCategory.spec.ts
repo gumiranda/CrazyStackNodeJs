@@ -18,6 +18,7 @@ describe("deleteCategory", () => {
     deleteCategoryRepository.deleteCategory.mockResolvedValue(fakeCategoryEntity);
   });
   beforeEach(() => {
+    jest.clearAllMocks();
     testInstance = deleteCategory(deleteCategoryRepository);
   });
   afterAll(async () => {

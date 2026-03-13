@@ -1,3 +1,4 @@
+import { describe, it, expect, beforeEach, jest } from "bun:test";
 import { DbAuthentication } from "./dbAuthentication";
 
 describe("DbAuthentication", () => {
@@ -14,6 +15,7 @@ describe("DbAuthentication", () => {
   };
 
   beforeEach(() => {
+    jest.clearAllMocks();
     loadUserRepository = {
       loadUser: jest.fn().mockResolvedValue(fakeUser),
     };

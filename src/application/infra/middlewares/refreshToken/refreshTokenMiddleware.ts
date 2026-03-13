@@ -1,4 +1,4 @@
-import jwt from "jsonwebtoken";
+import { jwtVerify } from "jose";
 import {
   forbidden,
   HttpRequest,
@@ -18,8 +18,9 @@ export class RefreshTokenMiddleware implements Middleware {
   constructor(private readonly loadUser: LoadUser, private readonly roles: string[]) {}
   private async verifyToken(token: string, secret: string): Promise<any> {
     try {
-      return jwt.verify(token, secret);
-    } catch (error) {
+      const { payload } = await jwtVerify(token, new TextEncoder().encode(secret));
+      return payload;
+    } catch {
       return null;
     }
   }

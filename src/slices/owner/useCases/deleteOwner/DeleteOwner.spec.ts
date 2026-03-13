@@ -18,6 +18,7 @@ describe("deleteOwner", () => {
     deleteOwnerRepository.deleteOwner.mockResolvedValue(fakeOwnerEntity);
   });
   beforeEach(() => {
+    jest.clearAllMocks();
     testInstance = deleteOwner(deleteOwnerRepository);
   });
   afterAll(async () => {

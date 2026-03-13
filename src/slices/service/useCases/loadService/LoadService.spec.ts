@@ -16,6 +16,7 @@ describe("LoadService", () => {
     loadServiceRepository.loadService.mockResolvedValue(fakeServiceEntity);
   });
   beforeEach(() => {
+    jest.clearAllMocks();
     testInstance = loadService(loadServiceRepository);
   });
   afterAll(async () => {

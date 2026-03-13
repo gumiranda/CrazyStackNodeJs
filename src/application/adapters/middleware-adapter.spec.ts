@@ -1,65 +1,61 @@
+import { describe, it, expect, beforeEach, jest } from "bun:test";
 import { adaptMiddleware } from "./middleware-adapter";
-import { ServerError } from "@/application/errors";
 
 describe("adaptMiddleware", () => {
   let middleware: any;
-  let request: any;
-  let reply: any;
+  let context: any;
 
   beforeEach(() => {
+    jest.clearAllMocks();
     middleware = {
       handle: jest.fn().mockResolvedValue({
         statusCode: 200,
-        data: { userId: "any_id", userLogged: {} },
+        data: { userId: "any_id", userLogged: {}, daysToNextPayment: 30 },
       }),
     };
-    request = {
+    context = {
       headers: { authorization: "Bearer any_token" },
-      requestContext: { set: jest.fn() },
-    };
-    reply = {
-      code: jest.fn().mockReturnThis(),
-      send: jest.fn(),
+      set: { status: 0 },
+      store: {} as any,
     };
   });
 
   it("should call middleware.handle with headers", async () => {
     const handler = adaptMiddleware(middleware);
-    await handler(request, reply);
+    await handler(context);
     expect(middleware.handle).toHaveBeenCalledWith({
       headers: { authorization: "Bearer any_token" },
     });
   });
 
-  it("should set request context on success (statusCode 200)", async () => {
+  it("should set store values on success (statusCode 200)", async () => {
     const handler = adaptMiddleware(middleware);
-    await handler(request, reply);
-    expect(request.requestContext.set).toHaveBeenCalledWith("context", {
-      userId: "any_id",
-      userLogged: {},
-    });
+    await handler(context);
+    expect(context.store.userId).toBe("any_id");
+    expect(context.store.userLogged).toEqual({});
+    expect(context.store.daysToNextPayment).toBe(30);
   });
 
-  it("should reply with error when statusCode is not 200 and data exists", async () => {
+  it("should set status and return data when statusCode is not 200 and data exists", async () => {
     middleware.handle.mockResolvedValueOnce({
       statusCode: 403,
       data: { message: "Forbidden" },
     });
     const handler = adaptMiddleware(middleware);
-    await handler(request, reply);
-    expect(reply.code).toHaveBeenCalledWith(403);
-    expect(reply.send).toHaveBeenCalledWith({ message: "Forbidden" });
+    const result = await handler(context);
+    expect(context.set.status).toBe(403);
+    expect(result).toEqual({ message: "Forbidden" });
   });
 
-  it("should reply with 500 ServerError when statusCode is not 200 and no data", async () => {
+  it("should return 500 error when statusCode is not 200 and no data", async () => {
     middleware.handle.mockResolvedValueOnce({
       statusCode: 401,
       data: null,
     });
     const handler = adaptMiddleware(middleware);
-    await handler(request, reply);
-    expect(reply.code).toHaveBeenCalledWith(500);
-    expect(reply.send).toHaveBeenCalledWith(expect.any(ServerError));
+    const result = await handler(context);
+    expect(context.set.status).toBe(500);
+    expect(result).toEqual({ error: "Internal Server Error" });
   });
 
   it("should return a function", () => {

@@ -1,3 +1,4 @@
+import { describe, test, expect, beforeEach, jest, mock } from "bun:test";
 const mockCollection = jest.fn();
 const mockDb = jest.fn(() => ({
   collection: mockCollection,
@@ -7,7 +8,7 @@ const mockConnect = jest.fn();
 const mockStartSession = jest.fn();
 const mockEndSession = jest.fn();
 
-jest.mock("mongodb", () => ({
+mock.module("mongodb", () => ({
   MongoClient: {
     connect: jest.fn().mockResolvedValue({
       db: mockDb,

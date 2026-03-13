@@ -16,6 +16,7 @@ describe("LoadPhoto", () => {
     loadPhotoRepository.loadPhoto.mockResolvedValue(fakePhotoEntity);
   });
   beforeEach(() => {
+    jest.clearAllMocks();
     testInstance = loadPhoto(loadPhotoRepository, mock());
   });
   afterAll(async () => {

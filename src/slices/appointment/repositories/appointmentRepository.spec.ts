@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
+import { describe, test, expect, beforeAll, beforeEach, afterAll, jest } from "bun:test";
 import {
   fakeAppointmentEntity,
   fakeAppointmentPaginated,
@@ -39,6 +40,14 @@ describe("Appointment Mongo Repository", () => {
     repository.aggregate.mockResolvedValue([fakeAvailableTimesEntity]);
   });
   beforeEach(async () => {
+    jest.clearAllMocks();
+    repository.add.mockResolvedValue(fakeAppointmentEntity);
+    repository.getOne.mockResolvedValue(fakeAppointmentEntity);
+    repository.update.mockResolvedValue(fakeAppointmentEntity);
+    repository.getPaginate.mockResolvedValue(fakeAppointmentPaginated?.appointments);
+    repository.getCount.mockResolvedValue(fakeAppointmentPaginated?.total);
+    repository.deleteOne.mockResolvedValue(true);
+    repository.aggregate.mockResolvedValue([fakeAvailableTimesEntity]);
     testInstance = new AppointmentRepository(repository);
   });
   afterAll(async () => {

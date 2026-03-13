@@ -1,5 +1,6 @@
-jest.mock("@/application/helpers/date/date", () => ({}));
-jest.mock("@/application/helpers/date/index", () => ({}));
+import { describe, it, expect, beforeEach, jest, mock } from "bun:test";
+mock.module("@/application/helpers/date/date", () => ({}));
+mock.module("@/application/helpers/date/index", () => ({}));
 
 import { HttpRequest, HttpResponse, serverError } from "@/application/helpers/http/http";
 import { Controller } from "./controller";
@@ -26,6 +27,7 @@ class ControllerAsyncErrorStub extends Controller {
 describe("Controller", () => {
   let sut: ControllerStub;
   beforeEach(() => {
+    jest.clearAllMocks();
     sut = new ControllerStub();
   });
 

@@ -1,3 +1,4 @@
+import { describe, it, test, expect, beforeEach, beforeAll, afterAll, jest } from "bun:test";
 import MockDate from "mockdate";
 import { badRequest, ok, Validation } from "@/application/helpers";
 import { MockProxy, mock } from "jest-mock-extended";
@@ -23,6 +24,7 @@ describe("DeleteServiceController", () => {
     MockDate.reset();
   });
   beforeEach(() => {
+    jest.clearAllMocks();
     fakeQuery = { _id: fakeServiceEntity._id };
     testInstance = new DeleteServiceController(validation, deleteService);
   });

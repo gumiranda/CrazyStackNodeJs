@@ -1,3 +1,4 @@
+import { describe, it, expect, beforeEach, jest } from "bun:test";
 import { Validation } from "@/application/helpers/contracts";
 import { ValidationComposite } from "./validation-composite";
 import { MissingParamError, InvalidParamError } from "@/application/errors";
@@ -7,6 +8,7 @@ describe("ValidationComposite", () => {
   let validation1: Validation;
   let validation2: Validation;
   beforeEach(() => {
+    jest.clearAllMocks();
     validation1 = { validate: jest.fn().mockReturnValue([]) };
     validation2 = { validate: jest.fn().mockReturnValue([]) };
     sut = new ValidationComposite([validation1, validation2]);

@@ -1,3 +1,4 @@
+import { describe, it, expect, beforeEach, beforeAll, afterAll, jest } from "bun:test";
 import { LoadUserRepository } from "@/slices/user/repositories";
 import MockDate from "mockdate";
 import { mock, MockProxy } from "jest-mock-extended";
@@ -18,6 +19,7 @@ describe("LoadUser", () => {
     loadUserRepository.loadUser.mockResolvedValue(fakeUserEntity);
   });
   beforeEach(() => {
+    jest.clearAllMocks();
     loadPhoto = jest.fn().mockResolvedValue({ _id: "photo_id", url: "http://photo.com/1.jpg" });
     testInstance = loadUser(loadUserRepository, loadPhoto as unknown as LoadPhoto);
   });

@@ -1,3 +1,4 @@
+import { describe, it, test, expect, beforeEach, beforeAll, afterAll, jest } from "bun:test";
 import MockDate from "mockdate";
 import { badRequest, ok, Validation } from "@/application/helpers";
 import { MockProxy, mock } from "jest-mock-extended";
@@ -28,6 +29,7 @@ describe("LoadRequestByPageController", () => {
     MockDate.reset();
   });
   beforeEach(() => {
+    jest.clearAllMocks();
     fakeQueryParams = { _id: fakeRequestEntity._id, createdById: fakeUserEntity?._id };
     fakeRestQuery = { page: 1, sortBy: "name", typeSort: "asc" };
     fakeQuery = { ...fakeQueryParams, ...fakeRestQuery };

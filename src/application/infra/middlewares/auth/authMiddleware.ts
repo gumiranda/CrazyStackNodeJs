@@ -1,4 +1,4 @@
-import jwt from "jsonwebtoken";
+import { jwtVerify } from "jose";
 import {
   calculateDaysToNextPayment,
   forbidden,
@@ -22,8 +22,9 @@ export class AuthMiddleware implements Middleware {
   ) {}
   private async verifyToken(token: string, secret: string): Promise<any> {
     try {
-      return jwt.verify(token, secret);
-    } catch (error) {
+      const { payload } = await jwtVerify(token, new TextEncoder().encode(secret));
+      return payload;
+    } catch {
       return null;
     }
   }

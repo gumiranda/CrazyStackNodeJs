@@ -1,3 +1,4 @@
+import { describe, it, expect, beforeEach, jest } from "bun:test";
 import { mock, MockProxy } from "jest-mock-extended";
 import { VerifyEmailController } from "./verifyEmailController";
 import { Controller } from "@/application/infra/contracts";
@@ -14,6 +15,7 @@ describe("VerifyEmailController", () => {
   const fakeUser = { _id: "any_id", email: "test@mail.com", token: "valid_token" };
 
   beforeEach(() => {
+    jest.clearAllMocks();
     validation = mock();
     validation.validate.mockReturnValue([]);
     updateUser = jest.fn().mockResolvedValue({ _id: "any_id", confirmedEmail: true });

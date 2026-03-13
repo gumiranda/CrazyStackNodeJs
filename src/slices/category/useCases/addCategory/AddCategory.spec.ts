@@ -15,6 +15,7 @@ describe("addCategory", () => {
     addCategoryRepository.addCategory.mockResolvedValue(fakeCategoryEntity);
   });
   beforeEach(() => {
+    jest.clearAllMocks();
     testInstance = addCategory(addCategoryRepository);
   });
   afterAll(async () => {

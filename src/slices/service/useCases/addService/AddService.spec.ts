@@ -15,6 +15,7 @@ describe("addService", () => {
     addServiceRepository.addService.mockResolvedValue(fakeServiceEntity);
   });
   beforeEach(() => {
+    jest.clearAllMocks();
     testInstance = addService(addServiceRepository);
   });
   afterAll(async () => {

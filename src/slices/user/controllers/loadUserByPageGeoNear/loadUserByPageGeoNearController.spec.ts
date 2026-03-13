@@ -1,3 +1,4 @@
+import { describe, it, test, expect, beforeEach, beforeAll, afterAll, jest } from "bun:test";
 import MockDate from "mockdate";
 import { badRequest, ok, Validation } from "@/application/helpers";
 import { MockProxy, mock } from "jest-mock-extended";
@@ -24,6 +25,7 @@ describe("LoadUserByPageGeoNearController", () => {
     MockDate.reset();
   });
   beforeEach(() => {
+    jest.clearAllMocks();
     fakeQueryParams = { _id: fakeUserEntity._id, lat: undefined, lng: undefined };
     fakeRestQuery = { page: 1, sortBy: "name", typeSort: "asc", limitPerPage: 10 };
     fakeQuery = { ...fakeQueryParams, ...fakeRestQuery };

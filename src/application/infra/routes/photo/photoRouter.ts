@@ -1,3 +1,4 @@
+import { Elysia } from "elysia";
 import { authLogged } from "@/application/infra/middlewares";
 import {
   addPhotoAdapter,
@@ -5,18 +6,17 @@ import {
   deletePhotoAdapter,
   loadPhotoByPageAdapter,
 } from "./photoAdapter";
-import {
-  addPhotoPostSchema,
-  loadPhotoGetSchema,
-  deletePhotoSchema,
-  loadPhotoByPageGetSchema,
-} from "./photoSchema";
 
-async function photo(fastify: any) {
-  fastify.addHook("preHandler", authLogged());
-  fastify.post("/photo/add", addPhotoPostSchema, addPhotoAdapter());
-  fastify.get("/photo/load", loadPhotoGetSchema, loadPhotoAdapter());
-  fastify.get("/photo/loadByPage", loadPhotoByPageGetSchema, loadPhotoByPageAdapter());
-  fastify.delete("/photo/delete", deletePhotoSchema, deletePhotoAdapter());
-}
+const photo = new Elysia()
+  .state("userId", null as string | null)
+  .state("userLogged", null as any)
+  .state("daysToNextPayment", null as any)
+  .guard({ beforeHandle: [authLogged()] }, (app) =>
+    app
+      .post("/photo/add", addPhotoAdapter())
+      .get("/photo/load", loadPhotoAdapter())
+      .get("/photo/loadByPage", loadPhotoByPageAdapter())
+      .delete("/photo/delete", deletePhotoAdapter())
+  );
+
 export { photo };

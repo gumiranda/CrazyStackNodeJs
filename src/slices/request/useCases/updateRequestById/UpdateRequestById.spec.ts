@@ -1,3 +1,4 @@
+import { describe, it, test, expect, beforeAll, beforeEach, afterAll, jest } from "bun:test";
 import MockDate from "mockdate";
 import { MockProxy, mock } from "jest-mock-extended";
 
@@ -39,6 +40,16 @@ describe("UpdateRequestById useCase", () => {
     mockAppointment.updateAppointment.mockResolvedValue({ ...fakeAppointmentEntity });
   });
   beforeEach(async () => {
+    jest.clearAllMocks();
+    mockRepo.updateRequest.mockResolvedValue({ ...fakeRequestEntity, status: 10 });
+    mockRepo.loadRequest.mockResolvedValue({
+      ...fakeRequestEntity,
+      status: 1,
+      initDate: subMinutes(new Date(), 4000).toISOString(),
+    });
+    mockAppointment.addAppointment.mockResolvedValue({ ...fakeAppointmentEntity });
+    mockAppointment.loadAppointment.mockResolvedValue({ ...fakeAppointmentEntity });
+    mockAppointment.updateAppointment.mockResolvedValue({ ...fakeAppointmentEntity });
     testInstance = new UpdateRequestById(mockRepo, mockAppointment);
   });
   afterAll(() => {

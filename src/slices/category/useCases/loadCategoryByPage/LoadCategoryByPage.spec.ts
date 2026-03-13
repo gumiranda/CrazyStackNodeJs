@@ -18,6 +18,7 @@ describe("LoadCategoryByPage", () => {
     );
   });
   beforeEach(() => {
+    jest.clearAllMocks();
     testInstance = loadCategoryByPage(loadCategoryByPageRepository);
   });
   afterAll(async () => {
