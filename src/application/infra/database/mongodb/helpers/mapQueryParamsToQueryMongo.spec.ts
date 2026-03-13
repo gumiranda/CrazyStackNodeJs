@@ -162,4 +162,69 @@ describe("mapQueryParamsToQueryMongo", () => {
       maxDistance: 20000000,
     });
   });
+  test("mapQueryParamsToQueryMongo with gte operator", () => {
+    const objectMapped = mapQueryParamsToQueryMongo({
+      priceoperatorgte: "100",
+    });
+    expect(objectMapped).toEqual({
+      price: { $gte: 100 },
+    });
+  });
+  test("mapQueryParamsToQueryMongo with lt operator", () => {
+    const objectMapped = mapQueryParamsToQueryMongo({
+      priceoperatorlt: "50",
+    });
+    expect(objectMapped).toEqual({
+      price: { $lt: 50 },
+    });
+  });
+  test("mapQueryParamsToQueryMongo with lte operator", () => {
+    const objectMapped = mapQueryParamsToQueryMongo({
+      priceoperatorlte: "200",
+    });
+    expect(objectMapped).toEqual({
+      price: { $lte: 200 },
+    });
+  });
+  test("mapQueryParamsToQueryMongo with ne operator", () => {
+    const objectMapped = mapQueryParamsToQueryMongo({
+      statusoperatorne: "3",
+    });
+    expect(objectMapped).toEqual({
+      status: { $ne: 3 },
+    });
+  });
+  test("mapQueryParamsToQueryMongo with empty object", () => {
+    const objectMapped = mapQueryParamsToQueryMongo({});
+    expect(objectMapped).toBeUndefined();
+  });
+  test("mapQueryParamsToQueryMongo with undefined", () => {
+    const objectMapped = mapQueryParamsToQueryMongo(undefined as any);
+    expect(objectMapped).toBeUndefined();
+  });
+  test("mapQueryParamsToQueryMongo with endDate only (should be excluded)", () => {
+    const objectMapped = mapQueryParamsToQueryMongo({
+      endDate: "2024-01-01",
+      name: "test",
+    });
+    expect(objectMapped).toEqual({
+      name: "test",
+    });
+  });
+  test("mapQueryParamsToQueryMongo with textregex containing special chars", () => {
+    const objectMapped = mapQueryParamsToQueryMongo({
+      nametextregex: "test.value+special",
+    });
+    expect(objectMapped).toEqual({
+      name: { $regex: "test\\.value\\+special", $options: "i" },
+    });
+  });
+  test("mountGeoNearQuery with empty object", () => {
+    const objectMapped = mountGeoNearQuery({});
+    expect(objectMapped).toBeNull();
+  });
+  test("mountGeoNearQuery with object without coordinates", () => {
+    const objectMapped = mountGeoNearQuery({ query: { name: "text" } });
+    expect(objectMapped).toBeNull();
+  });
 });

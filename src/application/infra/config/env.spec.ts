@@ -98,4 +98,48 @@ describe("env config", () => {
     expect(envSchema).toBeDefined();
     expect(envSchema.parse).toBeDefined();
   });
+
+  test("should throw in production when jwtSecret is default 'secret'", () => {
+    process.env.MONGO_URL_PROD = "mongodb://prodhost:27017";
+    process.env.JWT_SECRET = "secret";
+    process.env.JWT_REFRESH_SECRET = "my-refresh-secret";
+    process.env.NODE_ENV = "production";
+    expect(() => {
+      require("./env");
+    }).toThrow(
+      "JWT secrets must not use default values in production. Set JWT_SECRET and JWT_REFRESH_SECRET environment variables."
+    );
+  });
+
+  test("should throw in production when jwtRefreshSecret is default 'secret'", () => {
+    process.env.MONGO_URL_PROD = "mongodb://prodhost:27017";
+    process.env.JWT_SECRET = "my-jwt-secret";
+    process.env.JWT_REFRESH_SECRET = "secret";
+    process.env.NODE_ENV = "production";
+    expect(() => {
+      require("./env");
+    }).toThrow(
+      "JWT secrets must not use default values in production. Set JWT_SECRET and JWT_REFRESH_SECRET environment variables."
+    );
+  });
+
+  test("should coerce port to number", () => {
+    process.env.PORT = "9999";
+    const { env } = require("./env");
+    expect(env.port).toBe(9999);
+    expect(typeof env.port).toBe("number");
+  });
+
+  test("should accept postgres as database value", () => {
+    process.env.DATABASE = "postgres";
+    const { env } = require("./env");
+    expect(env.database).toBe("postgres");
+  });
+
+  test("should throw when database value is invalid", () => {
+    process.env.DATABASE = "mysql";
+    expect(() => {
+      require("./env");
+    }).toThrow();
+  });
 });

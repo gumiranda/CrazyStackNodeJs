@@ -61,6 +61,23 @@ describe("auth middleware", () => {
     const httpResponse = await testInstance.handle(mockFakeRequestHeader());
     expect(httpResponse).toEqual(forbidden(new AccessDeniedError()));
   });
+  test("should use postgres query format when database is not mongodb", async () => {
+    const whiteLabel = require("@/application/infra/config/whiteLabel").whiteLabel;
+    const originalDb = whiteLabel.database;
+    whiteLabel.database = "postgres";
+    try {
+      const httpResponse = await testInstance.handle(mockFakeRequestHeader());
+      expect(httpResponse).toEqual(ok({ userId: "123", userLogged: fakeUserEntity }));
+      expect(loadUser).toHaveBeenCalledWith(
+        expect.objectContaining({
+          fields: expect.objectContaining({ role: ["client"] }),
+          options: { projection: { password: 0 } },
+        })
+      );
+    } finally {
+      whiteLabel.database = originalDb;
+    }
+  });
 });
 
 jest.mock("@/application/adapters", () => ({

@@ -47,6 +47,26 @@ describe("PostgresRepository", () => {
       expect(result.whereClause).toBe("");
       expect(result.values).toEqual([]);
     });
+
+    test("should use ANY for array values", () => {
+      const result = repository.buildWhereClause({ tags: ["a", "b"] });
+      expect(result.whereClause).toBe('"test_table"."tags" = ANY($1)');
+      expect(result.values).toEqual([["a", "b"]]);
+    });
+  });
+
+  describe("sanitizeIdentifier", () => {
+    test("should throw for invalid identifier", () => {
+      expect(() => new PostgresRepository("invalid-table!")).toThrow(
+        "Invalid identifier: invalid-table!"
+      );
+    });
+
+    test("should throw for identifier with spaces", () => {
+      expect(() => new PostgresRepository("my table")).toThrow(
+        "Invalid identifier: my table"
+      );
+    });
   });
 
   describe("insertOne", () => {
