@@ -35,7 +35,6 @@ CREATE TABLE users (
     "pix" BOOLEAN DEFAULT FALSE,
     "nextPlan" VARCHAR(255),
     "addresses" JSONB,
-    "clientId" UUID,
     "active" BOOLEAN DEFAULT FALSE,
     "createdAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -57,20 +56,6 @@ ALTER TABLE "users" ADD COLUMN "link" VARCHAR(255);
 CREATE INDEX idx_users_createdById ON users("createdById");
 CREATE INDEX idx_users_ownerId ON users("ownerId");
 CREATE INDEX idx_users_myOwnerId ON users("myOwnerId");
-
-CREATE TABLE account (
-    "_id" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    "createdById" UUID NOT NULL,
-    "name" VARCHAR(255) NOT NULL,
-    "active" BOOLEAN DEFAULT TRUE,
-    "createdAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    "refreshToken" VARCHAR(255) NOT NULL,
-    "expiresAt" TIMESTAMP,
-   CONSTRAINT "fk_createdById" FOREIGN KEY ("createdById") REFERENCES users("_id")
-);
--- Index for account table
-CREATE INDEX idx_account_createdById ON account("createdById");
 
 CREATE TABLE category (
     "_id" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
@@ -160,30 +145,7 @@ CREATE TABLE owner (
 ALTER TABLE users ADD CONSTRAINT fk_ownerId FOREIGN KEY ("ownerId") REFERENCES owner("_id");
 -- Index for owner table
 CREATE INDEX idx_owner_createdById ON owner("createdById");
-CREATE TABLE client (
-    "_id" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    "createdById" UUID NOT NULL,
-    "name" VARCHAR(255) NOT NULL,
-    "active" BOOLEAN DEFAULT TRUE,
-    "createdAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    "cpf" VARCHAR(14),
-    "phone" VARCHAR(15),
-    "userId" UUID NOT NULL,
-    "ownerId" UUID NOT NULL,
-    "birthDate" DATE,
-    "appointmentsTotal" INT,
-    "myOwnerId" UUID,
-    FOREIGN KEY ("createdById") REFERENCES users("_id"),
-    FOREIGN KEY ("userId") REFERENCES users("_id"),
-    FOREIGN KEY ("ownerId") REFERENCES owner("_id"),
-    FOREIGN KEY ("myOwnerId") REFERENCES users("_id")
-);
--- Indexes for client table
-CREATE INDEX idx_client_createdById ON client("createdById");
-CREATE INDEX idx_client_userId ON client("userId");
-CREATE INDEX idx_client_ownerId ON client("ownerId");
-CREATE INDEX idx_client_myOwnerId ON client("myOwnerId");
+
 CREATE TABLE request (
     "_id" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     "createdById" UUID NOT NULL,
@@ -222,7 +184,7 @@ CREATE TABLE request (
     "order" JSONB,
     CONSTRAINT "fk_serviceId_request" FOREIGN KEY ("serviceId") REFERENCES service("_id"),
     CONSTRAINT "fk_ownerId_request" FOREIGN KEY ("ownerId") REFERENCES owner("_id"),
-    CONSTRAINT "fk_clientId_request" FOREIGN KEY ("clientId") REFERENCES client("_id"),
+    CONSTRAINT "fk_clientId_request" FOREIGN KEY ("clientId") REFERENCES users("_id"),
     CONSTRAINT "fk_clientUserId_request" FOREIGN KEY ("clientUserId") REFERENCES users("_id"),
     CONSTRAINT "fk_professionalId_request" FOREIGN KEY ("professionalId") REFERENCES users("_id"),
     CONSTRAINT "fk_createdForId_request" FOREIGN KEY ("createdForId") REFERENCES users("_id"),
@@ -236,6 +198,7 @@ CREATE INDEX idx_request_clientId ON request("clientId");
 CREATE INDEX idx_request_clientUserId ON request("clientUserId");
 CREATE INDEX idx_request_professionalId ON request("professionalId");
 CREATE INDEX idx_request_createdForId ON request("createdForId");
+
 CREATE TABLE appointment (
     "_id" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     "createdById" UUID NOT NULL,
@@ -267,7 +230,7 @@ CREATE TABLE appointment (
     CONSTRAINT "fk_requestId_appointment" FOREIGN KEY ("requestId") REFERENCES request("_id"),
     CONSTRAINT "fk_serviceId_appointment" FOREIGN KEY ("serviceId") REFERENCES service("_id"),
     CONSTRAINT "fk_ownerId_appointment" FOREIGN KEY ("ownerId") REFERENCES owner("_id"),
-    CONSTRAINT "fk_clientId_appointment" FOREIGN KEY ("clientId") REFERENCES client("_id"),
+    CONSTRAINT "fk_clientId_appointment" FOREIGN KEY ("clientId") REFERENCES users("_id"),
     CONSTRAINT "fk_professionalId_appointment" FOREIGN KEY ("professionalId") REFERENCES users("_id"),
     CONSTRAINT "fk_createdForId_appointment" FOREIGN KEY ("createdForId") REFERENCES users("_id"),
     CONSTRAINT "fk_cancelledBy_appointment" FOREIGN KEY ("cancelledBy") REFERENCES users("_id")
@@ -280,295 +243,6 @@ CREATE INDEX idx_appointment_clientId ON appointment("clientId");
 CREATE INDEX idx_appointment_professionalId ON appointment("professionalId");
 CREATE INDEX idx_appointment_createdForId ON appointment("createdForId");
 
-CREATE TABLE rating (
-    "_id" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    "createdById" UUID NOT NULL,
-    "name" VARCHAR(255) NOT NULL,
-    "active" BOOLEAN DEFAULT TRUE,
-    "createdAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    "ratingType" VARCHAR(255) NOT NULL,
-    "ratings" JSONB[] NOT NULL,
-    CONSTRAINT "fk_createdById" FOREIGN KEY ("createdById") REFERENCES users("_id")
-);
-CREATE INDEX idx_rating_createdById ON rating("createdById");
-
-CREATE TABLE "ratingResult" (
-    "_id" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    "createdById" UUID NOT NULL,
-    "name" VARCHAR(255) NOT NULL,
-    "active" BOOLEAN DEFAULT TRUE,
-    "createdAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    "ratingId" UUID NOT NULL,
-    "rating" INT DEFAULT 0,
-    "comment" TEXT,
-    "requestId" UUID NOT NULL,
-    "ratingType" VARCHAR(255) NOT NULL,
-    "ratingForId" UUID NOT NULL,
-    "ratings" JSONB[],
-    CONSTRAINT "fk_createdById" FOREIGN KEY ("createdById") REFERENCES users("_id"),
-    CONSTRAINT "fk_ratingId" FOREIGN KEY ("ratingId") REFERENCES rating("_id")
-);
-
-CREATE INDEX idx_rating_result_createdById ON "ratingResult"("createdById");
-CREATE INDEX idx_rating_result_ratingId ON "ratingResult"("ratingId");
-CREATE INDEX idx_rating_result_requestId ON "ratingResult"("requestId");
-CREATE INDEX idx_rating_result_ratingForId ON "ratingResult"("ratingForId");
-
-
-CREATE TABLE ride (
-    "_id" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    "createdById" UUID NOT NULL,
-    "name" VARCHAR(255) NOT NULL,
-    "active" BOOLEAN DEFAULT TRUE,
-    "createdAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    "driverUserType" VARCHAR(255) NOT NULL,
-    "requestId" UUID NOT NULL,
-    "origin" JSONB NOT NULL,
-    "destiny" JSONB NOT NULL,
-    "status" INT NOT NULL,
-    "distance" NUMERIC NOT NULL,
-    "distanceTime" INT NOT NULL,
-    "maxCostEstimated" NUMERIC NOT NULL,
-    "minCostEstimated" NUMERIC NOT NULL,
-    "finalCost" NUMERIC NOT NULL,
-    "costDefinedByOwner" NUMERIC,
-    "initDate" TIMESTAMP NOT NULL,
-    "endDateEstimated" TIMESTAMP NOT NULL,
-    "endDate" TIMESTAMP,
-    CONSTRAINT "fk_createdById_ride" FOREIGN KEY ("createdById") REFERENCES users("_id"),
-    CONSTRAINT "fk_requestId_ride" FOREIGN KEY ("requestId") REFERENCES request("_id")
-);
--- Indexes for ride table
-CREATE INDEX idx_ride_createdById ON ride("createdById");
-CREATE INDEX idx_ride_requestId ON ride("requestId");
-CREATE TABLE "order" (
-    "_id" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    "createdById" UUID NOT NULL,
-    "name" VARCHAR(255) NOT NULL,
-    "active" BOOLEAN DEFAULT TRUE,
-    "createdAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    "percentageAdopted" NUMERIC,
-    "paymentForm" VARCHAR(255),
-    "orderPaidByClient" BOOLEAN,
-    "comissionPaidByOwner" BOOLEAN,
-    "comissionValue" NUMERIC,
-    "totalValue" NUMERIC,
-    "professionalId" UUID,
-    "ownerId" UUID,
-    "requestId" UUID,
-    "clientId" UUID,
-    "extraCost" NUMERIC,
-    "normalCost" NUMERIC,
-    "haveFidelity" BOOLEAN,
-    "haveDelivery" BOOLEAN,
-    "pointsUsed" INT,
-    "appointmentDate" TIMESTAMP,
-    CONSTRAINT "fk_createdById_order" FOREIGN KEY ("createdById") REFERENCES users("_id"),
-    CONSTRAINT "fk_professionalId_order" FOREIGN KEY ("professionalId") REFERENCES users("_id"),
-    CONSTRAINT "fk_ownerId_order" FOREIGN KEY ("ownerId") REFERENCES owner("_id"),
-    CONSTRAINT "fk_requestId_order" FOREIGN KEY ("requestId") REFERENCES request("_id"),
-    CONSTRAINT "fk_clientId_order" FOREIGN KEY ("clientId") REFERENCES client("_id")
-);
--- Indexes for order table
-CREATE INDEX idx_order_createdById ON "order"("createdById");
-CREATE INDEX idx_order_professionalId ON "order"("professionalId");
-CREATE INDEX idx_order_ownerId ON "order"("ownerId");
-CREATE INDEX idx_order_requestId ON "order"("requestId");
-CREATE INDEX idx_order_clientId ON "order"("clientId");
-CREATE TABLE recurrence (
-    "_id" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    "createdById" UUID NOT NULL,
-    "name" VARCHAR(255) NOT NULL,
-    "active" BOOLEAN DEFAULT TRUE,
-    "createdAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    "type" INT CHECK ("type" IN (0, 1)) NOT NULL,  -- 0 is weekly, 1 is monthly
-    "accept" BOOLEAN NOT NULL,
-    "appointmentsWasInserted" BOOLEAN NOT NULL,
-    "frequency" INT NOT NULL,
-    "initDate" TIMESTAMP NOT NULL,
-    "endDate" TIMESTAMP NOT NULL,
-    "professionalId" UUID NOT NULL,
-    "requestId" UUID NOT NULL,
-    "clientId" UUID NOT NULL,
-    "ownerId" UUID NOT NULL,
-    "serviceId" UUID NOT NULL,
-    CONSTRAINT "fk_createdById_recurrence" FOREIGN KEY ("createdById") REFERENCES users("_id"),
-    CONSTRAINT "fk_professionalId_recurrence" FOREIGN KEY ("professionalId") REFERENCES users("_id"),
-    CONSTRAINT "fk_requestId_recurrence" FOREIGN KEY ("requestId") REFERENCES request("_id"),
-    CONSTRAINT "fk_clientId_recurrence" FOREIGN KEY ("clientId") REFERENCES client("_id"),
-    CONSTRAINT "fk_ownerId_recurrence" FOREIGN KEY ("ownerId") REFERENCES owner("_id"),
-    CONSTRAINT "fk_serviceId_recurrence" FOREIGN KEY ("serviceId") REFERENCES service("_id")
-);
--- Indexes for recurrence table
-CREATE INDEX idx_recurrence_createdById ON recurrence("createdById");
-CREATE INDEX idx_recurrence_professionalId ON recurrence("professionalId");
-CREATE INDEX idx_recurrence_requestId ON recurrence("requestId");
-CREATE INDEX idx_recurrence_clientId ON recurrence("clientId");
-CREATE INDEX idx_recurrence_ownerId ON recurrence("ownerId");
-CREATE INDEX idx_recurrence_serviceId ON recurrence("serviceId");
-CREATE TABLE charge (
-    "_id" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    "createdById" UUID NOT NULL,
-    "name" VARCHAR(255),
-    "active" BOOLEAN DEFAULT TRUE,
-    "createdAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    "status" VARCHAR(255),
-    "customer" JSONB,
-    "value" NUMERIC NOT NULL,
-    "comment" TEXT,
-    "correlationID" VARCHAR(255),
-    "discount" NUMERIC,
-    "fee" NUMERIC,
-    "globalID" VARCHAR(255)  ,
-    "transactionID" VARCHAR(255),
-    "valueWithDiscount" NUMERIC,
-    "identifier" VARCHAR(255),
-    "paymentLinkID" VARCHAR(255),
-    "paymentLinkUrl" VARCHAR(255),
-    "qrCodeImage" VARCHAR(255),
-    "expiresIn" INT,
-    "expiresDate" TIMESTAMP,
-    "brCode" TEXT,
-    "pixKey" VARCHAR(255),
-    "additionalInfo" JSONB,
-    "gatewayDetails" JSONB,
-    "pagarmeOrder" JSONB,
-    "type" VARCHAR(255),  -- Adicionando a coluna type
-    CONSTRAINT "fk_createdById_charge" FOREIGN KEY ("createdById") REFERENCES users("_id")
-);
-
-CREATE INDEX idx_charge_createdById ON charge("createdById");
-
-CREATE TABLE customer (
-    "_id" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    "createdById" UUID NOT NULL,
-    "active" BOOLEAN DEFAULT TRUE,
-    "createdAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    "cpf" VARCHAR(14),
-    "correlationID" VARCHAR(255),
-    "gatewayDetails" JSONB,
-    "pagarmeCustomer" JSONB,
-    "name" VARCHAR(255) NOT NULL,
-    "email" VARCHAR(255) NOT NULL,
-    "phone" VARCHAR(15) NOT NULL,
-    "taxID" JSONB NOT NULL,
-    "address" JSONB,
-    CONSTRAINT "fk_createdById_customer" FOREIGN KEY ("createdById") REFERENCES users("_id")
-);
-CREATE INDEX idx_customer_createdById ON customer("createdById");
-CREATE INDEX idx_customer_correlationID ON customer("correlationID");
-CREATE TABLE subscription (
-    "_id" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    "createdById" UUID NOT NULL,
-    "name" VARCHAR(255) ,
-    "active" BOOLEAN DEFAULT TRUE,
-    "createdAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    "customer" JSONB ,
-    "value" NUMERIC  ,
-    "comment" TEXT,
-    "additionalInfo" JSONB  ,
-    "dayGenerateCharge" VARCHAR(10) ,
-    "globalID" VARCHAR(255)  ,
-    "gatewayDetails" JSONB,
-    "priceId" UUID,
-    "pagarmeSubscription" JSONB,
-    CONSTRAINT "fk_createdById_subscription" FOREIGN KEY ("createdById") REFERENCES users("_id")
-);
-CREATE INDEX idx_subscription_createdById ON subscription("createdById");
-
-CREATE TABLE transaction (
-    "_id" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    "createdById" UUID NOT NULL,
-    "name" VARCHAR(255) NOT NULL,
-    "active" BOOLEAN DEFAULT TRUE,
-    "createdAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    "event" VARCHAR(255) NOT NULL,
-    "charge" JSONB NOT NULL,
-    "pix" JSONB,
-    "company" JSONB,
-    "account" JSONB,
-    CONSTRAINT "fk_createdById_transaction" FOREIGN KEY ("createdById") REFERENCES users("_id")
-);
-CREATE INDEX idx_transaction_createdById ON transaction("createdById");
-
-CREATE TABLE product (
-    "_id" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    "createdById" UUID NOT NULL,
-    "name" VARCHAR(255) NOT NULL,
-    "active" BOOLEAN DEFAULT TRUE,
-    "createdAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    "quantity" INT NOT NULL,
-    CONSTRAINT "fk_createdById_product" FOREIGN KEY ("createdById") REFERENCES users("_id")
-);
-CREATE INDEX idx_product_createdById ON product("createdById");
-
-CREATE TABLE "mapRoute" (
-    "_id" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    "createdById" UUID NOT NULL,
-    "name" VARCHAR(255) NOT NULL,
-    "active" BOOLEAN DEFAULT TRUE,
-    "createdAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    "source" JSONB NOT NULL,
-    "source_id" VARCHAR(255),
-    "destination_id" VARCHAR(255),
-    "destination" JSONB NOT NULL,
-    "distance" NUMERIC NOT NULL,
-    "duration" NUMERIC NOT NULL,
-    "directions" TEXT NOT NULL,
-    "routeDriver" JSONB  ,
-    CONSTRAINT "fk_createdById_maproute" FOREIGN KEY ("createdById") REFERENCES users("_id")
-);
-CREATE INDEX idx_mapRoute_createdById ON "mapRoute"("createdById");
-
-CREATE TABLE "routeDriver" (
-    "_id" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    "createdById" UUID NOT NULL,
-    "name" VARCHAR(255) NOT NULL,
-    "routeId" UUID NOT NULL,
-    "points" JSONB NOT NULL,
-    "status" VARCHAR(50) NOT NULL, -- FINALIZADO, INICIADO, ETC
-    "active" BOOLEAN DEFAULT TRUE,
-    "createdAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT "fk_createdById_routeDriver" FOREIGN KEY ("createdById") REFERENCES users("_id"),
-    CONSTRAINT "fk_routeId_routeDriver" FOREIGN KEY ("routeId") REFERENCES "mapRoute"("_id")
-);
--- Indexes for routeDriver table
-CREATE INDEX idx_routeDriver_createdById ON "routeDriver"("createdById");
-CREATE INDEX idx_routeDriver_routeId ON "routeDriver"("routeId");
-CREATE TABLE fidelity (
-    "_id" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    "createdById" UUID NOT NULL,
-    "name" VARCHAR(255) NOT NULL,
-    "active" BOOLEAN DEFAULT TRUE,
-    "createdAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    "ownerId" UUID NOT NULL,
-    "requestId" UUID NOT NULL,
-    "points" INT NOT NULL,
-    "clientId" UUID NOT NULL,
-    CONSTRAINT "fk_createdById_fidelity" FOREIGN KEY ("createdById") REFERENCES users("_id"),
-    CONSTRAINT "fk_ownerId_fidelity" FOREIGN KEY ("ownerId") REFERENCES owner("_id"),
-    CONSTRAINT "fk_requestId_fidelity" FOREIGN KEY ("requestId") REFERENCES request("_id"),
-    CONSTRAINT "fk_clientId_fidelity" FOREIGN KEY ("clientId") REFERENCES client("_id")
-);
--- Indexes for fidelity table
-CREATE INDEX idx_fidelity_createdById ON fidelity("createdById");
-CREATE INDEX idx_fidelity_ownerId ON fidelity("ownerId");
-CREATE INDEX idx_fidelity_requestId ON fidelity("requestId");
-CREATE INDEX idx_fidelity_clientId ON fidelity("clientId");
-
 CREATE TABLE photo (
     "_id" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     "createdById" UUID NOT NULL,
@@ -580,142 +254,6 @@ CREATE TABLE photo (
     "expiresInSeconds" INT NOT NULL DEFAULT 60,
     "createdAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT "fk_createdById_fidelity" FOREIGN KEY ("createdById") REFERENCES users("_id")
+    CONSTRAINT "fk_createdById_photo" FOREIGN KEY ("createdById") REFERENCES users("_id")
 );
-
 CREATE INDEX idx_photo_createdById ON photo("createdById");
--- CreateTable
-CREATE TABLE "tweet" (
-    "_id" UUID NOT NULL DEFAULT uuid_generate_v4(),
-    "createdById" UUID,
-    "userSlug" TEXT NOT NULL,
-    "body" TEXT NOT NULL,
-    "image" TEXT,
-    "tweetId" UUID,
-    "createdAt" TIMESTAMP(6) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(6) DEFAULT CURRENT_TIMESTAMP,
-
-    CONSTRAINT "tweet_pkey" PRIMARY KEY ("_id")
-);
-
--- CreateTable
-CREATE TABLE "tweetlike" (
-    "_id" UUID NOT NULL DEFAULT uuid_generate_v4(),
-    "createdById" UUID,
-    "tweetId" UUID,
-    "userSlug" TEXT NOT NULL,
-    "createdAt" TIMESTAMP(6) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(6) DEFAULT CURRENT_TIMESTAMP,
-
-    CONSTRAINT "tweetlike_pkey" PRIMARY KEY ("_id")
-);
-
--- CreateTable
-CREATE TABLE "follow" (
-    "_id" UUID NOT NULL DEFAULT uuid_generate_v4(),
-    "createdById" UUID,
-    "createdAt" TIMESTAMP(6) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(6) DEFAULT CURRENT_TIMESTAMP,
-    "userId" UUID NOT NULL,
-    CONSTRAINT "follow_pkey" PRIMARY KEY ("_id")
-);
-
--- CreateTable
-CREATE TABLE "trend" (
-    "_id" UUID NOT NULL DEFAULT uuid_generate_v4(),
-    "hashtag" TEXT NOT NULL,
-    "counter" INTEGER NOT NULL DEFAULT 1,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-
-    CONSTRAINT "trend_pkey" PRIMARY KEY ("_id")
-);
-
-CREATE TABLE tweettweetlike (
-    "_id" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    "userId" UUID NOT NULL,
-    "tweetId" UUID,
-    "tweetlikeId" UUID  ,
-    "createdAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT "fk_createdById_fidelity" FOREIGN KEY ("userId") REFERENCES users("_id"),
-    CONSTRAINT "fk_tweetId_tweetlike" FOREIGN KEY ("tweetId") REFERENCES tweet("_id")
- );
-
--- AddForeignKey
-ALTER TABLE "tweet" ADD CONSTRAINT "tweet_createdById_fkey" FOREIGN KEY ("createdById") REFERENCES "users"("_id") ON DELETE SET NULL ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "tweet" ADD CONSTRAINT "tweet_tweetId_fkey" FOREIGN KEY ("tweetId") REFERENCES "tweet"("_id") ON DELETE SET NULL ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "tweetlike" ADD CONSTRAINT "tweetlike_createdById_fkey" FOREIGN KEY ("createdById") REFERENCES "users"("_id") ON DELETE SET NULL ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "tweetlike" ADD CONSTRAINT "tweetlike_tweetId_fkey" FOREIGN KEY ("tweetId") REFERENCES "tweet"("_id") ON DELETE SET NULL ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "follow" ADD CONSTRAINT "follow_createdById_fkey" FOREIGN KEY ("createdById") REFERENCES "users"("_id") ON DELETE SET NULL ON UPDATE CASCADE;
--- DropForeignKey
-ALTER TABLE "follow" DROP CONSTRAINT "follow_createdById_fkey";
-
--- DropForeignKey
-ALTER TABLE "tweet" DROP CONSTRAINT "tweet_createdById_fkey";
-
--- DropForeignKey
-ALTER TABLE "tweet" DROP CONSTRAINT "tweet_tweetId_fkey";
-
--- DropForeignKey
-ALTER TABLE "tweetlike" DROP CONSTRAINT "tweetlike_createdById_fkey";
-
--- DropForeignKey
-ALTER TABLE "tweetlike" DROP CONSTRAINT "tweetlike_tweetId_fkey";
-
--- AddForeignKey
-ALTER TABLE "tweet" ADD CONSTRAINT "tweet_createdById_fkey" FOREIGN KEY ("createdById") REFERENCES "users"("_id") ON DELETE NO ACTION ON UPDATE NO ACTION;
-
--- AddForeignKey
-ALTER TABLE "tweet" ADD CONSTRAINT "tweet_tweetId_fkey" FOREIGN KEY ("tweetId") REFERENCES "tweet"("_id") ON DELETE NO ACTION ON UPDATE NO ACTION;
-
--- AddForeignKey
-ALTER TABLE "tweetlike" ADD CONSTRAINT "tweetlike_createdById_fkey" FOREIGN KEY ("createdById") REFERENCES "users"("_id") ON DELETE NO ACTION ON UPDATE NO ACTION;
-
--- AddForeignKey
-ALTER TABLE "tweetlike" ADD CONSTRAINT "tweetlike_tweetId_fkey" FOREIGN KEY ("tweetId") REFERENCES "tweet"("_id") ON DELETE NO ACTION ON UPDATE NO ACTION;
-
--- AddForeignKey
-ALTER TABLE "follow" ADD CONSTRAINT "follow_createdById_fkey" FOREIGN KEY ("createdById") REFERENCES "users"("_id") ON DELETE NO ACTION ON UPDATE NO ACTION;
-
-
-
-CREATE TABLE "categoryPlace" (
-    "_id" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    "createdById" UUID NOT NULL,
-    "name" VARCHAR(255) NOT NULL,
-    "active" BOOLEAN DEFAULT TRUE,
-    "createdAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT "fk_createdById_categoryplace" FOREIGN KEY ("createdById") REFERENCES users("_id")
-);
-
-
-CREATE TABLE "place" (
-    "_id" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    "createdById" UUID NOT NULL,
-    "name" VARCHAR(255) NOT NULL,
-    "coord" JSONB,
-    "address" TEXT,
-    "categoryPlaceId" UUID,
-    "profilephoto" VARCHAR(255),
-    "ownerId" UUID,
-    "description" TEXT,
-    "phone" VARCHAR(255),
-    "cover" VARCHAR(255),
-    "active" BOOLEAN DEFAULT TRUE,
-    "createdAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT "fk_createdById_categoryplace" FOREIGN KEY ("createdById") REFERENCES users("_id"),
-    CONSTRAINT "fk_categoryPlaceId_place" FOREIGN KEY ("categoryPlaceId") REFERENCES "categoryPlace"("_id")
-);
-
-
