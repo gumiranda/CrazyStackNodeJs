@@ -71,10 +71,13 @@ export class PostgresRepository extends Repository {
   async insertOne(data: any): Promise<any> {
     const client = await connect();
     try {
-      const columns = Object.keys(data)
+      const filteredData = Object.fromEntries(
+        Object.entries(data).filter(([_, v]) => v !== undefined)
+      );
+      const columns = Object.keys(filteredData)
         .map((key) => `"${sanitizeIdentifier(key)}"`)
         .join(", ");
-      const values = Object.values(data);
+      const values = Object.values(filteredData);
       const placeholders = values.map((_, i) => `$${i + 1}`).join(", ");
       const query = `INSERT INTO "${sanitizeIdentifier(this.tableName)}" (${columns}) VALUES (${placeholders}) RETURNING *`;
       const result = await client.query(query, values);

@@ -15,7 +15,10 @@
     "test:coverage": "bun run scripts/run-tests.ts --coverage",
     "test:all": "bun run scripts/run-tests.ts",
     "format": "prettier --write \"**/*.{ts,tsx,json,md}\"",
-    "generate": "yarn plop --plopfile ./generators/plopfile.js"
+    "generate": "yarn plop --plopfile ./generators/plopfile.js",
+    "admin:dev": "cd admin && bun run dev",
+    "admin:build": "cd admin && bun install && bun run build",
+    "admin:preview": "cd admin && bun run preview"
   },
   "license": "MIT",
   "devDependencies": {
@@ -34,6 +37,7 @@
     "@aws-sdk/lib-storage": "^3.744.0",
     "@aws-sdk/s3-request-presigner": "^3.744.0",
     "@elysiajs/cors": "^1.4.1",
+    "@elysiajs/static": "^1.4.7",
     "@elysiajs/swagger": "latest",
     "crypto-js": "^4.2.0",
     "date-fns": "^2.30.0",

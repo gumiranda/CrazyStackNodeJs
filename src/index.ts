@@ -1,10 +1,13 @@
 import { Elysia } from "elysia";
+import { staticPlugin } from "@elysiajs/static";
 import cors from "@elysiajs/cors";
 import { swagger } from "@elysiajs/swagger";
 import { rateLimit } from "elysia-rate-limit";
 import { env, MongoHelper } from "@/application/infra";
 import { routes } from "@/application/infra/routes";
 import { closePool } from "./application/infra/database/postgres";
+import { existsSync } from "fs";
+import { join } from "path";
 
 let isShuttingDown = false;
 
@@ -15,7 +18,7 @@ export const makeElysiaInstance = async (externalMongoClient: any) => {
     const app = new Elysia()
       .use(
         cors({
-          origin: ({ request }) => {
+          origin: (request) => {
             if (env.environment !== "production") return true;
             const origin = request.headers.get("origin") ?? "";
             const allowed = (process.env.ALLOWED_ORIGINS ?? "").split(",").filter(Boolean);
@@ -80,6 +83,16 @@ export const makeElysiaInstance = async (externalMongoClient: any) => {
     }
     app.use(api);
 
+    // Serve admin SPA static files in production
+    const adminDistPath = join(import.meta.dir, "..", "admin", "dist");
+    if (existsSync(adminDistPath)) {
+      app.use(staticPlugin({ assets: adminDistPath, prefix: "/" }));
+      // SPA fallback: serve index.html for non-API, non-file routes
+      app.get("/*", async () => {
+        return Bun.file(join(adminDistPath, "index.html"));
+      });
+    }
+
     return { app, client };
   } catch (error) {
     await closePool();
@@ -120,6 +133,6 @@ const start = async () => {
   }
 };
 
-if (env.environment === "production") {
+if (env.environment !== "test") {
   start();
 }

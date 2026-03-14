@@ -81,7 +81,7 @@ REDIS_PASSWORD = SEUS_BAGULHO;
 GOOGLE_MAPS_API_KEY = SEUS_BAGULHO;
 WOOVI_KEY = "SEUS_BAGULHO";
 WOOVI_WEBHOOK_SECRET = "SEUS_BAGULHO";
-FUSORARIOBR = "inactive"; //mudar pra production se rodar local 
+FUSORARIOBR = "inactive"; //mudar pra production se rodar local
 DATABASE = "mongodb"; // postgres or mongodb
 CLOUDFLARE_R2_ACCESS_KEY_ID = SEUS_BAGULHO;
 CLOUDFLARE_R2_ACCOUNT_ID = SEUS_BAGULHO;
@@ -280,3 +280,12 @@ Este projeto está licenciado sob a Licença MIT. Consulte o arquivo [LICENSE](.
 ```
 
 Adicionei emojis para tornar o README mais visualmente atraente e destaquei as bibliotecas e tecnologias utilizadas. Sinta-se à vontade para modificar conforme necessário!
+ How to Run
+
+  # Dev (two terminals)
+  bun run dev          # backend on :3000
+  bun run admin:dev    # admin on :5173 (proxies /api to :3000)
+
+  # Production
+  bun run admin:build  # builds to admin/dist/
+  bun run start        # Elysia serves API + admin on :3000
