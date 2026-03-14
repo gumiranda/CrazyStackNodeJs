@@ -251,9 +251,9 @@ CREATE TABLE appointment (
     "ownerId" UUID NOT NULL,
     "clientId" UUID NOT NULL,
     "professionalId" UUID NOT NULL,
+    "createdForId" UUID,
     "status" INT NOT NULL ,
-    "cancelledById" UUID,
-    "updatedByRole" VARCHAR(45),
+    "cancelledBy" UUID,
     "read" BOOLEAN DEFAULT FALSE,
     "push" BOOLEAN DEFAULT FALSE,
     "email" BOOLEAN DEFAULT FALSE,
@@ -269,7 +269,8 @@ CREATE TABLE appointment (
     CONSTRAINT "fk_ownerId_appointment" FOREIGN KEY ("ownerId") REFERENCES owner("_id"),
     CONSTRAINT "fk_clientId_appointment" FOREIGN KEY ("clientId") REFERENCES client("_id"),
     CONSTRAINT "fk_professionalId_appointment" FOREIGN KEY ("professionalId") REFERENCES users("_id"),
-    CONSTRAINT "fk_cancelledById_appointment" FOREIGN KEY ("cancelledById") REFERENCES users("_id")
+    CONSTRAINT "fk_createdForId_appointment" FOREIGN KEY ("createdForId") REFERENCES users("_id"),
+    CONSTRAINT "fk_cancelledBy_appointment" FOREIGN KEY ("cancelledBy") REFERENCES users("_id")
 );
 CREATE INDEX idx_appointment_createdById ON appointment("createdById");
 CREATE INDEX idx_appointment_requestId ON appointment("requestId");
@@ -277,6 +278,7 @@ CREATE INDEX idx_appointment_serviceId ON appointment("serviceId");
 CREATE INDEX idx_appointment_ownerId ON appointment("ownerId");
 CREATE INDEX idx_appointment_clientId ON appointment("clientId");
 CREATE INDEX idx_appointment_professionalId ON appointment("professionalId");
+CREATE INDEX idx_appointment_createdForId ON appointment("createdForId");
 
 CREATE TABLE rating (
     "_id" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
